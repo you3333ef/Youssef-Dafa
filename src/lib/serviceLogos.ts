@@ -2,14 +2,14 @@
 export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
   // UAE - الإمارات
   aramex: {
-    logo: "https://www.aramex.com/sites/default/files/aramex-logo.svg",
+    logo: "https://logo.clearbit.com/aramex.com",
     colors: {
-      primary: "#ED1C24",
-      secondary: "#000000"
+      primary: "#E30613",
+      secondary: "#FFFFFF"
     },
-    ogImage: "/og-aramex.jpg",
-    heroImage: "/og-aramex.jpg",
-    description: "شركة رائدة في خدمات الشحن السريع والحلول اللوجستية في المنطقة"
+    ogImage: "https://logo.clearbit.com/aramex.com",
+    heroImage: "https://logo.clearbit.com/aramex.com",
+    description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
   },
   dhl: {
     logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
@@ -184,104 +184,94 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
 
   // Real GCC Shipping Companies - Additional
   albaraka: {
-    logo: "https://www.albaraka.com/images/logo.png",
+    logo: "https://logo.clearbit.com/albaraka.com.tr",
     colors: {
-      primary: "#006C35",
-      secondary: "#FFB500"
+      primary: "#D89A00",
+      secondary: "#FFFFFF"
     },
-    ogImage: "/og-albaraka.jpg",
-    heroImage: "/og-albaraka.jpg",
-    description: "مجموعة البركة للتجارة والشحن - خدمات شحن وبنكية متكاملة"
-  },
-  alajwan: {
-    logo: "https://www.alajwan.com/images/logo.png",
-    colors: {
-      primary: "#DA291C",
-      secondary: "#003087"
-    },
-    ogImage: "/og-alajwan.jpg",
-    heroImage: "/og-alajwan.jpg",
-    description: "شركة الأغوان للتجارة والشحن - خدمات شحن متطورة"
-  },
-  national: {
-    logo: "https://www.nationalshipping.com/images/logo.png",
-    colors: {
-      primary: "#003087",
-      secondary: "#FFB500"
-    },
-    ogImage: "/og-national.jpg",
-    heroImage: "/og-national.jpg",
-    description: "الشركة الوطنية للشحن - خدمات شحن وخدمات لوجستية شاملة"
+    ogImage: "https://logo.clearbit.com/albaraka.com.tr",
+    heroImage: "https://logo.clearbit.com/albaraka.com.tr",
+    description: "خدمات شحن وبنكية متكاملة تابعة لمجموعة البركة، حلول مالية ولوجستية متكاملة في الخليج"
   },
   alfuttaim: {
-    logo: "https://www.alfuttaim.com/images/logo.png",
+    logo: "https://logo.clearbit.com/alfuttaim.com",
     colors: {
-      primary: "#E31E24",
-      secondary: "#0057B8"
+      primary: "#00559B",
+      secondary: "#FFFFFF"
     },
-    ogImage: "/og-alfuttaim.jpg",
-    heroImage: "/og-alfuttaim.jpg",
-    description: "مجموعة الفطيم للتجارة والشحن - حلول لوجستية متكاملة"
-  },
-  shipco: {
-    logo: "https://www.shipco.com/images/logo.png",
-    colors: {
-      primary: "#0066CC",
-      secondary: "#FF6600"
-    },
-    ogImage: "/og-shipco.jpg",
-    heroImage: "/og-shipco.jpg",
-    description: "شركة الشحن العالمية - خدمات شحن دولي ومحلي"
-  },
-  dhlfreight: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-freight-logo.svg",
-    colors: {
-      primary: "#FFCC00",
-      secondary: "#D40511"
-    },
-    ogImage: "/og-dhlfreight.jpg",
-    heroImage: "/og-dhlfreight.jpg",
-    description: "دي إتش إل للشحن - خدمات الشحن والخدمات اللوجستية المتقدمة"
-  },
-  hellmann: {
-    logo: "https://www.hellmann.com/images/logo.png",
-    colors: {
-      primary: "#E30613",
-      secondary: "#003087"
-    },
-    ogImage: "/og-hellmann.jpg",
-    heroImage: "/og-hellmann.jpg",
-    description: "هايلمان العالمية - خدمات شحن ولوجستيات دولية"
-  },
-  dsv: {
-    logo: "https://www.dsv.com/images/logo.png",
-    colors: {
-      primary: "#004B87",
-      secondary: "#FF6600"
-    },
-    ogImage: "/og-dsv.jpg",
-    heroImage: "/og-dsv.jpg",
-    description: "DSV للشحن والخدمات اللوجستية - حلول شحن متطورة"
+    ogImage: "https://logo.clearbit.com/alfuttaim.com",
+    heroImage: "https://logo.clearbit.com/alfuttaim.com",
+    description: "حلول لوجستية متكاملة تابعة لمجموعة فطيم، تشمل الشحن والتوزيع وخدمات سلسلة الإمداد في المنطقة"
   },
   alshaya: {
-    logo: "https://www.alshaya.com/images/logo.png",
+    logo: "https://logo.clearbit.com/alshaya.com",
     colors: {
-      primary: "#006C35",
-      secondary: "#DA291C"
+      primary: "#D71920",
+      secondary: "#000000"
     },
-    ogImage: "/og-alshaya.jpg",
-    heroImage: "/og-alshaya.jpg",
-    description: "مجموعة الشايع التجارية - خدمات شحن وتوزيع"
+    ogImage: "https://logo.clearbit.com/alshaya.com",
+    heroImage: "https://logo.clearbit.com/alshaya.com",
+    description: "مجموعة تعمل في الشحن والتوزيع لعلامات تجارية متعددة، وتوفر حلول التوزيع واللوجستيات للتجزئة"
+  },
+  national: {
+    logo: "https://logo.clearbit.com/bahri.sa",
+    colors: {
+      primary: "#003366",
+      secondary: "#FFFFFF"
+    },
+    ogImage: "https://logo.clearbit.com/bahri.sa",
+    heroImage: "https://logo.clearbit.com/bahri.sa",
+    description: "خدمات شحن وبحرية ولوجستيات شاملة، تغطي الشحن التجاري والبحري وخدمات النقل البحري داخل وخارج المملكة"
+  },
+  shipco: {
+    logo: "https://logo.clearbit.com/shipco.com",
+    colors: {
+      primary: "#0A5FB4",
+      secondary: "#FFFFFF"
+    },
+    ogImage: "https://logo.clearbit.com/shipco.com",
+    heroImage: "https://logo.clearbit.com/shipco.com",
+    description: "مزود خدمات شحن دولي ومحلي متخصص في الشحن البحري والجوي وحلول الشحن للمستوردين والمصدرين"
+  },
+  hellmann: {
+    logo: "https://logo.clearbit.com/hellmann.com",
+    colors: {
+      primary: "#0C4DA2",
+      secondary: "#FFFFFF"
+    },
+    ogImage: "https://logo.clearbit.com/hellmann.com",
+    heroImage: "https://logo.clearbit.com/hellmann.com",
+    description: "شبكة دولية لخدمات الشحن واللوجستيات، تقدم خدمات الشحن الدولي والنقل البري والبحري والجوي"
+  },
+  dsv: {
+    logo: "https://logo.clearbit.com/dsv.com",
+    colors: {
+      primary: "#0056A6",
+      secondary: "#FFFFFF"
+    },
+    ogImage: "https://logo.clearbit.com/dsv.com",
+    heroImage: "https://logo.clearbit.com/dsv.com",
+    description: "حلول شحن ولوجستيات متطورة تشمل الشحن الجوي، البحري، والنقل البري بالإضافة إلى تخزين وإدارة سلسلة الإمداد"
   },
   agility: {
-    logo: "https://www.agility.com/images/logo.png",
+    logo: "https://logo.clearbit.com/agility.com",
     colors: {
-      primary: "#004B87",
-      secondary: "#FF6600"
+      primary: "#003A63",
+      secondary: "#FFFFFF"
     },
-    ogImage: "/og-agility.jpg",
-    heroImage: "/og-agility.jpg",
-    description: "مجموعة الجاهلية - خدمات لوجستية وشحن متطورة"
+    ogImage: "https://logo.clearbit.com/agility.com",
+    heroImage: "https://logo.clearbit.com/agility.com",
+    description: "خدمات لوجستية وشحن متطورة وحلول سلسلة إمداد واسعة النطاق في المنطقة والعالم"
+  },
+  jinaken: {
+    logo: "https://genacom.carrd.co/assets/images/image01.jpg?v=6bb18d7b",
+    colors: {
+      primary: "#E82424",
+      secondary: "#F7C24A"
+    },
+    ogImage: "https://genacom.carrd.co/assets/images/image01.jpg?v=6bb18d7b",
+    heroImage: "https://genacom.carrd.co/assets/images/image01.jpg?v=6bb18d7b",
+    description: "شركة توصيل عُمانية محلية تقدم خدمات التوصيل والشحن داخل سلطنة عُمان مع شبكة فروع واسعة وخدمة تتبع"
   }
 };
 
