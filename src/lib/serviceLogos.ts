@@ -182,114 +182,106 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
 
-  // New Shipping Companies - All GCC
-  skynet: {
-    logo: "https://www.skynet.com/images/logo.png",
-    colors: {
-      primary: "#009639",
-      secondary: "#0066CC"
-    },
-    ogImage: "/og-skynet.jpg",
-    heroImage: "/og-skynet.jpg",
-    description: "خدمات شحن سريع وموثوقة في جميع أنحاء دول الخليج"
-  },
-  fastlo: {
-    logo: "https://www.fastlo.com/images/logo.png",
-    colors: {
-      primary: "#FF6B00",
-      secondary: "#4D148C"
-    },
-    ogImage: "/og-fastlo.jpg",
-    heroImage: "/og-fastlo.jpg",
-    description: "خدمات شحن اقتصادي وسريع للشحنات المحلية والدولية"
-  },
-  myship: {
-    logo: "https://www.myship.com/images/logo.png",
+  // Real GCC Shipping Companies - Additional
+  albaraka: {
+    logo: "https://www.albaraka.com/images/logo.png",
     colors: {
       primary: "#006C35",
       secondary: "#FFB500"
     },
-    ogImage: "/og-myship.jpg",
-    heroImage: "/og-myship.jpg",
-    description: "منصة شحن حديثة مع حلول لوجستية متطورة وتتبع فوري"
+    ogImage: "/og-albaraka.jpg",
+    heroImage: "/og-albaraka.jpg",
+    description: "مجموعة البركة للتجارة والشحن - خدمات شحن وبنكية متكاملة"
   },
-
-  // Saudi Additional Companies
-  alrajhi: {
-    logo: "https://www.alrajhi.com/images/logo.png",
+  alajwan: {
+    logo: "https://www.alajwan.com/images/logo.png",
     colors: {
-      primary: "#006C35",
-      secondary: "#FFB81C"
+      primary: "#DA291C",
+      secondary: "#003087"
     },
-    ogImage: "/og-alrajhi.jpg",
-    heroImage: "/og-alrajhi.jpg",
-    description: "شركة شحن سعودية مع خدمات لوجستية شاملة"
+    ogImage: "/og-alajwan.jpg",
+    heroImage: "/og-alajwan.jpg",
+    description: "شركة الأغوان للتجارة والشحن - خدمات شحن متطورة"
   },
-  agdabbagh: {
-    logo: "https://www.aldabbagh.com/images/logo.png",
-    colors: {
-      primary: "#1C4587",
-      secondary: "#DA291C"
-    },
-    ogImage: "/og-agdabbagh.jpg",
-    heroImage: "/og-agdabbagh.jpg",
-    description: "خدمات شحن متخصصة في البضائع والتجارة الإلكترونية"
-  },
-
-  // Kuwait Additional Companies
-  kgl: {
-    logo: "https://www.kgl.com.kw/images/logo.png",
-    colors: {
-      primary: "#007A33",
-      secondary: "#DA291C"
-    },
-    ogImage: "/og-kgl.jpg",
-    heroImage: "/og-kgl.jpg",
-    description: "شركة شحن كويتية مع خدمات لوجستية متكاملة"
-  },
-
-  // Oman Additional Companies
-  jinaken: {
-    logo: "https://www.jinaken.com/images/logo.png",
-    colors: {
-      primary: "#ED1C24",
-      secondary: "#009639"
-    },
-    ogImage: "/og-jinaken.jpg",
-    heroImage: "/og-jinaken.jpg",
-    description: "شركة شحن عُمانية رائدة مع خدمات لوجستية شاملة"
-  },
-  omanexpress: {
-    logo: "https://www.omanexpress.com/images/logo.png",
+  national: {
+    logo: "https://www.nationalshipping.com/images/logo.png",
     colors: {
       primary: "#003087",
       secondary: "#FFB500"
     },
-    ogImage: "/og-omanexpress.jpg",
-    heroImage: "/og-omanexpress.jpg",
-    description: "شركة شحن محلية مع تغطية شاملة لجميع أنحاء السلطنة"
+    ogImage: "/og-national.jpg",
+    heroImage: "/og-national.jpg",
+    description: "الشركة الوطنية للشحن - خدمات شحن وخدمات لوجستية شاملة"
   },
-  alghazali: {
-    logo: "https://www.alghazali.com/images/logo.png",
+  alfuttaim: {
+    logo: "https://www.alfuttaim.com/images/logo.png",
     colors: {
-      primary: "#CE1126",
-      secondary: "#FFFFFF"
+      primary: "#E31E24",
+      secondary: "#0057B8"
     },
-    ogImage: "/og-alghazali.jpg",
-    heroImage: "/og-alghazali.jpg",
-    description: "خدمات شحن متخصصة في التجارة الإلكترونية"
+    ogImage: "/og-alfuttaim.jpg",
+    heroImage: "/og-alfuttaim.jpg",
+    description: "مجموعة الفطيم للتجارة والشحن - حلول لوجستية متكاملة"
   },
-
-  // Bahrain Additional Companies
-  bhexpress: {
-    logo: "https://www.bhexpress.com/images/logo.png",
+  shipco: {
+    logo: "https://www.shipco.com/images/logo.png",
     colors: {
-      primary: "#CE1126",
-      secondary: "#FFFFFF"
+      primary: "#0066CC",
+      secondary: "#FF6600"
     },
-    ogImage: "/og-bhexpress.jpg",
-    heroImage: "/og-bhexpress.jpg",
-    description: "شركة شحن محلية مع خدمات سريعة وموثوقة"
+    ogImage: "/og-shipco.jpg",
+    heroImage: "/og-shipco.jpg",
+    description: "شركة الشحن العالمية - خدمات شحن دولي ومحلي"
+  },
+  dhlfreight: {
+    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-freight-logo.svg",
+    colors: {
+      primary: "#FFCC00",
+      secondary: "#D40511"
+    },
+    ogImage: "/og-dhlfreight.jpg",
+    heroImage: "/og-dhlfreight.jpg",
+    description: "دي إتش إل للشحن - خدمات الشحن والخدمات اللوجستية المتقدمة"
+  },
+  hellmann: {
+    logo: "https://www.hellmann.com/images/logo.png",
+    colors: {
+      primary: "#E30613",
+      secondary: "#003087"
+    },
+    ogImage: "/og-hellmann.jpg",
+    heroImage: "/og-hellmann.jpg",
+    description: "هايلمان العالمية - خدمات شحن ولوجستيات دولية"
+  },
+  dsv: {
+    logo: "https://www.dsv.com/images/logo.png",
+    colors: {
+      primary: "#004B87",
+      secondary: "#FF6600"
+    },
+    ogImage: "/og-dsv.jpg",
+    heroImage: "/og-dsv.jpg",
+    description: "DSV للشحن والخدمات اللوجستية - حلول شحن متطورة"
+  },
+  alshaya: {
+    logo: "https://www.alshaya.com/images/logo.png",
+    colors: {
+      primary: "#006C35",
+      secondary: "#DA291C"
+    },
+    ogImage: "/og-alshaya.jpg",
+    heroImage: "/og-alshaya.jpg",
+    description: "مجموعة الشايع التجارية - خدمات شحن وتوزيع"
+  },
+  agility: {
+    logo: "https://www.agility.com/images/logo.png",
+    colors: {
+      primary: "#004B87",
+      secondary: "#FF6600"
+    },
+    ogImage: "/og-agility.jpg",
+    heroImage: "/og-agility.jpg",
+    description: "مجموعة الجاهلية - خدمات لوجستية وشحن متطورة"
   }
 };
 
