@@ -6,6 +6,9 @@ export const gccShippingServices = {
     { id: 'fedex', name: 'فيديكس - FedEx', key: 'fedex', description: 'خدمات شحن دولية موثوقة مع تتبع فوري للشحنات' },
     { id: 'ups', name: 'يو بي إس - UPS', key: 'ups', description: 'حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم' },
     { id: 'empost', name: 'البريد الإماراتي - Emirates Post', key: 'empost', description: 'المشغل الوطني للبريد في دولة الإمارات العربية المتحدة' },
+    { id: 'skynet', name: 'سكاي نت - Skynet', key: 'skynet', description: 'شركة شحن متخصصة في التوصيل السريع داخل الإمارات' },
+    { id: 'fastlo', name: 'فاستلو - Fastlo', key: 'fastlo', description: 'خدمات شحن سريع وموثوقة للشحنات المحلية والدولية' },
+    { id: 'myship', name: 'ماي شيب - MyShip', key: 'myship', description: 'منصة شحن حديثة مع حلول لوجستية متطورة' },
   ],
   SA: [
     { id: 'smsa', name: 'سمسا - SMSA', key: 'smsa', description: 'أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية' },
@@ -16,6 +19,11 @@ export const gccShippingServices = {
     { id: 'saudipost', name: 'البريد السعودي - Saudi Post', key: 'saudipost', description: 'المشغل الوطني للبريد في المملكة العربية السعودية' },
     { id: 'fedex', name: 'فيديكس - FedEx', key: 'fedex', description: 'خدمات شحن دولية موثوقة مع تتبع فوري للشحنات' },
     { id: 'ups', name: 'يو بي إس - UPS', key: 'ups', description: 'حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم' },
+    { id: 'skynet', name: 'سكاي نت - Skynet', key: 'skynet', description: 'خدمات شحن سريع وموثوقة في جميع أنحاء المملكة' },
+    { id: 'fastlo', name: 'فاستلو - Fastlo', key: 'fastlo', description: 'خدمات شحن اقتصادي وسريع للشحنات المحلية' },
+    { id: 'myship', name: 'ماي شيب - MyShip', key: 'myship', description: 'حلول شحن رقمية متطورة وتتبع فوري للشحنات' },
+    { id: 'alrajhi', name: 'الراجحي للشحن - Al Rajhi Shipping', key: 'alrajhi', description: 'شركة شحن سعودية مع خدمات لوجستية شاملة' },
+    { id: 'agdabbagh', name: 'الدبابغ للشحن - Al Dabbagh Shipping', key: 'agdabbagh', description: 'خدمات شحن متخصصة في البضائع والتجارة الإلكترونية' },
   ],
   KW: [
     { id: 'kwpost', name: 'البريد الكويتي - Kuwait Post', key: 'kwpost', description: 'المشغل الوطني للبريد في دولة الكويت' },
@@ -23,6 +31,10 @@ export const gccShippingServices = {
     { id: 'aramex', name: 'أرامكس - Aramex', key: 'aramex', description: 'شركة رائدة في خدمات الشحن السريع والحلول اللوجستية في المنطقة' },
     { id: 'fedex', name: 'فيديكس - FedEx', key: 'fedex', description: 'خدمات شحن دولية موثوقة مع تتبع فوري للشحنات' },
     { id: 'ups', name: 'يو بي إس - UPS', key: 'ups', description: 'حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم' },
+    { id: 'skynet', name: 'سكاي نت - Skynet', key: 'skynet', description: 'خدمات شحن سريع وموثوقة في دولة الكويت' },
+    { id: 'fastlo', name: 'فاستلو - Fastlo', key: 'fastlo', description: 'خدمات شحن اقتصادي للشحنات المحلية والدولية' },
+    { id: 'kgl', name: 'كي جي إل - KGL', key: 'kgl', description: 'شركة شحن كويتية مع خدمات لوجستية متكاملة' },
+    { id: 'myship', name: 'ماي شيب - MyShip', key: 'myship', description: 'منصة شحن حديثة مع تتبع مباشر للشحنات' },
   ],
   QA: [
     { id: 'qpost', name: 'البريد القطري - Qatar Post', key: 'qpost', description: 'المشغل الوطني للبريد في دولة قطر' },
@@ -30,6 +42,9 @@ export const gccShippingServices = {
     { id: 'aramex', name: 'أرامكس - Aramex', key: 'aramex', description: 'شركة رائدة في خدمات الشحن السريع والحلول اللوجستية في المنطقة' },
     { id: 'fedex', name: 'فيديكس - FedEx', key: 'fedex', description: 'خدمات شحن دولية موثوقة مع تتبع فوري للشحنات' },
     { id: 'ups', name: 'يو بي إس - UPS', key: 'ups', description: 'حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم' },
+    { id: 'skynet', name: 'سكاي نت - Skynet', key: 'skynet', description: 'خدمات شحن سريع وموثوقة في دولة قطر' },
+    { id: 'fastlo', name: 'فاستلو - Fastlo', key: 'fastlo', description: 'خدمات شحن اقتصادي للشحنات المحلية والدولية' },
+    { id: 'myship', name: 'ماي شيب - MyShip', key: 'myship', description: 'منصة شحن حديثة مع حلول لوجستية متطورة' },
   ],
   OM: [
     { id: 'omanpost', name: 'البريد العُماني - Oman Post', key: 'omanpost', description: 'المشغل الوطني للبريد في سلطنة عُمان' },
@@ -37,6 +52,12 @@ export const gccShippingServices = {
     { id: 'aramex', name: 'أرامكس - Aramex', key: 'aramex', description: 'شركة رائدة في خدمات الشحن السريع والحلول اللوجستية في المنطقة' },
     { id: 'fedex', name: 'فيديكس - FedEx', key: 'fedex', description: 'خدمات شحن دولية موثوقة مع تتبع فوري للشحنات' },
     { id: 'ups', name: 'يو بي إس - UPS', key: 'ups', description: 'حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم' },
+    { id: 'jinaken', name: 'جيناكم - Jinaken', key: 'jinaken', description: 'شركة شحن عُمانية رائدة مع خدمات لوجستية شاملة' },
+    { id: 'skynet', name: 'سكاي نت - Skynet', key: 'skynet', description: 'خدمات شحن سريع وموثوقة في سلطنة عُمان' },
+    { id: 'omanexpress', name: 'عُمان إكسبريس - Oman Express', key: 'omanexpress', description: 'شركة شحن محلية مع تغطية شاملة لجميع أنحاء السلطنة' },
+    { id: 'alghazali', name: 'الغزالي للشحن - Al Ghazali Shipping', key: 'alghazali', description: 'خدمات شحن متخصصة في التجارة الإلكترونية' },
+    { id: 'fastlo', name: 'فاستلو - Fastlo', key: 'fastlo', description: 'خدمات شحن اقتصادي للشحنات المحلية والدولية' },
+    { id: 'myship', name: 'ماي شيب - MyShip', key: 'myship', description: 'منصة شحن حديثة مع حلول لوجستية متطورة' },
   ],
   BH: [
     { id: 'bahpost', name: 'البريد البحريني - Bahrain Post', key: 'bahpost', description: 'المشغل الوطني للبريد في مملكة البحرين' },
@@ -44,6 +65,10 @@ export const gccShippingServices = {
     { id: 'aramex', name: 'أرامكس - Aramex', key: 'aramex', description: 'شركة رائدة في خدمات الشحن السريع والحلول اللوجستية في المنطقة' },
     { id: 'fedex', name: 'فيديكس - FedEx', key: 'fedex', description: 'خدمات شحن دولية موثوقة مع تتبع فوري للشحنات' },
     { id: 'ups', name: 'يو بي إس - UPS', key: 'ups', description: 'حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم' },
+    { id: 'skynet', name: 'سكاي نت - Skynet', key: 'skynet', description: 'خدمات شحن سريع وموثوقة في مملكة البحرين' },
+    { id: 'bhexpress', name: 'البحرين إكسبريس - Bahrain Express', key: 'bhexpress', description: 'شركة شحن محلية مع خدمات سريعة وموثوقة' },
+    { id: 'fastlo', name: 'فاستلو - Fastlo', key: 'fastlo', description: 'خدمات شحن اقتصادي للشحنات المحلية والدولية' },
+    { id: 'myship', name: 'ماي شيب - MyShip', key: 'myship', description: 'منصة شحن حديثة مع حلول لوجستية متطورة' },
   ],
 };
 
