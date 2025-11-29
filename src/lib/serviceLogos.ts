@@ -269,7 +269,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       primary: "#E82424",
       secondary: "#F7C24A"
     },
-    ogImage: "/og-jinaken.jpg",
+    ogImage: "/og-genacom.jpg",
     heroImage: "/hero-jinaken.jpg",
     description: "شركة توصيل عُمانية محلية تقدم خدمات التوصيل والشحن داخل سلطنة عُمان مع شبكة فروع واسعة وخدمة تتبع"
   },

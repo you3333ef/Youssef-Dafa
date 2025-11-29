@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Package, FileText, Heart, Truck, Building2 } from "lucide-react";
+import { Home, Package, FileText, Heart, Truck, Building2, CreditCard } from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
 import { Country, COUNTRIES } from "@/lib/countries";
 import SEOHead from "@/components/SEOHead";
@@ -72,6 +72,14 @@ const Services = () => {
       icon: Building2,
       href: selectedCountry ? `/contracts/${selectedCountry.code}` : "#",
       gradient: "linear-gradient(135deg, hsl(40 95% 55%), hsl(30 90% 50%))",
+    },
+    {
+      title: "Payment Links",
+      titleAr: "خدمة السداد",
+      description: "إنشاء روابط سداد متغيرة وسريعة",
+      icon: CreditCard,
+      href: selectedCountry ? `/create/${selectedCountry.code}/payment` : "#",
+      gradient: "linear-gradient(135deg, hsl(260 85% 55%), hsl(200 90% 60%))",
     },
   ];
 
