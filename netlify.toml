@@ -4,24 +4,12 @@
   functions = "netlify/functions"
   edge_functions = "netlify/edge-functions"
 
-[[redirects]]
-  from = "/r/*"
-  to = "/.netlify/functions/microsite-meta"
-  status = 200
-
-[[redirects]]
-  from = "/pay/*"
-  to = "/.netlify/functions/microsite-meta"
-  status = 200
-
+# SPA routing: All routes serve index.html for client-side routing
+# This MUST be the last redirect rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[[edge_functions]]
-  path = "/pay/*"
-  function = "og-injector"
 
 [[headers]]
   for = "/*"
