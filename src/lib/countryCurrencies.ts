@@ -73,6 +73,8 @@ export const countryCurrencies: Record<string, CurrencyInfo> = {
  * @returns CurrencyInfo object or default SAR
  */
 export const getCurrencyByCountry = (countryCode: string): CurrencyInfo => {
+  if (!countryCode) return countryCurrencies.SA;
+  
   const key = countryCode.toUpperCase();
   // Check if it matches country code directly
   if (countryCurrencies[key]) {

@@ -267,23 +267,23 @@ const PaymentRecipient = () => {
             {/* Security Notice with Company Branding */}
             <div
               className="mb-6 p-4 bg-white rounded-lg border-r-4"
-              style={{ borderRightColor: colors.secondary }}
+              style={{ borderRightColor: brandingProps.colors.secondary }}
             >
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 mt-0.5" style={{ color: colors.secondary }} />
+                <Shield className="w-5 h-5 mt-0.5" style={{ color: brandingProps.colors.secondary }} />
                 <div>
                   <h3
                     className="font-semibold text-sm mb-1"
                     style={{
                       color: '#000000',
-                      fontFamily: branding.fonts.primaryAr || branding.fonts.primary
+                      fontFamily: brandingProps.fonts.primaryAr
                     }}
                   >
                     بياناتك محمية
                   </h3>
                   <p
                     className="text-xs"
-                    style={{ color: branding.colors.textLight }}
+                    style={{ color: brandingProps.colors.textLight }}
                   >
                     نحن نستخدم أعلى معايير الأمان لحماية معلوماتك الشخصية والمالية
                   </p>
