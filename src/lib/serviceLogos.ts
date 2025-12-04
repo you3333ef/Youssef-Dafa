@@ -1,5 +1,27 @@
 // Service logos and branding - All GCC shipping carriers
-export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
+export const serviceLogos: Record<string, { 
+  logo: string; 
+  colors: { 
+    primary: string; 
+    secondary: string;
+    accent?: string;
+    background?: string;
+    surface?: string;
+    border?: string;
+    text?: string;
+    textLight?: string;
+    textOnPrimary?: string;
+  }; 
+  ogImage?: string; 
+  heroImage?: string; 
+  description?: string;
+  fonts?: { primary: string; primaryAr: string };
+  gradients?: { primary: string };
+  shadows?: { sm: string; md: string; lg: string };
+  borderRadius?: { md: string; lg: string };
+  name?: string;
+  nameAr?: string;
+}> = {
   // UAE - الإمارات
   aramex: {
     logo: "https://logo.clearbit.com/aramex.com",
@@ -286,7 +308,29 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
 };
 
 export const getServiceBranding = (serviceName: string) => {
-  const key = serviceName.toLowerCase();
+  if (!serviceName) return serviceLogos['aramex']; // Default fallback if empty
+  
+  let key = serviceName.toLowerCase();
+  
+  // Handle country-specific suffixes (e.g., smsa_sa -> smsa, aramex_ae -> aramex)
+  // Strips _sa, _ae, _kw, _qa, _om, _bh if present at the end
+  key = key.replace(/_[a-z]{2}$/, '');
+
+  // Specific mappings for renamed services
+  if (key === 'spl') key = 'saudipost';
+  if (key === 'emirates_post') key = 'empost';
+  if (key === 'qatar_post') key = 'qpost';
+  if (key === 'oman_post') key = 'omanpost';
+  if (key === 'bahrain_post') key = 'bahpost';
+  if (key === 'posta_plus') key = 'kwpost'; // Posta Plus approximation or add dedicated entry if needed
+  if (key === 'falcon') key = 'aramex'; // Fallback for Falcon
+  if (key === 'asyad') key = 'omanpost'; // Asyad is Oman Post parent
+  if (key === 'ubex') key = 'aramex'; // Fallback
+  if (key === 'esnad') key = 'smsa'; // Fallback
+  if (key === 'aymakan') key = 'spl'; // Fallback
+  if (key === 'moshat') key = 'kwpost'; // Fallback
+  if (key === 'imile') key = 'aramex'; // Fallback
+
   return serviceLogos[key] || {
     logo: "",
     colors: {
