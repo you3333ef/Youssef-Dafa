@@ -4,10 +4,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
 import { useCreateLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
-import { getServicesByCountry } from "@/lib/gccShippingServices";
+import { SHIPPING_OPTIONS } from "@/lib/shippingOptions";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getBanksByCountry } from "@/lib/banks";
 import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countryCurrencies";
@@ -34,8 +34,16 @@ const CreateShippingLink = () => {
   const { toast } = useToast();
   const createLink = useCreateLink();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
-  const services = getServicesByCountry(country?.toUpperCase() || "");
   
+  // Filter shipping options based on the current country
+  const relevantShippingGroups = useMemo(() => {
+    const currentCountryCode = country?.toUpperCase();
+    if (!currentCountryCode) return SHIPPING_OPTIONS;
+    return SHIPPING_OPTIONS.filter(group => 
+      group.options.some(option => option.country === currentCountryCode)
+    );
+  }, [country]);
+
   const [selectedService, setSelectedService] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [payerType, setPayerType] = useState("recipient"); // "recipient" or "sender"
@@ -52,15 +60,49 @@ const CreateShippingLink = () => {
   const banks = useMemo(() => getBanksByCountry(country?.toUpperCase() || ""), [country]);
   
   // Get selected service details and branding
-  const selectedServiceData = useMemo(() => 
-    services.find(s => s.key === selectedService),
-    [services, selectedService]
-  );
+  const selectedServiceData = useMemo(() => {
+    if (!selectedService) return undefined;
+    
+    // Find the option in the new structure
+    for (const group of SHIPPING_OPTIONS) {
+      const option = group.options.find(o => o.value === selectedService);
+      if (option) {
+        return {
+          id: option.value,
+          key: option.value,
+          name: option.label,
+          // We don't have description in SHIPPING_OPTIONS, so we might miss it here
+          // We can fetch it from the old service data or branding if needed
+        };
+      }
+    }
+    return undefined;
+  }, [selectedService]);
   
-  const serviceBranding = useMemo(() =>
-    selectedService ? getServiceBranding(selectedService) : null,
-    [selectedService]
-  );
+  const serviceBranding = useMemo(() => {
+    if (!selectedService) return null;
+    // Strip country suffix for branding lookup (e.g., "smsa_sa" -> "smsa")
+    // Special handling: if the key doesn't match, try splitting by underscore
+    // But some keys like "posta_plus" might have underscores. 
+    // Current known keys in serviceLogos: smsa, aramex, dhl, etc.
+    // New keys: smsa_sa, aramex_sa. 
+    // Heuristic: remove last underscore part if it is a country code.
+    
+    const baseKey = selectedService.replace(/_[a-zA-Z]{2}$/, '');
+    // Manual mapping for known mismatches if needed, but let's try the base key first
+    let branding = getServiceBranding(baseKey);
+    
+    // Fallback: try looking up specifically mapped keys if baseKey doesn't work well
+    // e.g. spl_sa -> saudipost
+    if (selectedService === 'spl_sa') branding = getServiceBranding('saudipost');
+    if (selectedService === 'emirates_post_ae') branding = getServiceBranding('empost');
+    if (selectedService === 'qatar_post_qa') branding = getServiceBranding('qpost');
+    if (selectedService === 'oman_post_om') branding = getServiceBranding('omanpost');
+    if (selectedService === 'bahrain_post_bh') branding = getServiceBranding('bahpost');
+    if (selectedService === 'dhl_kw') branding = getServiceBranding('dhlkw'); // check dhlkw key in logos
+    
+    return branding;
+  }, [selectedService]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,10 +238,21 @@ const CreateShippingLink = () => {
                     <SelectValue placeholder="اختر خدمة الشحن" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
-                    {services.map((service) => (
-                      <SelectItem key={service.id} value={service.key}>
-                        {service.name}
-                      </SelectItem>
+                    {relevantShippingGroups.map((group, index) => (
+                      <SelectGroup key={index}>
+                        <SelectLabel className="flex items-center gap-2 px-2 py-1.5 text-muted-foreground bg-muted/50">
+                           {/* Use country flag based on the group's first option's country */}
+                           <span className="text-lg">
+                             {getCountryByCode(group.options[0].country)?.flag}
+                           </span>
+                           <span>{group.label}</span>
+                        </SelectLabel>
+                        {group.options.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>
