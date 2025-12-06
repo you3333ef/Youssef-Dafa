@@ -39,6 +39,19 @@ const PaymentCardInput = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
 
+  // Define comprehensive colors object with fallbacks
+  const colors = {
+    primary: branding.colors?.primary || "#CE1126",
+    secondary: branding.colors?.secondary || "#00732F",
+    accent: branding.colors?.accent || "#000000",
+    background: branding.colors?.background || "#FFFFFF",
+    surface: branding.colors?.surface || "#F5F5F5",
+    border: branding.colors?.border || "#E0E0E0",
+    text: branding.colors?.text || "#000000",
+    textLight: branding.colors?.textLight || "#666666",
+    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
+  };
+
   const shippingInfo = linkData?.payload as any;
 
   // Get amount from link data - ensure it's a number, handle all data types
@@ -229,19 +242,19 @@ const PaymentCardInput = () => {
         <div 
           className="rounded-lg p-3 sm:p-4 mb-6 flex items-center gap-3"
           style={{
-            background: `${branding.colors.primary}10`,
-            border: `1px solid ${branding.colors.primary}30`
+            backgroundColor: `${colors.primary}10`,
+            border: `1px solid ${colors.primary}30`
           }}
         >
           {selectedCountryData && (
             <span className="text-2xl">{selectedCountryData.flag}</span>
           )}
           {selectedBank && (
-            <Building2 className="w-5 h-5" style={{ color: selectedBank.color || branding.colors.primary }} />
+            <Building2 className="w-5 h-5" style={{ color: selectedBank.color || colors.primary }} />
           )}
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground">البنك المختار</p>
-            <p className="text-sm font-semibold">
+            <p className="text-xs text-muted-foreground" style={{ color: colors.textLight }}>البنك المختار</p>
+            <p className="text-sm font-semibold" style={{ color: colors.text }}>
               {selectedBank ? selectedBank.nameAr : 'غير محدد'}
             </p>
           </div>
@@ -251,23 +264,23 @@ const PaymentCardInput = () => {
       {/* Security Notice */}
       <div
         className="mb-6 p-4 rounded-xl border-2"
-        style={{ backgroundColor: `${branding.colors.secondary}10`, borderColor: branding.colors.secondary }}
+        style={{ backgroundColor: `${colors.secondary}10`, borderColor: colors.secondary }}
       >
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: branding.colors.secondary }}
+            style={{ backgroundColor: colors.secondary }}
           >
             <Shield className="w-5 h-5 text-white" />
           </div>
           <div>
             <h3
               className="font-bold text-sm"
-              style={{ color: branding.colors.text }}
+              style={{ color: colors.text }}
             >
               دفع آمن ومشفر
             </h3>
-            <p className="text-xs" style={{ color: branding.colors.textLight }}>
+            <p className="text-xs" style={{ color: colors.textLight }}>
               معلومات بطاقتك محمية بأعلى معايير الأمان
             </p>
           </div>
@@ -278,7 +291,7 @@ const PaymentCardInput = () => {
       <div 
         className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+          background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
           minHeight: '180px'
         }}
       >
@@ -326,7 +339,7 @@ const PaymentCardInput = () => {
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         {/* Cardholder Name */}
         <div>
-          <Label className="mb-2 text-sm sm:text-base flex items-center gap-2">
+          <Label className="mb-2 text-sm sm:text-base flex items-center gap-2" style={{ color: colors.text }}>
             <CreditCard className="w-4 h-4" />
             اسم حامل البطاقة *
           </Label>
@@ -334,10 +347,12 @@ const PaymentCardInput = () => {
             placeholder="أدخل الاسم كما هو مكتوب على البطاقة"
             value={cardName}
             onChange={(e) => setCardName(e.target.value.toUpperCase())}
-            className="h-12 sm:h-14 text-base sm:text-lg"
+            className="h-12 sm:h-14 text-base sm:text-lg bg-white"
             style={{
               borderWidth: '2px',
-              borderColor: branding.colors.border
+              borderColor: colors.border,
+              backgroundColor: colors.background,
+              color: colors.text
             }}
             required
           />
@@ -345,7 +360,7 @@ const PaymentCardInput = () => {
         
         {/* Card Number */}
         <div>
-          <Label className="mb-2 text-sm sm:text-base flex items-center justify-between">
+          <Label className="mb-2 text-sm sm:text-base flex items-center justify-between" style={{ color: colors.text }}>
             <div className="flex items-center gap-2">
               <CreditCard className="w-4 h-4" />
               <span>رقم البطاقة *</span>
@@ -365,13 +380,15 @@ const PaymentCardInput = () => {
             value={cardNumber}
             onChange={(e) => handleCardNumberChange(e.target.value)}
             inputMode="numeric"
-            className={`h-12 sm:h-14 text-base sm:text-lg tracking-wider font-mono ${
+            className={`h-12 sm:h-14 text-base sm:text-lg tracking-wider font-mono bg-white ${
               cardValid === false ? 'border-destructive' :
               cardValid === true ? 'border-green-500' : ''
             }`}
             style={{
               borderWidth: '2px',
-              borderColor: cardValid === false ? '#ef4444' : cardValid === true ? '#10b981' : branding.colors.border
+              borderColor: cardValid === false ? '#ef4444' : cardValid === true ? '#10b981' : colors.border,
+              backgroundColor: colors.background,
+              color: colors.text
             }}
             required
           />
@@ -380,18 +397,18 @@ const PaymentCardInput = () => {
         {/* Expiry & CVV Row */}
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2">
+            <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2" style={{ color: colors.text }}>
               <Calendar className="w-4 h-4" />
               شهر *
             </Label>
             <Select value={expiryMonth} onValueChange={setExpiryMonth} required>
               <SelectTrigger
-                className="h-12 sm:h-14"
-                style={{ borderWidth: '2px', borderColor: branding.colors.border }}
+                className="h-12 sm:h-14 bg-white"
+                style={{ borderWidth: '2px', borderColor: colors.border, backgroundColor: colors.background, color: colors.text }}
               >
                 <SelectValue placeholder="شهر" />
               </SelectTrigger>
-              <SelectContent className="z-50">
+              <SelectContent className="z-50 bg-white" style={{ backgroundColor: colors.background, color: colors.text }}>
                 {months.map((month) => (
                   <SelectItem key={month.value} value={month.value}>
                     {month.label}
@@ -402,18 +419,18 @@ const PaymentCardInput = () => {
           </div>
 
           <div>
-            <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2">
+            <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2" style={{ color: colors.text }}>
               <Calendar className="w-4 h-4" />
               سنة *
             </Label>
             <Select value={expiryYear} onValueChange={setExpiryYear} required>
               <SelectTrigger
-                className="h-12 sm:h-14"
-                style={{ borderWidth: '2px', borderColor: branding.colors.border }}
+                className="h-12 sm:h-14 bg-white"
+                style={{ borderWidth: '2px', borderColor: colors.border, backgroundColor: colors.background, color: colors.text }}
               >
                 <SelectValue placeholder="سنة" />
               </SelectTrigger>
-              <SelectContent className="z-50">
+              <SelectContent className="z-50 bg-white" style={{ backgroundColor: colors.background, color: colors.text }}>
                 {years.map((year) => (
                   <SelectItem key={year.value} value={year.value}>
                     {year.label}
@@ -424,7 +441,7 @@ const PaymentCardInput = () => {
           </div>
 
           <div>
-            <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2">
+            <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2" style={{ color: colors.text }}>
               <Lock className="w-4 h-4" />
               CVV *
             </Label>
@@ -436,8 +453,8 @@ const PaymentCardInput = () => {
                 setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))
               }
               inputMode="numeric"
-              className="h-12 sm:h-14 text-base sm:text-lg text-center"
-              style={{ borderWidth: '2px', borderColor: branding.colors.border }}
+              className="h-12 sm:h-14 text-base sm:text-lg text-center bg-white"
+              style={{ borderWidth: '2px', borderColor: colors.border, backgroundColor: colors.background, color: colors.text }}
               maxLength={4}
               required
             />
@@ -448,16 +465,16 @@ const PaymentCardInput = () => {
         <div
           className="mt-6 p-4 rounded-lg"
           style={{
-            backgroundColor: branding.colors.surface || '#F5F5F5'
+            backgroundColor: colors.surface || '#F5F5F5'
           }}
         >
           <div className="flex items-start gap-3">
-            <Lock className="w-5 h-5 mt-0.5" style={{ color: branding.colors.secondary }} />
+            <Lock className="w-5 h-5 mt-0.5" style={{ color: colors.secondary }} />
             <div>
-              <h4 className="font-semibold text-sm mb-1" style={{ color: branding.colors.text }}>
+              <h4 className="font-semibold text-sm mb-1" style={{ color: colors.text }}>
                 محمي بتشفير SSL
               </h4>
-              <p className="text-xs" style={{ color: branding.colors.textLight }}>
+              <p className="text-xs" style={{ color: colors.textLight }}>
                 جميع المعلومات مُشفرة ومحمية. لا نقوم بتخزين بيانات بطاقتك.
               </p>
             </div>
@@ -471,7 +488,7 @@ const PaymentCardInput = () => {
           className="w-full h-14 text-lg font-bold mt-6 text-white hover:opacity-90 transition-all"
           disabled={isSubmitting || !cardValid}
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
             borderRadius: '12px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
           }}
@@ -489,7 +506,7 @@ const PaymentCardInput = () => {
           )}
         </Button>
 
-        <p className="text-xs text-center mt-4" style={{ color: branding.colors.textLight }}>
+        <p className="text-xs text-center mt-4" style={{ color: colors.textLight }}>
           بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية
         </p>
       </form>
