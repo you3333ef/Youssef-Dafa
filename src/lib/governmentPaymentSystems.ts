@@ -47,17 +47,17 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     countryCode: 'SA',
     nameAr: 'سداد',
     nameEn: 'SADAD',
-    description: 'نظام الدفع الوطني للمدفوعات الحكومية والخدمات',
+    description: 'نظام المدفوعات الوطني للخدمات الحكومية والفواتير',
     colors: {
-      primary: '#006C35', // Saudi Green
-      secondary: '#165C2D',
-      accent: '#FFD700',
+      primary: '#F58220', // SADAD Orange (official color from website)
+      secondary: '#E67317',
+      accent: '#FFFFFF',
       background: '#FFFFFF',
-      surface: '#F8F9FA',
+      surface: '#FFF8F2',
       text: '#1A1A1A',
       textLight: '#666666',
       textOnPrimary: '#FFFFFF',
-      border: '#E0E0E0',
+      border: '#FFE5D0',
     },
     fonts: {
       primaryAr: 'Cairo',
@@ -66,14 +66,14 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     },
     website: 'https://www.sadad.com/',
     gradients: {
-      primary: 'linear-gradient(135deg, #006C35, #165C2D)',
-      secondary: 'linear-gradient(135deg, #165C2D, #006C35)',
-      header: 'linear-gradient(180deg, #006C35 0%, #165C2D 100%)',
+      primary: 'linear-gradient(135deg, #F58220, #E67317)',
+      secondary: 'linear-gradient(135deg, #E67317, #F58220)',
+      header: 'linear-gradient(180deg, #F58220 0%, #E67317 100%)',
     },
     shadows: {
-      sm: '0 1px 2px 0 rgba(0, 108, 53, 0.05)',
-      md: '0 4px 6px -1px rgba(0, 108, 53, 0.1)',
-      lg: '0 10px 15px -3px rgba(0, 108, 53, 0.15)',
+      sm: '0 1px 2px 0 rgba(245, 130, 32, 0.08)',
+      md: '0 4px 6px -1px rgba(245, 130, 32, 0.12)',
+      lg: '0 10px 15px -3px rgba(245, 130, 32, 0.18)',
     },
     borderRadius: {
       sm: '6px',

