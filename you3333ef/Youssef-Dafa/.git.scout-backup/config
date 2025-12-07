@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/you3333ef/Youssef-Dafa.git
+	tagOpt = --no-tags
+	fetch = +refs/heads/capy/cap-1-0d8fafbc:refs/remotes/origin/capy/cap-1-0d8fafbc
+[branch "capy/cap-1-0d8fafbc"]
+	remote = origin
+	merge = refs/heads/capy/cap-1-0d8fafbc

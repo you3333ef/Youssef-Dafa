@@ -5,3 +5,6 @@
 [user]
 	email = scout@scout.new
 	name = Scout
+[remote "pierre"]
+	url = https://t:eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjYXB5Iiwic3ViIjoiQHBpZXJyZS9zdG9yYWdlIiwicmVwbyI6ImphbS0yMTk0NjAxNy00YmUwLTRmMmMtOGIxOS04ZGQ2ZGI2M2ExYjciLCJzY29wZXMiOlsiZ2l0OnJlYWQiLCJnaXQ6d3JpdGUiXSwiaWF0IjoxNzY1MTM2NTg2LCJleHAiOjE3OTY2NzI1ODZ9.su7E9xtSe4mINsQKJeaiZ6q1SIjKTXwSj6qgoKu03fHSTXHeTqB0fpD2DZN8muDzmbz2o8q3n7Rn_pG7riedEw@capy.code.storage/jam-21946017-4be0-4f2c-8b19-8dd6db63a1b7.git
+	fetch = +refs/heads/*:refs/remotes/pierre/*
