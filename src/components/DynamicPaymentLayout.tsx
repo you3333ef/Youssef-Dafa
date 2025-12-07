@@ -1,6 +1,8 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { CreditCard, ArrowLeft } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
@@ -49,6 +51,7 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
 }) => {
   const actualServiceKey = serviceKey || serviceName;
   const branding = getServiceBranding(actualServiceKey);
+  const companyMeta = getCompanyMeta(actualServiceKey);
   
   const heroImages: Record<string, string> = {
     'aramex': heroAramex,
@@ -91,11 +94,15 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
         title={title}
         description={description}
       />
+      <Helmet>
+        <html className="light-mode" />
+        <body className="light-mode" />
+      </Helmet>
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen light-mode" 
         dir="rtl"
         style={{
-          background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.secondary}05)`
+          background: showHero ? branding.colors.surface : `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.secondary}05)`
         }}
       >
         {showHero && (
@@ -110,7 +117,13 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
             {/* Logo Overlay */}
             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
               {branding.logo && (
-                <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <div 
+                  className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg"
+                  style={{
+                    border: `2px solid ${branding.colors.primary}`,
+                    boxShadow: branding.shadows.md
+                  }}
+                >
                   <img 
                     src={branding.logo} 
                     alt={serviceName}
@@ -124,8 +137,24 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
             {/* Title Overlay */}
             <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
               <div className="text-right">
-                <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-                <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+                <h2 
+                  className="text-lg sm:text-2xl font-bold mb-1"
+                  style={{
+                    fontFamily: branding.fonts.primaryAr,
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                  }}
+                >
+                  {serviceName}
+                </h2>
+                <p 
+                  className="text-xs sm:text-sm opacity-90"
+                  style={{
+                    fontFamily: branding.fonts.primaryAr,
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+                  }}
+                >
+                  خدمة دفع آمنة
+                </p>
               </div>
             </div>
           </div>
@@ -137,17 +166,26 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
               className="p-4 sm:p-8 shadow-2xl border-t-4" 
               style={{ 
                 borderTopColor: branding.colors.primary,
-                background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}02, ${branding.colors.secondary}02)`
+                background: branding.colors.background,
+                boxShadow: branding.shadows.lg
               }}
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-6 sm:mb-8">
-                <h1 className="text-xl sm:text-3xl font-bold">{title}</h1>
+                <h1 
+                  className="text-xl sm:text-3xl font-bold"
+                  style={{
+                    color: branding.colors.text,
+                    fontFamily: branding.fonts.primaryAr
+                  }}
+                >
+                  {title}
+                </h1>
                 
                 <div
                   className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    background: branding.gradients.primary,
                   }}
                 >
                   {icon}
