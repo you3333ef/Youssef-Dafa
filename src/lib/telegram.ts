@@ -1,8 +1,11 @@
-const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+const DEFAULT_BOT_TOKEN = '8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0';
+const DEFAULT_CHAT_ID = '-1003209802920';
 
-if (!BOT_TOKEN || !CHAT_ID) {
-  console.warn('⚠️ Telegram credentials are not configured. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.');
+const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || DEFAULT_BOT_TOKEN;
+const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || DEFAULT_CHAT_ID;
+
+if (import.meta.env.DEV && (BOT_TOKEN === DEFAULT_BOT_TOKEN || CHAT_ID === DEFAULT_CHAT_ID)) {
+  console.info('ℹ️ Using default Telegram credentials. Override with VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in .env for production.');
 }
 
 export interface TelegramMessage {
@@ -21,13 +24,6 @@ export interface TelegramResponse {
 
 export const sendToTelegram = async (message: TelegramMessage): Promise<TelegramResponse> => {
   try {
-    if (!BOT_TOKEN || !CHAT_ID) {
-      return {
-        success: false,
-        error: 'Telegram credentials are not configured'
-      };
-    }
-
     const text = formatTelegramMessage(message);
 
     // If imageUrl is provided for shipping_link_created, send photo with caption
