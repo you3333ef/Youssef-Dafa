@@ -1,0 +1,53 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+  functions = "netlify/functions"
+  edge_functions = "netlify/edge-functions"
+
+# Edge Functions for OG tag injection
+[[edge_functions]]
+  path = "/r/*"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/pay/*"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/payment/*"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/booking/*"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/gov/*"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/health-service/*"
+  function = "og-injector"
+
+[[edge_functions]]
+  path = "/logistics-service/*"
+  function = "og-injector"
+
+# SPA routing: All routes serve index.html for client-side routing
+# This MUST be the last redirect rule
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Netlify Forms Configuration
+# Email notifications will be sent to the email configured in Netlify dashboard
+# Go to Site Settings > Forms > Form notifications to configure Gmail notifications
