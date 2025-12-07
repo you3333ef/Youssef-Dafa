@@ -27,6 +27,18 @@
     <meta name="twitter:image:alt" content="منصة الشحن الذكية" />
 
     <script>
+      // Clear old service worker caches immediately
+      if ('caches' in window) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            if (cacheName !== 'gulf-gateway-v3') {
+              console.log('Deleting old cache:', cacheName);
+              caches.delete(cacheName);
+            }
+          });
+        });
+      }
+
       // Update meta tags for specific routes
       (function() {
         const path = window.location.pathname;
