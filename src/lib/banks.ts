@@ -4,6 +4,8 @@ export interface Bank {
   nameAr: string;
   logo?: string;
   color?: string;
+  secondaryColor?: string;
+  website?: string;
 }
 
 export interface BanksByCountry {
@@ -16,19 +18,28 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "alrajhi_bank",
       name: "Al Rajhi Bank",
       nameAr: "مصرف الراجحي",
+      logo: "https://www.alrajhibank.com.sa/ar/wps/themes/html/Alrajhi-portal-theme/images/alrajhi-logo-ar.svg",
       color: "#006C35",
+      secondaryColor: "#004D27",
+      website: "https://www.alrajhibank.com.sa"
     },
     {
       id: "alahli_bank",
       name: "Al Ahli Bank",
       nameAr: "البنك الأهلي التجاري",
+      logo: "https://www.alahli.com/en-us/PublishingImages/SNB-Logo.svg",
       color: "#00843D",
+      secondaryColor: "#006330",
+      website: "https://www.alahli.com"
     },
     {
       id: "riyad_bank",
       name: "Riyad Bank",
       nameAr: "بنك الرياض",
+      logo: "https://www.riyadbank.com/images/rb-logo.svg",
       color: "#0066B2",
+      secondaryColor: "#004A7C",
+      website: "https://www.riyadbank.com"
     },
     {
       id: "samba_bank",
@@ -78,7 +89,10 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "emirates_nbd",
       name: "Emirates NBD",
       nameAr: "بنك الإمارات دبي الوطني",
+      logo: "https://www.emiratesnbd.com/images/logo.svg",
       color: "#D50032",
+      secondaryColor: "#9B0026",
+      website: "https://www.emiratesnbd.com"
     },
     {
       id: "adcb",
@@ -90,7 +104,10 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "fab",
       name: "First Abu Dhabi Bank",
       nameAr: "بنك أبوظبي الأول",
+      logo: "https://www.bankfab.com/images/fab-logo.svg",
       color: "#000000",
+      secondaryColor: "#333333",
+      website: "https://www.bankfab.com"
     },
     {
       id: "dib",
@@ -128,7 +145,10 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "nbk",
       name: "National Bank of Kuwait",
       nameAr: "بنك الكويت الوطني",
+      logo: "https://www.nbk.com/images/nbk-logo.svg",
       color: "#005EB8",
+      secondaryColor: "#003F7F",
+      website: "https://www.nbk.com"
     },
     {
       id: "gulf_bank",
@@ -172,7 +192,10 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "qnb",
       name: "Qatar National Bank",
       nameAr: "بنك قطر الوطني",
+      logo: "https://www.qnb.com/images/qnb-logo.svg",
       color: "#6E1D3E",
+      secondaryColor: "#4A142A",
+      website: "https://www.qnb.com"
     },
     {
       id: "cbq",
@@ -210,7 +233,10 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "bank_muscat",
       name: "Bank Muscat",
       nameAr: "بنك مسقط",
+      logo: "https://www.bankmuscat.com/images/logo.svg",
       color: "#004B87",
+      secondaryColor: "#003666",
+      website: "https://www.bankmuscat.com"
     },
     {
       id: "national_bank_oman",
@@ -248,7 +274,10 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "nbb",
       name: "National Bank of Bahrain",
       nameAr: "بنك البحرين الوطني",
+      logo: "https://www.nbbonline.com/images/nbb-logo.svg",
       color: "#E31E24",
+      secondaryColor: "#B01419",
+      website: "https://www.nbbonline.com"
     },
     {
       id: "bbk",

