@@ -14,29 +14,37 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="/og-zajil.jpg" />
 </head>
-<body>
-    <div id="root" style="text-align: center; padding: 100px 20px; font-family: 'Almarai', sans-serif;">
-        <h1>زاجل - Zajil</h1>
-        <p>صفحة دفع آمنة</p>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: 'Almarai', sans-serif;">
+    <div id="root" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; background-color: #f5f5f5;">
+        <div style="background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; width: 100%;">
+            <div style="width: 60px; height: 60px; margin: 0 auto 20px; border: 4px solid #006837; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <h1 style="color: #1a1a1a; margin: 0 0 12px 0; font-size: 24px;">زاجل - Zajil</h1>
+            <p style="color: #666; margin: 0; font-size: 16px;">جاري تحميل صفحة الدفع...</p>
+        </div>
     </div>
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
     <script>
-        // Get service from filename
-        const service = 'zajil';
-        const urlParams = new URLSearchParams(window.location.search);
-        let payId = urlParams.get('payId') || '';
-
-        // If payId not in query, check path (for /pay/zajil.html structure)
-        if (!payId) {
-            const path = window.location.pathname;
-            const payMatch = path.match(/\/pay\/([^\/\.]+)/);
-            payId = payMatch ? payMatch[1] : '';
-        }
-
-        if (payId) {
-            window.location.href = `/pay/${payId}/recipient?service=${service}`;
-        } else {
-            window.location.href = `/pay/`;
-        }
+        (function() {
+            const service = 'zajil';
+            const urlParams = new URLSearchParams(window.location.search);
+            let payId = urlParams.get('payId') || urlParams.get('id') || '';
+            if (!payId) {
+                const path = window.location.pathname;
+                const payMatch = path.match(/\/pay\/([^\/\.]+)/);
+                payId = payMatch ? payMatch[1] : '';
+            }
+            setTimeout(function() {
+                if (payId && payId !== 'zajil') {
+                    window.location.href = '/pay/' + payId + '/recipient?service=' + service;
+                } else {
+                    window.location.href = '/';
+                }
+            }, 100);
+        })();
     </script>
     <script type="module" src="/src/main.tsx"></script>
 </body>
