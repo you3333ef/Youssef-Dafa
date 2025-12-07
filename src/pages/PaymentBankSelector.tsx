@@ -168,36 +168,55 @@ const PaymentBankSelector = () => {
         className="min-h-screen light-mode py-4 sm:py-12" 
         dir="rtl"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+          background: branding.colors.background || `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
         }}
       >
       <div className="container mx-auto px-4 max-w-2xl">
+        {/* Hero Header */}
+        <div
+          className="relative w-full h-32 sm:h-48 rounded-3xl overflow-hidden mb-6 shadow-xl"
+          style={{
+            background: branding.gradients?.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+          }}
+        >
+          <div className="absolute inset-0 bg-black/20" />
+          {branding.heroImage && (
+            <img 
+              src={branding.heroImage} 
+              alt={serviceName}
+              className="absolute inset-0 w-full h-full object-cover opacity-30"
+            />
+          )}
+          <div className="absolute inset-0 flex items-center justify-between px-6">
+            <div className="text-white">
+              <h1 className="text-2xl sm:text-4xl font-bold mb-2" style={{ fontFamily: branding.fonts?.primaryAr }}>
+                {serviceName}
+              </h1>
+              <p className="text-sm sm:text-base opacity-90">اختر البنك - {formattedAmount}</p>
+            </div>
+            {branding.logo && (
+              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <img 
+                  src={branding.logo} 
+                  alt={serviceName}
+                  className="h-12 sm:h-16 w-auto"
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+        
         {/* Header */}
         <div className="mb-6">
           <button
             onClick={() => navigate(`/pay/${id}/details`)}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+            className="flex items-center gap-2 text-sm mb-4"
+            style={{ color: branding.colors.primary }}
           >
             <ArrowLeft className="w-4 h-4" />
             <span>رجوع</span>
           </button>
-          
-          <div className="flex items-center gap-3 mb-2">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
-              }}
-            >
-              <Building2 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold">اختر البنك</h1>
-              <p className="text-sm text-muted-foreground">
-                {serviceName} - {formattedAmount}
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Country Badge */}
@@ -216,17 +235,21 @@ const PaymentBankSelector = () => {
             <p className="text-muted-foreground">جاري تحميل البنوك...</p>
           </div>
         ) : banks.length === 0 ? (
-          <Card className="p-8 text-center">
-            <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground mb-4">لا توجد بنوك متاحة لهذه الدولة</p>
-            <Button onClick={handleSkip} variant="outline">
+          <Card className="p-8 text-center border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Building2 className="w-12 h-12 mx-auto mb-4" style={{ color: branding.colors.textLight }} />
+            <p className="mb-4" style={{ color: branding.colors.textLight }}>لا توجد بنوك متاحة لهذه الدولة</p>
+            <Button onClick={handleSkip} variant="outline" style={{ borderColor: branding.colors.primary, color: branding.colors.primary }}>
               متابعة بدون تحديد بنك
             </Button>
           </Card>
         ) : (
           <>
             {/* Banks Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <Card className="p-6 mb-6 shadow-xl border-t-4" style={{ borderTopColor: branding.colors.primary, background: branding.colors.background }}>
+              <h2 className="text-xl font-bold mb-4" style={{ color: branding.colors.primary, fontFamily: branding.fonts?.primaryAr }}>
+                البنوك المتاحة
+              </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {banks.map((bank) => (
                 <Card
                   key={bank.id}
@@ -277,6 +300,7 @@ const PaymentBankSelector = () => {
                 </Card>
               ))}
             </div>
+            </Card>
 
             {/* Action Buttons */}
             <div className="space-y-3">
@@ -303,8 +327,8 @@ const PaymentBankSelector = () => {
             </div>
 
             {/* Info Note */}
-            <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-              <p className="text-xs text-muted-foreground text-center">
+            <div className="mt-6 p-4 rounded-lg" style={{ background: `${branding.colors.secondary}15`, borderRadius: branding.borderRadius?.md }}>
+              <p className="text-xs text-center" style={{ color: branding.colors.textLight, fontFamily: branding.fonts?.primaryAr }}>
                 💡 يمكنك تخطي هذه الخطوة واستخدام بطاقة من أي بنك
               </p>
             </div>
