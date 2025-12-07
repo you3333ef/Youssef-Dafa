@@ -83,7 +83,7 @@ const App = () => (
           <Route path="/pay/:id/receipt" element={<PaymentReceiptPage />} />
           <Route path="/telegram-test" element={<TelegramTestPage />} />
           {/* Government payment route */}
-          <Route path="/pay/:country/government/:id" element={<GovernmentPayment />} />
+          <Route path="/pay/:id/government-data" element={<GovernmentPayment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

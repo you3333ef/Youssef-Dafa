@@ -573,7 +573,7 @@ const Microsite = () => {
                 className="w-full text-xl py-7 shadow-glow animate-pulse-glow"
                 onClick={() => {
                   if (isGovernment) {
-                    navigate(`/pay/${country}/government/${link.id}`);
+                    navigate(`/pay/${link.id}/government-data`);
                   } else {
                     const companyKey = payload.service_key || 'aramex';
                     const currency = getCurrency(countryData.code);

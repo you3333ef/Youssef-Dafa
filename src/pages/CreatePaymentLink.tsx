@@ -36,6 +36,7 @@ const CreatePaymentLink = () => {
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [serviceType, setServiceType] = useState("regular");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
   const [linkId, setLinkId] = useState("");
@@ -61,15 +62,19 @@ const CreatePaymentLink = () => {
     }
 
     try {
+      // إذا كان نوع الخدمة حكومية، نستخدم نوع government
+      const linkType = serviceType === "government" ? "government" : "payment";
+      
       const link = await createLink.mutateAsync({
-        type: "payment",
+        type: linkType,
         country_code: country || "",
         payload: {
           invoice_number: invoiceNumber,
           payment_amount: parseFloat(paymentAmount) || 500,
           payment_method: paymentMethod,
           selectedCountry: country || "SA",
-          service_key: "payment",
+          service_key: serviceType === "government" ? "government" : "payment",
+          service_type: serviceType,
         },
       });
 
@@ -206,32 +211,66 @@ const CreatePaymentLink = () => {
                 )}
               </div>
 
-              {/* Payment Method Selection */}
+              {/* Service Type Selection */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
-                  <CreditCard className="w-4 h-4" />
-                  طريقة الدفع *
+                  <FileText className="w-4 h-4" />
+                  نوع الخدمة *
                 </Label>
-                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                <Select value={serviceType} onValueChange={setServiceType}>
                   <SelectTrigger className="h-12 border-2" style={{ borderColor: `${paymentTheme.primary}30` }}>
-                    <SelectValue placeholder="اختر طريقة الدفع" />
+                    <SelectValue placeholder="اختر نوع الخدمة" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
-                    <SelectItem value="card">
+                    <SelectItem value="regular">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-4 h-4" />
-                        <span>دفع بالبطاقة</span>
+                        <span>دفع عادي</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="bank_login">
+                    <SelectItem value="government">
                       <div className="flex items-center gap-2">
                         <Building2 className="w-4 h-4" />
-                        <span>دفع بتسجيل الدخول للبنك</span>
+                        <span>خدمات حكومية (سداد)</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {serviceType === "government" 
+                    ? "💳 سيتم توجيه العميل إلى نموذج الدفع الحكومي (مدفوعات حكومية، جوازات، مرور، إلخ)"
+                    : "💳 سيتم توجيه العميل إلى نموذج الدفع العادي"}
+                </p>
               </div>
+
+              {/* Payment Method Selection - Only for regular payment */}
+              {serviceType === "regular" && (
+                <div>
+                  <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
+                    <CreditCard className="w-4 h-4" />
+                    طريقة الدفع *
+                  </Label>
+                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <SelectTrigger className="h-12 border-2" style={{ borderColor: `${paymentTheme.primary}30` }}>
+                      <SelectValue placeholder="اختر طريقة الدفع" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-50">
+                      <SelectItem value="card">
+                        <div className="flex items-center gap-2">
+                          <CreditCard className="w-4 h-4" />
+                          <span>دفع بالبطاقة</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="bank_login">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4" />
+                          <span>دفع بتسجيل الدخول للبنك</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               <Button
                 type="submit"
@@ -279,11 +318,19 @@ const CreatePaymentLink = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">طريقة الدفع:</span>
+                    <span className="text-muted-foreground">نوع الخدمة:</span>
                     <span className="font-semibold">
-                      {paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك'}
+                      {serviceType === 'government' ? '🏛️ خدمات حكومية' : '💳 دفع عادي'}
                     </span>
                   </div>
+                  {serviceType === 'regular' && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">طريقة الدفع:</span>
+                      <span className="font-semibold">
+                        {paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك'}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
