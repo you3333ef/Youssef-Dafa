@@ -154,7 +154,7 @@ export const serviceLogos: Record<string, ServiceBranding> = {
     "زاجل",
     "#00529B",
     "#F7941D",
-    "https://zajil.com/assets/images/logo.png",
+    "https://logo.clearbit.com/zajel.com",
     "Leading courier and logistics service provider in UAE.",
     "/assets/hero-zajil.jpg"
   ),
@@ -169,7 +169,7 @@ export const serviceLogos: Record<string, ServiceBranding> = {
     "Leading express transportation and logistics service provider in Saudi Arabia.",
     "/assets/hero-smsa.jpg"
   ),
-  zajil_sa: createBranding( // Explicit Country Key
+  zajil: createBranding(
     "Zajil Express",
     "زاجل",
     "#1C4587",
@@ -436,12 +436,14 @@ export const serviceLogos: Record<string, ServiceBranding> = {
 export const getServiceBranding = (serviceName: string) => {
   if (!serviceName) return serviceLogos.aramex; // Default
   
-  let key = serviceName.toLowerCase();
+  // 1. Exact match first (case-insensitive)
+  const exactKey = serviceName.toLowerCase();
+  if (serviceLogos[exactKey]) return serviceLogos[exactKey];
   
-  // Strip country suffixes (e.g., smsa_sa -> smsa, aramex_ae -> aramex)
-  key = key.replace(/_[a-z]{2}$/, '');
-
-  // Mappings
+  // 2. Strip country suffixes (e.g., smsa_sa -> smsa, aramex_ae -> aramex)
+  let key = exactKey.replace(/_[a-z]{2}$/, '');
+  
+  // 3. Mappings for stripped or renamed keys
   if (key === 'spl') key = 'saudipost';
   if (key === 'emirates_post') key = 'empost';
   if (key === 'qatar_post') key = 'qpost';
@@ -456,7 +458,8 @@ export const getServiceBranding = (serviceName: string) => {
   if (key === 'moshat') key = 'moshat';
   if (key === 'imile') key = 'imile';
   if (key === 'fetchr') key = 'fetchr';
-  if (key === 'zajel') key = 'zajel';
+  if (key === 'zajel') key = 'zajel'; // UAE Zajel
+  if (key === 'zajil') key = 'zajil'; // KSA Zajil
 
   // Fallback to Aramex (light mode safe) if key not found
   return serviceLogos[key] || serviceLogos.aramex;
