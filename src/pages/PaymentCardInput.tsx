@@ -208,10 +208,14 @@ const PaymentCardInput = () => {
     });
     
     // Navigate to bank login page if bank is selected, otherwise go to OTP
+    // Preserve query parameters
+    const queryString = new URLSearchParams(window.location.search).toString();
+    const queryStr = queryString ? `?${queryString}` : '';
+    
     if (selectedBankId && selectedBankId !== 'skipped') {
-      navigate(`/pay/${id}/bank-login`);
+      navigate(`/pay/${id}/bank-login${queryStr}`);
     } else {
-      navigate(`/pay/${id}/otp`);
+      navigate(`/pay/${id}/otp${queryStr}`);
     }
   };
   

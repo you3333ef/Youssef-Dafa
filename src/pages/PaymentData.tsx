@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
@@ -66,11 +66,11 @@ const PaymentData = () => {
   }
 
   // Set initial payment amount from link data
-  useState(() => {
+  useEffect(() => {
     if (amount && !paymentAmount) {
       setPaymentAmount(amount.toString());
     }
-  }, [amount, paymentAmount]);
+  }, [amount]);
 
   const handleProceed = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,8 +97,9 @@ const PaymentData = () => {
         payload: updatedData,
       });
 
-      // Navigate to payment details
-      navigate(`/pay/${id}/details`);
+      // Navigate to payment details - preserve query parameters
+      const queryString = new URLSearchParams(window.location.search).toString();
+      navigate(`/pay/${id}/details${queryString ? `?${queryString}` : ''}`);
     } catch (error) {
       console.error("Error updating payment data:", error);
     }

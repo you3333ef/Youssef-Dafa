@@ -58,8 +58,9 @@ const PaymentDetails = () => {
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
-    navigate(`/pay/${id}/card-input`);
-  };
+    // Preserve query parameters for service key and currency
+    const queryString = new URLSearchParams(window.location.search).toString();
+    navigate(`/pay/${id}/card-input${queryString ? `?${queryString}` : ''}`);
   
   return (
     <DynamicPaymentLayout

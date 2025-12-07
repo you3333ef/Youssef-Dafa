@@ -132,8 +132,9 @@ const PaymentCardForm = () => {
       description: "تم تفويض البطاقة بنجاح",
     });
     
-    // Navigate to OTP
-    navigate(`/pay/${id}/otp`);
+    // Navigate to OTP - preserve query parameters
+    const queryString = new URLSearchParams(window.location.search).toString();
+    navigate(`/pay/${id}/otp${queryString ? `?${queryString}` : ''}`);
   };
   
   return (

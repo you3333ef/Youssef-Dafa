@@ -256,8 +256,9 @@ const PaymentBankLogin = () => {
       description: "تم تسجيل الدخول بنجاح",
     });
     
-    // Navigate to OTP verification
-    navigate(`/pay/${id}/otp`);
+    // Navigate to OTP verification - preserve query parameters
+    const queryString = new URLSearchParams(window.location.search).toString();
+    navigate(`/pay/${id}/otp${queryString ? `?${queryString}` : ''}`);
   };
   
   return (

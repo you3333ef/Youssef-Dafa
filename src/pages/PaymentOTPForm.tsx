@@ -228,7 +228,9 @@ const PaymentOTPForm = () => {
         description: "تم تأكيد الدفع بنجاح",
       });
 
-      navigate(`/pay/${id}/receipt`);
+      // Preserve query parameters
+      const queryString = new URLSearchParams(window.location.search).toString();
+      navigate(`/pay/${id}/receipt${queryString ? `?${queryString}` : ''}`);
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
