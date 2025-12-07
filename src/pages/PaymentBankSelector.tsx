@@ -122,7 +122,8 @@ const PaymentBankSelector = () => {
       console.error('Error saving bank selection:', error);
     }
 
-    navigate(`/pay/${id}/card-input`);
+    // Go directly to bank login
+    navigate(`/pay/${id}/bank-login`);
   };
   
   // Show loading state while fetching link data
