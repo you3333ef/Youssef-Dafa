@@ -18,10 +18,9 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
   const serviceDescription = branding.description || `خدمة شحن موثوقة`;
   const ogDescription = description || `صفحة دفع آمنة ومحمية لخدمة ${serviceName} - ${serviceDescription}${amount ? ` - ${amount}` : ''}`;
 
-  // Use production domain to ensure links work when shared
-  const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://gentle-hamster-ed634c.netlify.app';
+  const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://gulf-unified-payment.netlify.app';
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : productionDomain;
 
-  // Use company-specific OG image or hero image
   const ogImage = branding.ogImage
     ? `${productionDomain}${branding.ogImage}`
     : branding.heroImage
@@ -35,7 +34,7 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={window.location.href} />
+      <meta property="og:url" content={currentUrl} />
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
       <meta property="og:image" content={ogImage} />

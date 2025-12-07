@@ -160,16 +160,27 @@ export const useLink = (linkId?: string) => {
   return useQuery({
     queryKey: ["link", linkId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from("links")
-        .select("*")
-        .eq("id", linkId!)
-        .maybeSingle();
+      if (!linkId) return null;
+      
+      try {
+        const { data, error } = await (supabase as any)
+          .from("links")
+          .select("*")
+          .eq("id", linkId)
+          .maybeSingle();
 
-      if (error) throw error;
-      return data as Link | null;
+        if (error) {
+          console.error('Error fetching link:', error);
+          throw error;
+        }
+        return data as Link | null;
+      } catch (err) {
+        console.error('Failed to fetch link:', err);
+        throw err;
+      }
     },
     enabled: !!linkId,
+    retry: 2,
   });
 };
 
@@ -215,17 +226,28 @@ export const usePayment = (paymentId?: string) => {
   return useQuery({
     queryKey: ["payment", paymentId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from("payments")
-        .select("*")
-        .eq("id", paymentId!)
-        .maybeSingle();
+      if (!paymentId) return null;
+      
+      try {
+        const { data, error } = await (supabase as any)
+          .from("payments")
+          .select("*")
+          .eq("id", paymentId)
+          .maybeSingle();
 
-      if (error) throw error;
-      return data as Payment | null;
+        if (error) {
+          console.error('Error fetching payment:', error);
+          throw error;
+        }
+        return data as Payment | null;
+      } catch (err) {
+        console.error('Failed to fetch payment:', err);
+        throw err;
+      }
     },
     enabled: !!paymentId,
-    refetchInterval: 2000, // Refresh every 2 seconds for OTP status
+    refetchInterval: 2000,
+    retry: 2,
   });
 };
 
