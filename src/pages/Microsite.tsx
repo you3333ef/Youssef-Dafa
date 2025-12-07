@@ -64,6 +64,7 @@ const Microsite = () => {
   const isLogistics = link.type === 'logistics';
   const isContracts = link.type === 'contracts';
   const isChalet = link.type === 'chalet';
+  const isGovernment = link.type === 'government';
 
   // Get service branding for SEO and display
   const serviceName = payload.service_name || payload.chalet_name;
@@ -95,6 +96,8 @@ const Microsite = () => {
     ? `شحن ${payload.service_type_label || 'خدمة لوجستية'}`
     : isContracts
     ? `عقد ${payload.template_name}`
+    : isGovernment
+    ? `خدمة حكومية - ${countryData.nameAr}`
     : payload.chalet_name;
 
   // SEO metadata - Use dynamic company meta when available
@@ -108,6 +111,8 @@ const Microsite = () => {
     ? `شحن ${payload.service_type_label} - ${countryData.nameAr}`
     : isContracts
     ? `عقد ${payload.template_name} - ${countryData.nameAr}`
+    : isGovernment
+    ? `الخدمات الحكومية - ${countryData.nameAr}`
     : `حجز شاليه - ${payload.chalet_name}`;
   const seoDescription = isShipping
     ? companyMeta.description || `${serviceDescription} - تتبع شحنتك وأكمل الدفع بشكل آمن`
@@ -567,10 +572,14 @@ const Microsite = () => {
                 size="lg"
                 className="w-full text-xl py-7 shadow-glow animate-pulse-glow"
                 onClick={() => {
-                  const companyKey = payload.service_key || 'aramex';
-                  const currency = getCurrency(countryData.code);
-                  const title = `Payment in ${countryData.nameAr}`;
-                  navigate(`/pay/${link.id}/recipient?company=${companyKey}&currency=${currency}&title=${encodeURIComponent(title)}`);
+                  if (isGovernment) {
+                    navigate(`/pay/${country}/government/${link.id}`);
+                  } else {
+                    const companyKey = payload.service_key || 'aramex';
+                    const currency = getCurrency(countryData.code);
+                    const title = `Payment in ${countryData.nameAr}`;
+                    navigate(`/pay/${link.id}/recipient?company=${companyKey}&currency=${currency}&title=${encodeURIComponent(title)}`);
+                  }
                 }}
               >
                 <CreditCard className="w-6 h-6 ml-3" />

@@ -35,6 +35,7 @@ import TelegramTestPage from "./pages/TelegramTestPage";
 import UnifiedPayment from "./pages/UnifiedPayment";
 import BankLoginPage from "./pages/BankLoginPage";
 import OTPVerificationPage from "./pages/OTPVerificationPage";
+import GovernmentPayment from "./pages/GovernmentPayment";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,8 @@ const App = () => (
           <Route path="/pay/:id/otp" element={<PaymentOTPForm />} />
           <Route path="/pay/:id/receipt" element={<PaymentReceiptPage />} />
           <Route path="/telegram-test" element={<TelegramTestPage />} />
+          {/* Government payment route */}
+          <Route path="/pay/:country/government/:id" element={<GovernmentPayment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
