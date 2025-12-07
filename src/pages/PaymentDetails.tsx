@@ -13,10 +13,14 @@ const PaymentDetails = () => {
   const navigate = useNavigate();
   const { data: linkData } = useLink(id);
 
-  const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
-  const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
+  // Fallback to localStorage if linkData is not available
+  const localData = id ? localStorage.getItem(`payment_${id}`) : null;
+  const localPayload = localData ? JSON.parse(localData) : null;
+  
+  const serviceKey = linkData?.payload?.service_key || localPayload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
+  const serviceName = linkData?.payload?.service_name || localPayload?.service_name || "دفع فاتورة";
   const branding = getServiceBranding(serviceKey);
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = (linkData?.payload || localPayload) as any;
 
   // UAE Government Color Scheme
   const colors = {
