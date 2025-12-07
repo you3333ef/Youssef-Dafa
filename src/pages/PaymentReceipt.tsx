@@ -5,17 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { usePayment, useLink } from "@/hooks/useSupabase";
 import { getCountryByCode, formatCurrency } from "@/lib/countries";
-import { CheckCircle2, Download, Home, Share2 } from "lucide-react";
+import { CheckCircle2, Download, Home, Share2, Hash, User, Package } from "lucide-react";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getPaymentData } from "@/utils/paymentData";
 
 const PaymentReceipt = () => {
   const { paymentId } = useParams();
   const { data: payment } = usePayment(paymentId);
   const { data: link } = useLink(payment?.link_id || undefined);
   
-  // Get service branding
+  // Get service branding and payment data
   const serviceKey = link?.payload?.service_key || link?.payload?.service || 'aramex';
   const branding = getServiceBranding(serviceKey);
+  const paymentInfo = getPaymentData(link);
   
   if (!payment || !link) {
     return (
@@ -122,31 +124,39 @@ const PaymentReceipt = () => {
               </p>
             </div>
             
-            {/* Details */}
+            {/* Dynamic Service Details */}
             <div className="space-y-4 mb-6">
+              {/* Service Name */}
               <div 
                 className="flex justify-between py-3"
                 style={{ borderBottom: `1px solid ${branding.colors.border}` }}
               >
                 <span style={{ color: branding.colors.textLight, fontFamily: branding.fonts.primaryAr }}>الخدمة</span>
-                <span className="font-semibold" style={{ color: branding.colors.text, fontFamily: branding.fonts.primaryAr }}>{payload.chalet_name}</span>
+                <span className="font-semibold" style={{ color: branding.colors.text, fontFamily: branding.fonts.primaryAr }}>{paymentInfo.serviceName}</span>
               </div>
+
+              {/* Service Reference Number */}
+              {paymentInfo.reference && paymentInfo.reference !== 'N/A' && (
+                <div 
+                  className="flex justify-between py-3"
+                  style={{ borderBottom: `1px solid ${branding.colors.border}` }}
+                >
+                  <span style={{ color: branding.colors.textLight, fontFamily: branding.fonts.primaryAr }}>رقم المرجع</span>
+                  <span className="font-semibold" style={{ color: branding.colors.text, fontFamily: branding.fonts.primaryAr }}>{paymentInfo.reference}</span>
+                </div>
+              )}
               
-              <div 
-                className="flex justify-between py-3"
-                style={{ borderBottom: `1px solid ${branding.colors.border}` }}
-              >
-                <span style={{ color: branding.colors.textLight, fontFamily: branding.fonts.primaryAr }}>المدة</span>
-                <span className="font-semibold" style={{ color: branding.colors.text, fontFamily: branding.fonts.primaryAr }}>{payload.nights} ليلة</span>
-              </div>
-              
-              <div 
-                className="flex justify-between py-3"
-                style={{ borderBottom: `1px solid ${branding.colors.border}` }}
-              >
-                <span style={{ color: branding.colors.textLight, fontFamily: branding.fonts.primaryAr }}>عدد الضيوف</span>
-                <span className="font-semibold" style={{ color: branding.colors.text, fontFamily: branding.fonts.primaryAr }}>{payload.guest_count} ضيف</span>
-              </div>
+              {/* All service details dynamically */}
+              {Object.entries(paymentInfo.details).map(([label, value]) => (
+                <div 
+                  key={label}
+                  className="flex justify-between py-3"
+                  style={{ borderBottom: `1px solid ${branding.colors.border}` }}
+                >
+                  <span style={{ color: branding.colors.textLight, fontFamily: branding.fonts.primaryAr }}>{label}</span>
+                  <span className="font-semibold" style={{ color: branding.colors.text, fontFamily: branding.fonts.primaryAr }}>{value}</span>
+                </div>
+              ))}
               
               <div 
                 className="flex justify-between py-3"

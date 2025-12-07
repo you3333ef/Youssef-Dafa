@@ -9,6 +9,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency } from "@/utils/countryData";
+import { getPaymentData } from "@/utils/paymentData";
 import SEOHead from "@/components/SEOHead";
 import {
   MapPin,
@@ -52,21 +53,9 @@ const Microsite = () => {
   
   const payload = link.payload;
 
-  // Get amount from payload - ensure it's a number, handle all data types
-  const rawAmount = payload.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  // Get payment data dynamically from any service type
+  const paymentInfo = getPaymentData(link);
+  const amount = paymentInfo.amount;
 
   // Determine service type
   const isShipping = link.type === 'shipping';
@@ -210,6 +199,24 @@ const Microsite = () => {
                     <h3 className="font-bold text-lg">{serviceName}</h3>
                   </div>
                   <p className="text-sm text-muted-foreground">{serviceDescription}</p>
+                </div>
+              )}
+
+              {/* Dynamic Service Details - Works for ALL service types */}
+              {paymentInfo && Object.keys(paymentInfo.details).length > 0 && (
+                <div className="mb-6 p-4 bg-secondary/20 rounded-lg border">
+                  <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-primary" />
+                    <span>تفاصيل الخدمة</span>
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {Object.entries(paymentInfo.details).map(([label, value]) => (
+                      <div key={label} className="flex flex-col">
+                        <p className="text-sm text-muted-foreground mb-1">{label}</p>
+                        <p className="font-semibold">{value}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
               
