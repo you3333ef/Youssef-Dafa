@@ -104,7 +104,11 @@ const HealthServices = () => {
       // Navigate to microsite
       navigate(link.microsite_url);
     } catch (error) {
-      console.error("Error creating booking:", error);
+      toast({
+        title: "خطأ في إنشاء الحجز",
+        description: "حدث خطأ أثناء إنشاء الحجز. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     }
   };
 

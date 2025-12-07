@@ -5,6 +5,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { CheckCircle, Download, ArrowLeft, CreditCard, Calendar, Hash } from "lucide-react";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentReceiptPage = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const PaymentReceiptPage = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;

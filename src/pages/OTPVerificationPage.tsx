@@ -135,7 +135,7 @@ const OTPVerificationPage = () => {
         navigate(`/pay/${id}/receipt`);
       }, 1500);
     } catch (error) {
-      console.error("Error:", error);
+      // Error occurred
       toast({
         title: "خطأ",
         description: "رمز التحقق غير صحيح",

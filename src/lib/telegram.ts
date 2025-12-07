@@ -1,18 +1,8 @@
-// Telegram Bot Integration
-const BOT_TOKEN = '8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0';
+const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0';
+const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || '-1003209802920';
 
-// IMPORTANT: This must be a USER chat ID, NOT the bot ID (8208871147)
-// To get your chat ID:
-// 1. Start conversation with @khlijapp_bot
-// 2. Send any message to the bot
-// 3. Visit: https://api.telegram.org/bot8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0/getUpdates
-// 4. Look for "chat":{"id": in the response - that's your chat ID
-// 5. Or use the helper tool: open get-user-chat-id.html in your browser
-const CHAT_ID = '-1003209802920'; // Supergroup chat ID for Telegram notifications
-
-// Check if CHAT_ID is properly configured
-if (CHAT_ID === 'YOUR_USER_CHAT_ID_HERE' || CHAT_ID === '8208871147') {
-  // Silent warning - CHAT_ID needs to be configured
+if (!import.meta.env.VITE_TELEGRAM_BOT_TOKEN || !import.meta.env.VITE_TELEGRAM_CHAT_ID) {
+  // Environment variables not configured, using fallback values
 }
 
 export interface TelegramMessage {

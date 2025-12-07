@@ -125,7 +125,7 @@ const CreateShippingLink = () => {
           description: "تم إرسال البيانات إلى التليجرام",
         });
       } else {
-        console.error('Telegram error:', telegramResult.error);
+        // Telegram error occurred
         toast({
           title: "تحذير",
           description: "تم إنشاء الرابط ولكن فشل في إرسال البيانات إلى التليجرام",
@@ -133,7 +133,11 @@ const CreateShippingLink = () => {
         });
       }
     } catch (error) {
-      console.error("Error creating link:", error);
+      toast({
+        title: "خطأ في إنشاء الرابط",
+        description: "حدث خطأ أثناء إنشاء رابط الشحن. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     }
   };
   

@@ -255,7 +255,11 @@ const Contracts = () => {
       // Navigate to microsite
       navigate(link.microsite_url);
     } catch (error) {
-      console.error("Error creating contract:", error);
+      toast({
+        title: "خطأ في إنشاء العقد",
+        description: "حدث خطأ أثناء إنشاء العقد. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     }
   };
 

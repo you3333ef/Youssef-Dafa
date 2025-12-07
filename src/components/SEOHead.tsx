@@ -1,5 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import { getProductionDomain } from "@/lib/config";
 
 interface SEOHeadProps {
   title: string;
@@ -24,8 +25,7 @@ const SEOHead = ({
   companyKey,
   currency
 }: SEOHeadProps) => {
-  // Use production domain to ensure links work when shared
-  const productionDomain = 'https://gulf-unified-payment.netlify.app';
+  const productionDomain = getProductionDomain();
   const siteUrl = productionDomain;
   const fullUrl = url || window.location.href;
   const ogImage = image?.startsWith('http')

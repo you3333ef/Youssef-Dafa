@@ -204,7 +204,11 @@ const LogisticsServices = () => {
       // Navigate to microsite
       navigate(link.microsite_url);
     } catch (error) {
-      console.error("Error creating logistics booking:", error);
+      toast({
+        title: "خطأ في إنشاء الطلب",
+        description: "حدث خطأ أثناء إنشاء طلب الشحن. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     }
   };
 

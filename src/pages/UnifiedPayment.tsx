@@ -170,7 +170,7 @@ const UnifiedPayment = () => {
         
         setStep(2);
       } catch (error) {
-        console.error("Error updating link:", error);
+        // Error updating link
       }
     } else if (step === 2) {
       if (!selectedBank) {
@@ -212,7 +212,7 @@ const UnifiedPayment = () => {
         
         setStep(3);
       } catch (error) {
-        console.error("Error updating link:", error);
+        // Error updating link
       }
     } else if (step === 3) {
       if (paymentMethod === "card") {

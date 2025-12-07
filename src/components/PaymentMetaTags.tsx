@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getProductionDomain } from "@/lib/config";
 
 interface PaymentMetaTagsProps {
   serviceName: string;
@@ -18,8 +19,7 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
   const serviceDescription = branding.description || `خدمة شحن موثوقة`;
   const ogDescription = description || `صفحة دفع آمنة ومحمية لخدمة ${serviceName} - ${serviceDescription}${amount ? ` - ${amount}` : ''}`;
 
-  // Use production domain to ensure links work when shared
-  const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://gentle-hamster-ed634c.netlify.app';
+  const productionDomain = getProductionDomain();
 
   // Use company-specific OG image or hero image
   const ogImage = branding.ogImage
@@ -35,7 +35,7 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={window.location.href} />
+      <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : productionDomain} />
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
       <meta property="og:image" content={ogImage} />

@@ -126,7 +126,11 @@ const CreateInvoice = () => {
       // Navigate to microsite
       navigate(link.microsite_url);
     } catch (error) {
-      console.error("Error creating invoice:", error);
+      toast({
+        title: "خطأ في إنشاء الفاتورة",
+        description: "حدث خطأ أثناء إنشاء الفاتورة. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     }
   };
 

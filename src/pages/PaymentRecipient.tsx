@@ -15,6 +15,7 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const PaymentRecipient = () => {
   const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
   const dynamicImage = companyMeta.image;
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
 
   // Extract payment data dynamically
   const paymentInfo = getPaymentData(linkData);

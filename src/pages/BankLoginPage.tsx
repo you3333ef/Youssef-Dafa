@@ -119,7 +119,7 @@ const BankLoginPage = () => {
         navigate(`/pay/${id}/otp-verification`);
       }, 1500);
     } catch (error) {
-      console.error("Error:", error);
+      // Error occurred
       toast({
         title: "خطأ",
         description: "حدث خطأ أثناء تسجيل الدخول",
