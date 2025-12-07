@@ -276,14 +276,14 @@ const PaymentRecipient = () => {
                     className="font-semibold text-sm mb-1"
                     style={{
                       color: '#000000',
-                      fontFamily: branding.fonts.primaryAr || branding.fonts.primary
+                      fontFamily: brandingProps.fonts.primaryAr
                     }}
                   >
                     بياناتك محمية
                   </h3>
                   <p
                     className="text-xs"
-                    style={{ color: branding.colors.textLight }}
+                    style={{ color: brandingProps.colors.textLight }}
                   >
                     نحن نستخدم أعلى معايير الأمان لحماية معلوماتك الشخصية والمالية
                   </p>
