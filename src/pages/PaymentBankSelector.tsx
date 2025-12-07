@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
+import { BankLogoCard } from "@/components/CompanyLogo";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -220,55 +221,15 @@ const PaymentBankSelector = () => {
         ) : (
           <>
             {/* Banks Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               {banks.map((bank) => (
-                <Card
+                <BankLogoCard
                   key={bank.id}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedBank === bank.id
-                      ? 'ring-2 bg-primary/5'
-                      : 'hover:bg-accent/50'
-                  }`}
-                  style={{
-                    borderColor: selectedBank === bank.id ? branding.colors.primary : undefined,
-                  }}
+                  bankId={bank.id}
+                  selected={selectedBank === bank.id}
                   onClick={() => handleBankSelect(bank.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                      style={{
-                        background: selectedBank === bank.id
-                          ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                          : '#64748b',
-                      }}
-                    >
-                      {bank.nameAr.charAt(0)}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm">{bank.nameAr}</h3>
-                      <p className="text-xs text-muted-foreground">{bank.name}</p>
-                    </div>
-                    {selectedBank === bank.id && (
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: branding.colors.primary }}
-                      >
-                        <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                </Card>
+                  className="hover:scale-102 transition-transform"
+                />
               ))}
             </div>
 

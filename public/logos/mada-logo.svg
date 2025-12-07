@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect width="200" height="60" fill="#006C35" rx="8"/>
+  <g transform="translate(20, 20)">
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">مدى</text>
+  </g>
+  <g transform="translate(80, 20)">
+    <rect width="100" height="3" fill="#FFB81C"/>
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFB81C">mada</text>
+  </g>
+</svg>
