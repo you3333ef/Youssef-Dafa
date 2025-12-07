@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
@@ -66,7 +66,7 @@ const PaymentData = () => {
   }
 
   // Set initial payment amount from link data
-  useState(() => {
+  React.useEffect(() => {
     if (amount && !paymentAmount) {
       setPaymentAmount(amount.toString());
     }

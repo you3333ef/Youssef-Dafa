@@ -14,7 +14,7 @@ const PaymentOTPForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading, error: linkError } = useLink(id);
   
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [attempts, setAttempts] = useState(0);
@@ -249,6 +249,34 @@ const PaymentOTPForm = () => {
   
   const isOtpComplete = otp.every(digit => digit !== "");
   const hasAnyDigit = otp.some(digit => digit !== "");
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="text-xl text-muted-foreground">جاري التحميل...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (linkError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-2 text-destructive">حدث خطأ</h2>
+          <p className="text-muted-foreground mb-4">لم نتمكن من تحميل بيانات الدفع. يرجى المحاولة مرة أخرى.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <DynamicPaymentLayout

@@ -9,9 +9,15 @@ import { CheckCircle, Download, ArrowLeft, CreditCard, Calendar, Hash } from "lu
 const PaymentReceiptPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading, error } = useLink(id);
   
-  const customerInfo = JSON.parse(sessionStorage.getItem('customerInfo') || '{}');
+  let customerInfo = {};
+  try {
+    customerInfo = JSON.parse(sessionStorage.getItem('customerInfo') || '{}');
+  } catch (error) {
+    console.error('Error parsing customerInfo:', error);
+    customerInfo = {};
+  }
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
@@ -34,6 +40,34 @@ const PaymentReceiptPage = () => {
   }
 
   const formattedAmount = `${amount} ر.س`;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="text-xl text-muted-foreground">جاري التحميل...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-2 text-destructive">حدث خطأ</h2>
+          <p className="text-muted-foreground mb-4">لم نتمكن من تحميل بيانات الدفع. يرجى المحاولة مرة أخرى.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
+  }
   
   const handleDownload = () => {
     // Create a simple receipt content
