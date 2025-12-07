@@ -8,24 +8,24 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Dark Mode Only - Gulf Platform */
-    --background: 220 25% 8%;
-    --foreground: 40 10% 96%;
+    /* Light Mode - Gulf Platform */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 220 20% 12%;
-    --card-foreground: 40 10% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 220 20% 10%;
-    --popover-foreground: 40 10% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 45 95% 60%;
     --primary-foreground: 220 25% 8%;
 
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 40 10% 96%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 220 15% 20%;
-    --muted-foreground: 40 5% 65%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 45 95% 60%;
     --accent-foreground: 220 25% 8%;
@@ -33,8 +33,8 @@ All colors MUST be HSL.
     --destructive: 0 85% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 16%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 45 95% 60%;
 
     --radius: 0.75rem;
