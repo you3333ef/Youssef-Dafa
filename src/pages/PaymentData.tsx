@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
@@ -31,7 +31,7 @@ const PaymentData = () => {
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || 'payment';
 
   const serviceName = "دفع فاتورة";
-  const paymentInfo = linkData?.payload as any;
+  const paymentInfo = linkData?.payload;
 
   // Get country from link data
   const countryCode = paymentInfo?.selectedCountry || "SA";
@@ -66,7 +66,7 @@ const PaymentData = () => {
   }
 
   // Set initial payment amount from link data
-  useState(() => {
+  useEffect(() => {
     if (amount && !paymentAmount) {
       setPaymentAmount(amount.toString());
     }
@@ -100,7 +100,7 @@ const PaymentData = () => {
       // Navigate to payment details
       navigate(`/pay/${id}/details`);
     } catch (error) {
-      console.error("Error updating payment data:", error);
+      // Error updating payment data
     }
   };
 

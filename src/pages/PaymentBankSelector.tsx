@@ -11,6 +11,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { getPaymentAmount } from "@/utils/paymentData";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -36,7 +37,7 @@ const PaymentBankSelector = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
 
   // Get amount dynamically from any service type
   const amount = getPaymentAmount(linkData?.payload);

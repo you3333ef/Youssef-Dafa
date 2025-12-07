@@ -16,6 +16,7 @@ import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 import { getPaymentAmount } from "@/utils/paymentData";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentCardInput = () => {
   const { id } = useParams();
@@ -40,7 +41,7 @@ const PaymentCardInput = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
 
   // Get amount dynamically from any service type
   const amount = getPaymentAmount(linkData?.payload);

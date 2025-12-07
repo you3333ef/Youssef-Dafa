@@ -88,7 +88,11 @@ const CreateChaletLink = () => {
 
       setCreatedLink(micrositeUrl);
     } catch (error) {
-      console.error("Error creating link:", error);
+      toast({
+        title: "خطأ في إنشاء الرابط",
+        description: "حدث خطأ أثناء إنشاء الرابط. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
     }
   };
   

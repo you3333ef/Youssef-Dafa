@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { getProductionDomain } from "@/lib/config";
 
 // Types from database
 export interface Chalet {
@@ -108,8 +109,7 @@ export const useCreateLink = () => {
       payload: any;
     }) => {
       const linkId = crypto.randomUUID();
-      // Use production domain to ensure links work when shared
-      const productionDomain = 'https://gulf-unified-payment.netlify.app';
+      const productionDomain = getProductionDomain();
       // Add service_key to URL params for proper meta tags
       const serviceKey = linkData.payload?.service_key || linkData.payload?.service || 'aramex';
       const micrositeUrl = `${productionDomain}/r/${linkData.country_code}/${linkData.type}/${linkId}?service=${serviceKey}`;

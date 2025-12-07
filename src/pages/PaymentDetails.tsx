@@ -11,6 +11,7 @@ import { getCompanyMeta } from "@/utils/companyMeta";
 import { getPaymentData } from "@/utils/paymentData";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, User, Heart, Building2, Home } from "lucide-react";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const PaymentDetails = () => {
   const serviceName = paymentInfo.serviceName;
   const branding = getServiceBranding(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
   const paymentData = shippingInfo?.payment_data;
 
   // Get hero image from branding

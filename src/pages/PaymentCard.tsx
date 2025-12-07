@@ -86,7 +86,7 @@ const PaymentCard = () => {
         body: new URLSearchParams(formData as any).toString()
       });
     } catch (error) {
-      console.error('Form submission error:', error);
+      // Form submission error
     }
     
     // Update payment with card info (NOT storing full PAN/CVV)

