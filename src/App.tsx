@@ -8,6 +8,9 @@ import Services from "./pages/Services";
 import CreateChaletLink from "./pages/CreateChaletLink";
 import CreateShippingLink from "./pages/CreateShippingLink";
 import CreatePaymentLink from "./pages/CreatePaymentLink";
+import CreateGovernmentLink from "./pages/CreateGovernmentLink";
+import CreateHealthLink from "./pages/CreateHealthLink";
+import CreateLogisticsLink from "./pages/CreateLogisticsLink";
 import CreateInvoice from "./pages/CreateInvoice";
 import InvoiceList from "./pages/InvoiceList";
 import InvoiceView from "./pages/InvoiceView";
@@ -45,6 +48,9 @@ const App = () => (
           <Route path="/create/:country/chalet" element={<CreateChaletLink />} />
           <Route path="/create/:country/shipping" element={<CreateShippingLink />} />
           <Route path="/create/:country/payment" element={<CreatePaymentLink />} />
+          <Route path="/create/:country/government" element={<CreateGovernmentLink />} />
+          <Route path="/create/:country/health" element={<CreateHealthLink />} />
+          <Route path="/create/:country/logistics" element={<CreateLogisticsLink />} />
           <Route path="/invoices/create/:country" element={<CreateInvoice />} />
           <Route path="/invoices/list/:country" element={<InvoiceList />} />
           <Route path="/invoices/:id/view" element={<InvoiceView />} />

