@@ -13,7 +13,8 @@ export const SHIPPING_OPTIONS = [
       { value: "naqel_sa", label: "Naqel Express", country: "SA" },
       { value: "spl_sa", label: "SPL (Saudi Post)", country: "SA" },
       { value: "aymakan_sa", label: "AyMakan", country: "SA" },
-      { value: "esnad_sa", label: "Esnad Express", country: "SA" }
+      { value: "esnad_sa", label: "Esnad Express", country: "SA" },
+      { value: "bahri_sa", label: "Bahri", country: "SA" }
     ]
   },
   {
@@ -26,7 +27,8 @@ export const SHIPPING_OPTIONS = [
       { value: "emirates_post_ae", label: "Emirates Post", country: "AE" },
       { value: "fetchr_ae", label: "Fetchr", country: "AE" },
       { value: "imile_ae", label: "iMile", country: "AE" },
-      { value: "zajel_ae", label: "Zajel Courier", country: "AE" }
+      { value: "zajel_ae", label: "Zajel Courier", country: "AE" },
+      { value: "smsa_ae", label: "SMSA Express", country: "AE" }
     ]
   },
   {
@@ -62,7 +64,8 @@ export const SHIPPING_OPTIONS = [
       { value: "aramex_om", label: "Aramex", country: "OM" },
       { value: "dhl_om", label: "DHL Oman", country: "OM" },
       { value: "fedex_om", label: "FedEx", country: "OM" },
-      { value: "ups_om", label: "UPS", country: "OM" }
+      { value: "ups_om", label: "UPS", country: "OM" },
+      { value: "jinakum_om", label: "Jinakum", country: "OM" }
     ]
   },
   {

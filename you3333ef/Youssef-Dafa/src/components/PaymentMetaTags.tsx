@@ -19,14 +19,16 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
   const ogDescription = description || `صفحة دفع آمنة ومحمية لخدمة ${serviceName} - ${serviceDescription}${amount ? ` - ${amount}` : ''}`;
 
   // Use production domain to ensure links work when shared
-  const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://gentle-hamster-ed634c.netlify.app';
+  const productionDomain = typeof window !== 'undefined' ? window.location.origin : '';
 
-  // Use company-specific OG image or hero image
-  const ogImage = branding.ogImage
-    ? `${productionDomain}${branding.ogImage}`
-    : branding.heroImage
-    ? `${productionDomain}${branding.heroImage}`
-    : `${productionDomain}/og-aramex.jpg`;
+  // Use company-specific OG image with absolute URL
+  const getAbsoluteImageUrl = (imagePath: string) => {
+    if (!imagePath) return `${productionDomain}/og-aramex.jpg`;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `${productionDomain}${imagePath.startsWith('/') ? imagePath : '/' + imagePath}`;
+  };
+
+  const ogImage = getAbsoluteImageUrl(branding.ogImage || branding.heroImage || '/og-aramex.jpg');
 
   return (
     <Helmet>

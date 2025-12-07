@@ -460,6 +460,8 @@ export const getServiceBranding = (serviceName: string) => {
   if (key === 'fetchr') key = 'fetchr';
   if (key === 'zajel') key = 'zajel'; // UAE Zajel
   if (key === 'zajil') key = 'zajil'; // KSA Zajil
+  if (key === 'bahri') key = 'national'; // Bahri mapping
+  if (key === 'jinakum') key = 'jinakum'; // Oman Jinakum
 
   // Fallback to Aramex (light mode safe) if key not found
   return serviceLogos[key] || serviceLogos.aramex;
