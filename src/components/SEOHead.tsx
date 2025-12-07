@@ -25,7 +25,7 @@ const SEOHead = ({
   currency
 }: SEOHeadProps) => {
   // Use production domain to ensure links work when shared
-  const productionDomain = 'https://gulf-unified-payment.netlify.app';
+  const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN || window.location.origin;
   const siteUrl = productionDomain;
   const fullUrl = url || window.location.href;
   const ogImage = image?.startsWith('http')
