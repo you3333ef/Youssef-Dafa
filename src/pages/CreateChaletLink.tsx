@@ -16,6 +16,7 @@ import { getBanksByCountry } from "@/lib/banks";
 import { useCreateLink } from "@/hooks/useSupabase";
 import { getChaletsByCountry, ChaletService } from "@/lib/gccChaletServices";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { ArrowRight, Home, Copy, Check, Building2, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -39,8 +40,19 @@ const CreateChaletLink = () => {
   const selectedChalet = chalets?.find((c) => c.key === selectedChaletKey);
   const totalAmount = pricePerNight * nights;
   
-  // Get banks for the selected country
   const banks = useMemo(() => getBanksByCountry(country?.toUpperCase() || ""), [country]);
+
+  const serviceBranding = useMemo(() => 
+    selectedChaletKey ? getServiceBranding(selectedChaletKey) : getServiceBranding('sa-abha-mountain'),
+    [selectedChaletKey]
+  );
+
+  const chaletTheme = {
+    primary: serviceBranding.colors.primary,
+    secondary: serviceBranding.colors.secondary,
+    gradient: serviceBranding.gradients?.primary || `linear-gradient(135deg, ${serviceBranding.colors.primary}, ${serviceBranding.colors.secondary})`,
+    bgLight: "#f0fdf4"
+  };
   
   useEffect(() => {
     if (selectedChalet) {
@@ -72,7 +84,6 @@ const CreateChaletLink = () => {
         payload,
       });
 
-      // Generate dynamic microsite URL similar to shipping services
       const micrositeUrl = `${window.location.origin}/r/${country}/${link.type}/${link.id}?service=${selectedChalet.key}`;
 
       setCreatedLink(micrositeUrl);
@@ -95,12 +106,14 @@ const CreateChaletLink = () => {
   
   if (!countryData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center" dir="rtl" style={{ background: chaletTheme.bgLight }}>
         <div className="text-center p-8">
-          <Home className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2 text-foreground">الدولة غير موجودة</h2>
+          <Home className="w-16 h-16 mx-auto mb-4" style={{ color: chaletTheme.primary }} />
+          <h2 className="text-2xl font-bold mb-2">الدولة غير موجودة</h2>
           <p className="text-muted-foreground mb-6">الرجاء اختيار دولة صحيحة</p>
-          <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
+          <Button onClick={() => navigate('/services')} style={{ background: chaletTheme.gradient, color: 'white' }}>
+            العودة للخدمات
+          </Button>
         </div>
       </div>
     );
@@ -108,10 +121,10 @@ const CreateChaletLink = () => {
   
   if (createdLink) {
     return (
-      <div className="min-h-screen py-6" dir="rtl">
+      <div className="min-h-screen py-6" dir="rtl" style={{ background: `linear-gradient(to bottom, ${chaletTheme.bgLight}, white)` }}>
         <div className="container mx-auto px-4">
-          <Card className="max-w-xl mx-auto p-4 text-center">
-            <div className="w-14 h-14 bg-gradient-success rounded-full flex items-center justify-center mx-auto mb-3">
+          <Card className="max-w-xl mx-auto p-4 text-center border-2" style={{ borderColor: `${chaletTheme.primary}30` }}>
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: chaletTheme.gradient }}>
               <Check className="w-7 h-7 text-white" />
             </div>
             
@@ -120,8 +133,7 @@ const CreateChaletLink = () => {
               شارك هذا الرابط مع عملائك
             </p>
 
-            {/* Booking Summary */}
-            <div className="bg-secondary/50 p-4 rounded-lg mb-4 space-y-2 text-right">
+            <div className="p-4 rounded-lg mb-4 space-y-2 text-right border-2" style={{ background: chaletTheme.bgLight, borderColor: `${chaletTheme.primary}20` }}>
               <div className="flex items-center justify-between text-sm">
                 <span className="font-semibold">{selectedChalet?.name}</span>
                 <span className="text-muted-foreground">الشاليه:</span>
@@ -140,8 +152,8 @@ const CreateChaletLink = () => {
                 </span>
                 <span className="text-muted-foreground">سعر الليلة:</span>
               </div>
-              <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50">
-                <span className="font-bold text-lg">
+              <div className="flex items-center justify-between text-sm pt-2 border-t" style={{ borderColor: `${chaletTheme.primary}20` }}>
+                <span className="font-bold text-lg" style={{ color: chaletTheme.primary }}>
                   {formatCurrency(totalAmount, countryData.currency)}
                 </span>
                 <span className="text-muted-foreground">الإجمالي:</span>
@@ -153,7 +165,7 @@ const CreateChaletLink = () => {
             </div>
 
             <div className="flex gap-3 justify-center">
-              <Button onClick={handleCopy}>
+              <Button onClick={handleCopy} style={{ background: chaletTheme.gradient, color: 'white' }}>
                 {copied ? (
                   <>
                     <Check className="w-4 h-4 ml-2" />
@@ -170,6 +182,7 @@ const CreateChaletLink = () => {
               <Button
                 variant="outline"
                 onClick={() => window.open(createdLink, "_blank")}
+                style={{ borderColor: chaletTheme.primary, color: chaletTheme.primary }}
               >
                 <span className="ml-2 text-sm">عرض المعاينة</span>
                 <ArrowRight className="w-4 h-4 mr-2" />
@@ -190,44 +203,45 @@ const CreateChaletLink = () => {
   }
   
   return (
-    <div className="min-h-screen py-6" dir="rtl">
+    <div className="min-h-screen py-4" dir="rtl" style={{ background: `linear-gradient(to bottom, ${chaletTheme.bgLight}, white)` }}>
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
-          {/* Header - Minimized */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{
-                  background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
-                }}
-              >
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">حجز شاليه - {countryData.nameAr}</h1>
-                <p className="text-xs text-muted-foreground">أنشئ رابط حجز مخصص</p>
+          <Card className="p-4 shadow-xl border-2" style={{ borderColor: `${chaletTheme.primary}20` }}>
+            <div
+              className="h-20 -m-4 mb-4 rounded-t-xl relative overflow-hidden"
+              style={{ background: chaletTheme.gradient }}
+            >
+              <div className="absolute inset-0 bg-black/10" />
+              <div className="absolute inset-0 flex items-center justify-between px-6">
+                <div className="text-white">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Home className="w-6 h-6" />
+                    <h1 className="text-xl font-bold">حجز الشاليهات</h1>
+                  </div>
+                  <p className="text-sm opacity-90">إنشاء رابط حجز - {countryData.nameAr}</p>
+                </div>
+                <div className="text-4xl">🏖️</div>
               </div>
             </div>
-          </div>
-          
-          <Card className="p-4">
+            
             <div className="space-y-4">
-              {/* Chalet Selection */}
               <div>
-                <Label className="text-sm mb-2">اختر الشاليه</Label>
+                <Label className="text-sm mb-2 font-semibold" style={{ color: chaletTheme.primary }}>
+                  اختر الشاليه *
+                </Label>
                 <Select onValueChange={setSelectedChaletKey}>
-                  <SelectTrigger className="w-full h-10">
+                  <SelectTrigger className="w-full h-11 border-2" style={{ borderColor: `${chaletTheme.primary}30` }}>
                     <SelectValue placeholder="اختر شاليه..." />
                   </SelectTrigger>
                   <SelectContent>
                     {chalets?.map((chalet) => (
                       <SelectItem key={chalet.key} value={chalet.key}>
                         <div className="flex items-center gap-2">
+                          <Home className="w-4 h-4" style={{ color: chaletTheme.primary }} />
                           <span className="text-sm">{chalet.name}</span>
                           {chalet.verified && (
-                            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
-                              موثّق
+                            <span className="text-xs px-2 py-0.5 rounded" style={{ background: `${chaletTheme.primary}20`, color: chaletTheme.primary }}>
+                              ✅ موثّق
                             </span>
                           )}
                         </div>
@@ -239,23 +253,22 @@ const CreateChaletLink = () => {
               
               {selectedChalet && (
                 <>
-                  {/* Chalet Details - Minimized */}
-                  <div className="bg-secondary/30 p-3 rounded-lg">
+                  <div className="p-3 rounded-lg border-2" style={{ background: chaletTheme.bgLight, borderColor: `${chaletTheme.primary}20` }}>
                     <p className="text-xs text-muted-foreground mb-1">
-                      <strong>المدينة:</strong> {selectedChalet.city}
+                      <strong>🏛️ المدينة:</strong> {selectedChalet.city}
                     </p>
                     <p className="text-xs text-muted-foreground mb-1">
-                      <strong>الوصف:</strong> {selectedChalet.description}
+                      <strong>📖 الوصف:</strong> {selectedChalet.description}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      <strong>السعة:</strong> حتى {selectedChalet.capacity} ضيف
+                      <strong>👥 السعة:</strong> حتى {selectedChalet.capacity} ضيف
                     </p>
                     {selectedChalet.amenities && selectedChalet.amenities.length > 0 && (
                       <div className="mt-2">
-                        <p className="text-xs font-semibold text-muted-foreground mb-1">المرافق:</p>
+                        <p className="text-xs font-semibold text-muted-foreground mb-1">⭐ المرافق:</p>
                         <div className="flex flex-wrap gap-1">
-                          {selectedChalet.amenities.slice(0, 4).map((amenity, idx) => (
-                            <span key={idx} className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+                          {selectedChalet.amenities.slice(0, 6).map((amenity, idx) => (
+                            <span key={idx} className="text-xs px-2 py-0.5 rounded" style={{ background: `${chaletTheme.primary}15`, color: chaletTheme.primary }}>
                               {amenity}
                             </span>
                           ))}
@@ -264,52 +277,55 @@ const CreateChaletLink = () => {
                     )}
                   </div>
                   
-                  {/* Price per Night */}
                   <div>
-                    <Label className="text-sm mb-2">
-                      سعر الليلة ({countryData.currency})
+                    <Label className="text-sm mb-2 font-semibold" style={{ color: chaletTheme.primary }}>
+                      💵 سعر الليلة ({countryData.currency})
                     </Label>
                     <Input
                       type="number"
                       value={pricePerNight}
                       onChange={(e) => setPricePerNight(Number(e.target.value))}
-                      className="h-9 text-sm"
+                      className="h-10 text-sm border-2 font-semibold"
+                      style={{ borderColor: `${chaletTheme.primary}20` }}
                     />
                   </div>
                   
-                  {/* Number of Nights */}
                   <div>
-                    <Label className="text-sm mb-2">عدد الليالي</Label>
+                    <Label className="text-sm mb-2 font-semibold" style={{ color: chaletTheme.primary }}>
+                      🌙 عدد الليالي
+                    </Label>
                     <Input
                       type="number"
                       min="1"
                       value={nights}
                       onChange={(e) => setNights(Number(e.target.value))}
-                      className="h-9 text-sm"
+                      className="h-10 text-sm border-2 font-semibold"
+                      style={{ borderColor: `${chaletTheme.primary}20` }}
                     />
                   </div>
                   
-                  {/* Guest Count */}
                   <div>
-                    <Label className="text-sm mb-2">عدد الضيوف</Label>
+                    <Label className="text-sm mb-2 font-semibold" style={{ color: chaletTheme.primary }}>
+                      👥 عدد الضيوف
+                    </Label>
                     <Input
                       type="number"
                       min="1"
                       max={selectedChalet.capacity}
                       value={guestCount}
                       onChange={(e) => setGuestCount(Number(e.target.value))}
-                      className="h-9 text-sm"
+                      className="h-10 text-sm border-2 font-semibold"
+                      style={{ borderColor: `${chaletTheme.primary}20` }}
                     />
                   </div>
                   
-                  {/* Bank Selection (Optional) */}
                   <div>
                     <Label className="text-sm mb-2 flex items-center gap-2">
-                      <Building2 className="w-3 h-3" />
+                      <Building2 className="w-3 h-3" style={{ color: chaletTheme.primary }} />
                       البنك (اختياري)
                     </Label>
                     <Select value={selectedBank} onValueChange={setSelectedBank}>
-                      <SelectTrigger className="h-9">
+                      <SelectTrigger className="h-10 border-2" style={{ borderColor: `${chaletTheme.primary}30` }}>
                         <SelectValue placeholder="اختر بنك (يمكن التخطي)" />
                       </SelectTrigger>
                       <SelectContent>
@@ -326,9 +342,8 @@ const CreateChaletLink = () => {
                     </p>
                   </div>
                   
-                  {/* Total Amount */}
-                  <div className="bg-gradient-primary p-4 rounded-xl text-primary-foreground">
-                    <p className="text-xs mb-1">المبلغ الإجمالي</p>
+                  <div className="p-4 rounded-xl text-white" style={{ background: chaletTheme.gradient }}>
+                    <p className="text-xs mb-1 opacity-90">💰 المبلغ الإجمالي</p>
                     <p className="text-2xl font-bold">
                       {formatCurrency(totalAmount, countryData.currency)}
                     </p>
@@ -337,18 +352,18 @@ const CreateChaletLink = () => {
                     </p>
                   </div>
                   
-                  {/* Create Button */}
                   <Button
                     onClick={handleCreate}
                     disabled={createLink.isPending}
-                    className="w-full py-5"
+                    className="w-full py-6 text-base font-bold shadow-lg text-white"
+                    style={{ background: chaletTheme.gradient }}
                   >
                     {createLink.isPending ? (
-                      <span className="text-sm">جاري الإنشاء...</span>
+                      <span>جاري الإنشاء...</span>
                     ) : (
                       <>
-                        <span className="ml-2 text-sm">إنشاء رابط الحجز</span>
-                        <ArrowRight className="w-4 h-4 mr-2" />
+                        <Home className="w-5 h-5 ml-2" />
+                        <span>إنشاء رابط الحجز</span>
                       </>
                     )}
                   </Button>

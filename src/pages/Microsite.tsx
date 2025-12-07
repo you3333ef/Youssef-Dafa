@@ -140,22 +140,22 @@ const Microsite = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header Badge */}
           <div className="text-center mb-8">
-            <Badge className="text-lg px-6 py-2 bg-gradient-primary">
+            <Badge className="text-lg px-6 py-2" style={{ background: serviceBranding.gradients?.primary }}>
               <Shield className="w-4 h-4 ml-2" />
-              <span>عقد موثّق ومحمي</span>
+              <span>دفع آمن ومحمي</span>
             </Badge>
           </div>
           
           {/* Main Card */}
           <Card className="overflow-hidden shadow-elevated">
-            {/* Header with Country Colors */}
+            {/* Header with Service Colors */}
             <div
               className="h-32 relative"
               style={{
-                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                background: serviceBranding.gradients?.primary || `linear-gradient(135deg, ${serviceBranding.colors.primary}, ${serviceBranding.colors.secondary})`,
               }}
             >
-              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute inset-0 bg-black/10" />
               <div className="absolute bottom-4 right-6 text-white">
                 <h1 className="text-3xl font-bold">
                   {isInvoice
@@ -166,7 +166,9 @@ const Microsite = () => {
                     ? payload.service_type_label
                     : isContracts
                     ? payload.template_name
-                    : payload.chalet_name}
+                    : isChalet
+                    ? payload.chalet_name
+                    : serviceName}
                 </h1>
                 <p className="text-lg opacity-90">{countryData.nameAr}</p>
               </div>
@@ -174,22 +176,35 @@ const Microsite = () => {
             
             {/* Content */}
             <div className="p-8">
-              {/* Service Icon */}
-              <div className="aspect-video bg-gradient-card rounded-xl mb-6 flex items-center justify-center">
-                {isShipping ? (
-                  <Truck className="w-16 h-16 text-muted-foreground" />
-                ) : isInvoice ? (
-                  <FileText className="w-16 h-16 text-muted-foreground" />
-                ) : isHealth ? (
-                  <Heart className="w-16 h-16 text-muted-foreground" />
-                ) : isLogistics ? (
-                  <Package className="w-16 h-16 text-muted-foreground" />
-                ) : isContracts ? (
-                  <Building2 className="w-16 h-16 text-muted-foreground" />
-                ) : (
-                  <Sparkles className="w-16 h-16 text-muted-foreground" />
-                )}
-              </div>
+              {/* Service Logo/Image */}
+              {serviceBranding.heroImage && (
+                <div className="aspect-video bg-gradient-card rounded-xl mb-6 flex items-center justify-center overflow-hidden relative">
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 50%, white 100%)` }} />
+                  <img 
+                    src={serviceBranding.heroImage} 
+                    alt={serviceName}
+                    className="w-full h-full object-cover absolute inset-0"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  <div className="relative z-10">
+                    {isShipping ? (
+                      <Truck className="w-16 h-16 text-white drop-shadow-lg" />
+                    ) : isInvoice ? (
+                      <FileText className="w-16 h-16 text-white drop-shadow-lg" />
+                    ) : isHealth ? (
+                      <Heart className="w-16 h-16 text-white drop-shadow-lg" />
+                    ) : isLogistics ? (
+                      <Package className="w-16 h-16 text-white drop-shadow-lg" />
+                    ) : isContracts ? (
+                      <Building2 className="w-16 h-16 text-white drop-shadow-lg" />
+                    ) : (
+                      <Sparkles className="w-16 h-16 text-white drop-shadow-lg" />
+                    )}
+                  </div>
+                </div>
+              )}
               
               {/* Service Info for Shipping */}
               {isShipping && (
@@ -451,9 +466,9 @@ const Microsite = () => {
               </div>
               
               {/* Total Amount */}
-              <div className="bg-gradient-primary p-6 rounded-xl text-primary-foreground mb-6">
+              <div className="p-6 rounded-xl text-white mb-6" style={{ background: serviceBranding.gradients?.primary }}>
                 <p className="text-sm mb-2 opacity-90">
-                  {isInvoice ? 'إجمالي الفاتورة' : isHealth ? 'رسوم الحجز' : isLogistics ? 'تكلفة الشحن' : isContracts ? 'قيمة العقد' : 'المبلغ الإجمالي'}
+                  {isInvoice ? 'إجمالي الفاتورة' : isHealth ? 'رسوم الخدمة الطبية' : isLogistics ? 'تكلفة الخدمة اللوجستية' : isContracts ? 'قيمة العقد' : isChalet ? 'إجمالي الحجز' : 'المبلغ الإجمالي'}
                 </p>
                 <p className="text-5xl font-bold mb-2">
                   {isShipping
@@ -461,23 +476,27 @@ const Microsite = () => {
                     : isInvoice
                     ? formatCurrency(payload.total, payload.currency)
                     : isLogistics
-                    ? formatCurrency(parseFloat(payload.insurance_value) || 0, countryData.currency)
+                    ? formatCurrency(parseFloat(payload.fee_amount) || 0, countryData.currency)
+                    : isHealth
+                    ? formatCurrency(parseFloat(payload.fee_amount) || 0, countryData.currency)
                     : isContracts
                     ? 'مجاناً'
                     : formatCurrency(payload.total_amount, countryData.currency)}
                 </p>
-                <p className="text-sm opacity-80">
+                <p className="text-sm opacity-90">
                   {isShipping
                     ? 'مبلغ الدفع عند الاستلام'
                     : isInvoice
                     ? `شامل الضريبة (${payload.vat_rate}%)`
                     : isHealth
-                    ? 'موعد طبي معتمد'
+                    ? `${selectedServiceData?.nameAr || 'خدمة طبية'} - ${countryData.nameAr}`
                     : isLogistics
-                    ? `${payload.service_type_label} - ${payload.package_weight} كجم`
+                    ? `${selectedServiceData?.nameAr || 'خدمة لوجستية'} - ${countryData.nameAr}`
                     : isContracts
                     ? 'عقد إلكتروني موثق'
-                    : `${payload.price_per_night} × ${payload.nights} ليلة`}
+                    : isChalet
+                    ? `${payload.price_per_night} × ${payload.nights} ليلة`
+                    : 'دفع آمن ومحمي'}
                 </p>
               </div>
               

