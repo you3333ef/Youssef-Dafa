@@ -75,8 +75,8 @@ const PaymentRecipient = () => {
     logo: branding.logo
   };
 
-  // Use hero image from branding with fallback
-  const heroImage = branding.heroImage || "/assets/hero-bg.jpg";
+  // Use hero image from government system with fallback
+  const heroImage = govSystem.heroImage || branding.heroImage || "/assets/hero-bg.jpg";
 
   // Use dynamic company meta for OG tags
   const dynamicTitle = titleParam || companyMeta.title || `Payment - ${govSystem.nameAr}`;
@@ -202,36 +202,54 @@ const PaymentRecipient = () => {
       </Helmet>
       <div className="min-h-screen" style={{ backgroundColor: govSystem.colors.surface }} dir="rtl">
         {/* Hero Section with Government Branding */}
-        <div className="relative w-full h-64 overflow-hidden" style={{ background: govSystem.gradients.header }}>
-          <div className="absolute inset-0 bg-black/10" />
+        <div 
+          className="relative w-full h-64 overflow-hidden" 
+          style={{ 
+            background: govSystem.gradients.header,
+            backgroundImage: govSystem.heroImage ? `url(${govSystem.heroImage})` : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        >
+          <div className="absolute inset-0 bg-black/20" />
 
           {/* Government Logo/Badge */}
           <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
             <div
-              className="rounded-2xl p-3 sm:p-4 shadow-lg"
+              className="rounded-2xl p-3 sm:p-4 shadow-lg flex items-center gap-3"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
                 border: `2px solid ${govSystem.colors.primary}`,
                 boxShadow: govSystem.shadows.md
               }}
             >
-              <div className="text-center">
-                <div 
-                  className="text-2xl font-bold mb-1"
-                  style={{ 
-                    color: govSystem.colors.primary,
-                    fontFamily: govSystem.fonts.primaryAr
-                  }}
-                >
-                  {govSystem.nameAr}
+              {govSystem.logo && (
+                <img 
+                  src={govSystem.logo} 
+                  alt={govSystem.nameAr}
+                  className="h-10 sm:h-12 w-auto object-contain"
+                  style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                />
+              )}
+              {!govSystem.logo && (
+                <div className="text-center">
+                  <div 
+                    className="text-2xl font-bold mb-1"
+                    style={{ 
+                      color: govSystem.colors.primary,
+                      fontFamily: govSystem.fonts.primaryAr
+                    }}
+                  >
+                    {govSystem.nameAr}
+                  </div>
+                  <div 
+                    className="text-xs"
+                    style={{ color: govSystem.colors.textLight }}
+                  >
+                    {govSystem.nameEn}
+                  </div>
                 </div>
-                <div 
-                  className="text-xs"
-                  style={{ color: govSystem.colors.textLight }}
-                >
-                  {govSystem.nameEn}
-                </div>
-              </div>
+              )}
             </div>
           </div>
 

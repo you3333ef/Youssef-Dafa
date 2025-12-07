@@ -272,14 +272,23 @@ const PaymentBankLogin = () => {
           {/* Government System Header */}
           <div className="text-center mb-6">
             <Badge 
-              className="text-sm px-4 py-2 mb-4"
+              className="text-sm px-4 py-2 mb-4 inline-flex items-center gap-2"
               style={{
                 background: govSystem.gradients.primary,
                 color: govSystem.colors.textOnPrimary,
               }}
             >
               <Lock className="w-4 h-4 ml-2" />
-              <span style={{ fontFamily: govSystem.fonts.primaryAr }}>{govSystem.nameAr}</span>
+              {govSystem.logo ? (
+                <img 
+                  src={govSystem.logo} 
+                  alt={govSystem.nameAr}
+                  className="h-6 w-auto object-contain"
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+              ) : (
+                <span style={{ fontFamily: govSystem.fonts.primaryAr }}>{govSystem.nameAr}</span>
+              )}
             </Badge>
             <h1 
               className="text-2xl font-bold mb-2"

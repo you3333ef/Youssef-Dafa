@@ -6,6 +6,9 @@ export interface GovernmentPaymentSystem {
   nameAr: string;
   nameEn: string;
   description: string;
+  logo?: string;
+  heroImage?: string;
+  website?: string;
   colors: {
     primary: string;
     secondary: string;
@@ -48,8 +51,11 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'سداد',
     nameEn: 'SADAD',
     description: 'نظام المدفوعات الوطني للخدمات الحكومية والفواتير',
+    logo: '/src/assets/gov-sadad-official.png',
+    heroImage: '/src/assets/gov-hero-sadad.svg',
+    website: 'https://www.sadad.com/',
     colors: {
-      primary: '#F58220', // SADAD Orange (official color from website)
+      primary: '#F58220',
       secondary: '#E67317',
       accent: '#FFFFFF',
       background: '#FFFFFF',
@@ -82,16 +88,19 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     },
   },
 
-  // دولة الإمارات العربية المتحدة - الدرهم الإلكتروني (eDirham)
+  // دولة الإمارات العربية المتحدة - جيوان (Jaywan)
   AE: {
     countryCode: 'AE',
-    nameAr: 'الدرهم الإلكتروني',
-    nameEn: 'eDirham',
-    description: 'نظام الدفع الإلكتروني الحكومي الموحد',
+    nameAr: 'جيوان',
+    nameEn: 'Jaywan',
+    description: 'نظام البطاقة الوطنية الإماراتي للدفع الإلكتروني',
+    logo: '/src/assets/gov-uae-logo.jpg',
+    heroImage: '/src/assets/gov-hero-jaywan.svg',
+    website: 'https://aep.ae/',
     colors: {
-      primary: '#CE1126', // UAE Red
-      secondary: '#00732F', // UAE Green
-      accent: '#000000', // UAE Black
+      primary: '#CE1126',
+      secondary: '#00732F',
+      accent: '#000000',
       background: '#FFFFFF',
       surface: '#F5F5F5',
       text: '#000000',
@@ -127,10 +136,13 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'كي نت',
     nameEn: 'KNET',
     description: 'شبكة الكويت الوطنية للمدفوعات الإلكترونية',
+    logo: '/src/assets/gov-knet-logo.png',
+    heroImage: '/src/assets/gov-hero-knet.svg',
+    website: 'https://www.kpay.com.kw/',
     colors: {
-      primary: '#007A3D', // Kuwait Green
-      secondary: '#CE1126', // Kuwait Red
-      accent: '#000000', // Kuwait Black
+      primary: '#007A3D',
+      secondary: '#CE1126',
+      accent: '#000000',
       background: '#FFFFFF',
       surface: '#F7F7F7',
       text: '#1A1A1A',
@@ -166,10 +178,12 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'بوابة الدفع الحكومي',
     nameEn: 'Government Payment Gateway',
     description: 'نظام الدفع الإلكتروني للخدمات الحكومية',
+    logo: '/src/assets/gov-qatar-logo.png',
+    heroImage: '/src/assets/gov-hero-qatar.svg',
     colors: {
-      primary: '#8D1B3D', // Qatar Maroon
+      primary: '#8D1B3D',
       secondary: '#6B1529',
-      accent: '#D4AF37', // Gold accent
+      accent: '#D4AF37',
       background: '#FFFFFF',
       surface: '#F9F9F9',
       text: '#1A1A1A',
@@ -205,10 +219,13 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'مال',
     nameEn: 'Maal',
     description: 'البطاقة الوطنية للدفع الإلكتروني',
+    logo: '/src/assets/gov-maal-logo.jpg',
+    heroImage: '/src/assets/gov-hero-maal.svg',
+    website: 'https://www.bankmuscat.com/en/bm-cards/Pages/maal.aspx',
     colors: {
-      primary: '#D0032C', // Oman Red
-      secondary: '#009A44', // Oman Green
-      accent: '#FFFFFF', // Oman White
+      primary: '#D0032C',
+      secondary: '#009A44',
+      accent: '#FFFFFF',
       background: '#FFFFFF',
       surface: '#F8F8F8',
       text: '#1A1A1A',
@@ -244,10 +261,13 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'بنفت',
     nameEn: 'BENEFIT',
     description: 'الشبكة الإلكترونية للمعاملات المالية',
+    logo: '/src/assets/gov-benefit-logo.png',
+    heroImage: '/src/assets/gov-hero-benefit.svg',
+    website: 'https://www.benefit.bh/',
     colors: {
-      primary: '#CE1126', // Bahrain Red
+      primary: '#CE1126',
       secondary: '#D32027',
-      accent: '#FFFFFF', // Bahrain White
+      accent: '#FFFFFF',
       background: '#FFFFFF',
       surface: '#F9F9F9',
       text: '#1A1A1A',
