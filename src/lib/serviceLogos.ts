@@ -89,7 +89,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   
   // Saudi Arabia - السعودية
   smsa: {
-    logo: "https://www.smsaexpress.com/images/logo.png",
+    logo: "https://logo.clearbit.com/smsaexpress.com",
     colors: {
       primary: "#0066CC",
       secondary: "#FF6600"
@@ -98,7 +98,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-smsa.jpg",
     description: "أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية",
     day: {
-        logo: "https://www.smsaexpress.com/images/logo.png",
+        logo: "https://logo.clearbit.com/smsaexpress.com",
         colors: {
             primary: "#FF6600",
             secondary: "#0066CC"
@@ -106,7 +106,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     }
   },
   zajil: {
-    logo: "https://zajil.com/assets/images/logo.png",
+    logo: "https://logo.clearbit.com/zajil-express.com",
     colors: {
       primary: "#1C4587",
       secondary: "#FF9900"
@@ -115,7 +115,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-zajil.jpg",
     description: "شركة سعودية رائدة في خدمات البريد السريع والشحن",
     day: {
-        logo: "https://zajil.com/assets/images/logo.png",
+        logo: "https://logo.clearbit.com/zajil-express.com",
         colors: {
             primary: "#FF9900",
             secondary: "#1C4587"
@@ -123,7 +123,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     }
   },
   naqel: {
-    logo: "https://www.naqelexpress.com/images/logo.png",
+    logo: "https://logo.clearbit.com/naqelexpress.com",
     colors: {
       primary: "#0052A3",
       secondary: "#FF6B00"
@@ -132,7 +132,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-naqel.jpg",
     description: "حلول شحن متطورة وخدمات لوجستية متكاملة داخل المملكة",
     day: {
-        logo: "https://www.naqelexpress.com/images/logo.png",
+        logo: "https://logo.clearbit.com/naqelexpress.com",
         colors: {
             primary: "#FF6B00",
             secondary: "#0052A3"
@@ -140,7 +140,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     }
   },
   saudipost: {
-    logo: "https://sp.com.sa/assets/images/logo.png",
+    logo: "https://logo.clearbit.com/sp.com.sa",
     colors: {
       primary: "#006C35",
       secondary: "#FFB81C"
@@ -149,17 +149,51 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-saudipost.jpg",
     description: "المشغل الوطني للبريد في المملكة العربية السعودية",
     day: {
-        logo: "https://sp.com.sa/assets/images/logo.png",
+        logo: "https://logo.clearbit.com/sp.com.sa",
         colors: {
             primary: "#FFB81C",
             secondary: "#006C35"
         }
     }
   },
+  esnad: {
+    logo: "https://logo.clearbit.com/esnadexpress.com",
+    colors: {
+      primary: "#00AEEF",
+      secondary: "#FFFFFF"
+    },
+    ogImage: "https://logo.clearbit.com/esnadexpress.com",
+    heroImage: "https://logo.clearbit.com/esnadexpress.com",
+    description: "شركة لوجستية في المملكة العربية السعودية تقدم حلولاً شاملة للتجارة الإلكترونية وخدمات الشحن السريع المحلي والدولي.",
+    day: {
+      logo: "https://logo.clearbit.com/esnadexpress.com",
+      colors: {
+        primary: "#FFFFFF",
+        secondary: "#00AEEF"
+      }
+    }
+  },
+  sal: {
+    logo: "https://logo.clearbit.com/sal.sa",
+    colors: {
+      primary: "#003366",
+      secondary: "#FDB913"
+    },
+    ogImage: "https://logo.clearbit.com/sal.sa",
+    heroImage: "https://logo.clearbit.com/sal.sa",
+    description: "الشركة السعودية للخدمات اللوجستية (SAL) هي المزود الرائد للخدمات اللوجستية وسلسلة التوريد في المملكة العربية السعودية.",
+    day: {
+      logo: "https://logo.clearbit.com/sal.sa",
+      colors: {
+        primary: "#FDB913",
+        secondary: "#003366"
+      }
+    }
+  },
   
   // Kuwait - الكويت
   kwpost: {
-    logo: "https://www.kwpost.com.kw/images/logo.png",
+    logo: "https://logo.clearbit.com/moc.gov.kw",
     colors: {
       primary: "#007A33",
       secondary: "#DA291C"
@@ -168,34 +202,17 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-kwpost.jpg",
     description: "المشغل الوطني للبريد في دولة الكويت",
     day: {
-        logo: "https://www.kwpost.com.kw/images/logo.png",
+        logo: "https://logo.clearbit.com/moc.gov.kw",
         colors: {
             primary: "#DA291C",
             secondary: "#007A33"
         }
     }
   },
-  dhlkw: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-    colors: {
-      primary: "#FFCC00",
-      secondary: "#D40511"
-    },
-    ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي",
-    day: {
-        logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-        colors: {
-            primary: "#D40511",
-            secondary: "#FFCC00"
-        }
-    }
-  },
   
   // Qatar - قطر
   qpost: {
-    logo: "https://www.qpost.qa/assets/images/logo.png",
+    logo: "https://logo.clearbit.com/qatarpost.qa",
     colors: {
       primary: "#8E1838",
       secondary: "#FFFFFF"
@@ -204,34 +221,17 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-qpost.jpg",
     description: "المشغل الوطني للبريد في دولة قطر",
     day: {
-        logo: "https://www.qpost.qa/assets/images/logo.png",
+        logo: "https://logo.clearbit.com/qatarpost.qa",
         colors: {
             primary: "#FFFFFF",
             secondary: "#8E1838"
         }
     }
   },
-  dhlqa: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-    colors: {
-      primary: "#FFCC00",
-      secondary: "#D40511"
-    },
-    ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي",
-    day: {
-        logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-        colors: {
-            primary: "#D40511",
-            secondary: "#FFCC00"
-        }
-    }
-  },
   
   // Oman - عمان
   omanpost: {
-    logo: "https://www.omanpost.om/images/logo.png",
+    logo: "https://logo.clearbit.com/omanpost.om",
     colors: {
       primary: "#ED1C24",
       secondary: "#009639"
@@ -240,34 +240,17 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-omanpost.jpg",
     description: "المشغل الوطني للبريد في سلطنة عُمان",
     day: {
-        logo: "https://www.omanpost.om/images/logo.png",
+        logo: "https://logo.clearbit.com/omanpost.om",
         colors: {
             primary: "#009639",
             secondary: "#ED1C24"
         }
     }
   },
-  dhlom: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-    colors: {
-      primary: "#FFCC00",
-      secondary: "#D40511"
-    },
-    ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي",
-    day: {
-        logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-        colors: {
-            primary: "#D40511",
-            secondary: "#FFCC00"
-        }
-    }
-  },
   
   // Bahrain - البحرين
   bahpost: {
-    logo: "https://www.bahrainpost.gov.bh/images/logo.png",
+    logo: "https://logo.clearbit.com/bahrainpost.gov.bh",
     colors: {
       primary: "#CE1126",
       secondary: "#FFFFFF"
@@ -276,27 +259,10 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     heroImage: "/og-bahpost.jpg",
     description: "المشغل الوطني للبريد في مملكة البحرين",
     day: {
-        logo: "https://www.bahrainpost.gov.bh/images/logo.png",
+        logo: "https://logo.clearbit.com/bahrainpost.gov.bh",
         colors: {
             primary: "#FFFFFF",
             secondary: "#CE1126"
-        }
-    }
-  },
-  dhlbh: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-    colors: {
-      primary: "#FFCC00",
-      secondary: "#D40511"
-    },
-    ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي",
-    day: {
-        logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
-        colors: {
-            primary: "#D40511",
-            secondary: "#FFCC00"
         }
     }
   },
