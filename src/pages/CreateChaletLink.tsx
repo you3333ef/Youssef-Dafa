@@ -17,12 +17,14 @@ import { useChalets, useCreateLink } from "@/hooks/useSupabase";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { ArrowRight, Home, Copy, Check, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getServiceTheme } from "@/lib/serviceThemes";
 
 const CreateChaletLink = () => {
   const { country } = useParams<{ country: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
+  const serviceTheme = getServiceTheme('chalet');
   
   const { data: chalets, isLoading } = useChalets(country);
   const createLink = useCreateLink();
@@ -200,7 +202,7 @@ const CreateChaletLink = () => {
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center"
                 style={{
-                  background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                  background: serviceTheme.gradient,
                 }}
               >
                 <Home className="w-5 h-5 text-white" />

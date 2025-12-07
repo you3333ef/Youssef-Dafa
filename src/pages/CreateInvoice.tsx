@@ -10,6 +10,7 @@ import { Country, COUNTRIES, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, FileText, Plus, Trash2, Download, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { getServiceTheme } from "@/lib/serviceThemes";
 
 interface InvoiceItem {
   id: string;
@@ -25,6 +26,7 @@ const CreateInvoice = () => {
   const { toast } = useToast();
   const selectedCountry = getCountryByCode(country || "");
   const createLink = useCreateLink();
+  const serviceTheme = getServiceTheme('invoices');
 
   const [invoiceData, setInvoiceData] = useState({
     invoiceNumber: `INV-${Date.now()}`,
@@ -153,8 +155,8 @@ const CreateInvoice = () => {
           </Button>
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-              <FileText className="w-6 h-6 text-primary-foreground" />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: serviceTheme.gradient }}>
+              <FileText className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="text-2xl font-bold">إنشاء فاتورة جديدة</h1>

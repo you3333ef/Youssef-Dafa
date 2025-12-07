@@ -17,6 +17,7 @@ import { CreditCard, DollarSign, Hash, Building2, Copy, ExternalLink, FileText, 
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import TelegramTest from "@/components/TelegramTest";
+import { getServiceTheme } from "@/lib/serviceThemes";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +34,7 @@ const CreatePaymentLink = () => {
   const { toast } = useToast();
   const createLink = useCreateLink();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
+  const serviceTheme = getServiceTheme('payment');
 
   const [paymentAmount, setPaymentAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -158,7 +160,7 @@ const CreatePaymentLink = () => {
             <div
               className="h-16 -m-4 mb-4 rounded-t-xl relative"
               style={{
-                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                background: serviceTheme.gradient,
               }}
             >
               <div className="absolute inset-0 bg-black/20 rounded-t-xl" />
@@ -271,7 +273,7 @@ const CreatePaymentLink = () => {
                 size="lg"
                 className="w-full h-11 text-white mt-6"
                 style={{
-                  background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`
+                  background: serviceTheme.gradient
                 }}
                 disabled={createLink.isPending}
               >

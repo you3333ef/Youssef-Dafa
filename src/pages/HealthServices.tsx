@@ -10,6 +10,7 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Heart, Shield, Clock, Award, Phone, MapPin, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { getServiceTheme } from "@/lib/serviceThemes";
 
 const HealthServices = () => {
   const { country } = useParams();
@@ -17,6 +18,7 @@ const HealthServices = () => {
   const { toast } = useToast();
   const selectedCountry = getCountryByCode(country || "");
   const createLink = useCreateLink();
+  const serviceTheme = getServiceTheme('health');
 
   const [bookingData, setBookingData] = useState({
     patientName: "",
@@ -131,7 +133,7 @@ const HealthServices = () => {
           </Button>
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: serviceTheme.gradient }}>
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>

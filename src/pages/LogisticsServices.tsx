@@ -11,6 +11,7 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Truck, Package, MapPin, Clock, Shield, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { getServiceTheme } from "@/lib/serviceThemes";
 
 const LogisticsServices = () => {
   const { country } = useParams();
@@ -18,6 +19,7 @@ const LogisticsServices = () => {
   const { toast } = useToast();
   const selectedCountry = getCountryByCode(country || "");
   const createLink = useCreateLink();
+  const serviceTheme = getServiceTheme('logistics');
 
   const [bookingData, setBookingData] = useState({
     senderName: "",
@@ -231,7 +233,7 @@ const LogisticsServices = () => {
           </Button>
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: serviceTheme.gradient }}>
               <Truck className="w-6 h-6 text-white" />
             </div>
             <div>

@@ -10,6 +10,7 @@ import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency } from "@/utils/countryData";
 import SEOHead from "@/components/SEOHead";
+import { getServiceTheme } from "@/lib/serviceThemes";
 import {
   MapPin,
   Users,
@@ -30,6 +31,20 @@ const Microsite = () => {
   const navigate = useNavigate();
   const { data: link, isLoading } = useLink(id);
   const countryData = getCountryByCode(country || "");
+  
+  // Get service theme based on link type
+  const getServiceTypeForTheme = (linkType: string) => {
+    if (linkType === 'payment') return 'payment';
+    if (linkType === 'shipping') return 'shipping';
+    if (linkType === 'chalet') return 'chalet';
+    if (linkType === 'invoices') return 'invoices';
+    if (linkType === 'health') return 'health';
+    if (linkType === 'logistics') return 'logistics';
+    if (linkType === 'contracts') return 'contracts';
+    return 'payment';
+  };
+  
+  const serviceTheme = link ? getServiceTheme(getServiceTypeForTheme(link.type)) : getServiceTheme('payment');
   
   const payload = link?.payload;
   const serviceKey = payload?.service_key || 'aramex';
@@ -151,7 +166,7 @@ const Microsite = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header Badge */}
           <div className="text-center mb-8">
-            <Badge className="text-lg px-6 py-2 bg-gradient-primary">
+            <Badge className="text-lg px-6 py-2" style={{ background: serviceTheme.gradient, color: 'white' }}>
               <Shield className="w-4 h-4 ml-2" />
               <span>عقد موثّق ومحمي</span>
             </Badge>
@@ -163,7 +178,7 @@ const Microsite = () => {
             <div
               className="h-32 relative"
               style={{
-                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                background: serviceTheme.gradient,
               }}
             >
               <div className="absolute inset-0 bg-black/20" />
@@ -444,7 +459,7 @@ const Microsite = () => {
               </div>
               
               {/* Total Amount */}
-              <div className="bg-gradient-primary p-6 rounded-xl text-primary-foreground mb-6">
+              <div className="p-6 rounded-xl mb-6" style={{ background: serviceTheme.gradient, color: 'white' }}>
                 <p className="text-sm mb-2 opacity-90">
                   {isInvoice ? 'إجمالي الفاتورة' : isHealth ? 'رسوم الحجز' : isLogistics ? 'تكلفة الشحن' : isContracts ? 'قيمة العقد' : 'المبلغ الإجمالي'}
                 </p>
