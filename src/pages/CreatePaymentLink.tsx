@@ -78,12 +78,22 @@ const CreatePaymentLink = () => {
         },
       });
 
-      // Generate unified payment URL using the new function
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: "payment",
-        country: country || 'SA'
-      });
+      // Generate payment URL based on service type
+      let paymentUrl;
+      if (serviceType === "government") {
+        // للخدمات الحكومية: رابط مباشر لصفحة الدفع الحكومي
+        const productionDomain = typeof window !== 'undefined' 
+          ? window.location.origin 
+          : import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://gulf-unified-payment.netlify.app';
+        paymentUrl = `${productionDomain}/pay/${link.id}/government-data`;
+      } else {
+        // للدفع العادي: استخدام generatePaymentLink
+        paymentUrl = generatePaymentLink({
+          invoiceId: link.id,
+          company: "payment",
+          country: country || 'SA'
+        });
+      }
 
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);
@@ -94,11 +104,11 @@ const CreatePaymentLink = () => {
         type: 'shipping_link_created',
         data: {
           linkId: link.id,
-          serviceKey: 'payment',
-          serviceName: 'خدمة السداد',
+          serviceKey: serviceType === "government" ? 'government' : 'payment',
+          serviceName: serviceType === "government" ? 'سداد حكومي' : 'خدمة السداد',
           invoice_number: invoiceNumber,
           payment_amount: parseFloat(paymentAmount) || 500,
-          payment_method: paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك',
+          payment_method: serviceType === "government" ? 'سداد حكومي' : (paymentMethod === 'card' ? 'دفع بالبطاقة' : 'تسجيل دخول البنك'),
           country: countryData?.nameAr || country,
           currency: getCurrencySymbol(country || 'SA'),
           payment_url: paymentUrl,
