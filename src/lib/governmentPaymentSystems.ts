@@ -70,7 +70,6 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
       primary: 'Inter',
       secondary: 'Cairo',
     },
-    website: 'https://www.sadad.com/',
     gradients: {
       primary: 'linear-gradient(135deg, #F58220, #E67317)',
       secondary: 'linear-gradient(135deg, #E67317, #F58220)',

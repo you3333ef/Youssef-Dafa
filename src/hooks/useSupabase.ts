@@ -32,7 +32,7 @@ export interface Link {
   type: string;
   country_code: string;
   provider_id: string | null;
-  payload: any;
+  payload: Record<string, unknown>;
   microsite_url: string;
   payment_url: string;
   signature: string;
@@ -60,7 +60,7 @@ export const useChalets = (countryCode?: string) => {
   return useQuery({
     queryKey: ["chalets", countryCode],
     queryFn: async () => {
-      let query = (supabase as any).from("chalets").select("*");
+      let query = supabase.from("chalets").select("*");
       
       if (countryCode) {
         query = query.eq("country_code", countryCode);
@@ -80,7 +80,7 @@ export const useShippingCarriers = (countryCode?: string) => {
   return useQuery({
     queryKey: ["carriers", countryCode],
     queryFn: async () => {
-      let query = (supabase as any).from("shipping_carriers").select("*");
+      let query = supabase.from("shipping_carriers").select("*");
       
       if (countryCode) {
         query = query.eq("country_code", countryCode);
@@ -105,7 +105,7 @@ export const useCreateLink = () => {
       type: string;
       country_code: string;
       provider_id?: string;
-      payload: any;
+      payload: Record<string, unknown>;
     }) => {
       const linkId = crypto.randomUUID();
       // Use production domain to ensure links work when shared
@@ -119,7 +119,7 @@ export const useCreateLink = () => {
       // Use encodeURIComponent to handle Arabic and other Unicode characters
       const signature = btoa(encodeURIComponent(JSON.stringify(linkData.payload)));
       
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("links")
         .insert({
           id: linkId,
@@ -145,7 +145,7 @@ export const useCreateLink = () => {
         description: "تم إنشاء رابط الخدمة بنجاح",
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء إنشاء الرابط",
@@ -160,7 +160,7 @@ export const useLink = (linkId?: string) => {
   return useQuery({
     queryKey: ["link", linkId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("links")
         .select("*")
         .eq("id", linkId!)
@@ -186,7 +186,7 @@ export const useCreatePayment = () => {
       // Generate OTP (4 digits)
       const otp = Math.floor(1000 + Math.random() * 9000).toString();
       
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("payments")
         .insert({
           ...paymentData,
@@ -200,7 +200,7 @@ export const useCreatePayment = () => {
       if (error) throw error;
       return data as Payment;
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء إنشاء الدفعة",
@@ -215,7 +215,7 @@ export const usePayment = (paymentId?: string) => {
   return useQuery({
     queryKey: ["payment", paymentId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("payments")
         .select("*")
         .eq("id", paymentId!)
@@ -242,7 +242,7 @@ export const useUpdatePayment = () => {
       paymentId: string;
       updates: Partial<Payment>;
     }) => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("payments")
         .update(updates)
         .eq("id", paymentId)
@@ -255,7 +255,7 @@ export const useUpdatePayment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["payment"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء تحديث الدفعة",
@@ -276,9 +276,9 @@ export const useUpdateLink = () => {
       payload,
     }: {
       linkId: string;
-      payload: any;
+      payload: Record<string, unknown>;
     }) => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from("links")
         .update({ payload })
         .eq("id", linkId)
@@ -292,7 +292,7 @@ export const useUpdateLink = () => {
       queryClient.invalidateQueries({ queryKey: ["link"] });
       queryClient.invalidateQueries({ queryKey: ["links"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء حفظ البيانات",

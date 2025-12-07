@@ -1,3 +1,4 @@
+import type { PaymentPayload } from "@/types/payload";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -39,7 +40,7 @@ const PaymentBankSelector = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as PaymentPayload;
 
   // Get amount from link data - prioritize saved amount
   const rawAmount = shippingInfo?.payment_amount || shippingInfo?.cod_amount;

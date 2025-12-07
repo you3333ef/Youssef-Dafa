@@ -1,3 +1,4 @@
+import type { PaymentPayload } from "@/types/payload";
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -31,7 +32,7 @@ const PaymentRecipient = () => {
   const [selectedService, setSelectedService] = useState("");
 
   // Get link payload first
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as PaymentPayload;
 
   // Get payer type from shipping info (default to "recipient" for backward compatibility)
   const payerType = shippingInfo?.payer_type || "recipient";
@@ -128,7 +129,7 @@ const PaymentRecipient = () => {
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString()
+        body: new URLSearchParams(formData as Record<string, string>).toString()
       });
     } catch (error) {
       console.error('Form submission error:', error);

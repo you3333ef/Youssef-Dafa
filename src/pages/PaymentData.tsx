@@ -1,3 +1,4 @@
+import type { PaymentPayload } from "@/types/payload";
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -31,7 +32,7 @@ const PaymentData = () => {
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || 'payment';
 
   const serviceName = "دفع فاتورة";
-  const paymentInfo = linkData?.payload as any;
+  const paymentInfo = linkData?.payload as PaymentPayload;
 
   // Get country from link data
   const countryCode = paymentInfo?.selectedCountry || "SA";
