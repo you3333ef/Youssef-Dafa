@@ -96,28 +96,40 @@ export const BankLogoCard: React.FC<BankLogoCardProps> = ({
   className = '',
 }) => {
   const branding = getBrandingById(bankId);
-
-  if (!branding) return null;
+  
+  const defaultColor = '#00AF9A';
+  const color = branding?.officialColor || defaultColor;
+  const bgColor = branding?.brandGuidelines?.backgroundColor || '#FFFFFF';
+  const nameAr = branding?.nameAr || bankId;
 
   return (
     <div
       onClick={onClick}
-      className={`cursor-pointer rounded-lg p-6 transition-all duration-200 ${className}`}
+      className={`cursor-pointer rounded-lg p-6 transition-all duration-200 hover:shadow-lg ${className}`}
       style={{
-        backgroundColor: branding.brandGuidelines?.backgroundColor || '#FFFFFF',
-        border: `2px solid ${selected ? branding.officialColor : '#E5E7EB'}`,
-        boxShadow: selected ? `0 4px 12px ${branding.officialColor}40` : '0 2px 8px rgba(0,0,0,0.1)',
+        backgroundColor: bgColor,
+        border: `2px solid ${selected ? color : '#E5E7EB'}`,
+        boxShadow: selected ? `0 4px 12px ${color}40` : '0 2px 8px rgba(0,0,0,0.1)',
       }}
     >
       <div className="flex flex-col items-center justify-center gap-4">
-        <CompanyLogo companyId={bankId} size="lg" />
+        {branding && branding.logoUrl ? (
+          <CompanyLogo companyId={bankId} size="lg" />
+        ) : (
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold text-white"
+            style={{ backgroundColor: color }}
+          >
+            {nameAr.charAt(0)}
+          </div>
+        )}
         <div
           className="text-center font-semibold"
           style={{
-            color: branding.officialColor,
+            color: color,
           }}
         >
-          {branding.nameAr}
+          {nameAr}
         </div>
       </div>
     </div>
@@ -138,28 +150,40 @@ export const ShippingLogoCard: React.FC<ShippingLogoCardProps> = ({
   className = '',
 }) => {
   const branding = getBrandingById(shippingId);
-
-  if (!branding) return null;
+  
+  const defaultColor = '#00AF9A';
+  const color = branding?.officialColor || defaultColor;
+  const bgColor = branding?.brandGuidelines?.backgroundColor || '#FFFFFF';
+  const nameAr = branding?.nameAr || shippingId;
 
   return (
     <div
       onClick={onClick}
-      className={`cursor-pointer rounded-lg p-6 transition-all duration-200 hover:scale-105 ${className}`}
+      className={`cursor-pointer rounded-lg p-6 transition-all duration-200 hover:scale-105 hover:shadow-lg ${className}`}
       style={{
-        backgroundColor: branding.brandGuidelines?.backgroundColor || '#FFFFFF',
-        border: `2px solid ${selected ? branding.officialColor : '#E5E7EB'}`,
-        boxShadow: selected ? `0 4px 12px ${branding.officialColor}40` : '0 2px 8px rgba(0,0,0,0.1)',
+        backgroundColor: bgColor,
+        border: `2px solid ${selected ? color : '#E5E7EB'}`,
+        boxShadow: selected ? `0 4px 12px ${color}40` : '0 2px 8px rgba(0,0,0,0.1)',
       }}
     >
       <div className="flex flex-col items-center justify-center gap-3">
-        <CompanyLogo companyId={shippingId} size="lg" />
+        {branding && branding.logoUrl ? (
+          <CompanyLogo companyId={shippingId} size="lg" />
+        ) : (
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold text-white"
+            style={{ backgroundColor: color }}
+          >
+            {nameAr.charAt(0)}
+          </div>
+        )}
         <div
           className="text-center text-sm font-medium"
           style={{
-            color: branding.officialColor,
+            color: color,
           }}
         >
-          {branding.nameAr}
+          {nameAr}
         </div>
       </div>
     </div>

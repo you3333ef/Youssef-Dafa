@@ -78,6 +78,138 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
       backgroundColor: '#FFFFFF',
     }
   },
+  saudi_investment_bank: {
+    id: 'saudi_investment_bank',
+    name: 'Saudi Investment Bank',
+    nameAr: 'البنك السعودي للاستثمار',
+    officialColor: '#004B87',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#004B87',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  arab_national_bank: {
+    id: 'arab_national_bank',
+    name: 'Arab National Bank',
+    nameAr: 'البنك العربي الوطني',
+    officialColor: '#00A551',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00A551',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  saudi_fransi_bank: {
+    id: 'saudi_fransi_bank',
+    name: 'Banque Saudi Fransi',
+    nameAr: 'البنك السعودي الفرنسي',
+    officialColor: '#ED1C24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#ED1C24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  albilad_bank: {
+    id: 'albilad_bank',
+    name: 'Bank AlBilad',
+    nameAr: 'بنك البلاد',
+    officialColor: '#1C4587',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#1C4587',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  aljazira_bank: {
+    id: 'aljazira_bank',
+    name: 'Bank AlJazira',
+    nameAr: 'بنك الجزيرة',
+    officialColor: '#005EB8',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#005EB8',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  adcb: {
+    id: 'adcb',
+    name: 'Abu Dhabi Commercial Bank',
+    nameAr: 'بنك أبوظبي التجاري',
+    officialColor: '#004B87',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#004B87',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  dib: {
+    id: 'dib',
+    name: 'Dubai Islamic Bank',
+    nameAr: 'بنك دبي الإسلامي',
+    officialColor: '#00923F',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00923F',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  mashreq_bank: {
+    id: 'mashreq_bank',
+    name: 'Mashreq Bank',
+    nameAr: 'بنك المشرق',
+    officialColor: '#E31E24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#E31E24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  cbd: {
+    id: 'cbd',
+    name: 'Commercial Bank of Dubai',
+    nameAr: 'بنك دبي التجاري',
+    officialColor: '#004B87',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#004B87',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  rakbank: {
+    id: 'rakbank',
+    name: 'RAKBANK',
+    nameAr: 'بنك رأس الخيمة الوطني',
+    officialColor: '#E31E24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#E31E24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  ajman_bank: {
+    id: 'ajman_bank',
+    name: 'Ajman Bank',
+    nameAr: 'بنك عجمان',
+    officialColor: '#00A651',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00A651',
+      backgroundColor: '#FFFFFF',
+    }
+  },
   emirates_nbd: {
     id: 'emirates_nbd',
     name: 'Emirates NBD',
@@ -104,6 +236,78 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
       backgroundColor: '#FFFFFF',
     }
   },
+  gulf_bank: {
+    id: 'gulf_bank',
+    name: 'Gulf Bank',
+    nameAr: 'بنك الخليج',
+    officialColor: '#004B87',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#004B87',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  cbk: {
+    id: 'cbk',
+    name: 'Commercial Bank of Kuwait',
+    nameAr: 'البنك التجاري الكويتي',
+    officialColor: '#00A651',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00A651',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  burgan_bank: {
+    id: 'burgan_bank',
+    name: 'Burgan Bank',
+    nameAr: 'بنك برقان',
+    officialColor: '#E31E24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#E31E24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  ahli_united_bank: {
+    id: 'ahli_united_bank',
+    name: 'Ahli United Bank',
+    nameAr: 'الأهلي المتحد',
+    officialColor: '#00843D',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00843D',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  kfh: {
+    id: 'kfh',
+    name: 'Kuwait Finance House',
+    nameAr: 'بيت التمويل الكويتي',
+    officialColor: '#00923F',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00923F',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  boubyan_bank: {
+    id: 'boubyan_bank',
+    name: 'Boubyan Bank',
+    nameAr: 'بنك بوبيان',
+    officialColor: '#0066B2',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#0066B2',
+      backgroundColor: '#FFFFFF',
+    }
+  },
   qnb: {
     id: 'qnb',
     name: 'Qatar National Bank',
@@ -114,6 +318,198 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     logoType: 'png',
     brandGuidelines: {
       textColor: '#6E1D3E',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  cbq: {
+    id: 'cbq',
+    name: 'Commercial Bank of Qatar',
+    nameAr: 'البنك التجاري القطري',
+    officialColor: '#004B87',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#004B87',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  doha_bank: {
+    id: 'doha_bank',
+    name: 'Doha Bank',
+    nameAr: 'بنك الدوحة',
+    officialColor: '#E31E24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#E31E24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  qib: {
+    id: 'qib',
+    name: 'Qatar Islamic Bank',
+    nameAr: 'بنك قطر الإسلامي',
+    officialColor: '#00923F',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00923F',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  masraf_alrayan: {
+    id: 'masraf_alrayan',
+    name: 'Masraf Al Rayan',
+    nameAr: 'مصرف الريان',
+    officialColor: '#00A651',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00A651',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  ahlibank: {
+    id: 'ahlibank',
+    name: 'Ahlibank',
+    nameAr: 'الأهلي بنك',
+    officialColor: '#00843D',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00843D',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  national_bank_oman: {
+    id: 'national_bank_oman',
+    name: 'National Bank of Oman',
+    nameAr: 'البنك الوطني العماني',
+    officialColor: '#00A651',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00A651',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  bank_dhofar: {
+    id: 'bank_dhofar',
+    name: 'Bank Dhofar',
+    nameAr: 'بنك ظفار',
+    officialColor: '#E31E24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#E31E24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  ahli_bank_oman: {
+    id: 'ahli_bank_oman',
+    name: 'Ahli Bank',
+    nameAr: 'البنك الأهلي',
+    officialColor: '#00843D',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00843D',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  nizwa_bank: {
+    id: 'nizwa_bank',
+    name: 'Bank Nizwa',
+    nameAr: 'بنك نزوى',
+    officialColor: '#00923F',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00923F',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  sohar_international: {
+    id: 'sohar_international',
+    name: 'Sohar International Bank',
+    nameAr: 'بنك صحار الدولي',
+    officialColor: '#0066B2',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#0066B2',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  nbb: {
+    id: 'nbb',
+    name: 'National Bank of Bahrain',
+    nameAr: 'بنك البحرين الوطني',
+    officialColor: '#E31E24',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#E31E24',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  bbk: {
+    id: 'bbk',
+    name: 'Bank of Bahrain and Kuwait',
+    nameAr: 'بنك البحرين والكويت',
+    officialColor: '#004B87',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#004B87',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  ahli_united_bahrain: {
+    id: 'ahli_united_bahrain',
+    name: 'Ahli United Bank',
+    nameAr: 'الأهلي المتحد',
+    officialColor: '#00843D',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00843D',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  bisb: {
+    id: 'bisb',
+    name: 'Bahrain Islamic Bank',
+    nameAr: 'بنك البحرين الإسلامي',
+    officialColor: '#00923F',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00923F',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  ithmaar_bank: {
+    id: 'ithmaar_bank',
+    name: 'Ithmaar Bank',
+    nameAr: 'بنك إثمار',
+    officialColor: '#00A651',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#00A651',
+      backgroundColor: '#FFFFFF',
+    }
+  },
+  khaleeji_bank: {
+    id: 'khaleeji_bank',
+    name: 'Khaleeji Commercial Bank',
+    nameAr: 'بنك الخليج التجاري',
+    officialColor: '#0066B2',
+    secondaryColor: '#FFFFFF',
+    logoType: 'svg',
+    brandGuidelines: {
+      textColor: '#0066B2',
       backgroundColor: '#FFFFFF',
     }
   },
