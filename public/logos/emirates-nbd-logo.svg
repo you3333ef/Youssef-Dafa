@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(15, 15)">
+    <rect width="50" height="50" rx="6" fill="#D50032"/>
+    <path d="M20,20 L45,20 L32.5,35 L45,50 L20,50 Z" fill="#FFFFFF"/>
+  </g>
+  <g transform="translate(75, 25)">
+    <text x="0" y="12" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#D50032">Emirates NBD</text>
+    <text x="0" y="28" font-family="Arial, sans-serif" font-size="10" fill="#666">بنك الإمارات دبي الوطني</text>
+  </g>
+</svg>

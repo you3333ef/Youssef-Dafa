@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(15, 15)">
+    <rect width="50" height="50" rx="6" fill="#006C35"/>
+    <rect x="15" y="15" width="20" height="20" fill="#FFB81C"/>
+    <text x="25" y="30" font-family="Arial Black, sans-serif" font-size="12" font-weight="900" fill="#006C35" text-anchor="middle">SP</text>
+  </g>
+  <g transform="translate(75, 22)">
+    <text x="0" y="12" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#006C35">البريد السعودي</text>
+    <text x="0" y="28" font-family="Arial, sans-serif" font-size="10" fill="#FFB81C">Saudi Post</text>
+  </g>
+</svg>

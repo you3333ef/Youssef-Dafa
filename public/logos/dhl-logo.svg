@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50">
+  <rect width="200" height="50" fill="#FFCC00"/>
+  <g transform="translate(10, 12)">
+    <path d="M0,0 L0,26 L12,26 C18,26 22,22 22,13 C22,4 18,0 12,0 Z M6,5 L11,5 C14,5 16,7 16,13 C16,19 14,21 11,21 L6,21 Z" fill="#D40511"/>
+    <path d="M28,0 L28,26 L34,26 L34,16 L42,16 L42,10 L34,10 L34,6 L44,6 L44,0 Z" fill="#D40511"/>
+    <path d="M50,0 L50,26 L56,26 L56,0 Z" fill="#D40511"/>
+    <path d="M62,0 L62,21 L72,21 L72,26 L56,26 L56,0 Z" fill="#D40511"/>
+  </g>
+  <g transform="translate(95, 30)">
+    <text font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#D40511">EXPRESS</text>
+  </g>
+</svg>

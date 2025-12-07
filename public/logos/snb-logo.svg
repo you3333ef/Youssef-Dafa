@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(20, 20)">
+    <rect width="40" height="40" rx="4" fill="#E30613"/>
+    <text x="20" y="28" font-family="Arial Black, sans-serif" font-size="16" font-weight="900" fill="#FFFFFF" text-anchor="middle">SNB</text>
+  </g>
+  <g transform="translate(70, 25)">
+    <text x="0" y="12" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#E30613">البنك الأهلي</text>
+    <text x="0" y="28" font-family="Arial, sans-serif" font-size="10" fill="#666666">Saudi National Bank</text>
+  </g>
+</svg>

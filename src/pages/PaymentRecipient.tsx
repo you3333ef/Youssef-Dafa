@@ -113,8 +113,6 @@ const PaymentRecipient = () => {
   const handleProceed = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!linkData) return;
-
     // Submit to Netlify Forms
     const formData = new FormData();
     formData.append('form-name', 'payment-recipient');
@@ -153,26 +151,35 @@ const PaymentRecipient = () => {
     });
 
     // Save customer data to the link's payload in Supabase for cross-device compatibility
-    try {
-      const customerData = {
-        ...linkData.payload,
-        customerInfo: {
-          name: customerName,
-          email: customerEmail,
-          phone: customerPhone,
-          address: residentialAddress,
-          service: serviceName,
-          amount: formattedAmount
-        },
-        selectedCountry: countryCode
-      };
+    // Also save to localStorage as fallback
+    const customerData = {
+      ...(linkData?.payload || {}),
+      customerInfo: {
+        name: customerName,
+        email: customerEmail,
+        phone: customerPhone,
+        address: residentialAddress,
+        service: serviceName,
+        amount: formattedAmount
+      },
+      selectedCountry: countryCode,
+      service_key: serviceKey,
+      service_name: serviceName
+    };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: customerData
-      });
-    } catch (error) {
-      // Silent error handling
+    // Save to localStorage for fallback
+    localStorage.setItem(`payment_${id}`, JSON.stringify(customerData));
+
+    // Try to save to Supabase if available
+    if (linkData) {
+      try {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: customerData
+        });
+      } catch (error) {
+        // Silent error handling - localStorage is already saved
+      }
     }
 
     navigate(`/pay/${id}/details`);

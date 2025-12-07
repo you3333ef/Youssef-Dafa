@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50">
+  <defs>
+    <style>
+      .fedex-purple { fill: #4D148C; }
+      .fedex-orange { fill: #FF6600; }
+    </style>
+  </defs>
+  <text x="10" y="35" font-family="Arial, sans-serif" font-size="32" font-weight="bold" class="fedex-purple">Fed</text>
+  <text x="85" y="35" font-family="Arial, sans-serif" font-size="32" font-weight="bold" class="fedex-orange">Ex</text>
+</svg>

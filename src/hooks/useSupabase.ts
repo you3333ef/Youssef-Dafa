@@ -160,16 +160,26 @@ export const useLink = (linkId?: string) => {
   return useQuery({
     queryKey: ["link", linkId],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from("links")
-        .select("*")
-        .eq("id", linkId!)
-        .maybeSingle();
+      try {
+        const { data, error } = await (supabase as any)
+          .from("links")
+          .select("*")
+          .eq("id", linkId!)
+          .maybeSingle();
 
-      if (error) throw error;
-      return data as Link | null;
+        if (error) {
+          // Return null on error - components will use localStorage fallback
+          return null;
+        }
+        return data as Link | null;
+      } catch (err) {
+        // Return null on any error - components will use localStorage fallback
+        return null;
+      }
     },
     enabled: !!linkId,
+    retry: false, // Don't retry on error
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 };
 

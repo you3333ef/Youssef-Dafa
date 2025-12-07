@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(20, 20)">
+    <rect width="160" height="40" rx="6" fill="#005EB8"/>
+    <text x="80" y="28" font-family="Arial Black, sans-serif" font-size="20" font-weight="900" fill="#FFFFFF" text-anchor="middle">NBK</text>
+  </g>
+  <g transform="translate(100, 67)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="8" fill="#005EB8" text-anchor="middle">National Bank of Kuwait</text>
+  </g>
+</svg>
