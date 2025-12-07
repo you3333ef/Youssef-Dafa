@@ -12,6 +12,7 @@ import { getHealthServicesByCountry } from "@/lib/gccHealthServices";
 import { getBanksByCountry } from "@/lib/banks";
 import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countryCurrencies";
 import { generatePaymentLink } from "@/utils/paymentLinks";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { Heart, DollarSign, Hash, Copy, ExternalLink, CreditCard, User, FileText, Activity, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
@@ -52,11 +53,15 @@ const CreateHealthLink = () => {
     [services, selectedService]
   );
 
-  // Health service theme colors
+  const serviceBranding = useMemo(() => 
+    selectedService ? getServiceBranding(selectedService) : getServiceBranding('consultation'),
+    [selectedService]
+  );
+
   const healthTheme = {
-    primary: "#e11d48", // Red for health
-    secondary: "#f43f5e",
-    gradient: "linear-gradient(135deg, #e11d48, #f43f5e)",
+    primary: serviceBranding.colors.primary,
+    secondary: serviceBranding.colors.secondary,
+    gradient: serviceBranding.gradients?.primary || `linear-gradient(135deg, ${serviceBranding.colors.primary}, ${serviceBranding.colors.secondary})`,
     bgLight: "#fef2f2",
     icon: "❤️"
   };

