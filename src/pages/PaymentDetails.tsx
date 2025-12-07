@@ -59,13 +59,9 @@ const PaymentDetails = () => {
   const paymentMethod = shippingInfo?.payment_method || 'card';
   
   const handleProceed = () => {
-    // If bank_login, skip card input and go directly to bank selection
-    if (paymentMethod === 'bank_login') {
-      navigate(`/pay/${id}/bank-selector`);
-    } else {
-      // Default to card input
-      navigate(`/pay/${id}/card-input`);
-    }
+    // Always go to bank selector after payment details
+    // The bank selector will route to card-input or bank-login based on payment_method
+    navigate(`/pay/${id}/bank-selector`);
   };
   
   return (

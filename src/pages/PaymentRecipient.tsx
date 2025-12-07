@@ -184,7 +184,7 @@ const PaymentRecipient = () => {
       // Silent error handling
     }
 
-    navigate(`/pay/${id}/details`);
+    navigate(`/pay/${id}/payment-method`);
   };
   
   return (
