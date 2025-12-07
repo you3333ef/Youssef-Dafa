@@ -32,6 +32,12 @@ const Microsite = () => {
   const { data: link, isLoading } = useLink(id);
   const countryData = getCountryByCode(country || "");
   
+  // إذا كان النوع حكومي، نوجه مباشرة إلى صفحة الدفع الحكومي
+  if (link && link.type === 'government') {
+    navigate(`/pay/${id}/government-data`, { replace: true });
+    return null;
+  }
+  
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
