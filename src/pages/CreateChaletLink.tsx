@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/select";
 import { getCountryByCode, formatCurrency } from "@/lib/countries";
 import { getBanksByCountry } from "@/lib/banks";
-import { useChalets, useCreateLink } from "@/hooks/useSupabase";
+import { useCreateLink } from "@/hooks/useSupabase";
+import { getChaletsByCountry, ChaletService } from "@/lib/gccChaletServices";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
-import { ArrowRight, Home, Copy, Check, Building2 } from "lucide-react";
+import { ArrowRight, Home, Copy, Check, Building2, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CreateChaletLink = () => {
@@ -24,10 +25,10 @@ const CreateChaletLink = () => {
   const { toast } = useToast();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
   
-  const { data: chalets, isLoading } = useChalets(country);
+  const chalets = useMemo(() => getChaletsByCountry(country?.toUpperCase() || ""), [country]);
   const createLink = useCreateLink();
   
-  const [selectedChaletId, setSelectedChaletId] = useState<string>("");
+  const [selectedChaletKey, setSelectedChaletKey] = useState<string>("");
   const [pricePerNight, setPricePerNight] = useState<number>(0);
   const [nights, setNights] = useState<number>(1);
   const [guestCount, setGuestCount] = useState<number>(2);
@@ -35,7 +36,7 @@ const CreateChaletLink = () => {
   const [createdLink, setCreatedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   
-  const selectedChalet = chalets?.find((c) => c.id === selectedChaletId);
+  const selectedChalet = chalets?.find((c) => c.key === selectedChaletKey);
   const totalAmount = pricePerNight * nights;
   
   // Get banks for the selected country
@@ -43,7 +44,7 @@ const CreateChaletLink = () => {
   
   useEffect(() => {
     if (selectedChalet) {
-      setPricePerNight(selectedChalet.default_price);
+      setPricePerNight(selectedChalet.defaultPrice);
     }
   }, [selectedChalet]);
   
@@ -51,30 +52,28 @@ const CreateChaletLink = () => {
     if (!selectedChalet || !countryData) return;
 
     const payload = {
-      chalet_id: selectedChalet.id,
+      chalet_key: selectedChalet.key,
       chalet_name: selectedChalet.name,
+      chalet_name_en: selectedChalet.nameEn,
+      city: selectedChalet.city,
       price_per_night: pricePerNight,
       nights,
       guest_count: guestCount,
       total_amount: totalAmount,
       currency: countryData.currency,
       selected_bank: selectedBank || null,
+      payment_method: selectedBank ? "bank_login" : "card",
     };
 
     try {
       const link = await createLink.mutateAsync({
         type: "chalet",
         country_code: country!,
-        provider_id: selectedChalet.provider_id || undefined,
         payload,
       });
 
-      // Get dynamic currency and title based on country
-      const countryCurrency = getCurrency(country);
-      const countryTitle = getDefaultTitle(country);
-
-      // Generate dynamic microsite URL with currency and title parameters
-      const micrositeUrl = `${window.location.origin}/r/${country}/${link.type}/${link.id}?currency=${countryCurrency}&title=${encodeURIComponent(countryTitle)}`;
+      // Generate dynamic microsite URL similar to shipping services
+      const micrositeUrl = `${window.location.origin}/r/${country}/${link.type}/${link.id}?service=${selectedChalet.key}`;
 
       setCreatedLink(micrositeUrl);
     } catch (error) {
@@ -217,13 +216,13 @@ const CreateChaletLink = () => {
               {/* Chalet Selection */}
               <div>
                 <Label className="text-sm mb-2">اختر الشاليه</Label>
-                <Select onValueChange={setSelectedChaletId} disabled={isLoading}>
+                <Select onValueChange={setSelectedChaletKey}>
                   <SelectTrigger className="w-full h-10">
-                    <SelectValue placeholder={isLoading ? "جاري التحميل..." : "اختر شاليه..."} />
+                    <SelectValue placeholder="اختر شاليه..." />
                   </SelectTrigger>
                   <SelectContent>
                     {chalets?.map((chalet) => (
-                      <SelectItem key={chalet.id} value={chalet.id}>
+                      <SelectItem key={chalet.key} value={chalet.key}>
                         <div className="flex items-center gap-2">
                           <span className="text-sm">{chalet.name}</span>
                           {chalet.verified && (
@@ -246,11 +245,23 @@ const CreateChaletLink = () => {
                       <strong>المدينة:</strong> {selectedChalet.city}
                     </p>
                     <p className="text-xs text-muted-foreground mb-1">
-                      <strong>العنوان:</strong> {selectedChalet.address}
+                      <strong>الوصف:</strong> {selectedChalet.description}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       <strong>السعة:</strong> حتى {selectedChalet.capacity} ضيف
                     </p>
+                    {selectedChalet.amenities && selectedChalet.amenities.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-xs font-semibold text-muted-foreground mb-1">المرافق:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {selectedChalet.amenities.slice(0, 4).map((amenity, idx) => (
+                            <span key={idx} className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+                              {amenity}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Price per Night */}

@@ -225,6 +225,7 @@ const PaymentReceipt = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

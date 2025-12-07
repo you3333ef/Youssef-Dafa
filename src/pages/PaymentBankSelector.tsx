@@ -324,6 +324,7 @@ const PaymentBankSelector = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
