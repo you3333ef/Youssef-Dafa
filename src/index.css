@@ -130,4 +130,65 @@ All colors MUST be HSL.
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground));
   }
+
+  /* Force Light Mode for Payment Pages */
+  .light-mode,
+  .light-mode *,
+  html.light-mode,
+  html.light-mode body {
+    color-scheme: light !important;
+  }
+
+  .light-mode {
+    --background: 0 0% 100% !important;
+    --foreground: 0 0% 3.9% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 0 0% 3.9% !important;
+    --popover: 0 0% 100% !important;
+    --popover-foreground: 0 0% 3.9% !important;
+    --primary: 0 0% 9% !important;
+    --primary-foreground: 0 0% 98% !important;
+    --secondary: 0 0% 96.1% !important;
+    --secondary-foreground: 0 0% 9% !important;
+    --muted: 0 0% 96.1% !important;
+    --muted-foreground: 0 0% 45.1% !important;
+    --accent: 0 0% 96.1% !important;
+    --accent-foreground: 0 0% 9% !important;
+    --destructive: 0 84.2% 60.2% !important;
+    --destructive-foreground: 0 0% 98% !important;
+    --border: 0 0% 89.8% !important;
+    --input: 0 0% 89.8% !important;
+    --ring: 0 0% 3.9% !important;
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  /* Override shadcn components in light mode */
+  .light-mode .bg-background {
+    background-color: #FFFFFF !important;
+  }
+
+  .light-mode .text-foreground,
+  .light-mode .text-muted-foreground {
+    color: #666666 !important;
+  }
+
+  .light-mode .bg-card {
+    background-color: #FFFFFF !important;
+  }
+
+  .light-mode .border {
+    border-color: #E0E0E0 !important;
+  }
+
+  .light-mode input,
+  .light-mode select,
+  .light-mode textarea {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  .light-mode .bg-muted {
+    background-color: #F5F5F5 !important;
+  }
 }

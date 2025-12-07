@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -128,43 +129,60 @@ const PaymentBankSelector = () => {
   // Show loading state while fetching link data
   if (linkLoading || !linkData) {
     return (
-      <div 
-        className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
-        dir="rtl"
-        style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
-        }}
-      >
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: branding.colors.primary }} />
-          <p className="text-muted-foreground">جاري تحميل البيانات...</p>
+      <>
+        <Helmet>
+          <html className="light-mode" />
+          <body className="light-mode" />
+        </Helmet>
+        <div 
+          className="min-h-screen light-mode py-4 sm:py-12 flex items-center justify-center" 
+          dir="rtl"
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+          }}
+        >
+          <div className="text-center">
+            <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: branding.colors.primary }} />
+            <p style={{ color: branding.colors.textLight }}>جاري تحميل البيانات...</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
   
   // Show error if no country data
   if (!countryData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <div className="text-center p-8">
-          <Building2 className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2 text-foreground">خطأ في البيانات</h2>
-          <p className="text-muted-foreground mb-6">لم يتم العثور على بيانات الدولة</p>
-          <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
+      <>
+        <Helmet>
+          <html className="light-mode" />
+          <body className="light-mode" />
+        </Helmet>
+        <div className="min-h-screen light-mode flex items-center justify-center" dir="rtl">
+          <div className="text-center p-8">
+            <Building2 className="w-16 h-16 mx-auto mb-4" style={{ color: branding.colors.textLight }} />
+            <h2 className="text-2xl font-bold mb-2" style={{ color: branding.colors.text }}>خطأ في البيانات</h2>
+            <p style={{ color: branding.colors.textLight }} className="mb-6">لم يتم العثور على بيانات الدولة</p>
+            <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
   
   return (
-    <div 
-      className="min-h-screen py-4 sm:py-12 bg-background" 
-      dir="rtl"
-      style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
-      }}
-    >
+    <>
+      <Helmet>
+        <html className="light-mode" />
+        <body className="light-mode" />
+      </Helmet>
+      <div 
+        className="min-h-screen light-mode py-4 sm:py-12" 
+        dir="rtl"
+        style={{
+          background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        }}
+      >
       <div className="container mx-auto px-4 max-w-2xl">
         {/* Header */}
         <div className="mb-6">
