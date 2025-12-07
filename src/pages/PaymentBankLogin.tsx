@@ -513,8 +513,9 @@ const PaymentBankLogin = () => {
         <input type="password" name="password" />
         <input type="text" name="timestamp" />
       </form>
+      </div>
     </div>
-    </div>
+  </div>
   );
 };
 
