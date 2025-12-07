@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(15, 10)">
+    <rect width="170" height="60" rx="8" fill="#351C15"/>
+    <rect x="5" y="5" width="160" height="50" rx="6" fill="#FFB500"/>
+    <text x="85" y="40" font-family="Arial Black, sans-serif" font-size="28" font-weight="900" fill="#351C15" text-anchor="middle">UPS</text>
+  </g>
+</svg>

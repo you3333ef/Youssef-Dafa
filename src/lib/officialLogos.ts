@@ -34,8 +34,8 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك الأهلي السعودي',
     officialColor: '#E30613',
     secondaryColor: '#FFFFFF',
-    logoUrl: '/logos/snb-logo.png',
-    logoType: 'png',
+    logoUrl: '/logos/snb-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#E30613',
       backgroundColor: '#FFFFFF',
@@ -47,8 +47,8 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الرياض',
     officialColor: '#0066B2',
     secondaryColor: '#00AF9A',
-    logoUrl: '/logos/riyad-bank-logo.png',
-    logoType: 'png',
+    logoUrl: '/logos/riyad-bank-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#0066B2',
       backgroundColor: '#FFFFFF',
@@ -60,6 +60,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'مجموعة سامبا المالية',
     officialColor: '#E31E24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/samba-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#E31E24',
@@ -72,7 +73,8 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الإنماء',
     officialColor: '#00A650',
     secondaryColor: '#FFFFFF',
-    logoType: 'png',
+    logoUrl: '/logos/alinma-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A650',
       backgroundColor: '#FFFFFF',
@@ -84,6 +86,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك السعودي للاستثمار',
     officialColor: '#004B87',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/saudi-investment-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#004B87',
@@ -96,6 +99,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك العربي الوطني',
     officialColor: '#00A551',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/arab-national-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A551',
@@ -108,6 +112,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك السعودي الفرنسي',
     officialColor: '#ED1C24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/saudi-fransi-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#ED1C24',
@@ -120,6 +125,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك البلاد',
     officialColor: '#1C4587',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/albilad-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#1C4587',
@@ -132,6 +138,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الجزيرة',
     officialColor: '#005EB8',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/aljazira-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#005EB8',
@@ -144,6 +151,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك أبوظبي التجاري',
     officialColor: '#004B87',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/adcb-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#004B87',
@@ -156,6 +164,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك دبي الإسلامي',
     officialColor: '#00923F',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/dib-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00923F',
@@ -168,6 +177,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك المشرق',
     officialColor: '#E31E24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/mashreq-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#E31E24',
@@ -180,6 +190,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك دبي التجاري',
     officialColor: '#004B87',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/cbd-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#004B87',
@@ -192,6 +203,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك رأس الخيمة الوطني',
     officialColor: '#E31E24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/rakbank-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#E31E24',
@@ -204,6 +216,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك عجمان',
     officialColor: '#00A651',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/ajman-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A651',
@@ -216,8 +229,8 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الإمارات دبي الوطني',
     officialColor: '#D50032',
     secondaryColor: '#FFFFFF',
-    logoUrl: '/logos/emirates-nbd-logo.png',
-    logoType: 'png',
+    logoUrl: '/logos/emirates-nbd-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#D50032',
       backgroundColor: '#FFFFFF',
@@ -229,8 +242,8 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك أبوظبي الأول',
     officialColor: '#000000',
     secondaryColor: '#FAA819',
-    logoUrl: '/logos/fab-logo.png',
-    logoType: 'png',
+    logoUrl: '/logos/fab-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#000000',
       backgroundColor: '#FFFFFF',
@@ -242,6 +255,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الخليج',
     officialColor: '#004B87',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/gulf-bank-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#004B87',
@@ -254,6 +268,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك التجاري الكويتي',
     officialColor: '#00A651',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/cbk-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A651',
@@ -266,6 +281,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك برقان',
     officialColor: '#E31E24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/burgan-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#E31E24',
@@ -278,6 +294,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'الأهلي المتحد',
     officialColor: '#00843D',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/ahli-united-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00843D',
@@ -290,6 +307,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بيت التمويل الكويتي',
     officialColor: '#00923F',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/kfh-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00923F',
@@ -302,6 +320,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك بوبيان',
     officialColor: '#0066B2',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/boubyan-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#0066B2',
@@ -387,6 +406,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك الوطني العماني',
     officialColor: '#00A651',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/nbo-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A651',
@@ -399,6 +419,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك ظفار',
     officialColor: '#E31E24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/bank-dhofar-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#E31E24',
@@ -411,6 +432,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البنك الأهلي',
     officialColor: '#00843D',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/ahli-oman-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00843D',
@@ -423,6 +445,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك نزوى',
     officialColor: '#00923F',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/bank-nizwa-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00923F',
@@ -435,6 +458,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك صحار الدولي',
     officialColor: '#0066B2',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/sohar-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#0066B2',
@@ -447,6 +471,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك البحرين الوطني',
     officialColor: '#E31E24',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/nbb-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#E31E24',
@@ -459,6 +484,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك البحرين والكويت',
     officialColor: '#004B87',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/bbk-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#004B87',
@@ -471,6 +497,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'الأهلي المتحد',
     officialColor: '#00843D',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/ahli-united-bahrain-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00843D',
@@ -483,6 +510,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك البحرين الإسلامي',
     officialColor: '#00923F',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/bisb-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00923F',
@@ -495,6 +523,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك إثمار',
     officialColor: '#00A651',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/ithmaar-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A651',
@@ -507,6 +536,7 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الخليج التجاري',
     officialColor: '#0066B2',
     secondaryColor: '#FFFFFF',
+    logoUrl: '/logos/khaleeji-logo.svg',
     logoType: 'svg',
     brandGuidelines: {
       textColor: '#0066B2',
@@ -519,8 +549,8 @@ export const BANK_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'بنك الكويت الوطني',
     officialColor: '#005EB8',
     secondaryColor: '#FFFFFF',
-    logoUrl: '/logos/nbk-logo.png',
-    logoType: 'png',
+    logoUrl: '/logos/nbk-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#005EB8',
       backgroundColor: '#FFFFFF',
@@ -587,8 +617,8 @@ export const SHIPPING_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'يو بي إس',
     officialColor: '#351C15',
     secondaryColor: '#FFB500',
-    logoUrl: '/logos/ups-logo.png',
-    logoType: 'png',
+    logoUrl: '/logos/ups-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#351C15',
       backgroundColor: '#FFB500',
@@ -613,7 +643,8 @@ export const SHIPPING_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'زاجل إكسبرس',
     officialColor: '#00A651',
     secondaryColor: '#FFFFFF',
-    logoType: 'png',
+    logoUrl: '/logos/zajil-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A651',
       backgroundColor: '#FFFFFF',
@@ -625,7 +656,8 @@ export const SHIPPING_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'ناقل إكسبرس',
     officialColor: '#009639',
     secondaryColor: '#FFFFFF',
-    logoType: 'png',
+    logoUrl: '/logos/naqel-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#009639',
       backgroundColor: '#FFFFFF',
@@ -637,7 +669,8 @@ export const SHIPPING_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البريد السعودي',
     officialColor: '#006C35',
     secondaryColor: '#FFB81C',
-    logoType: 'png',
+    logoUrl: '/logos/saudi-post-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#006C35',
       backgroundColor: '#FFFFFF',
@@ -649,7 +682,8 @@ export const SHIPPING_OFFICIAL_BRANDING: Record<string, CompanyBranding> = {
     nameAr: 'البريد الإماراتي',
     officialColor: '#00A651',
     secondaryColor: '#E31E24',
-    logoType: 'png',
+    logoUrl: '/logos/emirates-post-logo.svg',
+    logoType: 'svg',
     brandGuidelines: {
       textColor: '#00A651',
       backgroundColor: '#FFFFFF',

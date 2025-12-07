@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(15, 15)">
+    <path d="M25,5 L40,35 L35,35 L30,25 L20,25 L15,35 L10,35 Z M25,12 L22,20 L28,20 Z" fill="#00A650"/>
+    <text x="50" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00A650">الإنماء</text>
+    <text x="50" y="38" font-family="Arial, sans-serif" font-size="9" fill="#666">Alinma Bank</text>
+  </g>
+</svg>

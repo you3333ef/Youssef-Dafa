@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <rect width="200" height="80" fill="#FFFFFF"/>
+  <g transform="translate(15, 15)">
+    <rect width="50" height="50" rx="8" fill="#009639"/>
+    <path d="M20,25 L45,25 L32.5,38 L45,45 L20,45 Z" fill="#FFFFFF" opacity="0.9"/>
+  </g>
+  <g transform="translate(75, 25)">
+    <text x="0" y="14" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#009639">ناقل</text>
+    <text x="0" y="30" font-family="Arial, sans-serif" font-size="11" fill="#666">Naqel Express</text>
+  </g>
+</svg>
