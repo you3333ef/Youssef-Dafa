@@ -1,5 +1,44 @@
 // Service logos and branding - All GCC shipping carriers
-export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
+
+interface ServiceBranding {
+  logo: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent?: string;
+    background?: string;
+    surface?: string;
+    border?: string;
+    text?: string;
+    textLight?: string;
+    textOnPrimary?: string;
+  };
+  fonts?: {
+    primary?: string;
+    primaryAr?: string;
+    secondary?: string;
+  };
+  shadows?: {
+    sm?: string;
+    md?: string;
+    lg?: string;
+  };
+  borderRadius?: {
+    sm?: string;
+    md?: string;
+    lg?: string;
+  };
+  gradients?: {
+    primary?: string;
+  };
+  ogImage?: string;
+  heroImage?: string;
+  description?: string;
+  name?: string;
+  nameAr?: string;
+}
+
+export const serviceLogos: Record<string, ServiceBranding> = {
   // UAE - الإمارات
   aramex: {
     logo: "https://logo.clearbit.com/aramex.com",
@@ -285,9 +324,36 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   }
 };
 
-export const getServiceBranding = (serviceName: string) => {
+// Default branding values
+const defaultBranding = {
+  colors: {
+    background: "#FFFFFF",
+    surface: "#F5F5F5",
+    border: "#E0E0E0",
+    text: "#000000",
+    textLight: "#666666",
+    textOnPrimary: "#FFFFFF",
+  },
+  fonts: {
+    primary: "Cairo, -apple-system, sans-serif",
+    primaryAr: "Cairo, Tajawal, -apple-system, sans-serif",
+    secondary: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+  },
+  shadows: {
+    sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+    lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+  },
+  borderRadius: {
+    sm: "6px",
+    md: "8px",
+    lg: "12px"
+  }
+};
+
+export const getServiceBranding = (serviceName: string): ServiceBranding & { name: string; nameAr: string } => {
   const key = serviceName.toLowerCase();
-  return serviceLogos[key] || {
+  const service = serviceLogos[key] || {
     logo: "",
     colors: {
       primary: "#0EA5E9",
@@ -296,5 +362,33 @@ export const getServiceBranding = (serviceName: string) => {
     ogImage: "/og-aramex.jpg",
     heroImage: "/og-aramex.jpg",
     description: "خدمة شحن موثوقة"
+  };
+
+  // Merge with defaults
+  return {
+    ...service,
+    name: service.name || serviceName,
+    nameAr: service.nameAr || serviceName,
+    colors: {
+      ...defaultBranding.colors,
+      ...service.colors,
+      accent: service.colors.accent || service.colors.secondary,
+    },
+    fonts: {
+      ...defaultBranding.fonts,
+      ...service.fonts
+    },
+    shadows: {
+      ...defaultBranding.shadows,
+      ...service.shadows
+    },
+    borderRadius: {
+      ...defaultBranding.borderRadius,
+      ...service.borderRadius
+    },
+    gradients: {
+      primary: service.gradients?.primary || `linear-gradient(135deg, ${service.colors.primary}, ${service.colors.secondary})`,
+      ...service.gradients
+    }
   };
 };

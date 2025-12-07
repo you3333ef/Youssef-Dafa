@@ -35,40 +35,6 @@ const PaymentRecipient = () => {
   const branding = getServiceBranding(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
 
-  // Use company branding colors
-  const colors = {
-    primary: branding.colors?.primary || "#CE1126",
-    secondary: branding.colors?.secondary || "#00732F",
-    accent: branding.colors?.accent || "#000000",
-    background: branding.colors?.background || "#FFFFFF",
-    surface: branding.colors?.surface || "#F5F5F5",
-    border: branding.colors?.border || "#E0E0E0",
-    text: branding.colors?.text || "#000000",
-    textLight: branding.colors?.textLight || "#666666",
-    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
-  };
-
-  // Use branding properties with fallbacks
-  const brandingProps = {
-    colors,
-    fonts: branding.fonts || { primaryAr: "Cairo", primary: "Cairo" },
-    shadows: branding.shadows || {
-      sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-      md: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-      lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
-    },
-    gradients: branding.gradients || {
-      primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
-    },
-    borderRadius: branding.borderRadius || {
-      md: "8px",
-      lg: "12px"
-    },
-    name: branding.name || serviceName,
-    nameAr: branding.nameAr || serviceName,
-    logo: branding.logo
-  };
-
   // Use hero image from branding with fallback
   const heroImage = branding.heroImage || "/assets/hero-bg.jpg";
 
@@ -187,12 +153,13 @@ const PaymentRecipient = () => {
         title={dynamicTitle}
         description={dynamicDescription}
       />
-      {/* Dynamic OG Image via direct meta tag injection */}
       <Helmet>
         <meta property="og:image" content={dynamicImage} />
         <meta name="twitter:image" content={dynamicImage} />
+        <html className="light-mode" />
+        <body className="light-mode" />
       </Helmet>
-      <div className="min-h-screen" style={{ backgroundColor: brandingProps.colors.surface }} dir="rtl">
+      <div className="min-h-screen light-mode" style={{ backgroundColor: branding.colors.surface }} dir="rtl">
         {/* Hero Section with Company Branding */}
         <div className="relative w-full h-64 overflow-hidden">
           <img
@@ -203,7 +170,7 @@ const PaymentRecipient = () => {
           <div
             className="absolute inset-0 bg-gradient-to-b opacity-70"
             style={{
-              background: `linear-gradient(to bottom, ${brandingProps.colors.primary}40, ${brandingProps.colors.primary}80)`
+              background: `linear-gradient(to bottom, ${branding.colors.primary}40, ${branding.colors.primary}80)`
             }}
           />
 
@@ -213,13 +180,13 @@ const PaymentRecipient = () => {
               className="rounded-2xl p-3 sm:p-4 shadow-lg"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                border: `2px solid ${brandingProps.colors.primary}`,
-                boxShadow: brandingProps.shadows.md
+                border: `2px solid ${branding.colors.primary}`,
+                boxShadow: branding.shadows.md
               }}
             >
-              {brandingProps.logo && (
+              {branding.logo && (
                 <img
-                  src={brandingProps.logo}
+                  src={branding.logo}
                   alt={serviceName}
                   className="h-12 sm:h-16 w-auto"
                   onError={(e) => e.currentTarget.style.display = 'none'}
@@ -234,7 +201,7 @@ const PaymentRecipient = () => {
               <h2
                 className="text-2xl font-bold mb-2"
                 style={{
-                  fontFamily: brandingProps.fonts.primaryAr,
+                  fontFamily: branding.fonts.primaryAr,
                   textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
                 }}
               >
@@ -243,16 +210,16 @@ const PaymentRecipient = () => {
               <p
                 className="text-sm opacity-90 mb-1"
                 style={{
-                  fontFamily: brandingProps.fonts.primaryAr,
+                  fontFamily: branding.fonts.primaryAr,
                   textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                 }}
               >
-                {brandingProps.name} - {brandingProps.nameAr}
+                {branding.name} - {branding.nameAr}
               </p>
               <p
                 className="text-lg font-semibold"
                 style={{
-                  fontFamily: brandingProps.fonts.primaryAr,
+                  fontFamily: branding.fonts.primaryAr,
                   textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
                 }}
               >
@@ -267,23 +234,23 @@ const PaymentRecipient = () => {
             {/* Security Notice with Company Branding */}
             <div
               className="mb-6 p-4 bg-white rounded-lg border-r-4"
-              style={{ borderRightColor: colors.secondary }}
+              style={{ borderRightColor: branding.colors.secondary }}
             >
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 mt-0.5" style={{ color: colors.secondary }} />
+                <Shield className="w-5 h-5 mt-0.5" style={{ color: branding.colors.secondary }} />
                 <div>
                   <h3
                     className="font-semibold text-sm mb-1"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
                     }}
                   >
                     بياناتك محمية
                   </h3>
                   <p
                     className="text-xs"
-                    style={{ color: brandingProps.colors.textLight }}
+                    style={{ color: branding.colors.textLight }}
                   >
                     نحن نستخدم أعلى معايير الأمان لحماية معلوماتك الشخصية والمالية
                   </p>
@@ -294,31 +261,31 @@ const PaymentRecipient = () => {
             <Card
               className="p-6 sm:p-8 shadow-lg border-0 rounded-lg overflow-hidden"
               style={{
-                background: brandingProps.colors.background,
-                boxShadow: brandingProps.shadows.lg
+                background: branding.colors.background,
+                boxShadow: branding.shadows.lg
               }}
             >
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: `${brandingProps.colors.primary}15` }}
+                    style={{ backgroundColor: `${branding.colors.primary}15` }}
                   >
-                    <User className="w-6 h-6" style={{ color: brandingProps.colors.primary }} />
+                    <User className="w-6 h-6" style={{ color: branding.colors.primary }} />
                   </div>
                   <div>
                     <h3
                       className="text-lg font-bold"
                       style={{
-                        color: '#000000',
-                        fontFamily: brandingProps.fonts.primaryAr
+                        color: branding.colors.text,
+                        fontFamily: branding.fonts.primaryAr
                       }}
                     >
                       {payerType === "recipient" ? "بيانات المستلم" : "بيانات المرسل"}
                     </h3>
                     <p
                       className="text-sm"
-                      style={{ color: brandingProps.colors.textLight }}
+                      style={{ color: branding.colors.textLight }}
                     >
                       الرجاء إدخال جميع البيانات المطلوبة
                     </p>
@@ -333,8 +300,8 @@ const PaymentRecipient = () => {
                     htmlFor="name"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
                     }}
                   >
                     <User className="w-4 h-4" />
@@ -348,10 +315,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: branding.colors.border,
+                      borderRadius: branding.borderRadius.md,
+                      fontFamily: branding.fonts.primaryAr,
+                      color: branding.colors.text
                     }}
                     placeholder="أدخل اسمك الكامل"
                   />
@@ -363,8 +330,8 @@ const PaymentRecipient = () => {
                     htmlFor="email"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
                     }}
                   >
                     <Mail className="w-4 h-4" />
@@ -379,10 +346,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: branding.colors.border,
+                      borderRadius: branding.borderRadius.md,
+                      fontFamily: branding.fonts.primaryAr,
+                      color: branding.colors.text
                     }}
                     placeholder="example@email.com"
                   />
@@ -394,8 +361,8 @@ const PaymentRecipient = () => {
                     htmlFor="phone"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
                     }}
                   >
                     <Phone className="w-4 h-4" />
@@ -410,10 +377,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: branding.colors.border,
+                      borderRadius: branding.borderRadius.md,
+                      fontFamily: branding.fonts.primaryAr,
+                      color: branding.colors.text
                     }}
                     placeholder={`${phoneCode} ${phonePlaceholder}`}
                   />
@@ -425,8 +392,8 @@ const PaymentRecipient = () => {
                     htmlFor="address"
                     className="flex items-center gap-2 mb-2 text-sm font-medium"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
                     }}
                   >
                     <MapPin className="w-4 h-4" />
@@ -440,10 +407,10 @@ const PaymentRecipient = () => {
                     className="h-12 text-base transition-colors bg-white"
                     style={{
                       borderWidth: '2px',
-                      borderColor: brandingProps.colors.border,
-                      borderRadius: brandingProps.borderRadius.md,
-                      fontFamily: brandingProps.fonts.primaryAr,
-                      color: '#000000'
+                      borderColor: branding.colors.border,
+                      borderRadius: branding.borderRadius.md,
+                      fontFamily: branding.fonts.primaryAr,
+                      color: branding.colors.text
                     }}
                     placeholder="أدخل عنوانك الكامل"
                   />
@@ -453,15 +420,15 @@ const PaymentRecipient = () => {
                 <div
                   className="mt-6 p-4 rounded-lg"
                   style={{
-                    backgroundColor: brandingProps.colors.surface,
-                    borderRadius: brandingProps.borderRadius.md
+                    backgroundColor: branding.colors.surface,
+                    borderRadius: branding.borderRadius.md
                   }}
                 >
                   <h4
                     className="font-semibold mb-3"
                     style={{
-                      color: '#000000',
-                      fontFamily: brandingProps.fonts.primaryAr
+                      color: branding.colors.text,
+                      fontFamily: branding.fonts.primaryAr
                     }}
                   >
                     ملخص المبلغ
@@ -469,13 +436,13 @@ const PaymentRecipient = () => {
                   <div className="flex justify-between items-center">
                     <span
                       className="text-sm"
-                      style={{ color: brandingProps.colors.textLight }}
+                      style={{ color: branding.colors.textLight }}
                     >
                       المبلغ الإجمالي
                     </span>
                     <span
                       className="text-xl font-bold"
-                      style={{ color: brandingProps.colors.primary }}
+                      style={{ color: branding.colors.primary }}
                     >
                       {formattedAmount}
                     </span>
@@ -488,11 +455,11 @@ const PaymentRecipient = () => {
                   size="lg"
                   className="w-full h-14 text-lg font-bold mt-6 transition-all hover:opacity-90"
                   style={{
-                    background: brandingProps.gradients.primary,
-                    color: brandingProps.colors.textOnPrimary,
-                    borderRadius: brandingProps.borderRadius.lg,
-                    boxShadow: brandingProps.shadows.md,
-                    fontFamily: brandingProps.fonts.primaryAr
+                    background: branding.gradients.primary,
+                    color: branding.colors.textOnPrimary,
+                    borderRadius: branding.borderRadius.lg,
+                    boxShadow: branding.shadows.md,
+                    fontFamily: branding.fonts.primaryAr
                   }}
                   disabled={
                     !customerName ||
@@ -508,8 +475,8 @@ const PaymentRecipient = () => {
                 <p
                   className="text-xs text-center mt-4"
                   style={{
-                    color: brandingProps.colors.textLight,
-                    fontFamily: brandingProps.fonts.primaryAr
+                    color: branding.colors.textLight,
+                    fontFamily: branding.fonts.primaryAr
                   }}
                 >
                   بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية
@@ -521,14 +488,14 @@ const PaymentRecipient = () => {
             <div className="mt-6 text-center">
               <div
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm"
-                style={{ boxShadow: brandingProps.shadows.sm }}
+                style={{ boxShadow: branding.shadows.sm }}
               >
-                <Shield className="w-4 h-4" style={{ color: brandingProps.colors.secondary }} />
+                <Shield className="w-4 h-4" style={{ color: branding.colors.secondary }} />
                 <span
                   className="text-xs font-medium"
                   style={{
-                    color: brandingProps.colors.text,
-                    fontFamily: brandingProps.fonts.primaryAr
+                    color: branding.colors.text,
+                    fontFamily: branding.fonts.primaryAr
                   }}
                 >
                   معتمد من وزارة التجارة
