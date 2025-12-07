@@ -10,6 +10,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { BankLogoCard } from "@/components/CompanyLogo";
+import { formatCurrency } from "@/lib/countryCurrencies";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -53,7 +54,7 @@ const PaymentBankSelector = () => {
     }
   }
 
-  const formattedAmount = `${amount} ر.س`;
+  const formattedAmount = formatCurrency(amount, countryCode);
   
   // Load banks when country is available from link data
   useEffect(() => {
