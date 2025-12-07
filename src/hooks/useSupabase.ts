@@ -291,10 +291,6 @@ export const useUpdateLink = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["link"] });
       queryClient.invalidateQueries({ queryKey: ["links"] });
-      toast({
-        title: "تم الحفظ",
-        description: "تم حفظ البيانات بنجاح",
-      });
     },
     onError: (error: any) => {
       toast({

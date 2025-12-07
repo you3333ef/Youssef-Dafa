@@ -87,11 +87,12 @@ const PaymentRecipient = () => {
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
 
-  // Use currency from URL parameter if available, otherwise from country data
-  const currencyCode = currencyParam || countryData?.currency || "SAR";
+  // Get currency code from link data, URL parameter, or country data
+  const savedCurrencyCode = shippingInfo?.currency_code;
+  const currencyCode = savedCurrencyCode || currencyParam || countryData?.currency || "SAR";
 
   // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
+  const rawAmount = shippingInfo?.cod_amount || shippingInfo?.payment_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -106,6 +107,7 @@ const PaymentRecipient = () => {
     }
   }
 
+  // Format amount with the dynamic currency code
   const formattedAmount = formatCurrency(amount, currencyCode);
 
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";

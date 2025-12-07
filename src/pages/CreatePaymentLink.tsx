@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useCreateLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { getCurrencySymbol, getCurrencyName, formatCurrency } from "@/lib/countryCurrencies";
+import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
@@ -56,6 +56,7 @@ const CreatePaymentLink = () => {
         country_code: country || "",
         payload: {
           payment_amount: parseFloat(paymentAmount) || 500,
+          currency_code: getCurrencyCode(country || "SA"),
           payment_method: paymentMethod,
           selectedCountry: country || "SA",
         },
