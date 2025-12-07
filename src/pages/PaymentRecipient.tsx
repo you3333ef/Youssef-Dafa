@@ -18,7 +18,7 @@ import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide
 const PaymentRecipient = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading } = useLink(id);
   const updateLink = useUpdateLink();
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -35,38 +35,39 @@ const PaymentRecipient = () => {
   const branding = getServiceBranding(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
 
-  // Use company branding colors
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5f5' }}>
+        <div style={{ textAlign: 'center', padding: '40px', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', maxWidth: '400px', width: '100%' }}>
+          <div style={{ width: '60px', height: '60px', margin: '0 auto 20px', border: '4px solid #0EA5E9', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+          <h2 style={{ color: '#1a1a1a', margin: '0 0 12px 0', fontSize: '20px', fontFamily: 'Almarai, sans-serif' }}>جاري التحميل...</h2>
+          <p style={{ color: '#666', margin: '0', fontSize: '14px', fontFamily: 'Almarai, sans-serif' }}>الرجاء الانتظار</p>
+        </div>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  // Use company branding colors with safe fallbacks
+  const brandingColors = branding?.colors || {};
   const colors = {
-    primary: branding.colors?.primary || "#CE1126",
-    secondary: branding.colors?.secondary || "#00732F",
-    accent: branding.colors?.accent || "#000000",
-    background: branding.colors?.background || "#FFFFFF",
-    surface: branding.colors?.surface || "#F5F5F5",
-    border: branding.colors?.border || "#E0E0E0",
-    text: branding.colors?.text || "#000000",
-    textLight: branding.colors?.textLight || "#666666",
-    textOnPrimary: branding.colors?.textOnPrimary || "#FFFFFF",
+    primary: brandingColors.primary || "#351C15",
+    secondary: brandingColors.secondary || "#FFB500",
+    accent: brandingColors.accent || "#000000",
+    background: brandingColors.background || "#FFFFFF",
+    surface: brandingColors.surface || "#F5F5F5",
+    border: brandingColors.border || "#E0E0E0",
+    text: brandingColors.text || "#000000",
+    textLight: brandingColors.textLight || "#666666",
+    textOnPrimary: brandingColors.textOnPrimary || "#FFFFFF",
   };
 
-  // Use branding properties with fallbacks
+  // Use branding properties (now includes all properties from getServiceBranding)
   const brandingProps = {
+    ...branding,
     colors,
-    fonts: branding.fonts || { primaryAr: "Cairo", primary: "Cairo" },
-    shadows: branding.shadows || {
-      sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-      md: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-      lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
-    },
-    gradients: branding.gradients || {
-      primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`
-    },
-    borderRadius: branding.borderRadius || {
-      md: "8px",
-      lg: "12px"
-    },
     name: branding.name || serviceName,
     nameAr: branding.nameAr || serviceName,
-    logo: branding.logo
   };
 
   // Use hero image from branding with fallback

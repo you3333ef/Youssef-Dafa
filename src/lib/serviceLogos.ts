@@ -287,14 +287,71 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
 
 export const getServiceBranding = (serviceName: string) => {
   const key = serviceName.toLowerCase();
-  return serviceLogos[key] || {
+  const service = serviceLogos[key];
+  
+  if (service) {
+    return {
+      ...service,
+      name: service.name || key,
+      nameAr: service.nameAr || key,
+      fonts: service.fonts || { primaryAr: "Almarai", primary: "Almarai" },
+      shadows: service.shadows || {
+        sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        md: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+      },
+      gradients: service.gradients || {
+        primary: `linear-gradient(135deg, ${service.colors.primary}, ${service.colors.secondary})`
+      },
+      borderRadius: service.borderRadius || {
+        sm: "6px",
+        md: "8px",
+        lg: "12px"
+      },
+      colors: {
+        ...service.colors,
+        accent: service.colors.accent || "#000000",
+        background: service.colors.background || "#FFFFFF",
+        surface: service.colors.surface || "#F5F5F5",
+        border: service.colors.border || "#E0E0E0",
+        text: service.colors.text || "#000000",
+        textLight: service.colors.textLight || "#666666",
+        textOnPrimary: service.colors.textOnPrimary || "#FFFFFF",
+      }
+    };
+  }
+  
+  return {
     logo: "",
+    name: serviceName,
+    nameAr: serviceName,
     colors: {
       primary: "#0EA5E9",
-      secondary: "#06B6D4"
+      secondary: "#06B6D4",
+      accent: "#000000",
+      background: "#FFFFFF",
+      surface: "#F5F5F5",
+      border: "#E0E0E0",
+      text: "#000000",
+      textLight: "#666666",
+      textOnPrimary: "#FFFFFF",
     },
     ogImage: "/og-aramex.jpg",
     heroImage: "/og-aramex.jpg",
-    description: "خدمة شحن موثوقة"
+    description: "خدمة شحن موثوقة",
+    fonts: { primaryAr: "Almarai", primary: "Almarai" },
+    shadows: {
+      sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      md: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+      lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+    },
+    gradients: {
+      primary: "linear-gradient(135deg, #0EA5E9, #06B6D4)"
+    },
+    borderRadius: {
+      sm: "6px",
+      md: "8px",
+      lg: "12px"
+    }
   };
 };
