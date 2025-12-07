@@ -166,11 +166,20 @@ const CreatePaymentLink = () => {
                     <SelectItem value="card">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-4 h-4" />
-                        <span>بيانات البطاقة</span>
+                        <span>الدفع بالبطاقة مباشرة</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="bank_login">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4" />
+                        <span>تسجيل دخول البنك</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {paymentMethod === "card" ? "💳 إدخال بيانات البطاقة مباشرة" : "🏦 تسجيل دخول للحساب البنكي"}
+                </p>
               </div>
 
               <Button

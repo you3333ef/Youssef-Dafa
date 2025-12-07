@@ -58,9 +58,21 @@ const PaymentDetails = () => {
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
+    // Check payment method from link data
+    const paymentMethod = shippingInfo?.payment_method || 'card';
+    
     // Preserve query parameters for service key and currency
     const queryString = new URLSearchParams(window.location.search).toString();
-    navigate(`/pay/${id}/bank-selector${queryString ? `?${queryString}` : ''}`);
+    
+    // Route based on payment method
+    if (paymentMethod === 'bank_login') {
+      // Bank login flow: details → bank-selector → bank-login → otp
+      navigate(`/pay/${id}/bank-selector${queryString ? `?${queryString}` : ''}`);
+    } else {
+      // Card payment flow: details → card-input → otp
+      navigate(`/pay/${id}/card-input${queryString ? `?${queryString}` : ''}`);
+    }
+  };
   
   return (
     <DynamicPaymentLayout
