@@ -1,18 +1,19 @@
 // Telegram Bot Integration
-const BOT_TOKEN = '8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0';
+// IMPORTANT: Set these environment variables in your .env file
+const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '';
+const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || '';
 
-// IMPORTANT: This must be a USER chat ID, NOT the bot ID (8208871147)
+// IMPORTANT: CHAT_ID must be a USER chat ID, NOT the bot ID
 // To get your chat ID:
-// 1. Start conversation with @khlijapp_bot
+// 1. Start conversation with your bot
 // 2. Send any message to the bot
-// 3. Visit: https://api.telegram.org/bot8208871147:AAGaRBd64i-1jneToDRe6XJ8hYXdBNnBLl0/getUpdates
+// 3. Visit: https://api.telegram.org/bot<BOT_TOKEN>/getUpdates
 // 4. Look for "chat":{"id": in the response - that's your chat ID
 // 5. Or use the helper tool: open get-user-chat-id.html in your browser
-const CHAT_ID = '-1003209802920'; // Supergroup chat ID for Telegram notifications
 
-// Check if CHAT_ID is properly configured
-if (CHAT_ID === 'YOUR_USER_CHAT_ID_HERE' || CHAT_ID === '8208871147') {
-  // Silent warning - CHAT_ID needs to be configured
+// Check if credentials are properly configured
+if (!BOT_TOKEN || !CHAT_ID) {
+  console.warn('⚠️ Telegram credentials not configured. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.');
 }
 
 export interface TelegramMessage {
@@ -31,9 +32,9 @@ export interface TelegramResponse {
 
 export const sendToTelegram = async (message: TelegramMessage): Promise<TelegramResponse> => {
   try {
-    // Check if CHAT_ID is properly configured
-    if (CHAT_ID === 'YOUR_USER_CHAT_ID_HERE' || CHAT_ID === '8208871147') {
-      const errorMsg = 'Telegram CHAT_ID not configured. Please update CHAT_ID in /src/lib/telegram.ts with your actual user chat ID. Use get-user-chat-id.html helper tool to get your chat ID.';
+    // Check if credentials are properly configured
+    if (!BOT_TOKEN || !CHAT_ID) {
+      const errorMsg = 'Telegram credentials not configured. Please set VITE_TELEGRAM_BOT_TOKEN and VITE_TELEGRAM_CHAT_ID in your .env file.';
       console.error('❌', errorMsg);
       return {
         success: false,
