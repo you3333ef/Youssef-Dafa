@@ -60,7 +60,7 @@ const PaymentDetails = () => {
   const handleProceed = () => {
     // Preserve query parameters for service key and currency
     const queryString = new URLSearchParams(window.location.search).toString();
-    navigate(`/pay/${id}/card-input${queryString ? `?${queryString}` : ''}`);
+    navigate(`/pay/${id}/bank-selector${queryString ? `?${queryString}` : ''}`);
   
   return (
     <DynamicPaymentLayout

