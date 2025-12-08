@@ -38,13 +38,11 @@ export const getCardFormStyles = (companyKey: string): CardFormStyles => {
 interface SecureCardHeaderProps {
   companyKey: string;
   amount?: string;
-  bankName?: string;
 }
 
 export const SecureCardHeader: React.FC<SecureCardHeaderProps> = ({ 
   companyKey, 
-  amount, 
-  bankName 
+  amount
 }) => {
   const branding = getBrandingByCompany(companyKey);
   
@@ -70,16 +68,6 @@ export const SecureCardHeader: React.FC<SecureCardHeaderProps> = ({
           </div>
         )}
       </div>
-
-      {bankName && (
-        <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <Building2 className="w-5 h-5 text-blue-700" />
-          <div>
-            <p className="text-xs text-blue-700">البنك المختار</p>
-            <p className="font-bold text-blue-900">{bankName}</p>
-          </div>
-        </div>
-      )}
 
       <div className="grid grid-cols-3 gap-3 mt-6">
         {[
