@@ -130,4 +130,203 @@ All colors MUST be HSL.
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground));
   }
+
+  /* Company-Specific Animations */
+  @keyframes aramex-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(220, 41, 30, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(220, 41, 30, 0.5); }
+  }
+
+  @keyframes dhl-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(10px); }
+  }
+
+  @keyframes fedex-arrow {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+  }
+
+  @keyframes ups-shield {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes smsa-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(102, 45, 145, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(102, 45, 145, 0.5); }
+  }
+
+  @keyframes naqel-wave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .aramex-pulse {
+    animation: aramex-pulse 2s ease-in-out infinite;
+  }
+
+  .dhl-slide {
+    animation: dhl-slide 1s ease-in-out infinite alternate;
+  }
+
+  .fedex-arrow {
+    animation: fedex-arrow 1.5s ease-in-out infinite;
+  }
+
+  .ups-shield {
+    animation: ups-shield 2s ease-in-out infinite;
+  }
+
+  .smsa-glow {
+    animation: smsa-glow 2s ease-in-out infinite;
+  }
+
+  .naqel-wave {
+    animation: naqel-wave 3s ease-in-out infinite;
+    background-size: 200% 200%;
+  }
+
+  /* Brand-Specific Gradients */
+  .gradient-aramex {
+    background: linear-gradient(135deg, #DC291E 0%, #A32117 100%);
+  }
+
+  .gradient-dhl {
+    background: linear-gradient(90deg, #FFCC00 0%, #D40511 100%);
+  }
+
+  .gradient-fedex {
+    background: linear-gradient(to right, #4D148C 0%, #FF6600 100%);
+  }
+
+  .gradient-ups {
+    background: linear-gradient(135deg, #351C15 0%, #FFB500 100%);
+  }
+
+  .gradient-smsa {
+    background: linear-gradient(135deg, #662D91 0%, #FF6600 100%);
+  }
+
+  .gradient-naqel {
+    background: linear-gradient(to right, #E61838 0%, #002E60 100%);
+  }
+
+  .gradient-zajil {
+    background: linear-gradient(135deg, #1C4587 0%, #FF9900 100%);
+  }
+
+  .gradient-saudipost {
+    background: linear-gradient(to right, #006C35 0%, #FFB81C 100%);
+  }
+
+  .gradient-sadad {
+    background: linear-gradient(135deg, #F58220 0%, #E67317 100%);
+  }
+
+  .gradient-knet {
+    background: linear-gradient(135deg, #007A3D 0%, #CE1126 100%);
+  }
+
+  .gradient-benefit {
+    background: linear-gradient(135deg, #CE1126 0%, #D32027 100%);
+  }
+
+  /* Hover Effects */
+  .company-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .company-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .payment-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .payment-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .payment-button:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .payment-button:active {
+    transform: scale(0.98);
+  }
+
+  /* Loading Skeletons */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #f0f0f0 0%,
+      #e0e0e0 50%,
+      #f0f0f0 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Card Input Animations */
+  .card-input-focus {
+    transition: all 0.3s ease;
+  }
+
+  .card-input-focus:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Success Checkmark Animation */
+  @keyframes checkmark {
+    0% { 
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+    }
+    50% { 
+      transform: scale(1.2) rotate(180deg);
+      opacity: 1;
+    }
+    100% { 
+      transform: scale(1) rotate(360deg);
+      opacity: 1;
+    }
+  }
+
+  .success-checkmark {
+    animation: checkmark 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Badge Pulse */
+  @keyframes badge-pulse {
+    0%, 100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% { 
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  }
+
+  .badge-pulse {
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
 }

