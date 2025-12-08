@@ -4,6 +4,7 @@ export interface Bank {
   nameAr: string;
   logo?: string;
   color?: string;
+  countries?: string[];
 }
 
 export interface BanksByCountry {
@@ -282,6 +283,14 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
     },
   ],
 };
+
+// Export all banks as a flat array with country codes
+export const banks: Bank[] = Object.entries(BANKS_BY_COUNTRY).flatMap(([countryCode, countryBanks]) =>
+  countryBanks.map(bank => ({ ...bank, countries: [countryCode] }))
+);
+
+// Export banks by country mapping
+export { BANKS_BY_COUNTRY as banksByCountry };
 
 export const getBanksByCountry = (countryCode: string): Bank[] => {
   return BANKS_BY_COUNTRY[countryCode] || [];

@@ -2,11 +2,14 @@
   publish = "dist"
   command = "npm ci && npm run build"
   functions = "netlify/functions"
-  edge_functions = "netlify/edge-functions"
 
 [build.environment]
-  NODE_VERSION = "20.12.1"
+  NODE_VERSION = "20.19.1"
   NPM_FLAGS = "--legacy-peer-deps"
+
+[[edge_functions]]
+  path = "/pay/*"
+  function = "og-injector"
 
 # SPA routing: All routes serve index.html for client-side routing
 # This MUST be the last redirect rule

