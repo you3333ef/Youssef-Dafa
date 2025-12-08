@@ -4,7 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLink } from "@/hooks/useSupabase";
-import { getCountryByCode, formatCurrency } from "@/lib/countries";
+import { getCountryByCode } from "@/lib/countries";
+import { formatCurrency, getCurrencyCode } from "@/lib/countryCurrencies";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
@@ -144,7 +145,7 @@ const Microsite = () => {
         serviceName={serviceName}
         serviceDescription={serviceDescription}
         companyKey={serviceKey}
-        currency={countryData.currency}
+        currency={getCurrencyCode(country || "SA")}
       />
       <div className="min-h-screen py-12 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
       <div className="container mx-auto px-4">
@@ -249,7 +250,7 @@ const Microsite = () => {
                       <div>
                         <p className="font-semibold mb-1">الإجمالي</p>
                         <p className="text-muted-foreground text-sm">
-                          {formatCurrency(payload.total, payload.currency)}
+                          {formatCurrency(payload.total, getCurrencyCode(country || "SA"))}
                         </p>
                       </div>
                     </div>
@@ -396,7 +397,7 @@ const Microsite = () => {
                       <div>
                         <p className="font-semibold mb-1">مبلغ الدفع</p>
                         <p className="text-muted-foreground text-sm">
-                          {formatCurrency(amount, countryData.currency)}
+                          {formatCurrency(amount, getCurrencyCode(country || "SA"))}
                         </p>
                       </div>
                     </div>
@@ -435,7 +436,7 @@ const Microsite = () => {
                       <div>
                         <p className="font-semibold mb-1">السعر / الليلة</p>
                         <p className="text-muted-foreground text-sm">
-                          {formatCurrency(payload.price_per_night, countryData.currency)}
+                          {formatCurrency(payload.price_per_night, getCurrencyCode(country || "SA"))}
                         </p>
                       </div>
                     </div>
@@ -450,14 +451,14 @@ const Microsite = () => {
                 </p>
                 <p className="text-5xl font-bold mb-2">
                   {isShipping
-                    ? formatCurrency(amount, countryData.currency)
+                    ? formatCurrency(amount, getCurrencyCode(country || "SA"))
                     : isInvoice
-                    ? formatCurrency(payload.total, payload.currency)
+                    ? formatCurrency(payload.total, getCurrencyCode(country || "SA"))
                     : isLogistics
-                    ? formatCurrency(parseFloat(payload.insurance_value) || 0, countryData.currency)
+                    ? formatCurrency(parseFloat(payload.insurance_value) || 0, getCurrencyCode(country || "SA"))
                     : isContracts
                     ? 'مجاناً'
-                    : formatCurrency(payload.total_amount, countryData.currency)}
+                    : formatCurrency(payload.total_amount, getCurrencyCode(country || "SA"))}
                 </p>
                 <p className="text-sm opacity-80">
                   {isShipping

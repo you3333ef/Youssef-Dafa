@@ -100,10 +100,12 @@ export const useChalets = (countryCode?: string) => {
     queryKey: ["chalets", countryCode],
     queryFn: async () => {
       if (!SUPABASE_ENABLED) {
+        const { MOCK_CHALETS } = await import('@/lib/mockChalets');
         const chalets = getAllFromLocalStorage('chalets_');
+        const allChalets = chalets.length > 0 ? chalets : MOCK_CHALETS;
         return countryCode 
-          ? chalets.filter((c: Chalet) => c.country_code === countryCode)
-          : chalets;
+          ? allChalets.filter((c: Chalet) => c.country_code === countryCode)
+          : allChalets;
       }
       
       let query = (supabase as any).from("chalets").select("*");

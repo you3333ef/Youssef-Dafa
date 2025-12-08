@@ -202,29 +202,6 @@ const HealthServices = () => {
                 <h2 className="text-lg font-bold mb-4">تفاصيل الموعد</h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="serviceType">نوع الخدمة *</Label>
-                    <Select
-                      value={bookingData.serviceType}
-                      onValueChange={(value) =>
-                        setBookingData({ ...bookingData, serviceType: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="اختر الخدمة..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {serviceTypes.map((service) => (
-                          <SelectItem key={service.value} value={service.value}>
-                            <span className="flex items-center gap-2">
-                              <span>{service.icon}</span>
-                              <span>{service.label}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
                     <Label htmlFor="doctorName">الطبيب المفضل (اختياري)</Label>
                     <Input
                       id="doctorName"

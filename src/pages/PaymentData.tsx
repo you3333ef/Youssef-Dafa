@@ -70,7 +70,11 @@ const PaymentData = () => {
     if (amount && !paymentAmount) {
       setPaymentAmount(amount.toString());
     }
-  }, [amount, paymentAmount]);
+  });
+
+  // Calculate formatted amount dynamically based on input
+  const displayAmount = paymentAmount ? parseFloat(paymentAmount) : amount;
+  const formattedAmount = formatCurrency(displayAmount, countryCode);
 
   const handleProceed = async (e: React.FormEvent) => {
     e.preventDefault();

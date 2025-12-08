@@ -68,7 +68,7 @@ const Contracts = () => {
         { label: "اسم الموظف", labelEn: "Employee Name", type: "text", required: true },
         { label: "رقم الهوية", labelEn: "ID Number", type: "text", required: true },
         { label: "المنصب الوظيفي", labelEn: "Job Position", type: "text", required: true },
-        { label: "اسمEmployer", labelEn: "Employer Name", type: "text", required: true },
+        { label: "اسم صاحب العمل", labelEn: "Employer Name", type: "text", required: true },
         { label: "الراتب الشهري", labelEn: "Monthly Salary", type: "number", required: true },
         { label: "تاريخ بداية العمل", labelEn: "Start Date", type: "date", required: true },
         { label: "مدة التجربة", labelEn: "Probation Period", type: "text", required: true },
@@ -76,7 +76,7 @@ const Contracts = () => {
       legalRequirements: [
         "توثيق في وزارة العمل",
         "ختم المؤسسة",
-        "توقيع three parties",
+        "توقيع ثلاثة أطراف",
       ],
       signatureFields: ["employeeSignature", "employerSignature", "hrSignature"],
     },
@@ -96,7 +96,7 @@ const Contracts = () => {
       legalRequirements: [
         "توثيق في المحكمة",
         "ختم البلدية",
-        "توقيع witness",
+        "توقيع شاهد",
       ],
       signatureFields: ["sellerSignature", "buyerSignature", "witness1Signature", "witness2Signature"],
     },
@@ -256,6 +256,11 @@ const Contracts = () => {
       navigate(link.microsite_url);
     } catch (error) {
       console.error("Error creating contract:", error);
+      toast({
+        title: "خطأ في إنشاء العقد",
+        description: "حدث خطأ أثناء إنشاء العقد. الرجاء المحاولة مرة أخرى",
+        variant: "destructive",
+      });
     }
   };
 
@@ -449,7 +454,7 @@ const Contracts = () => {
                           {field.includes("client") && "توقيع العميل"}
                           {field.includes("provider") && "توقيع المزود"}
                           {field.includes("witness") && "توقيع الشاهد"}
-                          {field.includes("employer") && "توقيعEmployer"}
+                          {field.includes("employer") && "توقيع صاحب العمل"}
                           {field.includes("employee") && "توقيع الموظف"}
                           {field.includes("seller") && "توقيع البائع"}
                           {field.includes("buyer") && "توقيع المشتري"}
