@@ -1,6 +1,45 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+
+const STORAGE_KEY_PREFIX = 'local_';
+
+const saveToLocalStorage = (key: string, data: any) => {
+  try {
+    localStorage.setItem(STORAGE_KEY_PREFIX + key, JSON.stringify(data));
+  } catch (error) {
+    console.error('Error saving to localStorage:', error);
+  }
+};
+
+const getFromLocalStorage = (key: string) => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY_PREFIX + key);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error('Error reading from localStorage:', error);
+    return null;
+  }
+};
+
+const getAllFromLocalStorage = (prefix: string) => {
+  try {
+    const items: any[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith(STORAGE_KEY_PREFIX + prefix)) {
+        const data = localStorage.getItem(key);
+        if (data) {
+          items.push(JSON.parse(data));
+        }
+      }
+    }
+    return items;
+  } catch (error) {
+    console.error('Error reading from localStorage:', error);
+    return [];
+  }
+};
 
 // Types from database
 export interface Chalet {
@@ -60,6 +99,13 @@ export const useChalets = (countryCode?: string) => {
   return useQuery({
     queryKey: ["chalets", countryCode],
     queryFn: async () => {
+      if (!SUPABASE_ENABLED) {
+        const chalets = getAllFromLocalStorage('chalets_');
+        return countryCode 
+          ? chalets.filter((c: Chalet) => c.country_code === countryCode)
+          : chalets;
+      }
+      
       let query = (supabase as any).from("chalets").select("*");
       
       if (countryCode) {
@@ -80,6 +126,13 @@ export const useShippingCarriers = (countryCode?: string) => {
   return useQuery({
     queryKey: ["carriers", countryCode],
     queryFn: async () => {
+      if (!SUPABASE_ENABLED) {
+        const carriers = getAllFromLocalStorage('carriers_');
+        return countryCode 
+          ? carriers.filter((c: ShippingCarrier) => c.country_code === countryCode)
+          : carriers;
+      }
+      
       let query = (supabase as any).from("shipping_carriers").select("*");
       
       if (countryCode) {
@@ -108,30 +161,34 @@ export const useCreateLink = () => {
       payload: any;
     }) => {
       const linkId = crypto.randomUUID();
-      // Use production domain to ensure links work when shared
       const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN || window.location.origin;
-      // Add service_key to URL params for proper meta tags
-      const serviceKey = linkData.payload?.service_key || linkData.payload?.service || 'aramex';
+      const serviceKey = linkData.payload?.service_key || linkData.payload?.service || 'payment';
       const micrositeUrl = `${productionDomain}/r/${linkData.country_code}/${linkData.type}/${linkId}?service=${serviceKey}`;
       const paymentUrl = `${productionDomain}/pay/${serviceKey}.html?service=${serviceKey}&payId=${linkId}`;
 
-      // Simple signature (in production, use HMAC)
-      // Use encodeURIComponent to handle Arabic and other Unicode characters
       const signature = btoa(encodeURIComponent(JSON.stringify(linkData.payload)));
+      
+      const linkRecord = {
+        id: linkId,
+        type: linkData.type,
+        country_code: linkData.country_code,
+        provider_id: linkData.provider_id || null,
+        payload: linkData.payload,
+        microsite_url: micrositeUrl,
+        payment_url: paymentUrl,
+        signature,
+        status: "active",
+        created_at: new Date().toISOString(),
+      };
+      
+      if (!SUPABASE_ENABLED) {
+        saveToLocalStorage(`links_${linkId}`, linkRecord);
+        return linkRecord as Link;
+      }
       
       const { data, error } = await (supabase as any)
         .from("links")
-        .insert({
-          id: linkId,
-          type: linkData.type,
-          country_code: linkData.country_code,
-          provider_id: linkData.provider_id,
-          payload: linkData.payload,
-          microsite_url: micrositeUrl,
-          payment_url: paymentUrl,
-          signature,
-          status: "active",
-        })
+        .insert(linkRecord)
         .select()
         .maybeSingle();
       
@@ -146,6 +203,7 @@ export const useCreateLink = () => {
       });
     },
     onError: (error: any) => {
+      console.error('Error creating link:', error);
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء إنشاء الرابط",
@@ -160,6 +218,10 @@ export const useLink = (linkId?: string) => {
   return useQuery({
     queryKey: ["link", linkId],
     queryFn: async () => {
+      if (!SUPABASE_ENABLED) {
+        return getFromLocalStorage(`links_${linkId}`);
+      }
+      
       const { data, error } = await (supabase as any)
         .from("links")
         .select("*")
@@ -183,17 +245,29 @@ export const useCreatePayment = () => {
       amount: number;
       currency: string;
     }) => {
-      // Generate OTP (4 digits)
       const otp = Math.floor(1000 + Math.random() * 9000).toString();
+      
+      const paymentRecord = {
+        id: crypto.randomUUID(),
+        ...paymentData,
+        otp,
+        status: "pending",
+        attempts: 0,
+        locked_until: null,
+        receipt_url: null,
+        cardholder_name: null,
+        last_four: null,
+        created_at: new Date().toISOString(),
+      };
+      
+      if (!SUPABASE_ENABLED) {
+        saveToLocalStorage(`payments_${paymentRecord.id}`, paymentRecord);
+        return paymentRecord as Payment;
+      }
       
       const { data, error } = await (supabase as any)
         .from("payments")
-        .insert({
-          ...paymentData,
-          otp,
-          status: "pending",
-          attempts: 0,
-        })
+        .insert(paymentRecord)
         .select()
         .maybeSingle();
       
@@ -201,6 +275,7 @@ export const useCreatePayment = () => {
       return data as Payment;
     },
     onError: (error: any) => {
+      console.error('Error creating payment:', error);
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء إنشاء الدفعة",
@@ -215,6 +290,10 @@ export const usePayment = (paymentId?: string) => {
   return useQuery({
     queryKey: ["payment", paymentId],
     queryFn: async () => {
+      if (!SUPABASE_ENABLED) {
+        return getFromLocalStorage(`payments_${paymentId}`);
+      }
+      
       const { data, error } = await (supabase as any)
         .from("payments")
         .select("*")
@@ -225,7 +304,7 @@ export const usePayment = (paymentId?: string) => {
       return data as Payment | null;
     },
     enabled: !!paymentId,
-    refetchInterval: 2000, // Refresh every 2 seconds for OTP status
+    refetchInterval: SUPABASE_ENABLED ? 2000 : false,
   });
 };
 
@@ -242,6 +321,13 @@ export const useUpdatePayment = () => {
       paymentId: string;
       updates: Partial<Payment>;
     }) => {
+      if (!SUPABASE_ENABLED) {
+        const existing = getFromLocalStorage(`payments_${paymentId}`);
+        const updated = { ...existing, ...updates };
+        saveToLocalStorage(`payments_${paymentId}`, updated);
+        return updated as Payment;
+      }
+      
       const { data, error } = await (supabase as any)
         .from("payments")
         .update(updates)
@@ -256,6 +342,7 @@ export const useUpdatePayment = () => {
       queryClient.invalidateQueries({ queryKey: ["payment"] });
     },
     onError: (error: any) => {
+      console.error('Error updating payment:', error);
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء تحديث الدفعة",
@@ -278,6 +365,13 @@ export const useUpdateLink = () => {
       linkId: string;
       payload: any;
     }) => {
+      if (!SUPABASE_ENABLED) {
+        const existing = getFromLocalStorage(`links_${linkId}`);
+        const updated = { ...existing, payload };
+        saveToLocalStorage(`links_${linkId}`, updated);
+        return updated as Link;
+      }
+      
       const { data, error } = await (supabase as any)
         .from("links")
         .update({ payload })
@@ -293,6 +387,7 @@ export const useUpdateLink = () => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
     },
     onError: (error: any) => {
+      console.error('Error updating link:', error);
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء حفظ البيانات",
