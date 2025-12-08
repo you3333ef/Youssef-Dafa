@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القنوات الذكية لتسديد رسوم الخدمات الحكومية | بوابة الدفع الحكومي - دولة قطر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFFFF;
+            color: #1A1A1A;
+            line-height: 1.8;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8D1B3D 0%, #6B1529 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(141, 27, 61, 0.15);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #F9F9F9 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 3px solid #E0E0E0;
+        }
+
+        .hero h1 {
+            color: #8D1B3D;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero .gold-accent {
+            color: #D4AF37;
+        }
+
+        .hero p {
+            color: #666666;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #8D1B3D 0%, #6B1529 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(141, 27, 61, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(141, 27, 61, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-right: 6px solid #8D1B3D;
+        }
+
+        .section h2 {
+            color: #8D1B3D;
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(135deg, #8D1B3D, #D4AF37);
+            border-radius: 3px;
+        }
+
+        .section p {
+            color: #666666;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #F9F9F9;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(141, 27, 61, 0.15);
+            border-color: #8D1B3D;
+        }
+
+        .feature-card h3 {
+            color: #8D1B3D;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .payment-methods {
+            background: linear-gradient(135deg, #8D1B3D 0%, #6B1529 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-methods::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(212,175,55,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .payment-methods h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .method-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+        }
+
+        .method-item h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="gov-logo">
+                    <img src="../src/assets/gov-qatar-logo.png" alt="قطر" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="site-title">بوابة الدفع الحكومي - قطر</div>
+            </div>
+            <nav class="nav-links">
+                <a href="#services">الخدمات</a>
+                <a href="#payment">طرق الدفع</a>
+                <a href="#about">عن البوابة</a>
+                <a href="/">العودة للرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>القنوات الذكية لتسديد رسوم <span class="gold-accent">الخدمات الحكومية</span></h1>
+            <p>
+                بوابة الدفع الحكومي القطرية توفر منصة موحدة وآمنة لتسديد جميع رسوم الخدمات الحكومية في دولة قطر. 
+                نسعى لتقديم تجربة دفع رقمية متميزة تواكب رؤية قطر الوطنية 2030 في التحول الرقمي وتسهيل الخدمات 
+                الحكومية على المواطنين والمقيمين.
+            </p>
+            <a href="/payment-card" class="cta-button">ابدأ التسديد الآن</a>
+        </div>
+
+        <section id="services" class="section">
+            <h2>بوابة الدفع الحكومي القطرية</h2>
+            <p>
+                تم إطلاق بوابة الدفع الحكومي كجزء من مبادرات الحكومة الإلكترونية في دولة قطر، حيث توفر حلولاً 
+                متكاملة للدفع الإلكتروني تشمل جميع الجهات الحكومية والمؤسسات العامة. تتميز البوابة بسهولة الاستخدام، 
+                الأمان العالي، والتكامل مع جميع الأنظمة الحكومية.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🏛️ خدمات حكومية</h3>
+                    <p>تسديد رسوم جميع الجهات الحكومية من منصة واحدة</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💳 بوابة آمنة</h3>
+                    <p>تقنيات حماية متقدمة وتشفير عالي المستوى</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌐 خدمات إلكترونية</h3>
+                    <p>الوصول للخدمات عبر الإنترنت والتطبيقات الذكية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ سرعة الإنجاز</h3>
+                    <p>معاملات فورية مع تأكيد مباشر للدفع</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 تطبيقات ذكية</h3>
+                    <p>الدفع من خلال تطبيقات الهاتف الذكي</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔄 متابعة المدفوعات</h3>
+                    <p>سجل كامل لجميع معاملاتك المالية</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="payment" class="payment-methods">
+            <h2>قنوات الدفع المتاحة</h2>
+            <div class="methods-grid">
+                <div class="method-item">
+                    <h4>💳 البطاقات الائتمانية</h4>
+                    <p>Visa, Mastercard, American Express</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏦 الحساب البنكي</h4>
+                    <p>الدفع المباشر من حسابك البنكي</p>
+                </div>
+                <div class="method-item">
+                    <h4>📱 المحافظ الرقمية</h4>
+                    <p>Apple Pay, Google Pay, Samsung Pay</p>
+                </div>
+                <div class="method-item">
+                    <h4>🌐 التحويل البنكي</h4>
+                    <p>التحويل الإلكتروني المباشر</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏧 نقاط الخدمة</h4>
+                    <p>الدفع في مراكز الخدمة الحكومية</p>
+                </div>
+                <div class="method-item">
+                    <h4>💰 الصرافات الآلية</h4>
+                    <p>السداد عبر أجهزة الصراف الآلي</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2>عن بوابة الدفع الحكومي</h2>
+            <p>
+                بوابة الدفع الحكومي القطرية هي المنصة الرسمية لتسديد جميع رسوم الخدمات الحكومية في دولة قطر. تم 
+                تطوير البوابة ضمن إطار مبادرات التحول الرقمي الحكومي وتماشياً مع رؤية قطر الوطنية 2030، بهدف تسهيل 
+                الإجراءات على المتعاملين وتحسين جودة الخدمات المقدمة.
+            </p>
+            <p>
+                تتميز البوابة بتكاملها مع جميع الأنظمة الحكومية، مما يتيح للمستخدمين الوصول إلى خدمات متعددة من 
+                خلال منصة واحدة. كما توفر البوابة مستويات أمان عالية تتوافق مع أفضل المعايير الدولية لحماية البيانات 
+                والمعاملات المالية الإلكترونية.
+            </p>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 بوابة الدفع الحكومي - دولة قطر. جميع الحقوق محفوظة.</p>
+        <p>وزارة الاتصالات وتكنولوجيا المعلومات - دولة قطر</p>
+    </footer>
+</body>
+</html>

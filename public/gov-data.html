@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج تسديد رسوم الخدمات الحكومية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #F5F5F5;
+            color: #1A1A1A;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #1A1A1A;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #1A1A1A;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007A3D;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #007A3D 0%, #00732F 100%);
+            color: white;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 122, 61, 0.3);
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 122, 61, 0.4);
+        }
+
+        .required {
+            color: #CE1126;
+        }
+
+        .info-box {
+            background: #FFF8F2;
+            border-right: 4px solid #F58220;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #F58220;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #666666;
+            font-size: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 نموذج تسديد رسوم الخدمات الحكومية</h1>
+            <p>يرجى تعبئة النموذج أدناه لإتمام عملية الدفع</p>
+        </div>
+
+        <div class="info-box">
+            <h3>ℹ️ معلومات مهمة</h3>
+            <p>
+                جميع المعلومات المدخلة في هذا النموذج آمنة ومحمية. يرجى التأكد من صحة البيانات المدخلة قبل المتابعة 
+                لعملية الدفع. سيتم تحويلك إلى صفحة الدفع الآمنة بعد إتمام التعبئة.
+            </p>
+        </div>
+
+        <form class="form-container" id="paymentForm">
+            <div class="form-group">
+                <label for="country">اختر الدولة <span class="required">*</span></label>
+                <select id="country" name="country" required>
+                    <option value="">-- اختر الدولة --</option>
+                    <option value="SA">المملكة العربية السعودية - سداد</option>
+                    <option value="KW">دولة الكويت - كي نت</option>
+                    <option value="AE">دولة الإمارات - سداد الإمارات</option>
+                    <option value="QA">دولة قطر - بوابة الدفع الحكومي</option>
+                    <option value="OM">سلطنة عُمان - مال</option>
+                    <option value="BH">مملكة البحرين - بنفت</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="service">نوع الخدمة <span class="required">*</span></label>
+                <select id="service" name="service" required>
+                    <option value="">-- اختر نوع الخدمة --</option>
+                    <option value="electric">فواتير الكهرباء</option>
+                    <option value="water">فواتير المياه</option>
+                    <option value="telecom">فواتير الاتصالات</option>
+                    <option value="traffic">المخالفات المرورية</option>
+                    <option value="municipality">رسوم البلدية</option>
+                    <option value="health">الخدمات الصحية</option>
+                    <option value="education">الخدمات التعليمية</option>
+                    <option value="visa">خدمات التأشيرات</option>
+                    <option value="other">خدمات أخرى</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fullname">الاسم الكامل <span class="required">*</span></label>
+                    <input type="text" id="fullname" name="fullname" placeholder="أدخل الاسم الكامل" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="national-id">رقم الهوية / الإقامة <span class="required">*</span></label>
+                    <input type="text" id="national-id" name="national-id" placeholder="أدخل رقم الهوية" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mobile">رقم الجوال <span class="required">*</span></label>
+                    <input type="tel" id="mobile" name="mobile" placeholder="+966XXXXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" name="email" placeholder="example@email.com">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="account-number">رقم الحساب / رقم المشترك <span class="required">*</span></label>
+                <input type="text" id="account-number" name="account-number" placeholder="أدخل رقم الحساب أو المشترك" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="amount">المبلغ المطلوب <span class="required">*</span></label>
+                    <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="currency">العملة <span class="required">*</span></label>
+                    <select id="currency" name="currency" required>
+                        <option value="SAR">ريال سعودي (SAR)</option>
+                        <option value="KWD">دينار كويتي (KWD)</option>
+                        <option value="AED">درهم إماراتي (AED)</option>
+                        <option value="QAR">ريال قطري (QAR)</option>
+                        <option value="OMR">ريال عُماني (OMR)</option>
+                        <option value="BHD">دينار بحريني (BHD)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">ملاحظات إضافية</label>
+                <textarea id="notes" name="notes" placeholder="أدخل أي ملاحظات أو تفاصيل إضافية (اختياري)"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                المتابعة إلى صفحة الدفع الآمنة ←
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const country = document.getElementById('country').value;
+            const service = document.getElementById('service').value;
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+            
+            if (!country || !service || !amount) {
+                alert('يرجى تعبئة جميع الحقول المطلوبة');
+                return;
+            }
+            
+            const params = new URLSearchParams({
+                country: country,
+                service: service,
+                amount: amount,
+                currency: currency,
+                recipient: document.getElementById('fullname').value,
+                nationalId: document.getElementById('national-id').value,
+                mobile: document.getElementById('mobile').value,
+                email: document.getElementById('email').value || '',
+                accountNumber: document.getElementById('account-number').value,
+                notes: document.getElementById('notes').value || ''
+            });
+            
+            window.location.href = `/payment-card?${params.toString()}`;
+        });
+
+        document.getElementById('country').addEventListener('change', function() {
+            const currency = document.getElementById('currency');
+            const countryToCurrency = {
+                'SA': 'SAR',
+                'KW': 'KWD',
+                'AE': 'AED',
+                'QA': 'QAR',
+                'OM': 'OMR',
+                'BH': 'BHD'
+            };
+            
+            if (countryToCurrency[this.value]) {
+                currency.value = countryToCurrency[this.value];
+            }
+        });
+    </script>
+</body>
+</html>

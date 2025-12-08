@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القنوات الذكية لتسديد رسوم الخدمات الحكومية | سداد - المملكة العربية السعودية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFFFF;
+            color: #1A1A1A;
+            line-height: 1.8;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #F58220 0%, #E67317 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(245, 130, 32, 0.15);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #FFF8F2 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 3px solid #FFE5D0;
+        }
+
+        .hero h1 {
+            color: #F58220;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            color: #666666;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #F58220 0%, #E67317 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(245, 130, 32, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(245, 130, 32, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-right: 6px solid #F58220;
+        }
+
+        .section h2 {
+            color: #F58220;
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(135deg, #F58220, #E67317);
+            border-radius: 3px;
+        }
+
+        .section p {
+            color: #666666;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #FFF8F2;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #FFE5D0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(245, 130, 32, 0.15);
+        }
+
+        .feature-card h3 {
+            color: #F58220;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .payment-methods {
+            background: linear-gradient(135deg, #F58220 0%, #E67317 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-top: 40px;
+        }
+
+        .payment-methods h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .method-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .method-item h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="gov-logo">
+                    <img src="../src/assets/gov-sadad-official.png" alt="سداد" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="site-title">سداد - المملكة العربية السعودية</div>
+            </div>
+            <nav class="nav-links">
+                <a href="#services">الخدمات</a>
+                <a href="#payment">طرق الدفع</a>
+                <a href="#about">عن سداد</a>
+                <a href="/">العودة للرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>القنوات الذكية لتسديد رسوم الخدمات الحكومية</h1>
+            <p>
+                نظام سداد هو نظام المدفوعات الوطني المركزي في المملكة العربية السعودية، يوفر قنوات متعددة وآمنة لتسديد 
+                فواتير ورسوم الخدمات الحكومية والخاصة بكل سهولة ويسر. مع سداد، يمكنك تسديد جميع فواتيرك من مكان واحد، 
+                في أي وقت ومن أي مكان.
+            </p>
+            <a href="/payment-card" class="cta-button">ابدأ التسديد الآن</a>
+        </div>
+
+        <section id="services" class="section">
+            <h2>نظام سداد الوطني</h2>
+            <p>
+                يُعد نظام سداد أحد أهم الأنظمة المالية في المملكة العربية السعودية، حيث يوفر منصة موحدة لتسديد 
+                جميع المدفوعات الحكومية والخاصة. تم تطوير النظام ليكون الحل الأمثل للأفراد والشركات لإدارة جميع 
+                معاملاتهم المالية بكفاءة وأمان عاليين.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🏦 تسديد الفواتير</h3>
+                    <p>تسديد فواتير الكهرباء، المياه، الاتصالات، والخدمات الحكومية الأخرى</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💳 قنوات متعددة</h3>
+                    <p>الدفع عبر البنوك، الصرافات الآلية، الإنترنت، والتطبيقات الذكية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔒 أمان عالي</h3>
+                    <p>نظام آمن ومعتمد من مؤسسة النقد العربي السعودي (ساما)</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ سرعة الإنجاز</h3>
+                    <p>تسديد فوري ومؤكد مع إشعارات فورية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 تطبيقات البنوك</h3>
+                    <p>الدفع من خلال تطبيقات البنوك السعودية المختلفة</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌐 متاح 24/7</h3>
+                    <p>خدمة متاحة على مدار الساعة طوال أيام الأسبوع</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="payment" class="payment-methods">
+            <h2>طرق الدفع المتاحة</h2>
+            <div class="methods-grid">
+                <div class="method-item">
+                    <h4>🏧 الصرافات الآلية</h4>
+                    <p>تسديد مباشر عبر أجهزة الصراف الآلي</p>
+                </div>
+                <div class="method-item">
+                    <h4>💻 الخدمات المصرفية</h4>
+                    <p>عبر الموقع الإلكتروني للبنك</p>
+                </div>
+                <div class="method-item">
+                    <h4>📱 تطبيقات الجوال</h4>
+                    <p>من خلال تطبيقات البنوك الذكية</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏦 فروع البنوك</h4>
+                    <p>التسديد المباشر في فروع البنوك</p>
+                </div>
+                <div class="method-item">
+                    <h4>☎️ الهاتف المصرفي</h4>
+                    <p>عبر خدمات الهاتف المصرفي</p>
+                </div>
+                <div class="method-item">
+                    <h4>💳 نقاط البيع</h4>
+                    <p>الدفع في نقاط الخدمة المعتمدة</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2>عن نظام سداد</h2>
+            <p>
+                أُطلق نظام سداد للمدفوعات في عام 2004م من قبل البنك المركزي السعودي (ساما)، ويعد أحد أهم الأنظمة 
+                المالية الإلكترونية في المملكة. يهدف النظام إلى تسهيل عمليات التسديد وتوفير الوقت والجهد على 
+                الأفراد والمؤسسات من خلال توفير منصة موحدة وآمنة لجميع المدفوعات.
+            </p>
+            <p>
+                يخدم النظام ملايين المستخدمين يومياً ويعالج آلاف العمليات المالية، وهو يغطي أكثر من 5000 جهة فواتير 
+                مختلفة بين حكومية وخاصة، مما يجعله الخيار الأول للمدفوعات في المملكة.
+            </p>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 نظام سداد - المملكة العربية السعودية. جميع الحقوق محفوظة.</p>
+        <p>تم التطوير بواسطة البنك المركزي السعودي (ساما)</p>
+    </footer>
+</body>
+</html>

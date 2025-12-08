@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القنوات الذكية لتسديد رسوم الخدمات الحكومية | البوابة الرسمية لحكومة الإمارات العربية المتحدة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFFFF;
+            color: #000000;
+            line-height: 1.8;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #CE1126 0%, #00732F 50%, #000000 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(206, 17, 38, 0.15);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-title {
+            color: white;
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #F5F5F5 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 3px solid #E0E0E0;
+        }
+
+        .hero h1 {
+            color: #CE1126;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero .green-accent {
+            color: #00732F;
+        }
+
+        .hero p {
+            color: #666666;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #CE1126 0%, #00732F 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(206, 17, 38, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(206, 17, 38, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-right: 6px solid #CE1126;
+        }
+
+        .section h2 {
+            color: #CE1126;
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(135deg, #CE1126, #00732F);
+            border-radius: 3px;
+        }
+
+        .section p {
+            color: #666666;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .subsection {
+            background: #F5F5F5;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-right: 4px solid #00732F;
+        }
+
+        .subsection h3 {
+            color: #00732F;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #F5F5F5;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(206, 17, 38, 0.15);
+            border-color: #CE1126;
+        }
+
+        .feature-card h3 {
+            color: #CE1126;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .payment-methods {
+            background: linear-gradient(135deg, #CE1126 0%, #00732F 50%, #000000 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-top: 40px;
+        }
+
+        .payment-methods h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .method-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .method-item h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        ul {
+            list-style: none;
+            padding-right: 0;
+        }
+
+        ul li {
+            padding: 10px 0;
+            padding-right: 25px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '✓';
+            color: #00732F;
+            font-weight: bold;
+            position: absolute;
+            right: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="gov-logo">
+                    <img src="../src/assets/gov-uae-logo.jpg" alt="الإمارات" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="site-title">البوابة الرسمية لحكومة الإمارات العربية المتحدة</div>
+            </div>
+            <nav class="nav-links">
+                <a href="#services">الخدمات</a>
+                <a href="#payment">طرق الدفع</a>
+                <a href="#about">عن البوابة</a>
+                <a href="/">العودة للرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>القنوات الذكية لتسديد رسوم <span class="green-accent">الخدمات الحكومية</span></h1>
+            <p>
+                توفر حكومة دولة الإمارات خيارات متعددة لتسهيل دفع رسوم الخدمات الحكومية. فإلى جانب خيار الدفع نقداً عند 
+                مكتب تقديم الخدمة، يمكن الدفع إلكترونياً وعن طريق الأجهزة الذكية في معظم الجهات الحكومية الاتحادية 
+                والمحلية، بشكل آمن وفعال. تستعرض هذه الصفحة معلومات عن خيارات الدفع المختلفة.
+            </p>
+            <a href="/payment-card" class="cta-button">ابدأ التسديد الآن</a>
+        </div>
+
+        <section id="services" class="section">
+            <h2>سداد أبوظبي - منصة موحدة للدفع الرقمي</h2>
+            <p>
+                تعتبر منصة سداد أبوظبي، أحدث منصات الدفع الرقمية الموحدة لجميع الخدمات الحكومية في إمارة أبوظبي، 
+                وذلك ضمن إطار منظومة خدمات أبوظبي الحكومية الموحدة – تم.
+            </p>
+            <p>
+                توفر المنصة للمتعاملين طرقاً سلسة وآمنة وموحدة تتيح لهم إتمام عمليات الدفع رقمياً لجميع الخدمات 
+                الحكومية عبر قنواتها المختلفة، كما توفر للجهات الحكومية في الإمارة منصة رقمية موحدة لجميع قنوات الدفع.
+            </p>
+            
+            <div class="subsection">
+                <h3>مزايا سداد أبوظبي:</h3>
+                <ul>
+                    <li>إتمام عمليات الدفع والمصالحة والتسويات</li>
+                    <li>التقارير وعمليات التدقيق المتقدمة</li>
+                    <li>عملية دفع واحدة لخدمات متعددة</li>
+                    <li>البوابات الإلكترونية وتطبيقات الهاتف المتحرك</li>
+                    <li>نقاط البيع وأجهزة الإيداع النقدي</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>سداد دبي - بوابة الدفع الموحدة</h2>
+            <p>
+                "سداد دبي" بوابة دفع تملكها وتشغلها حكومة دبي تقدم كخدمة مشتركة لمزودي الخدمات والجهات الحكومية، 
+                وتختص بالخدمات التي تتطلب الدفع الإلكتروني من خلال الهاتف المحمول والمواقع الإلكترونية ومنافذ الخدمة 
+                (الأكشاك) والتقنيات القابلة للارتداء.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>💳 بطاقات الدفع</h3>
+                    <p>الائتمان والخصم والمحافظ الإلكترونية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔐 أمان متقدم</h3>
+                    <p>متوافق مع PCI DSS ومعايير ISO27001</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 تطبيق دبي الآن</h3>
+                    <p>الوصول لجميع الخدمات من تطبيق واحد</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ دفع فوري</h3>
+                    <p>واجهة دفع آمنة مع تحقق فوري</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="payment" class="payment-methods">
+            <h2>طرق الدفع الإلكتروني المتاحة</h2>
+            <div class="methods-grid">
+                <div class="method-item">
+                    <h4>💳 البطاقات البنكية</h4>
+                    <p>بطاقات الائتمان والخصم المحلية والدولية</p>
+                </div>
+                <div class="method-item">
+                    <h4>📱 المحافظ الرقمية</h4>
+                    <p>Apple Pay, PayBy, Payit</p>
+                </div>
+                <div class="method-item">
+                    <h4>🎫 بطاقة نول</h4>
+                    <p>لخدمات النقل والمواصلات في دبي</p>
+                </div>
+                <div class="method-item">
+                    <h4>🚗 بطاقة مواقف</h4>
+                    <p>لدفع رسوم المواقف في أبوظبي</p>
+                </div>
+                <div class="method-item">
+                    <h4>🚌 بطاقة حافلات</h4>
+                    <p>للنقل العام في أبوظبي وضواحيها</p>
+                </div>
+                <div class="method-item">
+                    <h4>📡 تقنية RFID</h4>
+                    <p>نظام سالك للتعرفة المرورية</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2>الدفع عبر الأجهزة الذكية</h2>
+            <p>
+                تماشياً مع اتجاه حكومة دولة الإمارات نحو التحول إلى حكومة ذكية، فقد طورت الجهات الحكومية العديد من 
+                التطبيقات الذكية للهاتف المتحرك، لسداد رسوم الخدمات الحكومية. وبعض هذه التطبيقات متخصص لسداد رسوم 
+                الخدمات فقط، والبعض الآخر يتضمن خدمة الدفع مع خدمات أخرى في التطبيق.
+            </p>
+            
+            <div class="subsection">
+                <h3>أهم التطبيقات الذكية:</h3>
+                <ul>
+                    <li><strong>تطبيق تم (TAMM)</strong> - منصة خدمات أبوظبي الحكومية الموحدة</li>
+                    <li><strong>تطبيق دبي الآن (DubaiNow)</strong> - للوصول إلى خدمات حكومة دبي</li>
+                    <li><strong>تطبيق هيئة الطرق والمواصلات</strong> - لخدمات النقل والمواصلات</li>
+                    <li><strong>تطبيق هويتي الإلكترونية</strong> - للخدمات الحكومية الموحدة</li>
+                    <li><strong>UAE PASS</strong> - الهوية الرقمية الموحدة</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>بطاقات الدفع لخدمات النقل والمواصلات</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🎫 بطاقة نول - دبي</h3>
+                    <p>بطاقة ذكية لسداد تعرفة التنقل عبر وسائل النقل المختلفة التابعة لهيئة الطرق والمواصلات في دبي، 
+                    تشمل المترو والترام والحافلات والباص المائي ومواقف السيارات.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🚌 بطاقة حافلات - أبوظبي</h3>
+                    <p>بطاقة ذكية قابلة لإعادة التعبئة لدفع رسوم النقل العام في أبوظبي وضواحيها، متوفرة بست فئات 
+                    مختلفة وتصاريح أسبوعية وشهرية.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🚗 بطاقة مواقف - أبوظبي</h3>
+                    <p>بطاقة قابلة لإعادة التعبئة لسداد رسوم المواقف العامة، يتم خصم الرسوم تلقائياً عند تمرير 
+                    البطاقة في الجهاز المخصص.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎫 بطاقة ساير - الشارقة</h3>
+                    <p>بطاقة إلكترونية لدفع تكلفة التذاكر داخل حافلات النقل العام في الشارقة، متوفرة في محطة الجبيل 
+                    وداخل الحافلات.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 البوابة الرسمية لحكومة الإمارات العربية المتحدة. جميع الحقوق محفوظة.</p>
+        <p>هيئة تنظيم الاتصالات والحكومة الرقمية</p>
+    </footer>
+</body>
+</html>

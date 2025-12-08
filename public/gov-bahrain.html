@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القنوات الذكية لتسديد رسوم الخدمات الحكومية | بنفت - مملكة البحرين</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFFFF;
+            color: #1A1A1A;
+            line-height: 1.8;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #CE1126 0%, #D32027 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(206, 17, 38, 0.15);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-logo {
+            width: 120px;
+            height: 60px;
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #F9F9F9 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 3px solid #E0E0E0;
+        }
+
+        .hero h1 {
+            color: #CE1126;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            color: #666666;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #CE1126 0%, #D32027 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(206, 17, 38, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(206, 17, 38, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-right: 6px solid #CE1126;
+        }
+
+        .section h2 {
+            color: #CE1126;
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(135deg, #CE1126, #D32027);
+            border-radius: 3px;
+        }
+
+        .section p {
+            color: #666666;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #F9F9F9;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(206, 17, 38, 0.15);
+            border-color: #CE1126;
+        }
+
+        .feature-card h3 {
+            color: #CE1126;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .payment-methods {
+            background: linear-gradient(135deg, #CE1126 0%, #A00E1E 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-top: 40px;
+        }
+
+        .payment-methods h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .method-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .method-item h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="gov-logo">
+                    <img src="../src/assets/logo-benefit.png" alt="بنفت" style="width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1);">
+                </div>
+                <div class="site-title">بنفت - مملكة البحرين</div>
+            </div>
+            <nav class="nav-links">
+                <a href="#services">الخدمات</a>
+                <a href="#payment">طرق الدفع</a>
+                <a href="#about">عن بنفت</a>
+                <a href="/">العودة للرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>القنوات الذكية لتسديد رسوم الخدمات الحكومية</h1>
+            <p>
+                بنفت (BENEFIT) هي الشبكة الإلكترونية للمعاملات المالية في مملكة البحرين، توفر حلولاً متكاملة وآمنة 
+                لتسديد رسوم الخدمات الحكومية والخاصة. من خلال بنفت، يمكنك إجراء معاملاتك بسهولة تامة عبر قنوات متعددة 
+                متاحة على مدار الساعة.
+            </p>
+            <a href="/payment-card" class="cta-button">ابدأ التسديد الآن</a>
+        </div>
+
+        <section id="services" class="section">
+            <h2>شبكة بنفت الوطنية</h2>
+            <p>
+                تأسست الشركة البحرينية للتحويل الإلكتروني (بنفت) في عام 1997 كشركة مساهمة بحرينية مملوكة بالكامل 
+                للبنوك العاملة في مملكة البحرين. تهدف بنفت إلى تطوير وإدارة البنية التحتية للمدفوعات الإلكترونية 
+                في المملكة، وتقديم خدمات مبتكرة تواكب التطور التكنولوجي في القطاع المالي.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🏦 شبكة متكاملة</h3>
+                    <p>ربط جميع البنوك والمؤسسات المالية في البحرين</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💳 بطاقات بنفت</h3>
+                    <p>نظام دفع وطني آمن ومقبول في كل مكان</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔐 أمان عالي</h3>
+                    <p>تقنيات تشفير متقدمة ومصادقة ثنائية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ معاملات فورية</h4>
+                    <p>تنفيذ سريع للمدفوعات والتحويلات</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 حلول رقمية</h3>
+                    <p>خدمات الدفع عبر الإنترنت والموبايل</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌐 خدمة 24/7</h3>
+                    <p>متاحة على مدار الساعة طوال أيام الأسبوع</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="payment" class="payment-methods">
+            <h2>قنوات الدفع المتاحة</h2>
+            <div class="methods-grid">
+                <div class="method-item">
+                    <h4>💳 نقاط البيع</h4>
+                    <p>شبكة واسعة من نقاط البيع</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏧 الصرافات الآلية</h4>
+                    <p>جميع أجهزة الصراف في البحرين</p>
+                </div>
+                <div class="method-item">
+                    <h4>🌐 الإنترنت</h4>
+                    <p>الدفع عبر المواقع الإلكترونية</p>
+                </div>
+                <div class="method-item">
+                    <h4>📱 تطبيقات البنوك</h4>
+                    <p>من خلال تطبيقات الخدمات المصرفية</p>
+                </div>
+                <div class="method-item">
+                    <h4>💸 فواتيركم</h4>
+                    <p>نظام فواتيركم الإلكتروني</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏛️ الخدمات الحكومية</h4>
+                    <p>تسديد الرسوم الحكومية</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2>عن شبكة بنفت</h2>
+            <p>
+                الشركة البحرينية للتحويل الإلكتروني (بنفت) هي الشركة الوطنية الرائدة في مجال خدمات الدفع الإلكتروني 
+                في مملكة البحرين. تعمل الشركة تحت إشراف مصرف البحرين المركزي، وتقدم مجموعة شاملة من الخدمات المالية 
+                الإلكترونية للقطاعين العام والخاص.
+            </p>
+            <p>
+                تدير بنفت البنية التحتية الوطنية للمدفوعات الإلكترونية في البحرين، وتخدم جميع البنوك العاملة في 
+                المملكة من خلال شبكة متطورة من الصرافات الآلية، نقاط البيع، والمنصات الإلكترونية. تعالج الشبكة 
+                ملايين المعاملات شهرياً، وتساهم في تعزيز التحول الرقمي في القطاع المالي البحريني.
+            </p>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 بنفت - مملكة البحرين. جميع الحقوق محفوظة.</p>
+        <p>الشركة البحرينية للتحويل الإلكتروني - تحت إشراف مصرف البحرين المركزي</p>
+    </footer>
+</body>
+</html>

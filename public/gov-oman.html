@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القنوات الذكية لتسديد رسوم الخدمات الحكومية | مال - سلطنة عُمان</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFFFF;
+            color: #1A1A1A;
+            line-height: 1.8;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #D0032C 0%, #009A44 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(208, 3, 44, 0.15);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .gov-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #F8F8F8 0%, #FFFFFF 100%);
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 3px solid #E0E0E0;
+        }
+
+        .hero h1 {
+            color: #D0032C;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hero .green-accent {
+            color: #009A44;
+        }
+
+        .hero p {
+            color: #666666;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #D0032C 0%, #009A44 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(208, 3, 44, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(208, 3, 44, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-right: 6px solid #D0032C;
+        }
+
+        .section h2 {
+            color: #D0032C;
+            font-size: 32px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 6px;
+            height: 40px;
+            background: linear-gradient(135deg, #D0032C, #009A44);
+            border-radius: 3px;
+        }
+
+        .section p {
+            color: #666666;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: #F8F8F8;
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #E0E0E0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(208, 3, 44, 0.15);
+            border-color: #D0032C;
+        }
+
+        .feature-card h3 {
+            color: #D0032C;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        .payment-methods {
+            background: linear-gradient(135deg, #D0032C 0%, #009A44 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 16px;
+            margin-top: 40px;
+        }
+
+        .payment-methods h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .method-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .method-item h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #1A1A1A;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="gov-logo">
+                    <img src="../src/assets/gov-maal-logo.jpg" alt="مال" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="site-title">مال - سلطنة عُمان</div>
+            </div>
+            <nav class="nav-links">
+                <a href="#services">الخدمات</a>
+                <a href="#payment">طرق الدفع</a>
+                <a href="#about">عن مال</a>
+                <a href="/">العودة للرئيسية</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>القنوات الذكية لتسديد رسوم <span class="green-accent">الخدمات الحكومية</span></h1>
+            <p>
+                بطاقة مال هي البطاقة الوطنية للدفع الإلكتروني في سلطنة عُمان، صادرة عن بنك مسقط. توفر بطاقة مال 
+                حلولاً شاملة للدفع الإلكتروني لجميع الخدمات الحكومية والخاصة، مع ميزات أمان متقدمة وسهولة في الاستخدام.
+            </p>
+            <a href="/payment-card" class="cta-button">ابدأ التسديد الآن</a>
+        </div>
+
+        <section id="services" class="section">
+            <h2>بطاقة مال الوطنية</h2>
+            <p>
+                بطاقة مال هي البطاقة المصرفية الوطنية العُمانية التي تتيح للعملاء إجراء جميع المعاملات المالية 
+                محلياً ودولياً. أُطلقت البطاقة كمبادرة وطنية لدعم الاقتصاد المحلي وتعزيز الشمول المالي، وهي مقبولة 
+                في جميع نقاط البيع والصرافات الآلية داخل السلطنة وخارجها.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>💳 بطاقة شاملة</h3>
+                    <p>تسديد جميع الخدمات الحكومية والخاصة</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌍 قبول عالمي</h3>
+                    <p>مقبولة في جميع نقاط البيع المحلية والدولية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔒 أمان متطور</h3>
+                    <p>تقنية الشريحة الذكية وكلمات المرور الديناميكية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 التطبيقات الذكية</h3>
+                    <p>إدارة البطاقة عبر تطبيق بنك مسقط</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ معاملات سريعة</h3>
+                    <p>تنفيذ فوري للمدفوعات مع إشعارات لحظية</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎁 برامج المكافآت</h3>
+                    <p>نقاط ومكافآت على كل عملية شراء</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="payment" class="payment-methods">
+            <h2>قنوات الدفع المتاحة</h2>
+            <div class="methods-grid">
+                <div class="method-item">
+                    <h4>💳 بطاقة مال</h4>
+                    <p>البطاقة الوطنية للدفع الإلكتروني</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏧 الصرافات الآلية</h4>
+                    <p>السحب والدفع عبر أجهزة الصراف</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏪 نقاط البيع</h4>
+                    <p>الدفع في المحلات والمؤسسات</p>
+                </div>
+                <div class="method-item">
+                    <h4>🌐 الدفع الإلكتروني</h4>
+                    <p>المعاملات عبر الإنترنت</p>
+                </div>
+                <div class="method-item">
+                    <h4>📱 تطبيق بنك مسقط</h4>
+                    <p>الدفع من خلال التطبيق الذكي</p>
+                </div>
+                <div class="method-item">
+                    <h4>🏦 الخدمات المصرفية</h4>
+                    <p>عبر فروع بنك مسقط</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2>عن بطاقة مال</h2>
+            <p>
+                أُطلقت بطاقة مال من قبل بنك مسقط بالتعاون مع البنك المركزي العُماني، كأول بطاقة وطنية للدفع 
+                الإلكتروني في سلطنة عُمان. تهدف البطاقة إلى تعزيز الشمول المالي ودعم الاقتصاد الوطني من خلال توفير 
+                حلول دفع محلية آمنة وفعالة.
+            </p>
+            <p>
+                تتميز بطاقة مال بقبولها الواسع في جميع أنحاء السلطنة وخارجها، مع توافقها مع شبكات الدفع العالمية. 
+                البطاقة مزودة بأحدث تقنيات الأمان بما في ذلك الشريحة الذكية وتقنية الدفع اللاتلامسي، مما يضمن سلامة 
+                معاملاتك المالية.
+            </p>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 بطاقة مال - سلطنة عُمان. جميع الحقوق محفوظة.</p>
+        <p>بنك مسقط - البنك المركزي العُماني</p>
+    </footer>
+</body>
+</html>
