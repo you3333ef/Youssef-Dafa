@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home, Package, FileText, Heart, Truck, Building2, CreditCard } from "lucide-react";
+import { Home, Package, FileText, Heart, Truck, Building2, CreditCard, PawPrint } from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
 import { Country, COUNTRIES } from "@/lib/countries";
 import SEOHead from "@/components/SEOHead";
@@ -30,6 +30,14 @@ const Services = () => {
       icon: Package,
       href: selectedCountry ? `/create/${selectedCountry.code}/shipping` : "#",
       gradient: "var(--gradient-success)",
+    },
+    {
+      title: "Animal Transport",
+      titleAr: "نقل الحيوانات",
+      description: "خدمات نقل الحيوانات الأليفة والمواشي بأمان",
+      icon: PawPrint,
+      href: selectedCountry ? `/create/${selectedCountry.code}/animal` : "#",
+      gradient: "linear-gradient(135deg, hsl(150 60% 45%), hsl(160 65% 50%))",
     },
     {
       title: "Invoices",

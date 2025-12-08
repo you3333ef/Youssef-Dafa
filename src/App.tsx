@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import CreateChaletLink from "./pages/CreateChaletLink";
 import CreateShippingLink from "./pages/CreateShippingLink";
+import CreateAnimalLink from "./pages/CreateAnimalLink";
 import CreatePaymentLink from "./pages/CreatePaymentLink";
 import CreateInvoice from "./pages/CreateInvoice";
 import InvoiceList from "./pages/InvoiceList";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/services" element={<Services />} />
           <Route path="/create/:country/chalet" element={<CreateChaletLink />} />
           <Route path="/create/:country/shipping" element={<CreateShippingLink />} />
+          <Route path="/create/:country/animal" element={<CreateAnimalLink />} />
           <Route path="/create/:country/payment" element={<CreatePaymentLink />} />
           <Route path="/invoices/create/:country" element={<CreateInvoice />} />
           <Route path="/invoices/list/:country" element={<InvoiceList />} />
