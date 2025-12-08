@@ -4,7 +4,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   aramex: {
     logo: "https://logo.clearbit.com/aramex.com",
     colors: {
-      primary: "#E30613",
+      primary: "#DC291E",
       secondary: "#FFFFFF"
     },
     ogImage: "https://logo.clearbit.com/aramex.com",
@@ -56,7 +56,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   smsa: {
     logo: "https://www.smsaexpress.com/images/logo.png",
     colors: {
-      primary: "#0066CC",
+      primary: "#662D91",
       secondary: "#FF6600"
     },
     ogImage: "/og-smsa.jpg",
@@ -76,8 +76,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   naqel: {
     logo: "https://www.naqelexpress.com/images/logo.png",
     colors: {
-      primary: "#0052A3",
-      secondary: "#FF6B00"
+      primary: "#E61838",
+      secondary: "#002E60"
     },
     ogImage: "/og-naqel.jpg",
     heroImage: "/og-naqel.jpg",
@@ -99,7 +99,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     logo: "https://www.kwpost.com.kw/images/logo.png",
     colors: {
       primary: "#007A33",
-      secondary: "#DA291C"
+      secondary: "#CE1126"
     },
     ogImage: "/og-kwpost.jpg",
     heroImage: "/og-kwpost.jpg",
@@ -164,8 +164,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   bahpost: {
     logo: "https://www.bahrainpost.gov.bh/images/logo.png",
     colors: {
-      primary: "#CE1126",
-      secondary: "#FFFFFF"
+      primary: "#EF3F32",
+      secondary: "#007CC2"
     },
     ogImage: "/og-bahpost.jpg",
     heroImage: "/og-bahpost.jpg",

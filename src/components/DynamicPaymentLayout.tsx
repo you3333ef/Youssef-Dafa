@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
+import { DynamicBranding } from "@/components/DynamicBranding";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { CreditCard, ArrowLeft } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
@@ -49,6 +51,7 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
 }) => {
   const actualServiceKey = serviceKey || serviceName;
   const branding = getServiceBranding(actualServiceKey);
+  const enhancedBranding = getBrandingByCompany(actualServiceKey);
   
   const heroImages: Record<string, string> = {
     'aramex': heroAramex,
@@ -84,7 +87,8 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
 
   return (
     <>
-      <PaymentMetaTags 
+      <DynamicBranding companyKey={actualServiceKey}>
+        <PaymentMetaTags 
         serviceName={serviceName}
         serviceKey={actualServiceKey}
         amount={amount}
@@ -137,7 +141,9 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
               className="p-4 sm:p-8 shadow-2xl border-t-4" 
               style={{ 
                 borderTopColor: branding.colors.primary,
-                background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}02, ${branding.colors.secondary}02)`
+                background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}02, ${branding.colors.secondary}02)`,
+                boxShadow: enhancedBranding?.shadows.lg || '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                borderRadius: enhancedBranding?.borderRadius.lg || '12px'
               }}
             >
               {/* Header */}
@@ -159,6 +165,7 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
           </div>
         </div>
       </div>
+      </DynamicBranding>
     </>
   );
 };
