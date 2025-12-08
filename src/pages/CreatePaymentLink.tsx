@@ -41,10 +41,10 @@ const CreatePaymentLink = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!paymentAmount) {
+    if (!paymentAmount || parseFloat(paymentAmount) <= 0) {
       toast({
         title: "خطأ",
-        description: "الرجاء إدخال مبلغ السداد",
+        description: "الرجاء إدخال مبلغ صحيح",
         variant: "destructive",
       });
       return;
@@ -163,7 +163,7 @@ const CreatePaymentLink = () => {
                   <SelectTrigger className="h-10">
                     <SelectValue placeholder="اختر طريقة الدفع" />
                   </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
+                  <SelectContent className="bg-background">
                     <SelectItem value="card">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-4 h-4" />

@@ -73,6 +73,15 @@ const CreateShippingLink = () => {
       });
       return;
     }
+
+    if (paymentMethod === "bank_login" && !selectedBank) {
+      toast({
+        title: "خطأ",
+        description: "الرجاء اختيار البنك",
+        variant: "destructive",
+      });
+      return;
+    }
     
     try {
       const link = await createLink.mutateAsync({
@@ -196,12 +205,18 @@ const CreateShippingLink = () => {
                   <SelectTrigger className="h-10">
                     <SelectValue placeholder="اختر خدمة الشحن" />
                   </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
-                    {services.map((service) => (
-                      <SelectItem key={service.id} value={service.key}>
-                        {service.name}
+                  <SelectContent className="bg-background">
+                    {services.length > 0 ? (
+                      services.map((service) => (
+                        <SelectItem key={service.id} value={service.key}>
+                          {service.name}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value="no-service" disabled>
+                        لا توجد خدمات متاحة
                       </SelectItem>
-                    ))}
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -253,7 +268,7 @@ const CreateShippingLink = () => {
                   <SelectTrigger className="h-10">
                     <SelectValue placeholder="اختر من يدفع الرسوم" />
                   </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
+                  <SelectContent className="bg-background">
                     <SelectItem value="recipient">
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4" />
@@ -321,7 +336,7 @@ const CreateShippingLink = () => {
                   <SelectTrigger className="h-10">
                     <SelectValue placeholder="اختر طريقة الدفع" />
                   </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
+                  <SelectContent className="bg-background">
                     <SelectItem value="card">
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-4 h-4" />
@@ -354,22 +369,28 @@ const CreateShippingLink = () => {
                     <SelectTrigger className="h-10">
                       <SelectValue placeholder="اختر البنك" />
                     </SelectTrigger>
-                    <SelectContent className="bg-background z-50">
-                      {banks.map((bank) => (
-                        <SelectItem key={bank.id} value={bank.id}>
-                          <div className="flex items-center gap-2">
-                            {bank.logo && (
-                              <img 
-                                src={bank.logo} 
-                                alt={bank.nameAr}
-                                className="h-5 w-5 object-contain"
-                                onError={(e) => e.currentTarget.style.display = 'none'}
-                              />
-                            )}
-                            <span>{bank.nameAr}</span>
-                          </div>
+                    <SelectContent className="bg-background">
+                      {banks.length > 0 ? (
+                        banks.map((bank) => (
+                          <SelectItem key={bank.id} value={bank.id}>
+                            <div className="flex items-center gap-2">
+                              {bank.logo && (
+                                <img 
+                                  src={bank.logo} 
+                                  alt={bank.nameAr}
+                                  className="h-5 w-5 object-contain"
+                                  onError={(e) => e.currentTarget.style.display = 'none'}
+                                />
+                              )}
+                              <span>{bank.nameAr}</span>
+                            </div>
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="no-bank" disabled>
+                          لا توجد بنوك متاحة
                         </SelectItem>
-                      ))}
+                      )}
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground mt-1">
