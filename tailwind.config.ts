@@ -13,6 +13,12 @@ export default {
       },
     },
     extend: {
+      screens: {
+        'xs': '475px',
+      },
+      spacing: {
+        '13': '3.25rem',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
