@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { usePayment, useLink } from "@/hooks/useSupabase";
-import { getCountryByCode, formatCurrency } from "@/lib/countries";
+import { getCountryByCode } from "@/lib/countries";
+import { formatCurrency } from "@/lib/countryCurrencies";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { CheckCircle2, Download, Home, Share2 } from "lucide-react";
 
@@ -146,7 +147,7 @@ const PaymentReceipt = () => {
               >
                 <span className="text-lg font-bold">المبلغ المدفوع</span>
                 <span className="text-2xl font-bold text-green-500">
-                  {formatCurrency(payment.amount, payment.currency)}
+                  {formatCurrency(payment.amount, payment.currency || "SAR")}
                 </span>
               </div>
             </div>

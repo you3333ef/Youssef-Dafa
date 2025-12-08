@@ -103,8 +103,9 @@ const PaymentRecipient = () => {
     }
   }
 
-  // Format amount with the dynamic currency code
-  const formattedAmount = formatCurrency(amount, currencyCode);
+  // Format amount with the dynamic currency code - use paymentAmount if entered, otherwise use default amount
+  const displayAmount = paymentAmount ? parseFloat(paymentAmount) : amount;
+  const formattedAmount = formatCurrency(displayAmount, currencyCode);
 
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";
 
@@ -540,7 +541,9 @@ const PaymentRecipient = () => {
                     id="amount"
                     type="number"
                     value={paymentAmount || amount}
-                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    onChange={(e) => {
+                      setPaymentAmount(e.target.value);
+                    }}
                     required
                     className="h-12 text-base transition-colors bg-white"
                     style={{

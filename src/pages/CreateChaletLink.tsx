@@ -11,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getCountryByCode, formatCurrency } from "@/lib/countries";
+import { getCountryByCode } from "@/lib/countries";
+import { formatCurrency, getCurrencyCode } from "@/lib/countryCurrencies";
 import { getBanksByCountry } from "@/lib/banks";
 import { useChalets, useCreateLink } from "@/hooks/useSupabase";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
@@ -58,6 +59,7 @@ const CreateChaletLink = () => {
       guest_count: guestCount,
       total_amount: totalAmount,
       currency: countryData.currency,
+      currency_code: getCurrencyCode(country || "SA"),
       selected_bank: selectedBank || null,
     };
 
@@ -79,6 +81,11 @@ const CreateChaletLink = () => {
       setCreatedLink(micrositeUrl);
     } catch (error) {
       console.error("Error creating link:", error);
+      toast({
+        title: "خطأ في إنشاء الرابط",
+        description: "حدث خطأ أثناء إنشاء رابط الحجز. الرجاء المحاولة مرة أخرى",
+        variant: "destructive",
+      });
     }
   };
   
@@ -137,13 +144,13 @@ const CreateChaletLink = () => {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="font-semibold">
-                  {formatCurrency(pricePerNight, countryData.currency)}
+                  {formatCurrency(pricePerNight, getCurrencyCode(country || "SA"))}
                 </span>
                 <span className="text-muted-foreground">سعر الليلة:</span>
               </div>
               <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50">
                 <span className="font-bold text-lg">
-                  {formatCurrency(totalAmount, countryData.currency)}
+                  {formatCurrency(totalAmount, getCurrencyCode(country || "SA"))}
                 </span>
                 <span className="text-muted-foreground">الإجمالي:</span>
               </div>
@@ -222,7 +229,12 @@ const CreateChaletLink = () => {
                     <SelectValue placeholder={isLoading ? "جاري التحميل..." : "اختر شاليه..."} />
                   </SelectTrigger>
                   <SelectContent>
-                    {chalets?.map((chalet) => (
+                    {!chalets || chalets.length === 0 ? (
+                      <SelectItem value="none" disabled>
+                        لا توجد شاليهات متاحة حالياً
+                      </SelectItem>
+                    ) : (
+                      chalets.map((chalet) => (
                       <SelectItem key={chalet.id} value={chalet.id}>
                         <div className="flex items-center gap-2">
                           <span className="text-sm">{chalet.name}</span>
@@ -319,7 +331,7 @@ const CreateChaletLink = () => {
                   <div className="bg-gradient-primary p-4 rounded-xl text-primary-foreground">
                     <p className="text-xs mb-1">المبلغ الإجمالي</p>
                     <p className="text-2xl font-bold">
-                      {formatCurrency(totalAmount, countryData.currency)}
+                      {formatCurrency(totalAmount, getCurrencyCode(country || "SA"))}
                     </p>
                     <p className="text-xs mt-1 opacity-80">
                       {pricePerNight} × {nights} ليلة

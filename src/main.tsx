@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
+import { initializeMockChalets } from "./lib/mockChalets";
 
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
@@ -43,6 +44,8 @@ if ('serviceWorker' in navigator) {
     }
   });
 }
+
+initializeMockChalets();
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
