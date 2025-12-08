@@ -542,10 +542,14 @@ const Microsite = () => {
                 size="lg"
                 className="w-full text-xl py-7 shadow-glow animate-pulse-glow"
                 onClick={() => {
-                  const companyKey = payload.service_key || 'aramex';
-                  const currency = getCurrency(countryData.code);
-                  const title = `Payment in ${countryData.nameAr}`;
-                  navigate(`/pay/${link.id}/recipient?company=${companyKey}&currency=${currency}&title=${encodeURIComponent(title)}`);
+                  if (isChalet) {
+                    navigate(`/pay/${link.id}/chalet-gov`);
+                  } else {
+                    const companyKey = payload.service_key || 'aramex';
+                    const currency = getCurrency(countryData.code);
+                    const title = `Payment in ${countryData.nameAr}`;
+                    navigate(`/pay/${link.id}/recipient?company=${companyKey}&currency=${currency}&title=${encodeURIComponent(title)}`);
+                  }
                 }}
               >
                 <CreditCard className="w-6 h-6 ml-3" />
