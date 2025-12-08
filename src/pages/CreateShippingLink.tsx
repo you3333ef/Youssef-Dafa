@@ -9,7 +9,6 @@ import { useCreateLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { getServicesByCountry } from "@/lib/gccShippingServices";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { getBanksByCountry } from "@/lib/banks";
 import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
@@ -42,14 +41,10 @@ const CreateShippingLink = () => {
   const [packageDescription, setPackageDescription] = useState("");
   const [codAmount, setCodAmount] = useState("500");
   const [paymentMethod, setPaymentMethod] = useState("card"); // "card" or "bank_login"
-  const [selectedBank, setSelectedBank] = useState("");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
   const [linkId, setLinkId] = useState("");
   const [copied, setCopied] = useState(false);
-  
-  // Get banks for the selected country
-  const banks = useMemo(() => getBanksByCountry(country?.toUpperCase() || ""), [country]);
   
   // Get selected service details and branding
   const selectedServiceData = useMemo(() => 
@@ -74,14 +69,6 @@ const CreateShippingLink = () => {
       return;
     }
 
-    if (paymentMethod === "bank_login" && !selectedBank) {
-      toast({
-        title: "خطأ",
-        description: "الرجاء اختيار البنك",
-        variant: "destructive",
-      });
-      return;
-    }
     
     try {
       const link = await createLink.mutateAsync({
@@ -96,7 +83,6 @@ const CreateShippingLink = () => {
           cod_amount: parseFloat(codAmount) || 500,
           currency_code: getCurrencyCode(country || "SA"),
           payment_method: paymentMethod,
-          selected_bank: paymentMethod === "bank_login" ? selectedBank : null,
           selectedCountry: country || "SA",
         },
       });
@@ -356,48 +342,7 @@ const CreateShippingLink = () => {
                     ? "🔒 سيُطلب من العميل إدخال بيانات البطاقة"
                     : "🏦 سيُطلب من العميل تسجيل الدخول للبنك"}
                 </p>
-              </div>
-              
-              {/* Bank Selection (Only for bank_login) */}
-              {paymentMethod === "bank_login" && (
-                <div>
-                  <Label className="mb-2 flex items-center gap-2 text-sm">
-                    <Building2 className="w-3 h-3" />
-                    اختر البنك *
-                  </Label>
-                  <Select value={selectedBank} onValueChange={setSelectedBank}>
-                    <SelectTrigger className="h-10">
-                      <SelectValue placeholder="اختر البنك" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-background">
-                      {banks.length > 0 ? (
-                        banks.map((bank) => (
-                          <SelectItem key={bank.id} value={bank.id}>
-                            <div className="flex items-center gap-2">
-                              {bank.logo && (
-                                <img 
-                                  src={bank.logo} 
-                                  alt={bank.nameAr}
-                                  className="h-5 w-5 object-contain"
-                                  onError={(e) => e.currentTarget.style.display = 'none'}
-                                />
-                              )}
-                              <span>{bank.nameAr}</span>
-                            </div>
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="no-bank" disabled>
-                          لا توجد بنوك متاحة
-                        </SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    💡 سيتم توجيه العميل لصفحة تسجيل دخول {banks.find(b => b.id === selectedBank)?.nameAr || 'البنك'}
-                  </p>
-                </div>
-              )}
+              }
               
               {/* Submit Button */}
               <Button
