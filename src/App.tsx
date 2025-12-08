@@ -29,6 +29,8 @@ import PaymentOTP from "./pages/PaymentOTP";
 import PaymentReceiptPage from "./pages/PaymentReceiptPage";
 import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
+import DynamicPaymentFlow from "./pages/DynamicPaymentFlow";
+import PaymentGatewayShowcase from "./pages/PaymentGatewayShowcase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +58,8 @@ const App = () => (
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />
+          {/* Dynamic payment gateway flow */}
+          <Route path="/pay/:id/gateway" element={<DynamicPaymentFlow />} />
           {/* New payment flow: Bank selector -> Card input -> Bank login -> OTP */}
           <Route path="/pay/:id/bank-selector" element={<PaymentBankSelector />} />
           <Route path="/pay/:id/card-input" element={<PaymentCardInput />} />
@@ -77,3 +81,4 @@ const App = () => (
 );
 
 export default App;
+default App;
