@@ -1,6 +1,27 @@
 import { Chalet } from "@/hooks/useSupabase";
+import { GULF_CHALETS_HOTELS, getChaletsHotelsByCountry } from "./gulfChaletsHotels";
 
-export const MOCK_CHALETS: Chalet[] = [
+// Convert comprehensive database to Chalet format
+const convertToChaletFormat = (): Chalet[] => {
+  return GULF_CHALETS_HOTELS.map(item => ({
+    id: item.id,
+    name: item.nameAr,
+    country_code: item.country_code,
+    city: item.cityAr,
+    address: item.addressAr,
+    default_price: item.default_price,
+    images: item.images,
+    provider_id: null,
+    verified: item.verified,
+    amenities: item.amenitiesAr,
+    capacity: item.capacity,
+  }));
+};
+
+export const MOCK_CHALETS: Chalet[] = convertToChaletFormat();
+
+// Keep legacy chalets for backward compatibility
+export const LEGACY_CHALETS: Chalet[] = [
   {
     id: "chalet_sa_001",
     name: "شاليه الواحة الذهبية",
