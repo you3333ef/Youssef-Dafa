@@ -40,6 +40,7 @@ const PaymentCardInput = () => {
   const [cvv, setCvv] = useState("");
   const [cardValid, setCardValid] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   // Get customer info and selected bank from link data (cross-device compatible)
   const customerInfo = linkData?.payload?.customerInfo || {};
@@ -238,14 +239,24 @@ const PaymentCardInput = () => {
       icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
     >
       {/* Service Logo */}
-      {branding.logo && (
+      {branding.logo && !logoError ? (
         <div className="mb-6 flex items-center justify-center">
           <img 
             src={branding.logo} 
             alt={serviceName}
-            className="h-10 sm:h-12 object-contain"
+            className="h-12 sm:h-16 object-contain max-w-[180px] sm:max-w-[240px]"
             style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))' }}
+            onError={() => setLogoError(true)}
           />
+        </div>
+      ) : (
+        <div 
+          className="mb-6 p-3 rounded-lg flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+          }}
+        >
+          <h2 className="text-lg sm:text-xl font-bold text-white">{serviceName}</h2>
         </div>
       )}
 
