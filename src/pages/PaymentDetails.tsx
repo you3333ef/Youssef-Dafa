@@ -79,6 +79,7 @@ const PaymentDetails = () => {
   };
   
   const paymentContent = (
+    <>
       {/* Shipping Info Display */}
       {shippingInfo && (
         <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
@@ -167,6 +168,7 @@ const PaymentDetails = () => {
       <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
         بالمتابعة، أنت توافق على الشروط والأحكام
       </p>
+    </>
   );
 
   return (
