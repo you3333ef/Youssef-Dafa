@@ -245,7 +245,7 @@ const CreateChaletLink = () => {
                           )}
                         </div>
                       </SelectItem>
-                    ))}
+                    )))}
                   </SelectContent>
                 </Select>
               </div>
