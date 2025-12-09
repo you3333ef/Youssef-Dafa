@@ -14,7 +14,7 @@ import {
   MapPin
 } from 'lucide-react';
 
-interface GenericCompanyLayoutProps {
+interface CompanyLayoutProps {
   companyKey: string;
   children: React.ReactNode;
   trackingNumber?: string;
@@ -22,7 +22,7 @@ interface GenericCompanyLayoutProps {
   status?: 'pending' | 'processing' | 'completed';
 }
 
-export const GenericCompanyLayout: React.FC<GenericCompanyLayoutProps> = ({ 
+const GenericCompanyLayout: React.FC<CompanyLayoutProps> = ({ 
   companyKey,
   children, 
   trackingNumber, 
