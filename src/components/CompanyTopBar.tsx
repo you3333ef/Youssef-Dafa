@@ -13,7 +13,7 @@ interface CompanyTopBarProps {
 }
 
 const logoUrls: Record<string, string> = {
-  aramex: '/logos/aramex-logo.png',
+  aramex: '/logos/aramex-red.png',
   dhl: '/logos/dhl-logo.png',
   dhlkw: '/logos/dhl-logo.png',
   dhlqa: '/logos/dhl-logo.png',
