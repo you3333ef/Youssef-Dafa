@@ -980,45 +980,6 @@ export const shippingCompanyBranding: Record<string, CompanyBranding> = {
     websiteUrl: 'https://www.bahri.sa',
     description: 'الشركة الوطنية السعودية للنقل البحري',
   },
-
-  empost: {
-    id: 'empost',
-    nameEn: 'Emirates Post',
-    nameAr: 'البريد الإماراتي',
-    colors: {
-      primary: '#D5161C',
-      secondary: '#009A44',
-      accent: '#FFFFFF',
-      background: '#FFFFFF',
-      surface: '#FFF5F6',
-      text: '#1A1A1A',
-      textLight: '#666666',
-      textOnPrimary: '#FFFFFF',
-      border: '#FFD6D8',
-    },
-    fonts: {
-      primary: 'Arial, sans-serif',
-      secondary: 'Helvetica, sans-serif',
-      arabic: 'Cairo, Tajawal, sans-serif',
-    },
-    gradients: {
-      primary: 'linear-gradient(135deg, #D5161C 0%, #A71216 100%)',
-      secondary: 'linear-gradient(135deg, #009A44 0%, #00BD55 100%)',
-      hero: 'linear-gradient(to right, #D5161C 0%, #009A44 100%)',
-    },
-    shadows: {
-      sm: '0 1px 2px 0 rgba(213, 22, 28, 0.08)',
-      md: '0 4px 6px -1px rgba(213, 22, 28, 0.15)',
-      lg: '0 10px 15px -3px rgba(213, 22, 28, 0.20)',
-    },
-    borderRadius: {
-      sm: '6px',
-      md: '10px',
-      lg: '14px',
-    },
-    websiteUrl: 'https://www.epg.gov.ae',
-    description: 'المشغل الوطني للبريد في دولة الإمارات العربية المتحدة',
-  },
 };
 
 export const governmentPaymentBranding: Record<string, CompanyBranding> = {
