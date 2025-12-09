@@ -36,6 +36,7 @@ import heroShipco from "@/assets/hero-shipco.jpg";
 import heroHellmann from "@/assets/hero-hellmann.jpg";
 import heroDsv from "@/assets/hero-dsv.jpg";
 import heroJinakum from "@/assets/hero-jinakum.jpg";
+import heroAgility from "@/assets/hero-agility.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const PaymentRecipient = () => {
@@ -125,6 +126,7 @@ const PaymentRecipient = () => {
     'hellmann': heroHellmann,
     'dsv': heroDsv,
     'jinakum': heroJinakum,
+    'agility': heroAgility,
   };
   
   const heroImage = heroImages[serviceKey.toLowerCase()] || heroBg;

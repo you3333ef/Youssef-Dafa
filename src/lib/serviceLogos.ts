@@ -282,6 +282,26 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     ogImage: "/og-jinakum.jpg",
     heroImage: "/og-jinakum.jpg",
     description: "شركة Jinakum - خدمات دفع وتحويل آمنة وموثوقة"
+  },
+  genacom: {
+    logo: "/og-genacom.jpg",
+    colors: {
+      primary: "#E82424",
+      secondary: "#F7C24A"
+    },
+    ogImage: "/og-genacom.jpg",
+    heroImage: "/hero-genacom.jpg",
+    description: "خدمات التوصيل السريع في عُمان"
+  },
+  bahri: {
+    logo: "https://companieslogo.com/img/orig/4030.SR-4f7e3e94.png",
+    colors: {
+      primary: "#00447C",
+      secondary: "#0099CC"
+    },
+    ogImage: "/og-bahri.jpg",
+    heroImage: "/hero-bahri.jpg",
+    description: "الشركة الوطنية للنقل البحري"
   }
 };
 
