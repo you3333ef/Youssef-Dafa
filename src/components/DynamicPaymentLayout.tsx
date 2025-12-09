@@ -111,25 +111,34 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
             
-            {/* Logo Overlay */}
+            {/* Logo Overlay - Enhanced with better styling */}
             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
               {branding.logo && (
-                <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-2xl border border-gray-200">
                   <img 
                     src={branding.logo} 
                     alt={serviceName}
-                    className="h-12 sm:h-16 w-auto"
-                    onError={(e) => e.currentTarget.style.display = 'none'}
+                    className="h-12 sm:h-16 w-auto max-w-[120px] sm:max-w-[160px] object-contain"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        const fallback = document.createElement('div');
+                        fallback.className = 'h-12 sm:h-16 w-32 sm:w-40 flex items-center justify-center text-gray-700 font-bold text-sm';
+                        fallback.textContent = serviceName;
+                        parent.appendChild(fallback);
+                      }
+                    }}
                   />
                 </div>
               )}
             </div>
             
-            {/* Title Overlay */}
+            {/* Title Overlay - Enhanced with backdrop blur */}
             <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-              <div className="text-right">
-                <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-                <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+              <div className="text-right bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2">
+                <h2 className="text-lg sm:text-2xl font-bold mb-1 drop-shadow-lg">{serviceName}</h2>
+                <p className="text-xs sm:text-sm opacity-90 drop-shadow-md">خدمة دفع موثوقة</p>
               </div>
             </div>
           </div>

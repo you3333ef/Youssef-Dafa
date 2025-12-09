@@ -1,16 +1,20 @@
-// Service logos and branding - All GCC shipping carriers
+// Service logos and branding - All GCC shipping carriers with official colors and logos
 export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
-  // UAE - الإمارات
+  // International Carriers - الشركات العالمية
+  
+  // Aramex - أرامكس
   aramex: {
-    logo: "https://logo.clearbit.com/aramex.com",
+    logo: "/logos/aramex.svg",
     colors: {
       primary: "#DC291E",
-      secondary: "#FFFFFF"
+      secondary: "#000000"
     },
-    ogImage: "https://logo.clearbit.com/aramex.com",
-    heroImage: "https://logo.clearbit.com/aramex.com",
-    description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
+    ogImage: "/og-aramex.jpg",
+    heroImage: "/hero-aramex.jpg",
+    description: "شركة عالمية رائدة في خدمات الشحن السريع واللوجستيات. تقدم حلول الشحن الدولي والمحلي مع تتبع متقدم ودعم للتجارة الإلكترونية"
   },
+  
+  // DHL - دي إتش إل
   dhl: {
     logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
     colors: {
@@ -18,92 +22,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
-  },
-  fedex: {
-    logo: "https://www.fedex.com/content/dam/fedex-com/logos/logo.png",
-    colors: {
-      primary: "#4D148C",
-      secondary: "#FF6600"
-    },
-    ogImage: "/og-fedex.jpg",
-    heroImage: "/og-fedex.jpg",
-    description: "خدمات شحن دولية موثوقة مع تتبع فوري للشحنات"
-  },
-  ups: {
-    logo: "https://www.ups.com/assets/resources/webcontent/images/ups-logo.svg",
-    colors: {
-      primary: "#351C15",
-      secondary: "#FFB500"
-    },
-    ogImage: "/og-ups.jpg",
-    heroImage: "/og-ups.jpg",
-    description: "حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم"
-  },
-  empost: {
-    logo: "https://www.emiratespost.ae/images/logo.png",
-    colors: {
-      primary: "#C8102E",
-      secondary: "#003087"
-    },
-    ogImage: "/og-empost.jpg",
-    heroImage: "/og-empost.jpg",
-    description: "المشغل الوطني للبريد في دولة الإمارات العربية المتحدة"
-  },
-  
-  // Saudi Arabia - السعودية
-  smsa: {
-    logo: "https://www.smsaexpress.com/images/logo.png",
-    colors: {
-      primary: "#662D91",
-      secondary: "#FF6600"
-    },
-    ogImage: "/og-smsa.jpg",
-    heroImage: "/og-smsa.jpg",
-    description: "أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية"
-  },
-  zajil: {
-    logo: "https://zajil.com/assets/images/logo.png",
-    colors: {
-      primary: "#1C4587",
-      secondary: "#FF9900"
-    },
-    ogImage: "/og-zajil.jpg",
-    heroImage: "/og-zajil.jpg",
-    description: "شركة سعودية رائدة في خدمات البريد السريع والشحن"
-  },
-  naqel: {
-    logo: "https://www.naqelexpress.com/images/logo.png",
-    colors: {
-      primary: "#E61838",
-      secondary: "#002E60"
-    },
-    ogImage: "/og-naqel.jpg",
-    heroImage: "/og-naqel.jpg",
-    description: "حلول شحن متطورة وخدمات لوجستية متكاملة داخل المملكة"
-  },
-  saudipost: {
-    logo: "https://sp.com.sa/assets/images/logo.png",
-    colors: {
-      primary: "#006C35",
-      secondary: "#FFB81C"
-    },
-    ogImage: "/og-saudipost.jpg",
-    heroImage: "/og-saudipost.jpg",
-    description: "المشغل الوطني للبريد في المملكة العربية السعودية"
-  },
-  
-  // Kuwait - الكويت
-  kwpost: {
-    logo: "https://www.kwpost.com.kw/images/logo.png",
-    colors: {
-      primary: "#007A33",
-      secondary: "#CE1126"
-    },
-    ogImage: "/og-kwpost.jpg",
-    heroImage: "/og-kwpost.jpg",
-    description: "المشغل الوطني للبريد في دولة الكويت"
+    heroImage: "/hero-dhl.jpg",
+    description: "شبكة الشحن العالمية الأولى. خدمات توصيل سريع دولي ومحلي مع تتبع متقدم وحلول لوجستية متكاملة"
   },
   dhlkw: {
     logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
@@ -112,20 +32,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
-  },
-  
-  // Qatar - قطر
-  qpost: {
-    logo: "https://www.qpost.qa/assets/images/logo.png",
-    colors: {
-      primary: "#8E1838",
-      secondary: "#FFFFFF"
-    },
-    ogImage: "/og-qpost.jpg",
-    heroImage: "/og-qpost.jpg",
-    description: "المشغل الوطني للبريد في دولة قطر"
+    heroImage: "/hero-dhl.jpg",
+    description: "شبكة الشحن العالمية الأولى. خدمات توصيل سريع دولي ومحلي مع تتبع متقدم وحلول لوجستية متكاملة"
   },
   dhlqa: {
     logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
@@ -134,20 +42,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
-  },
-  
-  // Oman - عمان
-  omanpost: {
-    logo: "https://www.omanpost.om/images/logo.png",
-    colors: {
-      primary: "#ED1C24",
-      secondary: "#009639"
-    },
-    ogImage: "/og-omanpost.jpg",
-    heroImage: "/og-omanpost.jpg",
-    description: "المشغل الوطني للبريد في سلطنة عُمان"
+    heroImage: "/hero-dhl.jpg",
+    description: "شبكة الشحن العالمية الأولى. خدمات توصيل سريع دولي ومحلي مع تتبع متقدم وحلول لوجستية متكاملة"
   },
   dhlom: {
     logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
@@ -156,20 +52,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
-  },
-  
-  // Bahrain - البحرين
-  bahpost: {
-    logo: "https://www.bahrainpost.gov.bh/images/logo.png",
-    colors: {
-      primary: "#EF3F32",
-      secondary: "#007CC2"
-    },
-    ogImage: "/og-bahpost.jpg",
-    heroImage: "/og-bahpost.jpg",
-    description: "المشغل الوطني للبريد في مملكة البحرين"
+    heroImage: "/hero-dhl.jpg",
+    description: "شبكة الشحن العالمية الأولى. خدمات توصيل سريع دولي ومحلي مع تتبع متقدم وحلول لوجستية متكاملة"
   },
   dhlbh: {
     logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
@@ -178,101 +62,287 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
+    heroImage: "/hero-dhl.jpg",
+    description: "شبكة الشحن العالمية الأولى. خدمات توصيل سريع دولي ومحلي مع تتبع متقدم وحلول لوجستية متكاملة"
   },
-
-  // Real GCC Shipping Companies - Additional
-  albaraka: {
-    logo: "https://logo.clearbit.com/albaraka.com.tr",
+  
+  // FedEx - فيديكس
+  fedex: {
+    logo: "/logos/fedex.png",
     colors: {
-      primary: "#D89A00",
+      primary: "#4D148C",
+      secondary: "#FF6600"
+    },
+    ogImage: "/og-fedex.jpg",
+    heroImage: "/hero-fedex.jpg",
+    description: "خدمات شحن دولية موثوقة مع تتبع فوري للشحنات. حلول توصيل سريعة وآمنة لجميع أنحاء العالم"
+  },
+  
+  // UPS - يو بي إس
+  ups: {
+    logo: "/logos/ups.svg",
+    colors: {
+      primary: "#351C15",
+      secondary: "#FFB500"
+    },
+    ogImage: "/og-ups.jpg",
+    heroImage: "/hero-ups.jpg",
+    description: "حلول لوجستية متكاملة وخدمات شحن عالمية. شركة رائدة في التوصيل السريع وإدارة سلسلة الإمداد"
+  },
+  
+  // Saudi Arabia - السعودية
+  
+  // SMSA - سمسا
+  smsa: {
+    logo: "/logos/smsa.svg",
+    colors: {
+      primary: "#662D91",
+      secondary: "#F05A28"
+    },
+    ogImage: "/og-smsa.jpg",
+    heroImage: "/hero-smsa.jpg",
+    description: "أكبر شركة شحن سعودية رائدة. خدمات التوصيل السريع والحلول اللوجستية المتطورة في جميع أنحاء المملكة"
+  },
+  
+  // Zajil Express - زاجل
+  zajil: {
+    logo: "/logos/zajil.png",
+    colors: {
+      primary: "#FDB71A",
+      secondary: "#1E3A8A"
+    },
+    ogImage: "/og-zajil.jpg",
+    heroImage: "/hero-zajil.jpg",
+    description: "شركة سعودية رائدة في البريد السريع. خدمات شحن وتوصيل موثوقة مع شبكة واسعة داخل المملكة"
+  },
+  
+  // Naqel Express - ناقل
+  naqel: {
+    logo: "https://www.naqelexpress.com/images/logo.png",
+    colors: {
+      primary: "#E61838",
+      secondary: "#002E60"
+    },
+    ogImage: "/og-naqel.jpg",
+    heroImage: "/hero-naqel.jpg",
+    description: "حلول شحن متطورة وخدمات لوجستية متكاملة. شبكة توصيل واسعة تغطي جميع مناطق المملكة"
+  },
+  
+  // Saudi Post - البريد السعودي
+  saudipost: {
+    logo: "/logos/saudipost.png",
+    colors: {
+      primary: "#006C35",
+      secondary: "#FFB81C"
+    },
+    ogImage: "/og-saudipost.jpg",
+    heroImage: "/hero-saudipost.jpg",
+    description: "المشغل الوطني للبريد في المملكة العربية السعودية. خدمات بريدية شاملة وحلول شحن محلية ودولية"
+  },
+  
+  // UAE - الإمارات
+  
+  // Emirates Post - البريد الإماراتي
+  empost: {
+    logo: "/logos/empost.png",
+    colors: {
+      primary: "#C8102E",
+      secondary: "#00732F"
+    },
+    ogImage: "/og-empost.jpg",
+    heroImage: "/hero-empost.jpg",
+    description: "المشغل الوطني للبريد في دولة الإمارات. خدمات بريدية متطورة وحلول لوجستية متكاملة"
+  },
+  
+  // Kuwait - الكويت
+  
+  // Kuwait Post - البريد الكويتي
+  kwpost: {
+    logo: "https://www.kwpost.com.kw/images/logo.png",
+    colors: {
+      primary: "#007A33",
+      secondary: "#CE1126"
+    },
+    ogImage: "/og-kwpost.jpg",
+    heroImage: "/hero-kwpost.jpg",
+    description: "المشغل الوطني للبريد في دولة الكويت. خدمات بريدية شاملة وحلول شحن موثوقة"
+  },
+  
+  // Qatar - قطر
+  
+  // Qatar Post - البريد القطري
+  qpost: {
+    logo: "https://www.qpost.qa/assets/images/logo.png",
+    colors: {
+      primary: "#8E1838",
       secondary: "#FFFFFF"
     },
-    ogImage: "https://logo.clearbit.com/albaraka.com.tr",
-    heroImage: "https://logo.clearbit.com/albaraka.com.tr",
-    description: "خدمات شحن وبنكية متكاملة تابعة لمجموعة البركة، حلول مالية ولوجستية متكاملة في الخليج"
+    ogImage: "/og-qpost.jpg",
+    heroImage: "/hero-qpost.jpg",
+    description: "المشغل الوطني للبريد في دولة قطر. خدمات بريدية حديثة وحلول لوجستية متقدمة"
   },
+  
+  // Oman - عُمان
+  
+  // Oman Post - البريد العُماني
+  omanpost: {
+    logo: "/logos/omanpost.jpg",
+    colors: {
+      primary: "#ED1C24",
+      secondary: "#009639"
+    },
+    ogImage: "/og-omanpost.jpg",
+    heroImage: "/hero-omanpost.jpg",
+    description: "المشغل الوطني للبريد في سلطنة عُمان. خدمات بريدية شاملة وحلول شحن محلية ودولية"
+  },
+  
+  // Bahrain - البحرين
+  
+  // Bahrain Post - البريد البحريني
+  bahpost: {
+    logo: "https://upload.wikimedia.org/wikipedia/en/thumb/5/57/Bahrain_Post_logo.svg/217px-Bahrain_Post_logo.svg.png",
+    colors: {
+      primary: "#EF3F32",
+      secondary: "#007CC2"
+    },
+    ogImage: "/og-bahpost.jpg",
+    heroImage: "/hero-bahpost.jpg",
+    description: "المشغل الوطني للبريد في مملكة البحرين. خدمات بريدية متطورة وحلول لوجستية حديثة"
+  },
+  
+  // Regional Logistics Companies - شركات اللوجستيات الإقليمية
+  
+  // Al Baraka - البركة
+  albaraka: {
+    logo: "https://www.albaraka.com/media/1268/logo.png",
+    colors: {
+      primary: "#D4AF37",
+      secondary: "#1A4D2E"
+    },
+    ogImage: "/og-albaraka.jpg",
+    heroImage: "/hero-albaraka.jpg",
+    description: "مجموعة البركة - حلول مالية ولوجستية متكاملة. خدمات شحن وبنكية شاملة في دول الخليج"
+  },
+  
+  // Al Futtaim - الفطيم
   alfuttaim: {
-    logo: "https://logo.clearbit.com/alfuttaim.com",
+    logo: "https://www.alfuttaim.com/assets/images/logo.svg",
     colors: {
       primary: "#00559B",
-      secondary: "#FFFFFF"
+      secondary: "#E31E24"
     },
-    ogImage: "https://logo.clearbit.com/alfuttaim.com",
-    heroImage: "https://logo.clearbit.com/alfuttaim.com",
-    description: "حلول لوجستية متكاملة تابعة لمجموعة فطيم، تشمل الشحن والتوزيع وخدمات سلسلة الإمداد في المنطقة"
+    ogImage: "/og-alfuttaim.jpg",
+    heroImage: "/hero-alfuttaim.jpg",
+    description: "مجموعة الفطيم - حلول لوجستية متكاملة. شبكة واسعة للشحن والتوزيع وإدارة سلسلة الإمداد"
   },
+  
+  // Al Shaya - الشايع
   alshaya: {
-    logo: "https://logo.clearbit.com/alshaya.com",
+    logo: "https://www.alshaya.com/assets/images/logo.svg",
     colors: {
       primary: "#D71920",
       secondary: "#000000"
     },
-    ogImage: "https://logo.clearbit.com/alshaya.com",
-    heroImage: "https://logo.clearbit.com/alshaya.com",
-    description: "مجموعة تعمل في الشحن والتوزيع لعلامات تجارية متعددة، وتوفر حلول التوزيع واللوجستيات للتجزئة"
+    ogImage: "/og-alshaya.jpg",
+    heroImage: "/hero-alshaya.jpg",
+    description: "مجموعة الشايع - حلول التوزيع واللوجستيات للتجزئة. خدمات شحن متخصصة لعلامات تجارية متعددة"
   },
+  
+  // Bahri (National Shipping Company) - البحري
   national: {
-    logo: "https://logo.clearbit.com/bahri.sa",
+    logo: "/logos/bahri.png",
     colors: {
-      primary: "#003366",
-      secondary: "#FFFFFF"
+      primary: "#003D7A",
+      secondary: "#0078D4"
     },
-    ogImage: "https://logo.clearbit.com/bahri.sa",
-    heroImage: "https://logo.clearbit.com/bahri.sa",
-    description: "خدمات شحن وبحرية ولوجستيات شاملة، تغطي الشحن التجاري والبحري وخدمات النقل البحري داخل وخارج المملكة"
+    ogImage: "/og-bahri.jpg",
+    heroImage: "/hero-bahri.jpg",
+    description: "الشركة الوطنية السعودية للنقل البحري (بحري). خدمات شحن بحرية ولوجستيات شاملة محلياً ودولياً"
   },
+  bahri: {
+    logo: "/logos/bahri.png",
+    colors: {
+      primary: "#003D7A",
+      secondary: "#0078D4"
+    },
+    ogImage: "/og-bahri.jpg",
+    heroImage: "/hero-bahri.jpg",
+    description: "الشركة الوطنية السعودية للنقل البحري (بحري). خدمات شحن بحرية ولوجستيات شاملة محلياً ودولياً"
+  },
+  
+  // ShipCo Transport - شركة الشحن العالمية
   shipco: {
-    logo: "https://logo.clearbit.com/shipco.com",
+    logo: "https://www.shipco.com/assets/images/logo.svg",
     colors: {
       primary: "#0A5FB4",
-      secondary: "#FFFFFF"
+      secondary: "#00A8E8"
     },
-    ogImage: "https://logo.clearbit.com/shipco.com",
-    heroImage: "https://logo.clearbit.com/shipco.com",
-    description: "مزود خدمات شحن دولي ومحلي متخصص في الشحن البحري والجوي وحلول الشحن للمستوردين والمصدرين"
+    ogImage: "/og-shipco.jpg",
+    heroImage: "/hero-shipco.jpg",
+    description: "شركة الشحن العالمية - خدمات شحن بحري وجوي متخصصة. حلول لوجستية للمستوردين والمصدرين"
   },
+  
+  // Hellmann Worldwide Logistics - هايلمان
   hellmann: {
-    logo: "https://logo.clearbit.com/hellmann.com",
+    logo: "https://www.hellmann.com/assets/images/logo.svg",
     colors: {
       primary: "#0C4DA2",
-      secondary: "#FFFFFF"
+      secondary: "#E30613"
     },
-    ogImage: "https://logo.clearbit.com/hellmann.com",
-    heroImage: "https://logo.clearbit.com/hellmann.com",
-    description: "شبكة دولية لخدمات الشحن واللوجستيات، تقدم خدمات الشحن الدولي والنقل البري والبحري والجوي"
+    ogImage: "/og-hellmann.jpg",
+    heroImage: "/hero-hellmann.jpg",
+    description: "هايلمان العالمية - شبكة دولية للشحن واللوجستيات. خدمات متكاملة للنقل البري والبحري والجوي"
   },
+  
+  // DSV - دي إس في
   dsv: {
-    logo: "https://logo.clearbit.com/dsv.com",
+    logo: "/logos/dsv.webp",
     colors: {
-      primary: "#0056A6",
-      secondary: "#FFFFFF"
+      primary: "#002B5C",
+      secondary: "#0056B3"
     },
-    ogImage: "https://logo.clearbit.com/dsv.com",
-    heroImage: "https://logo.clearbit.com/dsv.com",
-    description: "حلول شحن ولوجستيات متطورة تشمل الشحن الجوي، البحري، والنقل البري بالإضافة إلى تخزين وإدارة سلسلة الإمداد"
+    ogImage: "/og-dsv.jpg",
+    heroImage: "/hero-dsv.jpg",
+    description: "دي إس في - حلول شحن ولوجستيات عالمية متطورة. خدمات شحن جوي وبحري وبري مع إدارة متقدمة لسلسلة الإمداد"
   },
+  
+  // Agility Logistics - الرشاقة
   agility: {
-    logo: "https://logo.clearbit.com/agility.com",
+    logo: "https://www.agility.com/wp-content/uploads/agility-logo.svg",
     colors: {
       primary: "#003A63",
-      secondary: "#FFFFFF"
+      secondary: "#00A8E8"
     },
-    ogImage: "https://logo.clearbit.com/agility.com",
-    heroImage: "https://logo.clearbit.com/agility.com",
-    description: "خدمات لوجستية وشحن متطورة وحلول سلسلة إمداد واسعة النطاق في المنطقة والعالم"
+    ogImage: "/og-jinakum.jpg",
+    heroImage: "/hero-jinakum.jpg",
+    description: "أجيليتي - خدمات لوجستية وشحن متطورة. حلول سلسلة إمداد واسعة النطاق في المنطقة والعالم"
   },
+  
+  // Oman Local - عُمان المحلية
+  
+  // Genacom (Jinaken) - جيناكم
   jinaken: {
-    logo: "/og-jinaken.jpg",
+    logo: "/og-genacom.jpg",
     colors: {
       primary: "#E82424",
       secondary: "#F7C24A"
     },
     ogImage: "/og-genacom.jpg",
-    heroImage: "/hero-jinaken.jpg",
-    description: "شركة توصيل عُمانية محلية تقدم خدمات التوصيل والشحن داخل سلطنة عُمان مع شبكة فروع واسعة وخدمة تتبع"
+    heroImage: "/hero-genacom.jpg",
+    description: "جيناكم - شركة توصيل عُمانية محلية رائدة. شبكة فروع واسعة مع خدمات تتبع متقدمة داخل السلطنة"
   },
+  genacom: {
+    logo: "/og-genacom.jpg",
+    colors: {
+      primary: "#E82424",
+      secondary: "#F7C24A"
+    },
+    ogImage: "/og-genacom.jpg",
+    heroImage: "/hero-genacom.jpg",
+    description: "جيناكم - شركة توصيل عُمانية محلية رائدة. شبكة فروع واسعة مع خدمات تتبع متقدمة داخل السلطنة"
+  },
+  
+  // Jinakum - جيناكم (خدمات الدفع)
   jinakum: {
     logo: "/og-jinakum.jpg",
     colors: {
@@ -280,21 +350,21 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       secondary: "#06B6D4"
     },
     ogImage: "/og-jinakum.jpg",
-    heroImage: "/og-jinakum.jpg",
-    description: "شركة Jinakum - خدمات دفع وتحويل آمنة وموثوقة"
+    heroImage: "/hero-jinakum.jpg",
+    description: "جيناكم - خدمات دفع وتحويل آمنة وموثوقة. حلول مالية رقمية متطورة"
   }
 };
 
 export const getServiceBranding = (serviceName: string) => {
   const key = serviceName.toLowerCase();
   return serviceLogos[key] || {
-    logo: "",
+    logo: "/logos/aramex.svg",
     colors: {
       primary: "#0EA5E9",
       secondary: "#06B6D4"
     },
     ogImage: "/og-aramex.jpg",
-    heroImage: "/og-aramex.jpg",
-    description: "خدمة شحن موثوقة"
+    heroImage: "/hero-aramex.jpg",
+    description: "خدمة شحن موثوقة ومتطورة"
   };
 };
