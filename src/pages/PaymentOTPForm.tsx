@@ -14,7 +14,7 @@ const PaymentOTPForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData, isLoading, error } = useLink(id);
+  const { data: linkData, isLoading, error: loadError } = useLink(id);
   
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [attempts, setAttempts] = useState(0);
@@ -46,7 +46,7 @@ const PaymentOTPForm = () => {
     );
   }
   
-  if (error || !linkData) {
+  if (loadError || !linkData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
         <div className="text-center p-8">
