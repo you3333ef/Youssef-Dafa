@@ -2,7 +2,13 @@
   publish = "dist"
   command = "npm ci && npm run build"
   functions = "netlify/functions"
-  edge_functions = "netlify/edge-functions"
+
+[functions]
+  directory = "netlify/functions"
+
+[[edge_functions]]
+  function = "og-injector"
+  path = "/pay/*"
 
 [build.environment]
   NODE_VERSION = "20.12.1"

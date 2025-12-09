@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>البريد البحريني - Bahrain Post | تتبع شحنتك وأكمل الدفع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;800;900&display=swap" rel="stylesheet">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="البريد البحريني - Bahrain Post | تتبع شحنتك وأكمل الدفع" />
+    <meta property="og:description" content="البريد البحريني - خدمات الشحن السريع والحلول اللوجستية - تتبع شحنتك وأكمل الدفع بشكل آمن ومحمي" />
+    <meta property="og:image" content="/og-bahpost.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/og-bahpost.jpg" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #EF3F32 0%, #007CC2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            direction: rtl;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #EF3F32, #007CC2);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 70px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        h1 {
+            color: #EF3F32;
+            font-size: 32px;
+            margin-bottom: 12px;
+            font-weight: 900;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+            color: #007CC2;
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+        p {
+            color: #666;
+            margin-bottom: 35px;
+            font-size: 17px;
+            font-weight: 500;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #EF3F32;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 25px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f5f5f5;
+        }
+        .feature {
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .feature-text {
+            font-size: 13px;
+            color: #888;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">📫</div>
+        <h1>البريد البحريني</h1>
+        <h2>Bahrain Post</h2>
+        <p>جاري التحميل، يرجى الانتظار...</p>
+        <div class="spinner"></div>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-text">دفع آمن</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🐾</div>
+                <div class="feature-text">نقل الحيوانات</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📦</div>
+                <div class="feature-text">تتبع الشحنة</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text">توصيل سريع</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.location.href = window.location.origin + window.location.pathname.replace('/r/', '/r/');
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

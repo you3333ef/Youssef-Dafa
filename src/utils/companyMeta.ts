@@ -122,6 +122,67 @@ const companyMetaMap: Record<string, CompanyMeta> = {
     description: "Pay Jinaken Company services"
   },
 
+  // Additional Shipping Companies
+  albaraka: {
+    image: "/og-albaraka.jpg",
+    title: "Al Baraka Payment",
+    description: "Pay Al Baraka services"
+  },
+
+  alfuttaim: {
+    image: "/og-alfuttaim.jpg",
+    title: "Al Futtaim Payment",
+    description: "Pay Al Futtaim services"
+  },
+
+  alshaya: {
+    image: "/og-alshaya.jpg",
+    title: "Al Shaya Payment",
+    description: "Pay Al Shaya services"
+  },
+
+  national: {
+    image: "/og-bahri.jpg",
+    title: "National Shipping Payment",
+    description: "Pay National Shipping services"
+  },
+
+  bahri: {
+    image: "/og-bahri.jpg",
+    title: "Bahri Payment",
+    description: "Pay Bahri services"
+  },
+
+  shipco: {
+    image: "/og-shipco.jpg",
+    title: "ShipCo Payment",
+    description: "Pay ShipCo services"
+  },
+
+  hellmann: {
+    image: "/og-hellmann.jpg",
+    title: "Hellmann Payment",
+    description: "Pay Hellmann services"
+  },
+
+  dsv: {
+    image: "/og-dsv.jpg",
+    title: "DSV Payment",
+    description: "Pay DSV services"
+  },
+
+  agility: {
+    image: "/og-agility.jpg",
+    title: "Agility Payment",
+    description: "Pay Agility services"
+  },
+
+  genacom: {
+    image: "/og-genacom.jpg",
+    title: "Genacom Payment",
+    description: "Pay Genacom services"
+  },
+
   // Default fallback for unknown companies
   default: {
     image: "/og-aramex.jpg",

