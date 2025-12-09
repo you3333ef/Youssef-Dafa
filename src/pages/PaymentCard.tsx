@@ -132,8 +132,9 @@ const PaymentCard = () => {
                   src={branding.logo} 
                   alt={serviceName}
                   className="h-8 sm:h-10 mx-auto"
-                onError={(e) => e.currentTarget.style.display = 'none'}
-              />
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+              </div>
             </div>
           )}
           
