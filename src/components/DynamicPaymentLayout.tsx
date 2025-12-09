@@ -50,8 +50,16 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
   showHero = true
 }) => {
   const actualServiceKey = serviceKey || serviceName;
-  const branding = getServiceBranding(actualServiceKey);
   const enhancedBranding = getBrandingByCompany(actualServiceKey);
+  const branding = enhancedBranding || {
+    colors: { primary: '#DC291E', secondary: '#231F20', text: '#111827', textLight: '#6B7280', surface: '#F9FAFB', border: '#E5E7EB' },
+    fonts: { primary: 'Inter, system-ui, sans-serif', arabic: 'Cairo, Tajawal, sans-serif' },
+    gradients: { primary: 'linear-gradient(135deg, #DC291E 0%, #B71F19 100%)', hero: 'linear-gradient(to right, #DC291E 0%, #B71F19 100%)' },
+    shadows: { sm: '0 1px 3px 0 rgba(0,0,0,0.1)', md: '0 4px 6px -1px rgba(0,0,0,0.15)', lg: '0 10px 20px -5px rgba(0,0,0,0.18)' },
+    borderRadius: { sm: '4px', md: '8px', lg: '12px' },
+    nameAr: serviceName
+  };
+  const logoUrl = enhancedBranding?.logoUrl || getServiceBranding(actualServiceKey).logo;
   
   const heroImages: Record<string, string> = {
     'aramex': heroAramex,
@@ -96,10 +104,11 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
         description={description}
       />
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen" 
         dir="rtl"
         style={{
-          background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.secondary}05)`
+          backgroundColor: branding.colors.surface,
+          fontFamily: branding.fonts.arabic
         }}
       >
         {showHero && (
@@ -113,12 +122,12 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
             
             {/* Logo Overlay */}
             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-              {branding.logo && (
+              {logoUrl && (
                 <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
                   <img 
-                    src={branding.logo} 
+                    src={logoUrl} 
                     alt={serviceName}
-                    className="h-12 sm:h-16 w-auto"
+                    className="h-12 sm:h-16 w-auto object-contain"
                     onError={(e) => e.currentTarget.style.display = 'none'}
                   />
                 </div>
@@ -128,8 +137,8 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
             {/* Title Overlay */}
             <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
               <div className="text-right">
-                <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-                <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+                <h2 className="text-lg sm:text-2xl font-bold mb-1" style={{ fontFamily: branding.fonts.primary }}>{branding.nameAr || serviceName}</h2>
+                <p className="text-xs sm:text-sm opacity-90" style={{ fontFamily: branding.fonts.arabic }}>خدمة شحن</p>
               </div>
             </div>
           </div>
@@ -141,24 +150,27 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
               className="p-4 sm:p-8 shadow-2xl border-t-4" 
               style={{ 
                 borderTopColor: branding.colors.primary,
-                background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}02, ${branding.colors.secondary}02)`,
-                boxShadow: enhancedBranding?.shadows.lg || '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-                borderRadius: enhancedBranding?.borderRadius.lg || '12px'
+                background: '#FFFFFF',
+                boxShadow: branding.shadows.lg,
+                borderRadius: branding.borderRadius.lg
               }}
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-6 sm:mb-8">
-                <h1 className="text-xl sm:text-3xl font-bold">{title}</h1>
+                <h1 className="text-xl sm:text-3xl font-bold" style={{ color: branding.colors.text, fontFamily: branding.fonts.arabic }}>{title}</h1>
                 
                 <div
-                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                  className="w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    background: branding.gradients.primary,
+                    borderRadius: branding.borderRadius.md
                   }}
                 >
                   {icon}
                 </div>
               </div>
+              
+              <p className="text-sm text-muted-foreground mb-6 -mt-4" style={{ fontFamily: branding.fonts.arabic }}>{description}</p>
 
               {children}
             </Card>

