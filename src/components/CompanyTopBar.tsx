@@ -1,13 +1,15 @@
 import React from 'react';
 import { Hash } from 'lucide-react';
+import { getBrandingByCompany } from '@/lib/brandingSystem';
 
 interface CompanyTopBarProps {
   companyKey: string;
-  companyName: string;
-  primaryColor: string;
-  secondaryColor?: string;
+  companyName?: string;
   trackingNumber?: string;
   logo?: string;
+  // Legacy props for backward compatibility
+  primaryColor?: string;
+  secondaryColor?: string;
 }
 
 const logoUrls: Record<string, string> = {
@@ -45,29 +47,43 @@ const logoUrls: Record<string, string> = {
 const CompanyTopBar: React.FC<CompanyTopBarProps> = ({
   companyKey,
   companyName,
-  primaryColor,
-  secondaryColor,
   trackingNumber,
-  logo
+  logo,
+  primaryColor: legacyPrimaryColor,
+  secondaryColor: legacySecondaryColor
 }) => {
+  // Get branding from the branding system
+  const branding = getBrandingByCompany(companyKey);
+  
+  // Use branding colors if available, otherwise fallback to legacy props
+  const primaryColor = branding?.colors.primary || legacyPrimaryColor || '#0EA5E9';
+  const gradientBackground = branding?.gradients.primary || 
+    `linear-gradient(135deg, ${primaryColor}, ${legacySecondaryColor || primaryColor})`;
+  const shadowStyle = branding?.shadows.md || '0 2px 8px rgba(0,0,0,0.15)';
+  const borderRadius = branding?.borderRadius.md || '8px';
+  const displayName = companyName || branding?.nameAr || companyKey;
+  
+  // Get logo URL
   const logoUrl = logo || logoUrls[companyKey.toLowerCase()] || '';
-  const bgColor = secondaryColor || primaryColor;
 
   return (
     <div 
       className="w-full px-4 py-3 sm:px-6 sm:py-4"
       style={{ 
-        background: `linear-gradient(135deg, ${primaryColor}, ${bgColor})`,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        background: gradientBackground,
+        boxShadow: shadowStyle
       }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3 sm:gap-4">
           {logoUrl && (
-            <div className="bg-white rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 shadow-md flex items-center">
+            <div 
+              className="bg-white px-3 py-2 sm:px-4 sm:py-2.5 shadow-md flex items-center"
+              style={{ borderRadius }}
+            >
               <img 
                 src={logoUrl}
-                alt={companyName}
+                alt={displayName}
                 className="h-8 sm:h-10 w-auto max-w-[120px] sm:max-w-[180px] object-contain"
                 onError={(e) => {
                   const target = e.currentTarget;
@@ -82,7 +98,7 @@ const CompanyTopBar: React.FC<CompanyTopBarProps> = ({
                 className="fallback-text font-bold text-sm sm:text-lg hidden"
                 style={{ color: primaryColor }}
               >
-                {companyName}
+                {displayName}
               </span>
             </div>
           )}

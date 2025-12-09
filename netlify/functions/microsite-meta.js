@@ -323,9 +323,9 @@ exports.handler = async (event, context) => {
   } catch (error) {
     console.error('Could not read index.html:', error);
     // Fallback: Use current build's asset filenames
-    // Updated: 2025-12-09
-    scriptTag = '<script type="module" crossorigin src="/assets/index-BARmUuxM.js"></script>';
-    styleTag = '<link rel="stylesheet" crossorigin href="/assets/index-BpNRvmlh.css">';
+    // Updated: 2025-12-09 (After Branding Update)
+    scriptTag = '<script type="module" crossorigin src="/assets/index-wWjgiLuB.js"></script>';
+    styleTag = '<link rel="stylesheet" crossorigin href="/assets/index-DoPBShL7.css">';
 
     // If those don't work, add a fallback script that tries multiple patterns
     scriptTag += `
