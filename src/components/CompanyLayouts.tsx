@@ -481,7 +481,11 @@ export const getCompanyLayout = (companyKey: string) => {
     case 'smsa':
       return SMSALayout;
     default:
-      return AramexLayout;
+      // Return a dynamic layout wrapper that will use GenericCompanyLayout
+      return (props: CompanyLayoutProps) => {
+        const { GenericCompanyLayout } = require('./GenericCompanyLayout');
+        return <GenericCompanyLayout companyKey={companyKey} {...props} />;
+      };
   }
 };
 
