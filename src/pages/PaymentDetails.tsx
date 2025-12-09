@@ -12,7 +12,30 @@ import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck } from "lucide-
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading, error } = useLink(id);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center p-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error || !linkData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold mb-2">خطأ في تحميل البيانات</h2>
+          <p className="text-muted-foreground mb-6">الرجاء التحقق من الرابط والمحاولة مرة أخرى</p>
+          <Button onClick={() => window.location.reload()}>إعادة المحاولة</Button>
+        </div>
+      </div>
+    );
+  }
 
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;

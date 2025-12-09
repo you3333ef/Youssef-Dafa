@@ -29,23 +29,29 @@ import {
 const Microsite = () => {
   const { country, type, id } = useParams();
   const navigate = useNavigate();
-  const { data: link, isLoading } = useLink(id);
+  const { data: link, isLoading, error } = useLink(id);
   const countryData = getCountryByCode(country || "");
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-xl">جاري التحميل...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center p-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg">جاري التحميل...</p>
+        </div>
       </div>
     );
   }
   
-  if (!link || !countryData) {
+  if (error || !link || !countryData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">الرابط غير موجود</h2>
-          <p className="text-muted-foreground">الرجاء التحقق من الرابط</p>
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold mb-4">خطأ في تحميل البيانات</h2>
+          <p className="text-muted-foreground mb-6">
+            {!link ? 'الرابط غير موجود أو انتهت صلاحيته' : 'الرجاء التحقق من الرابط والمحاولة مرة أخرى'}
+          </p>
+          <Button onClick={() => window.location.reload()}>إعادة المحاولة</Button>
         </div>
       </div>
     );
