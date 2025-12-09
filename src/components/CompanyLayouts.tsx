@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getBrandingByCompany } from '@/lib/brandingSystem';
+import GenericCompanyLayout from '@/components/GenericCompanyLayout';
 import { 
   Package, 
   Truck, 
@@ -481,7 +482,9 @@ export const getCompanyLayout = (companyKey: string) => {
     case 'smsa':
       return SMSALayout;
     default:
-      return AramexLayout;
+      return (props: CompanyLayoutProps) => (
+        <GenericCompanyLayout companyKey={companyKey} {...props} />
+      );
   }
 };
 

