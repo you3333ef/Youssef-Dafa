@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getBrandingByCompany } from '@/lib/brandingSystem';
+import CompanyTopBar from '@/components/CompanyTopBar';
 import { 
   Package, 
   Truck, 
@@ -29,30 +30,10 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
   
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
-      <div 
-        className="h-24 shadow-lg"
-        style={{ background: branding?.gradients.primary }}
-      >
-        <div className="container mx-auto h-full flex items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            <div className="bg-white p-3 rounded-lg">
-              <span className="font-black text-2xl" style={{ color: branding?.colors.primary }}>
-                ناقل
-              </span>
-            </div>
-            <div className="text-white">
-              <p className="font-bold text-xl">NAQEL EXPRESS</p>
-              <p className="text-sm opacity-90">#1 في المملكة العربية السعودية</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Badge className="bg-yellow-400 text-yellow-900 px-3 py-1">
-              <Star className="w-4 h-4 ml-1 fill-current" />
-              الأعلى تقييماً
-            </Badge>
-          </div>
-        </div>
-      </div>
+      <CompanyTopBar 
+        companyKey="naqel"
+        trackingNumber={trackingNumber}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-4 gap-4 mb-8">
@@ -76,7 +57,10 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
 
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <Card className="p-8 shadow-xl">
+            <Card 
+              className="p-8 shadow-xl"
+              style={{ borderRadius: branding?.borderRadius.lg }}
+            >
               <div 
                 className="flex items-center gap-3 mb-6 pb-4 border-b-2"
                 style={{ borderBottomColor: branding?.colors.primary }}
@@ -92,7 +76,10 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
             {amount && (
               <Card 
                 className="p-6 text-white text-center"
-                style={{ background: branding?.gradients.primary }}
+                style={{ 
+                  background: branding?.gradients.primary,
+                  borderRadius: branding?.borderRadius.md
+                }}
               >
                 <p className="text-sm opacity-90 mb-2">المبلغ الإجمالي</p>
                 <p className="text-3xl font-black">{amount}</p>
@@ -100,7 +87,7 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
             )}
 
             {trackingNumber && (
-              <Card className="p-6">
+              <Card className="p-6" style={{ borderRadius: branding?.borderRadius.md }}>
                 <h3 className="font-bold mb-3">معلومات الشحنة</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -115,7 +102,7 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
               </Card>
             )}
 
-            <Card className="p-6 bg-gradient-to-br from-blue-50 to-blue-100">
+            <Card className="p-6 bg-gradient-to-br from-blue-50 to-blue-100" style={{ borderRadius: branding?.borderRadius.md }}>
               <div className="flex items-center gap-3 mb-3">
                 <Shield className="w-6 h-6 text-blue-700" />
                 <h3 className="font-bold text-blue-900">ناقل إكسبرس</h3>
@@ -140,27 +127,16 @@ export const ZajilLayout: React.FC<CompanyLayoutProps> = ({
   
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F8FAFC' }} dir="rtl">
-      <div 
-        className="h-20"
-        style={{ background: branding?.gradients.primary }}
-      >
-        <div className="container mx-auto h-full flex items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-lg">
-              <span className="font-black text-xl" style={{ color: branding?.colors.primary }}>
-                زاجل
-              </span>
-            </div>
-            <span className="text-white font-bold text-lg">Zajil Express</span>
-          </div>
-          <div className="text-white text-sm">
-            <p className="font-semibold">Yes, Delivered</p>
-          </div>
-        </div>
-      </div>
+      <CompanyTopBar 
+        companyKey="zajil"
+        trackingNumber={trackingNumber}
+      />
 
       <div className="container mx-auto px-4 py-8">
-        <Card className="p-8 max-w-4xl mx-auto shadow-2xl">
+        <Card 
+          className="p-8 max-w-4xl mx-auto shadow-2xl"
+          style={{ borderRadius: branding?.borderRadius.lg }}
+        >
           <div className="flex items-center justify-between mb-6 pb-4 border-b">
             <h1 className="text-3xl font-bold">عملية الدفع</h1>
             {amount && (
@@ -189,7 +165,11 @@ export const ZajilLayout: React.FC<CompanyLayoutProps> = ({
             { icon: Clock, text: 'توصيل سريع', sub: 'خلال 24 ساعة' },
             { icon: Shield, text: 'دفع آمن', sub: 'SSL مشفر' }
           ].map((item, idx) => (
-            <Card key={idx} className="p-4 text-center">
+            <Card 
+              key={idx} 
+              className="p-4 text-center"
+              style={{ borderRadius: branding?.borderRadius.md }}
+            >
               <item.icon className="w-8 h-8 mx-auto mb-2" style={{ color: branding?.colors.primary }} />
               <p className="font-bold text-sm">{item.text}</p>
               <p className="text-xs text-gray-600">{item.sub}</p>
@@ -210,28 +190,10 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-yellow-50" dir="rtl">
-      <div 
-        className="h-24"
-        style={{ background: branding?.gradients.primary }}
-      >
-        <div className="container mx-auto h-full flex items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            <div className="bg-white p-3 rounded-xl flex items-center gap-2">
-              <span className="font-black text-xl" style={{ color: branding?.colors.primary }}>
-                البريد السعودي
-              </span>
-            </div>
-            <div className="text-white">
-              <p className="font-bold">Saudi Post | SPL</p>
-              <p className="text-xs opacity-90">المشغل الوطني للبريد</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge className="bg-white/20 text-white">عضو UPU</Badge>
-            <Badge className="bg-white/20 text-white">منذ 1927</Badge>
-          </div>
-        </div>
-      </div>
+      <CompanyTopBar 
+        companyKey="saudipost"
+        trackingNumber={trackingNumber}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
@@ -245,7 +207,10 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
               <Card 
                 key={idx}
                 className="p-4 text-center border-2 hover:shadow-lg transition-all"
-                style={{ borderColor: `${item.color}30` }}
+                style={{ 
+                  borderColor: `${item.color}30`,
+                  borderRadius: branding?.borderRadius.md 
+                }}
               >
                 <div 
                   className="w-10 h-10 mx-auto rounded-lg flex items-center justify-center mb-2"
@@ -258,7 +223,10 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
             ))}
           </div>
 
-          <Card className="p-8 shadow-xl">
+          <Card 
+            className="p-8 shadow-xl"
+            style={{ borderRadius: branding?.borderRadius.lg }}
+          >
             <div className="flex items-center gap-4 mb-6 pb-4 border-b-2" style={{ borderBottomColor: branding?.colors.primary }}>
               <div 
                 className="w-14 h-14 rounded-full flex items-center justify-center"
@@ -282,7 +250,10 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
           </Card>
 
           {trackingNumber && (
-            <Card className="mt-6 p-6 bg-gradient-to-r from-green-100 to-yellow-100">
+            <Card 
+              className="mt-6 p-6 bg-gradient-to-r from-green-100 to-yellow-100"
+              style={{ borderRadius: branding?.borderRadius.md }}
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-700 mb-1">رقم الشحنة</p>
@@ -310,35 +281,16 @@ export const UPSLayout: React.FC<CompanyLayoutProps> = ({
   
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FAF8F7' }} dir="rtl">
-      <div 
-        className="h-20"
-        style={{ backgroundColor: branding?.colors.primary }}
-      >
-        <div className="container mx-auto h-full flex items-center justify-between px-6">
-          <div className="flex items-center gap-3">
-            <div 
-              className="p-3 rounded"
-              style={{ backgroundColor: branding?.colors.secondary }}
-            >
-              <span className="font-black text-2xl" style={{ color: branding?.colors.primary }}>
-                UPS
-              </span>
-            </div>
-            <span className="text-white font-bold">United Parcel Service</span>
-          </div>
-          {amount && (
-            <div 
-              className="px-4 py-2 rounded font-bold"
-              style={{ backgroundColor: branding?.colors.secondary }}
-            >
-              {amount}
-            </div>
-          )}
-        </div>
-      </div>
+      <CompanyTopBar 
+        companyKey="ups"
+        trackingNumber={trackingNumber}
+      />
 
       <div className="container mx-auto px-4 py-8">
-        <Card className="max-w-4xl mx-auto p-8 shadow-2xl">
+        <Card 
+          className="max-w-4xl mx-auto p-8 shadow-2xl"
+          style={{ borderRadius: branding?.borderRadius.lg }}
+        >
           <div className="flex items-center gap-4 mb-8">
             <div 
               className="w-16 h-16 rounded flex items-center justify-center"
@@ -355,7 +307,13 @@ export const UPSLayout: React.FC<CompanyLayoutProps> = ({
           {children}
 
           {trackingNumber && (
-            <div className="mt-6 p-4 rounded" style={{ backgroundColor: `${branding?.colors.secondary}30` }}>
+            <div 
+              className="mt-6 p-4 rounded" 
+              style={{ 
+                backgroundColor: `${branding?.colors.secondary}30`,
+                borderRadius: branding?.borderRadius.md 
+              }}
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold mb-1">Tracking Number</p>
