@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countr
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
+import { parseAmount } from "@/utils/amountParser";
 
 const PaymentData = () => {
   const { id } = useParams();
@@ -53,24 +54,14 @@ const PaymentData = () => {
 
   // Get amount from link data
   const rawAmount = paymentInfo?.payment_amount;
-  let amount = 500;
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  const amount = parseAmount(rawAmount, 500);
 
   // Set initial payment amount from link data
-  useState(() => {
+  useEffect(() => {
     if (amount && !paymentAmount) {
       setPaymentAmount(amount.toString());
     }
-  });
+  }, [amount, paymentAmount]);
 
   // Calculate formatted amount dynamically based on input
   const displayAmount = paymentAmount ? parseFloat(paymentAmount) : amount;

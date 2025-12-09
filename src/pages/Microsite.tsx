@@ -11,6 +11,7 @@ import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency } from "@/utils/countryData";
 import SEOHead from "@/components/SEOHead";
+import { parseAmount } from "@/utils/amountParser";
 import {
   MapPin,
   Users,
@@ -55,19 +56,7 @@ const Microsite = () => {
 
   // Get amount from payload - ensure it's a number, handle all data types
   const rawAmount = payload.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  const amount = parseAmount(rawAmount, 500);
 
   // Determine service type
   const isShipping = link.type === 'shipping';

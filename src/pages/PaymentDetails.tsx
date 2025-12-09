@@ -8,6 +8,7 @@ import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck } from "lucide-react";
+import { parseAmount } from "@/utils/amountParser";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -46,19 +47,7 @@ const PaymentDetails = () => {
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  const amount = parseAmount(rawAmount, 500);
 
   // Format amount with currency symbol and name
   const formattedAmount = formatCurrency(amount, countryCode);

