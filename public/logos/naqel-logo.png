@@ -1,0 +1,1249 @@
+
+
+<!doctype html>
+<html lang="en">
+<!--dir="rtl" lang="ar"-->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- <title>NAQEL Express</title> -->
+
+	
+	<!-- Google Tag Manager
+	<script>
+	
+		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		
+		})(window,document,'script','dataLayer','GTM-P4VF5MT');
+		
+		</script>
+		
+		<!-- End Google Tag Manager -->
+		
+		<!-- Google Tag Manager -->
+		
+		<script>
+		
+		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		
+		})(window,document,'script','dataLayer','GTM-NGZ2BXZ');
+		
+		</script>
+		
+		<!-- End Google Tag Manager -->
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-XSX70MFQQP"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-XSX70MFQQP');
+	</script>	
+	<!-- End Google tag (gtag.js) -->
+
+	<!-- favicon icon -->
+	<link rel="shortcut icon" href="/static/images/favicon.png"/>
+
+	<!-- bootstrap -->
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+
+	<!-- animate -->
+	<link rel="stylesheet" type="text/css" href="/static/css/animate.css"/>
+
+	<!-- flaticon -->
+	<link rel="stylesheet" type="text/css" href="/static/css/flaticon.css"/>
+
+	<!-- fontawesome -->
+	<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+
+	<!-- themify -->
+	<link rel="stylesheet" type="text/css" href="/static/css/themify-icons.css"/>
+
+	<!-- slick -->
+	<link rel="stylesheet" type="text/css" href="/static/css/slick.css">
+
+	<!-- Site -->
+	<link rel="stylesheet" type="text/css" href="/static/css/site.css">
+
+	<!-- prettyphoto -->
+	<link rel="stylesheet" type="text/css" href="/static/css/prettyPhoto.css">
+
+	<!-- shortcodes -->
+	<link rel="stylesheet" type="text/css" href="/static/css/shortcode.css"/>
+
+	<!-- main -->
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css"/>
+
+	<!-- megamenu -->
+	<link rel="stylesheet" type="text/css" href="/static/css/megamenu.css"/>
+
+	<!-- responsive -->
+	<link rel="stylesheet" type="text/css" href="/static/css/responsive.css"/>
+
+	<!-- login -->
+	<link rel="stylesheet" type="text/css" href="/static/css/login.css"/>
+	<!-- login util -->
+	<link rel="stylesheet" type="text/css" href="/static/css/util.css"/>
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+	<!-- 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	 --><!--
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+
+</head>
+<body>
+	<!-- Include the modal HTML dynamically -->
+    	<!-- modal.html -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-3 shadow-lg">
+            <div class="modal-header" style="position: relative;">
+                <h5 class="modal-title" id="notificationModalLabel">Notification Title</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body" id="notificationModalBody">
+                Notification message will appear here.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add some custom CSS for the modal -->
+<style>
+    .modal-dialog {
+        max-width: 500px;
+        margin: 10% auto;
+    }
+
+    .modal-title {
+        color: #002058 !important;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+        background-color: white; /* Changed background color to white */
+        color: #002058 !important; /* Changed font color to blue */
+        font-family: 'Almarai', 'Helvetica Neue', sans-serif; /* Added Arabic and English fonts */
+    }
+
+    .modal-header {
+        background-color: white !important; /* Changed header background to white */
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+        font-size: 1.2rem;
+    }
+
+    .modal-body {
+        padding: 20px !important;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        text-align: center;
+        color: #002058; /* Changed body text color to blue */
+    }
+    .modal-body p{
+    color: #06205C;
+    }
+
+
+    .modal-footer {
+        background-color: white; /* Changed footer background to white */
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+    }
+    .modal-header .btn-close{
+    background-color:white;
+    color:black;
+    font-weight:900;
+    padding: 0 !important;
+    }
+    .modal-footer .btn-secondary {
+        background-color: #06205C;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 25px;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .modal-footer .btn-secondary:hover {
+        background-color: #c74c24;
+    }
+
+    .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.7) !important;
+    }
+
+    /* Fade effect */
+    .modal.fade:not(.show) {
+        opacity: 0; /* This makes sure the modal is invisible when not shown */
+        transition: opacity 0.3s ease-out; /* Optional smooth transition */
+    }
+
+    .modal.fade.show {
+        opacity: 1; /* Modal is visible when the 'show' class is applied */
+        transition: opacity 0.3s ease-in; /* Optional smooth transition */
+    }
+
+    /* Ensure modal is hidden when it is not displayed */
+    .modal[hidden] {
+        display: none;
+    }
+    @media (max-width: 767px) {
+    .modal-dialog {
+        max-width: 90%; /* Make modal take up more space */
+        margin: 10% 5%; /* Keep the same margin */
+    }
+}
+
+/* For screens smaller than 480px (mobile phones) */
+@media (max-width: 479px) {
+    .modal-dialog {
+        max-width: 95%; /* Modal takes up more space */
+        margin: 10% 3%; /* Adjust margins */
+    }
+}
+</style>
+
+<!-- Bootstrap 5 JS and Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+	
+	<!-- Google Tag Manager (noscript) -->
+
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P4VF5MT"
+
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	
+	<!-- End Google Tag Manager (noscript) -->
+	
+	<!-- Google Tag Manager (noscript) -->
+	
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGZ2BXZ"
+	
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	
+	<!-- End Google Tag Manager (noscript) -->
+	
+	 
+<div class="page">
+	<!--	&lt;!&ndash;	 preloader start &ndash;&gt;-->
+	<!--	<div id="preloader" class="blobs-wrapper">-->
+	<!--		<div class="cmt-bgcolor-skincolor loader"></div>-->
+	<!--	</div>-->
+	<!--preloader End -->
+
+	
+
+	
+
+<!--header start-->
+	<!--suppress ALL -->
+	<!-- For country List -->
+	<link rel="stylesheet" href="/static/css/countrySelect.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+	<script src="/static/js/countrySelect.js"></script>
+	<!-- Country List -->
+	<style>
+		@media only screen and (min-width: 1200px) {
+    .container {
+        max-width: 1205px !important;
+    }
+}
+	</style>
+<header id="masthead" class="header cmt-header-style-01">
+			  <!-- cmt-topbar-wrapper -->
+	            <div class="cmt-topbar cmt-bgcolor-grey cmt-topbar-wrapper clearfix">
+	                <div class="container">
+	                    <div class="cmt-topbar-content">
+	                        <div class="topbar-left text-left top-contact">
+	                            <ul class="top-contact cmt-textcolor-grey cmt-highlight-left">
+	                               <a href="/en/sa/download_app/" target="_blank"><li class="list-inline-item text-white redhover">Download NAQEL App</li></a>
+	                            </ul>
+	                            <div class="topbar-btn d-inline-block">
+	                                <a href="/en/sa/contactus/" class="cmt-btn btn-inline cmt-btn-size-sm cmt-icon-btn-right ">Find Us On the Map <i class="ti ti-arrow-right"></i></a>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="topbar-right text-right">
+	                        <ul class="top-contact">
+								
+								<li>
+	                                <div class="cmt-social-links-wrapper list-inline">
+										<ul class="social-icons">
+											<li>
+													<a class="tooltip-bottom" target="_blank" href="https://bit.ly/2Wzzoeg"  data-tooltip="WhatsApp"><i class="fa fa-whatsapp"></i></a>
+											</li>
+											<li>
+													<a class="tooltip-bottom" target="_blank" href="https://www.facebook.com/NaqelExpr" data-tooltip="Facebook"><i class="fa fa-facebook"></i></a>
+											</li>
+											<li>
+													<a class=" tooltip-bottom" target="_blank" href="https://www.instagram.com/naqelexpr/" data-tooltip="Instagram"><i class="fa fa-instagram"></i></a>
+											</li>
+											<li>
+													<a class="tooltip-bottom" target="_blank" href="https://twitter.com/naqelexpr?lang=en" data-tooltip="X"><i class="bi bi-twitter-x"></i></a>
+											</li>
+										</ul>
+	                                </div>
+	                            </li>
+	                            <li><strong class="cmt-textcolor-grey font-weight-500"><i class="fa fa-phone cmt-textcolor-darkgrey"></i>Talk to Customer Support</strong> <span class="tel-no ">8002464444</span></li>
+								<li>
+								
+									<i class="fa fa-user"></i>
+									<a href="https://infotrack.naqelexpress.com/InfoTrack/View/Login.aspx" rel="nofollow" target="_blank" class="cmt-textcolor-grey font-weight-500">NAQEL Employees</a>
+								</li>
+							<!-- 	<li>
+									<i class="fa fa-user-plus"></i>
+									<a href="https://infotrack.naqelexpress.com/ClientInfoTrack/View/CustomerLogin.aspx" rel="nofollow" target="_blank" class="cmt-textcolor-grey font-weight-500">Business User</a>
+								</li> -->
+
+	                            
+	                        </ul>
+	                    </div>
+	                </div>
+	            </div><!-- cmt-topbar end -->
+<!--	 site-header-menu-->
+
+		<div id="site-header-menu" class="site-header-menu">
+			            <div class="site-header-menu-inner cmt-stickable-header">
+<!--			<div class="site-header-menu-inner cmt-stickable-header">-->
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<!--site-navigation -->
+							<div class="site-navigation d-flex flex-row align-items-center">
+								<!-- site-branding -->
+								<div class="site-branding mr-auto">
+
+									<a class="home-link" href="/en/sa/" title="NAQEL Express" rel="home">
+
+										<img id="logo-img" class="img-center standardlogo"
+											 src="/static/images/logo%20with%20logistic%20en.jpg" alt="logo-img">
+
+										<img id="logo-dark" class="img-center stickylogo"
+											 src="/static/images/logo%20with%20logistic%20en.jpg" alt="logo-img">
+									</a>
+
+								</div><!-- site-branding end -->
+								<div class="btn-show-menu-mobile menubar menubar--squeeze">
+                                        <span class="menubar-box">
+                                            <span class="menubar-inner"></span>
+                                        </span>
+								</div>
+								<!-- menu -->
+								<nav class="main-menu menu-mobile" id="menu">
+									<ul class="menu">
+										<li
+										
+										  class="mega-menu-item"
+										>
+										<a class="mega-menu-link">
+											<span class="navmenuconstcolor">Ship</span></a>
+
+										<ul class="mega-submenu navmenuconstcolor ">
+											<li class="active"><a href="/en/sa/ratecalculator/">Rate Estimate</a></li>
+											<li><a href="/en/sa/Pickup/pickup/">Schedule A Pickup</a></li>
+											<li><a href="/en/sa/TransitTime/">Transit Time</a></li>
+										
+										</ul>
+										</li>
+
+										
+										<li class="mega-menu-item">
+											<a href="/en/sa/tracking/" class=" navmenuconstcolor">Track</a>
+									   </li>
+
+										<!-- <li class="mega-menu-item"><a  class="mega-menu-link">
+											<span class="navmenuconstcolor">Track</span></a>
+											<ul class="mega-submenu">
+												<form id="cmt-contactform-nav"  autocomplete="off" class="pt-10" method="post" action="/en/sa/tracking/">
+												 <input type="hidden" name="csrfmiddlewaretoken" value="AmJUJXItJx1Vj9qgwLLkmuWWCZjkQkv449LUXCDDGkWVEh147audcNcg3lHblolH">
+												<div class="pl-10 pr-10 pb-10">
+													<b class="boldfont">Track Your Shipment</b>
+												</div>
+												<li class="pl-10 pr-10">
+													<input  type="text" id="tracktext" name="waybills" placeholder="Shipment Number" required="">
+												</li>
+												<li>
+													<div class="pl-10 pr-10 pb-10">
+													<button class="submit  cmt-btn-size-md cmt-btn-shape-square cmt-btn-style-fill cmt-btn-color-skincolor but-radius w-100"
+																		type="submit">Track
+													</button></div>
+												</li>
+												</form>
+											</ul>
+										</li> -->
+
+
+										<li class="mega-menu-item"><a class="mega-menu-link">
+											<span class="navmenuconstcolor">Services</span>
+											</a>
+											<ul class="mega-submenu navmenuconstcolor ">
+												<li><a href="/en/sa/services/Ecommerce">E-commerce </a></li>
+												<li><a href="/en/sa/services/Express">Express Logistics</a></li>
+												<li><a href="/en/sa/services/Warehouse">Warehousing </a></li>
+												<li><a href="/en/sa/services/Freight">Freight Forwarding </a></li>
+												<li><a href="/en/sa/services/Logistics">Industrial Solutions </a></li>
+												<li><a href="/en/sa/services/Pharma">Cold Chain Logistics</a></li>
+											    <li><a href="/en/sa/services/Gateway">Customs Clearance</a></li>
+												<li><a target="_blank" href="/en/sa/pdfs/terms-condition/">Service Terms & Conditions</a></li>
+												<li><a href="/en/sa/services/FuelSurcharge">Fuel Surcharge</a></li>
+											</ul>
+										</li>
+
+									
+
+
+										<li 
+										  class="mega-menu-item "
+										
+											><a class="mega-menu-link">
+										<span class="navmenuconstcolor">About Us</span>
+										</a>
+											<ul class="mega-submenu  navmenuconstcolor">
+												<li class="active"><a href="/en/sa/About/AboutUs">Our Story</a></li>
+											<!-- 	<li class=""><a href="/en/sa/Technology/">Technology</a></li> -->
+												<li><a href="/en/sa/About/Quality">Quality Policy</a></li>
+												<li><a href="/en/sa/About/CustomerCharter">Customer Charter</a></li>
+												
+												<!-- <li><a href="faq.html">Faq</a></li>
+												<li class="mega-menu-item"><a href="shop.html" class="mega-menu-link">Shop</a>
+													<ul class="mega-submenu">
+														<li><a href="product-details.html">Single Product Details</a>
+														</li>
+														<li><a href="cart.html">Cart</a></li>
+														<li><a href="checkout.html">Checkout</a></li>
+													</ul>
+												</li> -->
+											</ul>
+										</li>
+									
+										<li class="mega-menu-item">
+											<a class="mega-menu-link">
+												<span class="navmenuconstcolor">Contact Us</span>
+												</a>
+											<ul class="mega-submenu navmenuconstcolor ">
+												<li class=""><a href="/en/sa/contactus/">Contact Us</a></li> 
+												<li class="mega-menu-item"><a href="/en/sa/Complaints/" class="mega-menu-link">Complaints</a>
+													<ul class="mega-submenu">
+														<!-- <li class=""><a href="/en/sa/ClaimProcess/">Claim Process</a></li> -->
+														<li ><a  target="_blank" href="/en/sa/Complaints/Create_Complaint">Create A Complaint</a></li>
+														<li ><a  target="_blank" href="/en/sa/Complaints/track-complaint/">Track Complaint</a></li>
+														<li><a onclick="setComplaint(true,'en')">Connect With Our Chatbot</a></li>
+														<li ><a href="/en/sa/Complaints/ReachUs">Reach out to Customer Support</a></li>
+													</ul>
+												</li>
+
+												<li class="mega-menu-item"><a href="/en/sa/Claims/" class="mega-menu-link">Claims</a>
+													<ul class="mega-submenu">
+														<li><a href="/en/sa/Claims/Create_Claim">Create A Claim</a></li>
+														<li><a href="/en/sa/Claims/ClaimTracking">Claim Tracking</a></li>
+														<li ><a href="/en/sa/Claims/ReachUs">Reach out to Customer Support</a></li>
+														<li><a target="_blank" href="/en/sa/pdfs/claim-rules/">Claims Rules and Procedures</a></li>
+
+														<li class=""><a target="_blank" href="/en/pdfs/compensation-policy/">Compensation Policy for Postal Services Beneficiaries</a></li>
+
+														
+													</ul>
+												</li>	
+												<li class=""><a href="/en/FAQ/">FAQs</a></li>                                                                                        
+											
+											</ul>
+										</li>
+
+										
+
+										<li class="mega-menu-item">
+										 	<a target="_blank" href="/en/sa/CourierReg/courier-reg/" class=" navmenuconstcolor">Drive Part Time</a>
+										</li>
+										
+
+										
+					
+										<li class="mega-menu-item">
+												<input id="country_selector" type="text"  readonly>
+										</li>
+										
+										<!-- country -->
+
+										<!-- <li class="mega-menu-item">
+											<a class="mega-menu-link">
+											<i style="font-size: 20px; color: #06205C;" class="fa fa-globe" aria-hidden="true"></i>
+											<span class="navmenuconstcolor">SA</span>
+											</a>
+											<ul class="mega-submenu navmenuconstcolor ">
+												<li><a href="/en/sa/" >Saudi Arabia</a></li>
+												<li><a href="/en/ae/" >United Arab Emirates</a></li>
+											</ul>
+										</li> -->
+										<!-- lan -->
+
+										<li class="mega-menu-item">
+											<a class="mega-menu-link">
+												
+											<span class="navmenuconstcolor">EN</span>
+											</a>
+											<ul class="mega-submenu ">
+												
+											   
+											   
+											   
+											   <li><a href='/en/tent/Images/logo.png'>English</a></li>
+											   
+											   <li><a href='/ar/tent/Images/logo.png'>العربيّة</a></li>
+											   
+										   </ul>
+										</li>
+										
+
+										<!-- 	old									
+										<li class="mega-menu-item">
+											<a class="mega-menu-link">
+											<i style="font-size: 20px; color: #06205C;" class="fa fa-globe" aria-hidden="true"></i>
+											<span class="navmenuconstcolor">SA</span>
+											</a>
+											<ul class="mega-submenu navmenuconstcolor ">
+												<li><a href="/en/sa/" >Saudi Arabia</a></li>
+												<li><a href="/en/ae/" >United Arab Emirates</a></li>
+											</ul>
+										</li>
+								
+
+
+										<!-- old -->
+										<!-- <li class="mega-menu-item">
+											<a class="mega-menu-link">
+												
+												<i style="font-size: 20px; color: #06205C; " class="fa fa-globe" aria-hidden="true"></i>
+										
+												<span class="navmenuconstcolor">SA</span>
+											</a>
+											<ul class="mega-submenu navmenuconstcolor ">
+												
+												<li class="mega-menu-item"><a href="/en/sa/" class="mega-menu-link">Saudi Arabia</a>
+													<ul class="mega-submenu">
+														
+														<li class=""><a href='/en/sa/t/Images/logo.png'>English</a></li>
+														
+														<li class=""><a href='/ar/sa/t/Images/logo.png'>Arabic</a></li>
+														 
+													</ul>
+												</li>
+												<li class="mega-menu-item"><a href="/en/ae/" class="mega-menu-link">United Arab Emirates</a>
+													<ul class="mega-submenu">
+														
+														<li class=""><a href='/en/ae/t/Images/logo.png'>English</a></li>
+														
+														<li class=""><a href='/ar/ae/t/Images/logo.png'>Arabic</a></li>
+														 
+													</ul>
+												</li>
+											</ul>
+										</li> -->
+
+
+									<!-- 	<li class="mega-menu-item"><a  class="mega-menu-link">
+											<span class="navmenuconstcolor">EN</span>
+											</a>
+											<ul class="mega-submenu ">
+												 
+												
+												
+												
+												<li><a href='/en/tent/Images/logo.png'>English</a></li>
+												
+												<li><a href='/ar/tent/Images/logo.png'>العربيّة</a></li>
+												
+											</ul>
+										</li> -->
+									</ul>
+								</nav>
+								<div class="header_extra  d-flex flex-row align-items-center justify-content-end">
+
+									 <div class="header_search mobilelogin mr-10">
+										<a href="/en/sa/login/"><i class="fa fa-user cmt-textcolor-skincolor "></i></a>
+									</div>
+								<!-- 	<div class="header_cart">
+										<a href="cart.html" class="button-cart">
+											<div class="cart_icon"><i class="ti-shopping-cart"></i></div>
+											<div class="cart_count">0</div>
+										</a>
+									</div>  -->
+									
+
+									<div class="dropdown1">
+										<div class="header_btn">
+										<a class="cmt-btn cmt-btn-size-md cmt-btn-shape-square cmt-btn-style-fill cmt-btn-color-skincolor but-radius text-white"
+										   >Login</a>
+										</div>
+										<div class="dropdown1-content">
+										  <li><a href="/en/sa/login/">Individual Users Login</a></li>
+										  <li><a target="_blank" href="https://infotrack.naqelexpress.com/ClientInfoTrack/View/CustomerLogin.aspx" rel="nofollow">Business Users Login</a></li>
+										  
+										</div>
+									  </div>
+								<!-- 	<div class="header_btn">
+										<a class="cmt-btn cmt-btn-size-md cmt-btn-shape-square cmt-btn-style-fill cmt-btn-color-skincolor but-radius"
+										   href="/en/sa/login/">Login</a>
+									</div> -->
+									
+
+								</div> 
+
+								<!--Booktstrap start-->
+								<!-- Example single danger button -->
+
+								<!--bootstrap end-->
+							</div><!-- site-navigation end-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- site-header-menu end-->
+
+
+<!-- 
+		
+		 -->
+	
+</header>
+<!-- header end--> 
+
+
+
+
+<!-- Floating SPL  -->
+<div class="float-sm">
+
+	<div class="fl-fl float-fb">
+		<a class="" href="https://splonline.com.sa/en/national-address-1/" target="_blank">Update National Address</a>
+		<img src="/static/images/SPL_Logo.svg" alt="" height="40px" width="36px">
+		
+	  </div>
+</div>
+<!-- Floating SPL -->
+
+
+<script>
+		$("#country_selector").countrySelect({
+			
+			//defaultCountry: 'sa',
+			// onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+			//responsiveDropdown: true,
+			preferredCountries: ['sa']
+		});
+
+</script>
+
+ <script> 
+$(document).ready(function(){
+	
+	$('li.country').on('click', function() {
+		//sessionStorage.setItem("Countrycode", $(this).attr("data-country-code"));
+		//var countrylist = sessionStorage.getItem("Countrycode");
+		let countrycode = $(this).attr("data-country-code");
+		//console.log("countrycode",countrylist);
+		if (countrycode == 'ae'){
+			window.location.href = "/en/ae/"
+		}
+		else if (countrycode == 'bh'){
+			window.location.href = "/en/bh/"
+		}
+
+		else if (countrycode == 'om'){
+		window.location.href = "/en/om/"
+	}
+	
+		else{
+			window.location.href = "/en/sa/"
+		}
+
+});
+// //List if country we serve to be Bold
+// $("#country-list li:contains('Oman')").css('font-weight', 'bold');
+// $("#country-list li:contains('China')").css('font-weight', 'bold');
+// $("#country-list li:contains('Egypt')").css('font-weight', 'bold');
+// $("#country-list li:contains('Germany')").css('font-weight', 'bold');
+// $("#country-list li:contains('India (भारत)')").css('font-weight', 'bold');
+// $("#country-list li:contains('Jordan')").css('font-weight', 'bold');
+// $("#country-list li:contains('Kuwait')").css('font-weight', 'bold');
+// $("#country-list li:contains('Lebanon')").css('font-weight', 'bold');
+// $("#country-list li:contains('Morocco')").css('font-weight', 'bold');
+// $("#country-list li:contains('Oman')").css('font-weight', 'bold');
+// $("#country-list li:contains('Qatar')").css('font-weight', 'bold');
+$("#country-list li:contains('Saudi Arabia')").css('font-weight', 'bold');
+// $("#country-list li:contains('United Arab Emirates')").css('font-weight', 'bold');
+// $("#country-list li:contains('United Kingdom')").css('font-weight', 'bold');
+// $("#country-list li:contains('United States')").css('font-weight', 'bold');
+
+});
+
+</script>  
+
+	
+
+	
+
+<title>NAQEL Express</title>
+
+<style>
+
+
+#notfound {
+  position: relative;
+  height: 100vh;
+}
+
+#notfound .notfound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound {
+  max-width: 710px;
+  width: 100%;
+  padding-left: 190px;
+  line-height: 1.4;
+}
+
+.notfound .notfound-404 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150px;
+  height: 150px;
+}
+
+.notfound .notfound-404 h1 {
+  font-family: 'Passion One', cursive;
+  color: #06205C;
+  font-size: 150px;
+  letter-spacing: 15.5px;
+  margin: 0px;
+  font-weight: 900;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound h2 {
+  font-family: 'Raleway', sans-serif;
+  color: #292929;
+  font-size: 28px;
+    font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-top: 0;
+}
+
+.notfound p {
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.notfound a {
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+  text-transform: uppercase;
+  background: #fff;
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 40px;
+  color: #292929;
+  font-weight: 700;
+  -webkit-box-shadow: 0px 4px 15px -5px rgba(0, 0, 0, 0.3);
+          box-shadow: 0px 4px 15px -5px rgba(0, 0, 0, 0.3);
+  -webkit-transition: 0.2s all;
+  transition: 0.2s all;
+}
+
+.notfound a:hover {
+  color: #fff;
+  background-color: #06205C;
+}
+
+@media only screen and (max-width: 480px) {
+  .notfound {
+    text-align: center;
+  }
+  .notfound .notfound-404 {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .notfound {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+</style>
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-404">
+            <h1>
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </h1>
+        </div>
+        <h2>404 - Page not found</h2>
+        <p>The page you are looking for might have been removed had its name changed or is temporarily unavailable.</p>
+        <a href="/en/sa/">home page</a>
+    </div>
+</div>
+
+
+	
+
+	
+<!--footer start-->
+<footer class="footer widget-footer clearfix">
+	<div class="first-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6 col-md-6 col-lg-3 widget-area">
+					<div class="widget widget_text  clearfix">
+						<div class="footer-logo">
+							<img id="footer-logo-img" class="img-center" src="/static/images/logo-footer.png"
+								 alt="">
+						</div>
+						
+						<ul class="widget_contact_wrapper">
+							<li>
+								<i class="fa fa-map-marker cmt-textcolor-skincolor"></i>
+								<a target="_blank" href="https://goo.gl/maps/CLMrF1JiDT1iyK689">Head Office -Exit 17 Suly Area Riyadh, 11625 Kingdom of Saudi Arabia <br>Short Address REQA7924</a> 
+							</li>
+
+							<!-- <li>
+								<i class="fa fa-map-pin cmt-textcolor-skincolor"></i><a target="_blank"  href="https://goo.gl/maps/7CduHmqjxVyCR4rR6">
+								Head Office Short Address <strong>- REQA7924</strong></a>
+							</li> -->
+							<li>
+								<i class="fa fa-envelope-o cmt-textcolor-skincolor"></i>
+								<a href="mailto:care@naqel.com.sa">care@naqel.com.sa</a>
+							</li>
+                            <li>
+								<i class="fa fa-phone cmt-textcolor-skincolor"></i>Toll Free Number <br>
+								KSA - 8002464444<br>Bahrain – 80020800<br>Oman – 80064444
+							</li>
+							<li>
+								<i class="fa fa-phone cmt-textcolor-skincolor"></i>UAE - (+971) 43131800<br> Other Countries - (+966) 920020505
+							</li>
+
+						</ul>
+						
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-3 widget-area">
+					<div class="widget widget_nav_menu clearfix">
+						<h3 class="widget-title">Useful Links</h3>
+						<ul class="menu-footer-quick-links">
+							<li><a href="/en/About/AboutUs">About Us</a></li>
+							<li><a target="_blank" href="https://splonline.com.sa/">SPL</a></li>
+							<!-- <li><a href="/en/career">Career</a></li> -->
+							<li><a href="/en/About/CustomerCharter">Customer Charter</a></li>
+							<li><a target="_blank" href="/en/pdfs/terms-condition/">Terms and Conditions for Postal Services Beneficiaries</a></li>
+							<li><a href="/en/contactus/">Contact Us</a></li>
+							
+							<li><a target="_blank" href="/en/pdfs/regulations-for-postal-law/">Regulations for postal law</a></li>
+							
+							<li><a target="_blank" href="/en/pdfs/beneficiaries-rights-obligations">Protecting the Rights of Postal Service Beneficiaries Policy </a></li>
+							<li><a href="/en/About/NaqelAPIs">NAQEL APIs</a></li>
+
+
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-3 widget-area">
+					<div class="widget widget_nav_menu clearfix">
+						<h3 class="widget-title">Download NAQEL App</h3>
+						<ul class="menu-footer-quick-service-links">
+							<li><a href="/en/download_app/" target="_blank" class="d-block mb-2"> <img
+									src="/static/images/QR_app.jpg" class="img-thumbnail"/> </a></li>
+							<li><a target="_blank"
+								   href="https://play.google.com/store/apps/details?id=com.naqel.mobile.android"
+								   class="d-block mb-2" data-abc="true"><img class="img-responsive"
+																			 src="/static/images/Android3.png"
+																			 height="40" width="123"></a></li>
+							<li><a target="_blank" href="https://itunes.apple.com/sa/app/naqelexpress/id1297949272?mt=8"
+								   class="d-block mb-2" data-abc="true"><img class="img-responsive"
+																			 src="/static/images/ios.png"
+																			 height="40" width="123"></a></li>
+							<li><a target="_blank" href="https://appgallery.huawei.com/app/C104633367"
+									class="d-block mb-2" data-abc="true"><img class="img-responsive"
+																			src="/static/images/appgallery.png"
+																			height="40" width="123"></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-6 col-lg-3 widget-area">
+					<div class="widget widget-text clearfix">
+						<h4 class="widget-title">Subscribe to get the latest updates</h4>
+						<!-- <p>Subscribe to get latest updates.</p> -->
+						<form id="subscribe-form" class="newsletter-form"
+							  data-mailchimp="true">
+							<input type="hidden" name="csrfmiddlewaretoken" value="AmJUJXItJx1Vj9qgwLLkmuWWCZjkQkv449LUXCDDGkWVEh147audcNcg3lHblolH">
+
+							<div class="mailchimp-inputbox" id="subscribe-content">
+								<p>
+									<input type="email" id="post-text" name="post-text" placeholder="Email Add.."
+										   required="">
+								</p>
+								<p>
+									<button type="submit" onclick="SubscribeJs()"
+											class="cmt-btn cmt-btn-size-md cmt-btn-shape-round cmt-btn-style-fill cmt-bgcolor-red">
+										Send
+									</button>
+								</p>
+							</div>
+							<div id="subscribe-msg"></div>
+						</form>
+						<div class="widget d-flex pt-2">
+
+							<div class="social-icons m-0">
+								<h3 class="widget-title mb-10">Follow Us</h3>
+								<ul class="list-inline d-flex">
+									<li>
+										<a class=" tooltip-top" target="_blank" href="https://bit.ly/2Wzzoeg"
+										   data-tooltip="WhatsApp"><i
+												class="fa fa-whatsapp"></i></a>
+									</li>
+
+									<li>
+										<a class="tooltip-top" target="_blank"
+										   href="https://www.facebook.com/NaqelExpr" data-tooltip="Facebook"><i
+												class="fa fa-facebook"></i></a>
+									</li>
+									<li>
+										<a class="tooltip-top" target="_blank"
+										   href="https://www.instagram.com/naqelexpr/" data-tooltip="Instagram"><i
+												class="fa fa-instagram"></i></a>
+									</li>
+									<li>
+										<a class="tooltip-top" target="_blank"
+										   href="https://www.linkedin.com/company/naqel" data-tooltip="linkedin"><i
+												class="fa fa-linkedin"></i></a>
+									</li>
+
+									<li>
+										<a class="tooltip-top" target="_blank"
+										   href="https://www.youtube.com/channel/UCFHi7n8VcvU3E_p0l9X2Zcg "
+										   data-tooltip="Youtube"><i
+												class="fa fa-youtube"></i></a>
+									</li>
+
+									<li>
+										<a class="tooltip-top" target="_blank"
+										   href="https://twitter.com/naqelexpr?lang=en" data-tooltip="X"><i
+												class="bi bi-twitter-x"></i></a>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+						<div class="widget d-flex pt-2">
+													 <!-- Support Hours Section -->
+							<div class="support-hours mt-3">
+								<h4 class="widget-title">Support Hours</h4>
+								<p><strong>📞 Call Center:</strong> 8:00 AM – 8:00 PM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Sat–Thu)</p>
+								<p><strong>💬 Social Media:</strong> 8:00 AM – 2:00 AM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Daily)</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-footer-text">
+		<div class="container">
+			<div class="row copyright">
+				<div class="col-lg-7 col-md-7 col-sm-12">
+					<span>Copyright 2025 NAQEL Company, All Rights Reserved.</span>
+				</div>
+				<div class="col-lg-5 col-md-5 col-sm-12">
+					<div id="footer-nav-menu" class="d-flex flex-row justify-content-end">
+						<ul class="footer-nav-menu">
+							<li><a href="/en/privacypolicy/cookies-policy/">Privacy</a></li>
+							<li><a href="/en/About/AboutUs">About Us</a></li>
+							<li><a href="/en/contactus/">Contact Us</a></li>
+							<li><a href="/en/FAQ/">FAQ</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+<!--back-to-top start-->
+<a id="totop" href="#top" class="topbutcolor">
+	<i class="fa fa-angle-up"></i>
+</a>
+<!--back-to-top end-->
+
+
+
+<!-- <div id="bot-container"> </div> -->
+
+<style>
+	
+	#TFCallButtonFloat {
+    position: fixed !important;
+    bottom: 123px;
+    right: 43px;
+	z-index: 1;
+}
+	#totop.top-visible {
+    
+    bottom: 190px !important;
+	right: 50px !important;
+}
+
+@media (max-width: 992px) {
+   
+    #TFCallButtonFloat{
+      right: 7%;
+    }
+
+	#totop.top-visible{
+		right: 33px !important;
+	}
+  }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+<!--Start of TeleFinity WebRTC-SIP Gateway Script
+<script>
+	const jsScript = document.createElement('script');
+	jsScript.src = 'https://embed.webrtc.tele-finity.com/Script?Token=D5862D7936584EA9B40B97ECE253B85117DC1B45B5DC4ACDA2964782979DD44F';
+	document.body.appendChild(jsScript);
+	jsScript.addEventListener('load', () => {
+		var pTFRTCSIP = new Window.TFRTCSIP();
+		pTFRTCSIP.Init();
+	})
+</script>
+-->
+
+
+<!--Chat Bot Start-->
+<!-- 
+<embed id="frameContainer" src="https://d2ka5v04lnst0s.cloudfront.net/?lang=en" scrolling="no"
+	   frameborder="0"> -->
+
+<!--<embed id="frameContainer" src="https://dpmytyti69p6j.cloudfront.net/?lang=en" scrolling="no"-->
+<!--frameborder="0">-->
+
+<!--Chat Bot End-->
+
+
+
+<!-- Nouf test -->
+<script type="text/javascript">
+    var eventMethod = window.addEventListener
+      ? "addEventListener"
+      : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    eventer(messageEvent, function (e) {
+      console.log(e);
+      if (e.origin !== "https://dpmytyti69p6j.cloudfront.net") return;
+
+      if (e.data.open == true) {
+        document
+          .getElementById("frameContainer")
+          .classList.remove("en_lang_height");
+        // add class to show the full the cotainer
+        document
+          .getElementById("frameContainer")
+          .classList.add("chatbot-container");
+        document
+          .getElementById("frameContainer")
+          .classList.remove("ar_lang_height");
+      } else if (e.data.close_welcome == true) {
+        document
+          .getElementById("frameContainer")
+          .classList.remove("ar_lang_height");
+        document
+          .getElementById("frameContainer")
+          .classList.remove("en_lang_height");
+        document
+          .getElementById("frameContainer")
+          .classList.add("normal-height");
+      } else if (e.data.open == false) {
+        // remove this class
+        document
+          .getElementById("frameContainer")
+          .classList.remove("chatbot-container");
+        document
+          .getElementById("frameContainer")
+          .classList.add("normal-height");
+      }
+    });
+
+    // please set the url of the iframe chatbot url
+    var url_string = document.getElementById("frameContainer").src;
+    var url = new URL(url_string);
+    var show_welcome = url.searchParams.get("show_welcome");
+    var langauge = url.searchParams.get("lang");
+
+    if (show_welcome == "false") {
+      document.getElementById("frameContainer").classList.add("normal-height");
+    } else {
+      if (langauge == "ar") {
+        document
+          .getElementById("frameContainer")
+          .classList.add("ar_lang_height");
+      } else {
+        document
+          .getElementById("frameContainer")
+          .classList.add("en_lang_height");
+      }
+    }
+  </script>
+
+
+
+	
+
+
+	
+
+</div>
+
+
+<!-- <link rel="stylesheet" href="/static/assets/demo.css" >
+<script src="/static/assets/demo.js " defer></script> -->
+
+<link rel="stylesheet" href="/static/assets/cookieconsent.css" media="print" onload="this.media='all'">
+
+<script defer src="/static/js/cookieconsent.js"></script>
+<script defer src="/static/assets/cookieconsent-init.js"></script>
+
+<!-- 
+         
+
+
+<div class="wrapper" style= "display: block">
+    <img src="/static/images/Cookie1.png" alt="">
+    <div class="content">
+      <header>Cookies Consent</header>
+      <p>By clicking "Accept all", you agree NAQEL can store cookies on your device and disclose information in accordance with our<a class="item" href="/en/sa/cookiespolicy/cookies-policy/"> Cookie Policy.</a></p>
+      <div class="buttons">
+        <button >Accept all </button>
+        <a href="/en/sa/cookiespolicy/cookies-policy/" class="item">Learn more</a>
+      </div>
+    </div>
+  </div>
+
+ -->
+
+
+<!-- Javascript -->
+<script src="/static/js/jquery-3.6.0.min.js"></script>
+<script src="/static/js/jquery-migrate-3.3.2.min.js"></script>
+<script type="text/javascript" src="/en/jsi18n/"></script>
+<script src="/static/js/jquery.easing.js"></script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/jquery-waypoints.js"></script>
+<script src="/static/js/jquery-validate.js"></script>
+<script src="/static/js/jquery.prettyPhoto.js"></script>
+<script src="/static/js/slick.min.js"></script>
+<script src="/static/js/numinate.min.js"></script>
+<script src="/static/js/main.js"></script>
+<script src="/static/js/site.js"></script>
+<script type="text/javascript" src="/static/js/mdb.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/htmx.min.js" defer></script>
+<script>
+
+	function loadScript() {
+            var script = document.createElement('script');
+            script.src = 'https://wesaltalk-widget.s3.me-south-1.amazonaws.com/wesaltalk-widget.js?wesaltalkId=772f3ce1-1c79-4fa3-904d-267467f72739&region=KSA';
+            document.head.appendChild(script);
+        }
+
+
+	function getLocation() {
+  		if (navigator.geolocation) {
+		    navigator.geolocation.getCurrentPosition(showPosition);
+		} 
+		else {
+		    console.log("Geolocation is not supported by this browser.");
+		}
+
+	}
+
+	function showPosition(position) {
+
+		if (!(position.coords.latitude >= 16.959 && position.coords.latitude <= 32.152 &&
+		      position.coords.longitude >= 34.624 && position.coords.longitude <= 50.322))
+		{
+			loadScript();
+		}
+  		console.log("Latitude: " + position.coords.latitude +
+			  " Longitude: " + position.coords.longitude);
+		console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+	}
+	getLocation()
+	
+</script>
+<script type="text/javascript" charset="utf-8">
+  (function (g, e, n, es, ys) {
+    g['_genesysJs'] = e;
+    g[e] = g[e] || function () {
+      (g[e].q = g[e].q || []).push(arguments)
+    };
+    g[e].t = 1 * new Date();
+    g[e].c = es;
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+  })(window, 'Genesys', 'https://apps.mec1.pure.cloud/genesys-bootstrap/genesys.min.js', {
+    environment: 'prod-mec1',
+    deploymentId: 'ad0e2cb3-97b0-44ef-9022-9f231b14c789'
+  });
+</script>
+</body>
+</html>

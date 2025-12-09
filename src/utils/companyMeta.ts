@@ -122,6 +122,76 @@ const companyMetaMap: Record<string, CompanyMeta> = {
     description: "Pay Jinaken Company services"
   },
 
+  // Genacom
+  genacom: {
+    image: "/og-genacom.jpg",
+    title: "Genacom Payment",
+    description: "Pay Genacom delivery services"
+  },
+
+  // Al Baraka Group
+  albaraka: {
+    image: "/og-albaraka.jpg",
+    title: "Al Baraka Payment",
+    description: "Pay Al Baraka logistics services"
+  },
+
+  // Al Futtaim
+  alfuttaim: {
+    image: "/og-alfuttaim.jpg",
+    title: "Al Futtaim Payment",
+    description: "Pay Al Futtaim logistics services"
+  },
+
+  // Alshaya Group
+  alshaya: {
+    image: "/og-alshaya.jpg",
+    title: "Alshaya Payment",
+    description: "Pay Alshaya logistics services"
+  },
+
+  // Bahri
+  bahri: {
+    image: "/og-bahri.jpg",
+    title: "Bahri Payment",
+    description: "Pay Bahri shipping services"
+  },
+
+  // National Shipping
+  national: {
+    image: "/og-bahri.jpg",
+    title: "National Shipping Payment",
+    description: "Pay National Shipping services"
+  },
+
+  // ShipCo
+  shipco: {
+    image: "/og-shipco.jpg",
+    title: "ShipCo Payment",
+    description: "Pay ShipCo transport services"
+  },
+
+  // Hellmann
+  hellmann: {
+    image: "/og-hellmann.jpg",
+    title: "Hellmann Payment",
+    description: "Pay Hellmann logistics services"
+  },
+
+  // DSV
+  dsv: {
+    image: "/og-dsv.jpg",
+    title: "DSV Payment",
+    description: "Pay DSV logistics services"
+  },
+
+  // Agility
+  agility: {
+    image: "/og-agility.jpg",
+    title: "Agility Payment",
+    description: "Pay Agility logistics services"
+  },
+
   // Default fallback for unknown companies
   default: {
     image: "/og-aramex.jpg",
