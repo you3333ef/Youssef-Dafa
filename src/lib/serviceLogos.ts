@@ -2,13 +2,13 @@
 export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
   // UAE - الإمارات
   aramex: {
-    logo: "https://logo.clearbit.com/aramex.com",
+    logo: "/logos/aramex-logo.svg",
     colors: {
       primary: "#DC291E",
       secondary: "#FFFFFF"
     },
-    ogImage: "https://logo.clearbit.com/aramex.com",
-    heroImage: "https://logo.clearbit.com/aramex.com",
+    ogImage: "/og-aramex.jpg",
+    heroImage: "/og-aramex.jpg",
     description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
   },
   dhl: {
@@ -32,7 +32,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "خدمات شحن دولية موثوقة مع تتبع فوري للشحنات"
   },
   ups: {
-    logo: "https://www.ups.com/assets/resources/webcontent/images/ups-logo.svg",
+    logo: "/logos/ups-logo.svg",
     colors: {
       primary: "#351C15",
       secondary: "#FFB500"
@@ -54,7 +54,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   
   // Saudi Arabia - السعودية
   smsa: {
-    logo: "https://www.smsaexpress.com/images/logo.png",
+    logo: "/logos/smsa-logo.svg",
     colors: {
       primary: "#662D91",
       secondary: "#FF6600"
@@ -64,7 +64,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية"
   },
   zajil: {
-    logo: "https://zajil.com/assets/images/logo.png",
+    logo: "/logos/zajil-logo.png",
     colors: {
       primary: "#1C4587",
       secondary: "#FF9900"
@@ -74,7 +74,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "شركة سعودية رائدة في خدمات البريد السريع والشحن"
   },
   naqel: {
-    logo: "https://www.naqelexpress.com/images/logo.png",
+    logo: "/logos/naqel-logo.png",
     colors: {
       primary: "#E61838",
       secondary: "#002E60"
