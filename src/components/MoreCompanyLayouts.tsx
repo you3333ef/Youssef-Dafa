@@ -28,7 +28,7 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('naqel');
   
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen" style={{ backgroundColor: branding?.colors.surface, fontFamily: branding?.fonts.arabic }} dir="rtl">
       <div 
         className="h-24 shadow-lg"
         style={{ background: branding?.gradients.primary }}
@@ -36,13 +36,13 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
         <div className="container mx-auto h-full flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
             <div className="bg-white p-3 rounded-lg">
-              <span className="font-black text-2xl" style={{ color: branding?.colors.primary }}>
+              <span className="font-black text-2xl" style={{ color: branding?.colors.primary, fontFamily: branding?.fonts.arabic }}>
                 ناقل
               </span>
             </div>
             <div className="text-white">
-              <p className="font-bold text-xl">NAQEL EXPRESS</p>
-              <p className="text-sm opacity-90">#1 في المملكة العربية السعودية</p>
+              <p className="font-bold text-xl" style={{ fontFamily: branding?.fonts.primary }}>NAQEL EXPRESS</p>
+              <p className="text-sm opacity-90" style={{ fontFamily: branding?.fonts.arabic }}>#1 في المملكة العربية السعودية</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -69,7 +69,7 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
               >
                 <item.icon className="w-6 h-6" style={{ color: item.color }} />
               </div>
-              <p className="font-bold text-sm">{item.label}</p>
+              <p className="font-bold text-sm" style={{ fontFamily: branding?.fonts.arabic }}>{item.label}</p>
             </Card>
           ))}
         </div>
@@ -82,7 +82,7 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
                 style={{ borderBottomColor: branding?.colors.primary }}
               >
                 <CreditCard className="w-7 h-7" style={{ color: branding?.colors.primary }} />
-                <h2 className="text-2xl font-bold">الدفع الآمن</h2>
+                <h2 className="text-2xl font-bold" style={{ fontFamily: branding?.fonts.arabic }}>الدفع الآمن</h2>
               </div>
               {children}
             </Card>
@@ -94,8 +94,8 @@ export const NAQELLayout: React.FC<CompanyLayoutProps> = ({
                 className="p-6 text-white text-center"
                 style={{ background: branding?.gradients.primary }}
               >
-                <p className="text-sm opacity-90 mb-2">المبلغ الإجمالي</p>
-                <p className="text-3xl font-black">{amount}</p>
+                <p className="text-sm opacity-90 mb-2" style={{ fontFamily: branding?.fonts.arabic }}>المبلغ الإجمالي</p>
+                <p className="text-3xl font-black" style={{ fontFamily: branding?.fonts.primary }}>{amount}</p>
               </Card>
             )}
 
@@ -139,22 +139,23 @@ export const ZajilLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('zajil');
   
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F8FAFC' }} dir="rtl">
+    <div className="min-h-screen" style={{ backgroundColor: branding?.colors.surface, fontFamily: branding?.fonts.arabic }} dir="rtl">
       <div 
         className="h-20"
         style={{ background: branding?.gradients.primary }}
       >
         <div className="container mx-auto h-full flex items-center justify-between px-6">
           <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-lg">
-              <span className="font-black text-xl" style={{ color: branding?.colors.primary }}>
+            <div className="bg-white p-3 px-4 rounded-lg flex items-center gap-2">
+              <span className="font-black text-2xl" style={{ color: branding?.colors.primary, fontFamily: branding?.fonts.arabic }}>
                 زاجل
               </span>
+              <span className="font-bold text-sm" style={{ color: branding?.colors.secondary, fontFamily: branding?.fonts.primary }}>Zajil</span>
             </div>
-            <span className="text-white font-bold text-lg">Zajil Express</span>
+            <span className="text-white font-bold text-lg" style={{ fontFamily: branding?.fonts.primary }}>Zajil Express</span>
           </div>
           <div className="text-white text-sm">
-            <p className="font-semibold">Yes, Delivered</p>
+            <p className="font-semibold" style={{ fontFamily: branding?.fonts.primary }}>Yes, Delivered</p>
           </div>
         </div>
       </div>
@@ -162,7 +163,7 @@ export const ZajilLayout: React.FC<CompanyLayoutProps> = ({
       <div className="container mx-auto px-4 py-8">
         <Card className="p-8 max-w-4xl mx-auto shadow-2xl">
           <div className="flex items-center justify-between mb-6 pb-4 border-b">
-            <h1 className="text-3xl font-bold">عملية الدفع</h1>
+            <h1 className="text-3xl font-bold" style={{ fontFamily: branding?.fonts.arabic }}>عملية الدفع</h1>
             {amount && (
               <div className="text-left">
                 <p className="text-sm text-gray-600">المجموع</p>
@@ -209,7 +210,7 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('saudipost');
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-yellow-50" dir="rtl">
+    <div className="min-h-screen" style={{ backgroundColor: branding?.colors.surface, fontFamily: branding?.fonts.arabic }} dir="rtl">
       <div 
         className="h-24"
         style={{ background: branding?.gradients.primary }}
@@ -217,13 +218,13 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
         <div className="container mx-auto h-full flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
             <div className="bg-white p-3 rounded-xl flex items-center gap-2">
-              <span className="font-black text-xl" style={{ color: branding?.colors.primary }}>
+              <span className="font-black text-xl" style={{ color: branding?.colors.primary, fontFamily: branding?.fonts.arabic }}>
                 البريد السعودي
               </span>
             </div>
             <div className="text-white">
-              <p className="font-bold">Saudi Post | SPL</p>
-              <p className="text-xs opacity-90">المشغل الوطني للبريد</p>
+              <p className="font-bold" style={{ fontFamily: branding?.fonts.primary }}>Saudi Post | SPL</p>
+              <p className="text-xs opacity-90" style={{ fontFamily: branding?.fonts.arabic }}>المشغل الوطني للبريد</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -267,8 +268,8 @@ export const SaudiPostLayout: React.FC<CompanyLayoutProps> = ({
                 <CreditCard className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">بوابة الدفع الحكومية</h2>
-                <p className="text-sm text-gray-600">نظام دفع آمن ومعتمد</p>
+                <h2 className="text-2xl font-bold" style={{ fontFamily: branding?.fonts.arabic }}>بوابة الدفع الحكومية</h2>
+                <p className="text-sm text-gray-600" style={{ fontFamily: branding?.fonts.arabic }}>نظام دفع آمن ومعتمد</p>
               </div>
               {amount && (
                 <div className="mr-auto text-left">
@@ -309,7 +310,7 @@ export const UPSLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('ups');
   
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FAF8F7' }} dir="rtl">
+    <div className="min-h-screen" style={{ backgroundColor: branding?.colors.surface, fontFamily: branding?.fonts.arabic }} dir="rtl">
       <div 
         className="h-20"
         style={{ backgroundColor: branding?.colors.primary }}
@@ -320,11 +321,11 @@ export const UPSLayout: React.FC<CompanyLayoutProps> = ({
               className="p-3 rounded"
               style={{ backgroundColor: branding?.colors.secondary }}
             >
-              <span className="font-black text-2xl" style={{ color: branding?.colors.primary }}>
+              <span className="font-black text-2xl" style={{ color: branding?.colors.primary, fontFamily: branding?.fonts.primary }}>
                 UPS
               </span>
             </div>
-            <span className="text-white font-bold">United Parcel Service</span>
+            <span className="text-white font-bold" style={{ fontFamily: branding?.fonts.primary }}>United Parcel Service</span>
           </div>
           {amount && (
             <div 
@@ -347,8 +348,8 @@ export const UPSLayout: React.FC<CompanyLayoutProps> = ({
               <Shield className="w-8 h-8" style={{ color: branding?.colors.primary }} />
             </div>
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-1">Secure Checkout</h1>
-              <p className="text-gray-600">What can brown do for you today?</p>
+              <h1 className="text-3xl font-bold mb-1" style={{ fontFamily: branding?.fonts.primary }}>Secure Checkout</h1>
+              <p className="text-gray-600" style={{ fontFamily: branding?.fonts.primary }}>What can brown do for you today?</p>
             </div>
           </div>
 
