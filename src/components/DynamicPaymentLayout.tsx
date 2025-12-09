@@ -81,6 +81,8 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
     'shipco': heroShipco,
     'hellmann': heroHellmann,
     'dsv': heroDsv,
+    'agility': heroDsv,
+    'jinakum': heroJinakum,
   };
   
   const heroImage = heroImages[actualServiceKey.toLowerCase()] || heroBg;
@@ -103,55 +105,72 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
         }}
       >
         {showHero && (
-          <div className="relative w-full h-48 sm:h-64 overflow-hidden">
+          <div className="relative w-full h-28 sm:h-36 md:h-44 overflow-hidden">
             <img 
               src={heroImage}
               alt={serviceName}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+            <div className="absolute inset-0" style={{
+              background: `linear-gradient(135deg, ${branding.colors.primary}CC, ${branding.colors.primary}99)`
+            }} />
             
-            {/* Logo Overlay */}
-            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+            {/* Company Logo - Top Left */}
+            <div className="absolute top-2 left-2 sm:top-3 sm:left-4">
               {branding.logo && (
-                <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-1.5 sm:p-2 shadow-xl" style={{
+                  border: `2px solid ${branding.colors.primary}20`
+                }}>
                   <img 
                     src={branding.logo} 
                     alt={serviceName}
-                    className="h-12 sm:h-16 w-auto"
+                    className="h-6 sm:h-8 md:h-10 w-auto"
                     onError={(e) => e.currentTarget.style.display = 'none'}
                   />
                 </div>
               )}
             </div>
             
-            {/* Title Overlay */}
-            <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-              <div className="text-right">
-                <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-                <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+            {/* Service Name & Badge - Bottom Right */}
+            <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-4 text-white">
+              <div className="text-right space-y-0.5">
+                <h2 className="text-sm sm:text-base md:text-lg font-bold tracking-wide">{serviceName}</h2>
+                <div className="flex items-center gap-1.5 justify-end">
+                  <span className="text-[10px] sm:text-xs opacity-95">خدمة شحن آمنة</span>
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        <div className={`container mx-auto px-3 sm:px-4 ${showHero ? '-mt-8 sm:-mt-12 relative z-10' : 'py-8'}`}>
-          <div className="max-w-2xl mx-auto">
+        <div className={`container mx-auto px-2 sm:px-3 md:px-4 ${showHero ? '-mt-5 sm:-mt-7 md:-mt-8 relative z-10 pb-6' : 'py-6'}`}>
+          <div className="max-w-lg mx-auto">
             <Card 
-              className="p-4 sm:p-8 shadow-2xl border-t-4" 
+              className="p-3 sm:p-4 md:p-5 shadow-2xl backdrop-blur-sm" 
               style={{ 
-                borderTopColor: branding.colors.primary,
-                background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}02, ${branding.colors.secondary}02)`,
-                boxShadow: enhancedBranding?.shadows.lg || '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-                borderRadius: enhancedBranding?.borderRadius.lg || '12px'
+                borderTop: `3px solid ${branding.colors.primary}`,
+                background: showHero ? enhancedBranding?.colors.surface || '#FFFFFF' : `linear-gradient(135deg, ${branding.colors.primary}02, ${branding.colors.secondary}02)`,
+                boxShadow: `0 20px 50px ${branding.colors.primary}20`,
+                borderRadius: '12px'
               }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between mb-6 sm:mb-8">
-                <h1 className="text-xl sm:text-3xl font-bold">{title}</h1>
+              <div className="flex items-center justify-between mb-4 sm:mb-5 md:mb-6 pb-3 border-b" style={{
+                borderColor: `${branding.colors.primary}20`
+              }}>
+                <div>
+                  <h1 className="text-base sm:text-lg md:text-xl font-bold" style={{
+                    color: enhancedBranding?.colors.text || '#1A1A1A'
+                  }}>{title}</h1>
+                  <p className="text-[10px] sm:text-xs mt-0.5" style={{
+                    color: enhancedBranding?.colors.textLight || '#6E6E6E'
+                  }}>
+                    {description}
+                  </p>
+                </div>
                 
                 <div
-                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                  className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center shadow-md"
                   style={{
                     background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
                   }}
