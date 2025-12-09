@@ -32,93 +32,189 @@ export const AramexLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('aramex');
   
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div 
+      className="min-h-screen" 
+      dir="rtl"
+      style={{ 
+        background: branding?.colors.background || '#FFFFFF',
+        fontFamily: branding?.fonts.arabic || 'Cairo, sans-serif'
+      }}
+    >
       <div 
-        className="h-16 flex items-center px-6 shadow-md"
-        style={{ backgroundColor: branding?.colors.primary }}
+        className="h-20 flex items-center px-6 shadow-xl"
+        style={{ 
+          backgroundColor: branding?.colors.primary,
+          borderBottom: `3px solid ${branding?.colors.secondary || '#000000'}`
+        }}
       >
         <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded">
-              <Package className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+          <div className="flex items-center gap-4">
+            <div 
+              className="bg-white p-3 rounded-xl shadow-lg"
+              style={{ borderRadius: branding?.borderRadius?.md || '10px' }}
+            >
+              <Package className="w-7 h-7" style={{ color: branding?.colors.primary }} />
             </div>
-            <span className="text-white font-bold text-xl">Aramex</span>
+            <div>
+              <span className="text-white font-black text-2xl" style={{ fontFamily: branding?.fonts.primary }}>Aramex</span>
+              <p className="text-white/80 text-sm">خدمة الشحن السريع</p>
+            </div>
           </div>
           {trackingNumber && (
-            <Badge variant="secondary" className="bg-white/20 text-white">
-              <span className="text-xs">رقم التتبع:</span>
-              <span className="font-mono mr-1">{trackingNumber}</span>
+            <Badge 
+              variant="secondary" 
+              className="bg-white/20 text-white px-4 py-2 backdrop-blur-sm"
+              style={{ borderRadius: branding?.borderRadius?.sm || '8px' }}
+            >
+              <span className="text-sm font-medium">رقم التتبع:</span>
+              <span className="font-mono font-bold mr-2">{trackingNumber}</span>
             </Badge>
           )}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          <Card 
+            className="p-6 border-r-4 hover:shadow-xl transition-all"
+            style={{ 
+              borderRightColor: branding?.colors.primary,
+              borderRadius: branding?.borderRadius?.md || '10px',
+              background: branding?.colors.surface || '#F8F8F8'
+            }}
+          >
             <div className="flex items-center gap-4">
               <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${branding?.colors.primary}15` }}
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{ 
+                  background: branding?.gradients.primary || branding?.colors.primary,
+                  boxShadow: branding?.shadows.md
+                }}
               >
-                <Truck className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+                <Truck className="w-7 h-7 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">حالة الشحنة</p>
-                <p className="font-bold text-lg">قيد المعالجة</p>
+                <p className="text-sm font-medium" style={{ color: branding?.colors.textLight }}>حالة الشحنة</p>
+                <p className="font-bold text-lg" style={{ color: branding?.colors.text }}>قيد المعالجة</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
+          <Card 
+            className="p-6 border-r-4 hover:shadow-xl transition-all"
+            style={{ 
+              borderRightColor: branding?.colors.primary,
+              borderRadius: branding?.borderRadius?.md || '10px',
+              background: branding?.colors.surface || '#F8F8F8'
+            }}
+          >
             <div className="flex items-center gap-4">
               <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${branding?.colors.primary}15` }}
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{ 
+                  background: branding?.gradients.primary || branding?.colors.primary,
+                  boxShadow: branding?.shadows.md
+                }}
               >
-                <Clock className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+                <Clock className="w-7 h-7 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">وقت التسليم</p>
-                <p className="font-bold text-lg">2-3 أيام عمل</p>
+                <p className="text-sm font-medium" style={{ color: branding?.colors.textLight }}>وقت التسليم</p>
+                <p className="font-bold text-lg" style={{ color: branding?.colors.text }}>2-3 أيام عمل</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
+          <Card 
+            className="p-6 border-r-4 hover:shadow-xl transition-all"
+            style={{ 
+              borderRightColor: branding?.colors.primary,
+              borderRadius: branding?.borderRadius?.md || '10px',
+              background: branding?.colors.surface || '#F8F8F8'
+            }}
+          >
             <div className="flex items-center gap-4">
               <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${branding?.colors.primary}15` }}
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{ 
+                  background: branding?.gradients.primary || branding?.colors.primary,
+                  boxShadow: branding?.shadows.md
+                }}
               >
-                <Shield className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+                <Shield className="w-7 h-7 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">الدفع الآمن</p>
-                <p className="font-bold text-lg">{amount || 'محمي'}</p>
+                <p className="text-sm font-medium" style={{ color: branding?.colors.textLight }}>الدفع الآمن</p>
+                <p className="font-bold text-lg" style={{ color: branding?.colors.primary }}>{amount || 'محمي'}</p>
               </div>
             </div>
           </Card>
         </div>
 
-        <Card className="p-8 shadow-lg">
+        <Card 
+          className="p-10 shadow-2xl"
+          style={{
+            borderRadius: branding?.borderRadius?.lg || '16px',
+            boxShadow: branding?.shadows.lg || '0 20px 40px rgba(0,0,0,0.1)'
+          }}
+        >
           <div 
-            className="flex items-center gap-3 mb-6 pb-4 border-b-2"
+            className="flex items-center gap-4 mb-8 pb-6 border-b-2"
             style={{ borderBottomColor: branding?.colors.primary }}
           >
-            <CreditCard className="w-6 h-6" style={{ color: branding?.colors.primary }} />
-            <h2 className="text-2xl font-bold">إكمال عملية الدفع</h2>
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center"
+              style={{ background: branding?.gradients.primary }}
+            >
+              <CreditCard className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <h2 
+                className="text-3xl font-bold"
+                style={{ 
+                  color: branding?.colors.text,
+                  fontFamily: branding?.fonts.arabic
+                }}
+              >
+                إكمال عملية الدفع
+              </h2>
+              <p className="text-sm" style={{ color: branding?.colors.textLight }}>
+                أدخل بيانات الدفع للمتابعة
+              </p>
+            </div>
           </div>
 
           {children}
         </Card>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-blue-900">
-              <p className="font-semibold mb-1">معلومات مهمة</p>
-              <p>سيتم معالجة طلبك خلال 24 ساعة. جميع المعاملات مشفرة ومحمية.</p>
+        <div 
+          className="mt-8 p-6 rounded-xl"
+          style={{
+            background: branding?.colors.surface || '#F8F8F8',
+            border: `2px solid ${branding?.colors.border || '#E5E5E5'}`,
+            borderRadius: branding?.borderRadius?.md || '10px'
+          }}
+        >
+          <div className="flex items-start gap-4">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ background: branding?.colors.primary }}
+            >
+              <AlertCircle className="w-6 h-6 text-white" />
+            </div>
+            <div className="text-sm">
+              <p 
+                className="font-bold mb-2 text-base"
+                style={{ 
+                  color: branding?.colors.text,
+                  fontFamily: branding?.fonts.arabic
+                }}
+              >
+                معلومات مهمة
+              </p>
+              <p style={{ color: branding?.colors.textLight }}>
+                سيتم معالجة طلبك خلال 24 ساعة. جميع المعاملات مشفرة بأعلى معايير الأمان.
+              </p>
             </div>
           </div>
         </div>
@@ -136,62 +232,93 @@ export const DHLLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('dhl');
   
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #FFF9E6, #FFFFFF)' }} dir="rtl">
+    <div 
+      className="min-h-screen" 
+      dir="rtl"
+      style={{ 
+        background: 'linear-gradient(to bottom, #FFF9E6 0%, #FFFFFF 100%)',
+        fontFamily: branding?.fonts.arabic || 'Cairo, sans-serif'
+      }}
+    >
       <div 
-        className="h-20 flex items-center shadow-lg"
+        className="h-24 flex items-center shadow-2xl"
         style={{ 
-          background: `linear-gradient(135deg, ${branding?.colors.primary} 0%, ${branding?.colors.secondary} 100%)` 
+          background: `linear-gradient(90deg, ${branding?.colors.primary} 0%, ${branding?.colors.secondary} 100%)`,
+          borderBottom: `4px solid ${branding?.colors.secondary}`
         }}
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="bg-black p-3 rounded-lg">
-                <span className="text-4xl font-black text-yellow-400">DHL</span>
+            <div className="flex items-center gap-5">
+              <div 
+                className="bg-black p-4 rounded-xl shadow-2xl"
+                style={{ borderRadius: branding?.borderRadius?.md || '10px' }}
+              >
+                <span 
+                  className="text-5xl font-black"
+                  style={{ 
+                    color: branding?.colors.primary,
+                    fontFamily: 'Arial Black, sans-serif'
+                  }}
+                >
+                  DHL
+                </span>
               </div>
-              <div className="text-white">
-                <p className="text-sm opacity-90">EXPRESS SHIPPING</p>
-                <p className="text-xs opacity-75">Worldwide Delivery</p>
+              <div className="text-black">
+                <p className="text-lg font-bold">EXPRESS SHIPPING</p>
+                <p className="text-sm opacity-75">التوصيل السريع العالمي</p>
               </div>
             </div>
             {trackingNumber && (
-              <div className="bg-black/30 px-4 py-2 rounded-lg backdrop-blur-sm">
-                <p className="text-xs text-white/80">Tracking Number</p>
-                <p className="text-white font-mono font-bold">{trackingNumber}</p>
+              <div 
+                className="bg-black/90 px-6 py-3 rounded-xl backdrop-blur-sm"
+                style={{ borderRadius: branding?.borderRadius?.md || '10px' }}
+              >
+                <p className="text-xs text-yellow-400 mb-1 font-semibold">Tracking Number</p>
+                <p className="text-white font-mono font-bold text-lg">{trackingNumber}</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-2 mb-8">
-          <div className="flex items-center gap-2">
+      <div className="container mx-auto px-4 py-10">
+        <div className="flex items-center gap-3 mb-10 justify-center">
+          <div className="flex items-center gap-3">
             <div 
-              className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white"
-              style={{ backgroundColor: branding?.colors.secondary }}
+              className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shadow-lg"
+              style={{ 
+                background: branding?.gradients.secondary || branding?.colors.secondary,
+                fontFamily: 'Arial Black, sans-serif'
+              }}
             >
               1
             </div>
-            <span className="font-bold">معلومات الدفع</span>
+            <span className="font-bold text-lg" style={{ color: branding?.colors.text }}>معلومات الدفع</span>
           </div>
-          <ChevronRight className="w-5 h-5 text-gray-400" />
-          <div className="flex items-center gap-2 text-gray-400">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
+          <ChevronRight className="w-6 h-6" style={{ color: branding?.colors.textLight }} />
+          <div className="flex items-center gap-3" style={{ opacity: 0.5 }}>
+            <div 
+              className="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold"
+              style={{ borderColor: branding?.colors.border, color: branding?.colors.textLight }}
+            >
               2
             </div>
-            <span>التأكيد</span>
+            <span className="font-bold text-lg" style={{ color: branding?.colors.textLight }}>التأكيد</span>
           </div>
-          <ChevronRight className="w-5 h-5 text-gray-400" />
-          <div className="flex items-center gap-2 text-gray-400">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
+          <ChevronRight className="w-6 h-6" style={{ color: branding?.colors.textLight }} />
+          <div className="flex items-center gap-3" style={{ opacity: 0.5 }}>
+            <div 
+              className="w-10 h-10 rounded-full flex items-center justify-center border-2 font-bold"
+              style={{ borderColor: branding?.colors.border, color: branding?.colors.textLight }}
+            >
               3
             </div>
-            <span>الإكمال</span>
+            <span className="font-bold text-lg" style={{ color: branding?.colors.textLight }}>الإكمال</span>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
+        <div className="grid md:grid-cols-4 gap-5 mb-10">
           {[
             { icon: Truck, label: 'توصيل سريع', desc: '24-48 ساعة' },
             { icon: Shield, label: 'مضمون 100%', desc: 'حماية كاملة' },
@@ -200,38 +327,86 @@ export const DHLLayout: React.FC<CompanyLayoutProps> = ({
           ].map((item, idx) => (
             <Card 
               key={idx}
-              className="p-4 text-center border-2 hover:shadow-lg transition-all duration-300"
-              style={{ borderColor: `${branding?.colors.primary}30` }}
+              className="p-5 text-center border-2 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+              style={{ 
+                borderColor: branding?.colors.primary,
+                background: `${branding?.colors.primary}05`,
+                borderRadius: branding?.borderRadius?.md || '10px'
+              }}
             >
               <div 
-                className="w-12 h-12 mx-auto rounded-full flex items-center justify-center mb-2"
-                style={{ backgroundColor: `${branding?.colors.primary}20` }}
+                className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3"
+                style={{ 
+                  background: branding?.gradients.secondary || branding?.colors.secondary,
+                  boxShadow: branding?.shadows.md
+                }}
               >
-                <item.icon className="w-6 h-6" style={{ color: branding?.colors.secondary }} />
+                <item.icon className="w-8 h-8 text-white" />
               </div>
-              <p className="font-bold text-sm">{item.label}</p>
-              <p className="text-xs text-gray-600">{item.desc}</p>
+              <p className="font-bold text-base mb-1" style={{ color: branding?.colors.text }}>{item.label}</p>
+              <p className="text-sm" style={{ color: branding?.colors.textLight }}>{item.desc}</p>
             </Card>
           ))}
         </div>
 
         <Card 
-          className="p-8 shadow-2xl border-t-4"
-          style={{ borderTopColor: branding?.colors.secondary }}
+          className="p-10 shadow-2xl border-t-8"
+          style={{ 
+            borderTopColor: branding?.colors.secondary,
+            borderRadius: branding?.borderRadius?.lg || '16px',
+            boxShadow: branding?.shadows.lg || '0 25px 50px rgba(0,0,0,0.15)'
+          }}
         >
+          <div 
+            className="flex items-center gap-4 mb-8 pb-6 border-b-2"
+            style={{ borderBottomColor: branding?.colors.primary }}
+          >
+            <div
+              className="w-16 h-16 rounded-xl flex items-center justify-center"
+              style={{ 
+                background: branding?.gradients.primary,
+                borderRadius: branding?.borderRadius?.md || '10px'
+              }}
+            >
+              <CreditCard className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h2 
+                className="text-3xl font-black"
+                style={{ 
+                  color: branding?.colors.text,
+                  fontFamily: branding?.fonts.arabic
+                }}
+              >
+                DHL SECURE PAYMENT
+              </h2>
+              <p className="text-base" style={{ color: branding?.colors.textLight }}>
+                بوابة الدفع الآمنة
+              </p>
+            </div>
+          </div>
+
           {children}
         </Card>
 
         <div 
-          className="mt-6 p-6 rounded-xl text-white"
-          style={{ background: branding?.gradients.primary }}
+          className="mt-8 p-8 rounded-2xl text-white"
+          style={{ 
+            background: branding?.gradients.primary,
+            borderRadius: branding?.borderRadius?.lg || '16px',
+            boxShadow: branding?.shadows.lg
+          }}
         >
-          <div className="flex items-center gap-4">
-            <Shield className="w-12 h-12" />
+          <div className="flex items-center gap-5">
+            <div
+              className="w-16 h-16 bg-black/30 rounded-full flex items-center justify-center"
+            >
+              <Shield className="w-9 h-9" />
+            </div>
             <div>
-              <h3 className="font-bold text-lg mb-1">DHL Secure Payment</h3>
-              <p className="text-sm opacity-90">
-                معاملاتك محمية بأعلى معايير الأمان العالمية. نحن نستخدم تشفير SSL 256-bit
+              <h3 className="font-black text-xl mb-2" style={{ fontFamily: 'Arial Black, sans-serif' }}>DHL SECURE PAYMENT</h3>
+              <p className="text-base opacity-95">
+                معاملاتك محمية بأعلى معايير الأمان العالمية - تشفير SSL 256-bit
               </p>
             </div>
           </div>

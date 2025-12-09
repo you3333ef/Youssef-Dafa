@@ -2,43 +2,43 @@
 export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
   // UAE - الإمارات
   aramex: {
-    logo: "https://logo.clearbit.com/aramex.com",
+    logo: "/logos/aramex.svg",
     colors: {
       primary: "#DC291E",
       secondary: "#FFFFFF"
     },
-    ogImage: "https://logo.clearbit.com/aramex.com",
-    heroImage: "https://logo.clearbit.com/aramex.com",
+    ogImage: "/og-aramex.jpg",
+    heroImage: "/hero-aramex.jpg",
     description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
   },
   dhl: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
+    logo: "/logos/dhl.png",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
+    heroImage: "/hero-dhl.jpg",
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
   fedex: {
-    logo: "https://www.fedex.com/content/dam/fedex-com/logos/logo.png",
+    logo: "/logos/fedex-express.png",
     colors: {
       primary: "#4D148C",
       secondary: "#FF6600"
     },
     ogImage: "/og-fedex.jpg",
-    heroImage: "/og-fedex.jpg",
+    heroImage: "/hero-fedex.jpg",
     description: "خدمات شحن دولية موثوقة مع تتبع فوري للشحنات"
   },
   ups: {
-    logo: "https://www.ups.com/assets/resources/webcontent/images/ups-logo.svg",
+    logo: "/logos/ups.svg",
     colors: {
       primary: "#351C15",
       secondary: "#FFB500"
     },
     ogImage: "/og-ups.jpg",
-    heroImage: "/og-ups.jpg",
+    heroImage: "/hero-ups.jpg",
     description: "حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم"
   },
   empost: {
@@ -54,20 +54,20 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   
   // Saudi Arabia - السعودية
   smsa: {
-    logo: "https://www.smsaexpress.com/images/logo.png",
+    logo: "/logos/smsa.png",
     colors: {
       primary: "#662D91",
       secondary: "#FF6600"
     },
     ogImage: "/og-smsa.jpg",
-    heroImage: "/og-smsa.jpg",
+    heroImage: "/hero-smsa.jpg",
     description: "أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية"
   },
   zajil: {
     logo: "https://zajil.com/assets/images/logo.png",
     colors: {
-      primary: "#1C4587",
-      secondary: "#FF9900"
+      primary: "#1F3A6C",
+      secondary: "#E8A500"
     },
     ogImage: "/og-zajil.jpg",
     heroImage: "/og-zajil.jpg",
@@ -84,14 +84,14 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "حلول شحن متطورة وخدمات لوجستية متكاملة داخل المملكة"
   },
   saudipost: {
-    logo: "https://sp.com.sa/assets/images/logo.png",
+    logo: "/logos/saudipost.jpg",
     colors: {
-      primary: "#006C35",
-      secondary: "#FFB81C"
+      primary: "#00B4D8",
+      secondary: "#006C35"
     },
     ogImage: "/og-saudipost.jpg",
-    heroImage: "/og-saudipost.jpg",
-    description: "المشغل الوطني للبريد في المملكة العربية السعودية"
+    heroImage: "/hero-saudipost.jpg",
+    description: "المشغل الوطني للبريد في المملكة العربية السعودية - سبل"
   },
   
   // Kuwait - الكويت
@@ -106,13 +106,13 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في دولة الكويت"
   },
   dhlkw: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
+    logo: "/logos/dhl.png",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
+    heroImage: "/hero-dhl.jpg",
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
   
@@ -121,20 +121,20 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     logo: "https://www.qpost.qa/assets/images/logo.png",
     colors: {
       primary: "#8E1838",
-      secondary: "#FFFFFF"
+      secondary: "#F9D416"
     },
     ogImage: "/og-qpost.jpg",
     heroImage: "/og-qpost.jpg",
     description: "المشغل الوطني للبريد في دولة قطر"
   },
   dhlqa: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
+    logo: "/logos/dhl.png",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
+    heroImage: "/hero-dhl.jpg",
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
   
@@ -150,13 +150,13 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في سلطنة عُمان"
   },
   dhlom: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
+    logo: "/logos/dhl.png",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
+    heroImage: "/hero-dhl.jpg",
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
   
@@ -172,13 +172,13 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في مملكة البحرين"
   },
   dhlbh: {
-    logo: "https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg",
+    logo: "/logos/dhl.png",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
     },
     ogImage: "/og-dhl.jpg",
-    heroImage: "/og-dhl.jpg",
+    heroImage: "/hero-dhl.jpg",
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
 
@@ -186,82 +186,102 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   albaraka: {
     logo: "https://logo.clearbit.com/albaraka.com.tr",
     colors: {
-      primary: "#D89A00",
-      secondary: "#FFFFFF"
+      primary: "#006838",
+      secondary: "#D4AF37"
     },
-    ogImage: "https://logo.clearbit.com/albaraka.com.tr",
-    heroImage: "https://logo.clearbit.com/albaraka.com.tr",
+    ogImage: "/og-albaraka.jpg",
+    heroImage: "/hero-albaraka.jpg",
     description: "خدمات شحن وبنكية متكاملة تابعة لمجموعة البركة، حلول مالية ولوجستية متكاملة في الخليج"
   },
   alfuttaim: {
     logo: "https://logo.clearbit.com/alfuttaim.com",
     colors: {
-      primary: "#00559B",
-      secondary: "#FFFFFF"
+      primary: "#C8102E",
+      secondary: "#003087"
     },
-    ogImage: "https://logo.clearbit.com/alfuttaim.com",
-    heroImage: "https://logo.clearbit.com/alfuttaim.com",
+    ogImage: "/og-alfuttaim.jpg",
+    heroImage: "/hero-alfuttaim.jpg",
     description: "حلول لوجستية متكاملة تابعة لمجموعة فطيم، تشمل الشحن والتوزيع وخدمات سلسلة الإمداد في المنطقة"
   },
   alshaya: {
     logo: "https://logo.clearbit.com/alshaya.com",
     colors: {
-      primary: "#D71920",
-      secondary: "#000000"
+      primary: "#1A1A1A",
+      secondary: "#D4AF37"
     },
-    ogImage: "https://logo.clearbit.com/alshaya.com",
-    heroImage: "https://logo.clearbit.com/alshaya.com",
+    ogImage: "/og-alshaya.jpg",
+    heroImage: "/hero-alshaya.jpg",
     description: "مجموعة تعمل في الشحن والتوزيع لعلامات تجارية متعددة، وتوفر حلول التوزيع واللوجستيات للتجزئة"
   },
   national: {
     logo: "https://logo.clearbit.com/bahri.sa",
     colors: {
-      primary: "#003366",
-      secondary: "#FFFFFF"
+      primary: "#002E60",
+      secondary: "#E61838"
     },
-    ogImage: "https://logo.clearbit.com/bahri.sa",
-    heroImage: "https://logo.clearbit.com/bahri.sa",
+    ogImage: "/og-bahri.jpg",
+    heroImage: "/hero-bahri.jpg",
     description: "خدمات شحن وبحرية ولوجستيات شاملة، تغطي الشحن التجاري والبحري وخدمات النقل البحري داخل وخارج المملكة"
+  },
+  bahri: {
+    logo: "https://logo.clearbit.com/bahri.sa",
+    colors: {
+      primary: "#002E60",
+      secondary: "#E61838"
+    },
+    ogImage: "/og-bahri.jpg",
+    heroImage: "/hero-bahri.jpg",
+    description: "شركة بحري الوطنية للشحن - شريك رئيسي في النقل البحري والخدمات اللوجستية"
   },
   shipco: {
     logo: "https://logo.clearbit.com/shipco.com",
     colors: {
-      primary: "#0A5FB4",
-      secondary: "#FFFFFF"
+      primary: "#0066B2",
+      secondary: "#FF6600"
     },
-    ogImage: "https://logo.clearbit.com/shipco.com",
-    heroImage: "https://logo.clearbit.com/shipco.com",
+    ogImage: "/og-shipco.jpg",
+    heroImage: "/hero-shipco.jpg",
     description: "مزود خدمات شحن دولي ومحلي متخصص في الشحن البحري والجوي وحلول الشحن للمستوردين والمصدرين"
   },
   hellmann: {
     logo: "https://logo.clearbit.com/hellmann.com",
     colors: {
-      primary: "#0C4DA2",
-      secondary: "#FFFFFF"
+      primary: "#E90206",
+      secondary: "#005197"
     },
-    ogImage: "https://logo.clearbit.com/hellmann.com",
-    heroImage: "https://logo.clearbit.com/hellmann.com",
+    ogImage: "/og-hellmann.jpg",
+    heroImage: "/hero-hellmann.jpg",
     description: "شبكة دولية لخدمات الشحن واللوجستيات، تقدم خدمات الشحن الدولي والنقل البري والبحري والجوي"
   },
   dsv: {
     logo: "https://logo.clearbit.com/dsv.com",
     colors: {
-      primary: "#0056A6",
-      secondary: "#FFFFFF"
+      primary: "#192862",
+      secondary: "#003D82"
     },
-    ogImage: "https://logo.clearbit.com/dsv.com",
-    heroImage: "https://logo.clearbit.com/dsv.com",
+    ogImage: "/og-dsv.jpg",
+    heroImage: "/hero-dsv.jpg",
     description: "حلول شحن ولوجستيات متطورة تشمل الشحن الجوي، البحري، والنقل البري بالإضافة إلى تخزين وإدارة سلسلة الإمداد"
   },
   agility: {
     logo: "https://logo.clearbit.com/agility.com",
     colors: {
-      primary: "#003A63",
-      secondary: "#FFFFFF"
+      primary: "#ED1C24",
+      secondary: "#003DA5"
     },
-    ogImage: "https://logo.clearbit.com/agility.com",
-    heroImage: "https://logo.clearbit.com/agility.com",
+    ogImage: "/og-agility.jpg",
+    heroImage: "/hero-agility.jpg",
     description: "خدمات لوجستية وشحن متطورة وحلول سلسلة إمداد واسعة النطاق في المنطقة والعالم"
+  },
+  genacom: {
+    logo: "/og-genacom.jpg",
+    colors: {
+      primary: "#E91E63",
+      secondary: "#9C27B0"
+    },
+    ogImage: "/og-genacom.jpg",
+    heroImage: "/hero-genacom.jpg",
+    description: "شركة توصيل عُمانية محلية تقدم خدمات التوصيل والشحن داخل سلطنة عُمان مع شبكة فروع واسعة وخدمة تتبع"
   },
   jinaken: {
     logo: "/og-jinaken.jpg",
