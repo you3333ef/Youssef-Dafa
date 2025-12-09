@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getBrandingByCompany } from '@/lib/brandingSystem';
+import { getMoreShippingLayout } from './MoreShippingLayouts';
 import { 
   Package, 
   Truck, 
@@ -946,7 +947,8 @@ export const getCompanyLayout = (companyKey: string) => {
     case 'empost':
       return EmiratesPostLayout;
     default:
-      return AramexLayout;
+      const moreLayout = getMoreShippingLayout(key);
+      return moreLayout || AramexLayout;
   }
 };
 
