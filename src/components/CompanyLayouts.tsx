@@ -32,95 +32,48 @@ export const AramexLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('aramex');
   
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen" style={{ 
+      background: branding?.colors.surface || '#FAFAFA',
+      fontFamily: branding?.fonts.arabic 
+    }} dir="rtl">
       <div 
-        className="h-16 flex items-center px-6 shadow-md"
+        className="h-12 sm:h-14 md:h-16 flex items-center px-3 sm:px-4 md:px-6 shadow-md"
         style={{ backgroundColor: branding?.colors.primary }}
       >
         <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded">
-              <Package className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="bg-white p-1.5 sm:p-2 rounded">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: branding?.colors.primary }} />
             </div>
-            <span className="text-white font-bold text-xl">Aramex</span>
+            <span className="text-white font-bold text-sm sm:text-base md:text-lg">Aramex</span>
           </div>
           {trackingNumber && (
-            <Badge variant="secondary" className="bg-white/20 text-white">
-              <span className="text-xs">رقم التتبع:</span>
+            <Badge variant="secondary" className="bg-white/20 text-white text-[10px] sm:text-xs px-2 py-1">
+              <span>رقم التتبع:</span>
               <span className="font-mono mr-1">{trackingNumber}</span>
             </Badge>
           )}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${branding?.colors.primary}15` }}
-              >
-                <Truck className="w-6 h-6" style={{ color: branding?.colors.primary }} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">حالة الشحنة</p>
-                <p className="font-bold text-lg">قيد المعالجة</p>
-              </div>
+      <div className="container mx-auto px-2 sm:px-3 md:px-4 py-4 sm:py-6">
+        <div className="max-w-4xl mx-auto">
+          <Card className="p-4 sm:p-5 md:p-6 shadow-xl" style={{
+            borderTop: `3px solid ${branding?.colors.primary}`,
+            background: branding?.colors.surface
+          }}>
+            <div 
+              className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 pb-3 border-b"
+              style={{ borderBottomColor: `${branding?.colors.primary}30` }}
+            >
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: branding?.colors.primary }} />
+              <h2 className="text-base sm:text-lg md:text-xl font-bold" style={{
+                color: branding?.colors.text
+              }}>إكمال عملية الدفع</h2>
             </div>
+
+            {children}
           </Card>
-
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${branding?.colors.primary}15` }}
-              >
-                <Clock className="w-6 h-6" style={{ color: branding?.colors.primary }} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">وقت التسليم</p>
-                <p className="font-bold text-lg">2-3 أيام عمل</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${branding?.colors.primary}15` }}
-              >
-                <Shield className="w-6 h-6" style={{ color: branding?.colors.primary }} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">الدفع الآمن</p>
-                <p className="font-bold text-lg">{amount || 'محمي'}</p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <Card className="p-8 shadow-lg">
-          <div 
-            className="flex items-center gap-3 mb-6 pb-4 border-b-2"
-            style={{ borderBottomColor: branding?.colors.primary }}
-          >
-            <CreditCard className="w-6 h-6" style={{ color: branding?.colors.primary }} />
-            <h2 className="text-2xl font-bold">إكمال عملية الدفع</h2>
-          </div>
-
-          {children}
-        </Card>
-
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-blue-900">
-              <p className="font-semibold mb-1">معلومات مهمة</p>
-              <p>سيتم معالجة طلبك خلال 24 ساعة. جميع المعاملات مشفرة ومحمية.</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -136,68 +89,59 @@ export const DHLLayout: React.FC<CompanyLayoutProps> = ({
   const branding = getBrandingByCompany('dhl');
   
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #FFF9E6, #FFFFFF)' }} dir="rtl">
+    <div className="min-h-screen" style={{ 
+      background: branding?.colors.surface || '#FFFBF0',
+      fontFamily: branding?.fonts.arabic 
+    }} dir="rtl">
       <div 
-        className="h-20 flex items-center shadow-lg"
+        className="h-14 sm:h-16 md:h-20 flex items-center shadow-lg"
         style={{ 
           background: `linear-gradient(135deg, ${branding?.colors.primary} 0%, ${branding?.colors.secondary} 100%)` 
         }}
       >
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="bg-black p-3 rounded-lg">
-                <span className="text-4xl font-black text-yellow-400">DHL</span>
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+              <div className="bg-black p-2 sm:p-2.5 md:p-3 rounded-lg">
+                <span className="text-2xl sm:text-3xl md:text-4xl font-black" style={{ color: branding?.colors.primary }}>DHL</span>
               </div>
               <div className="text-white">
-                <p className="text-sm opacity-90">EXPRESS SHIPPING</p>
-                <p className="text-xs opacity-75">Worldwide Delivery</p>
+                <p className="text-xs sm:text-sm opacity-90">EXPRESS SHIPPING</p>
+                <p className="text-[10px] sm:text-xs opacity-75">Worldwide Delivery</p>
               </div>
             </div>
             {trackingNumber && (
-              <div className="bg-black/30 px-4 py-2 rounded-lg backdrop-blur-sm">
-                <p className="text-xs text-white/80">Tracking Number</p>
-                <p className="text-white font-mono font-bold">{trackingNumber}</p>
+              <div className="bg-black/30 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg backdrop-blur-sm">
+                <p className="text-[10px] sm:text-xs text-white/80">Tracking Number</p>
+                <p className="text-white font-mono font-bold text-xs sm:text-sm">{trackingNumber}</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-2 mb-8">
-          <div className="flex items-center gap-2">
+      <div className="container mx-auto px-2 sm:px-3 md:px-4 py-4 sm:py-6">
+        <div className="max-w-4xl mx-auto">
+          <Card className="p-4 sm:p-5 md:p-6 shadow-xl" style={{
+            borderTop: `3px solid ${branding?.colors.primary}`,
+            background: branding?.colors.surface
+          }}>
             <div 
-              className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white"
-              style={{ backgroundColor: branding?.colors.secondary }}
+              className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 pb-3 border-b"
+              style={{ borderBottomColor: `${branding?.colors.primary}30` }}
             >
-              1
+              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: branding?.colors.primary }} />
+              <h2 className="text-base sm:text-lg md:text-xl font-bold" style={{
+                color: branding?.colors.text
+              }}>إكمال عملية الدفع</h2>
             </div>
-            <span className="font-bold">معلومات الدفع</span>
-          </div>
-          <ChevronRight className="w-5 h-5 text-gray-400" />
-          <div className="flex items-center gap-2 text-gray-400">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
-              2
-            </div>
-            <span>التأكيد</span>
-          </div>
-          <ChevronRight className="w-5 h-5 text-gray-400" />
-          <div className="flex items-center gap-2 text-gray-400">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-300">
-              3
-            </div>
-            <span>الإكمال</span>
-          </div>
-        </div>
 
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          {[
-            { icon: Truck, label: 'توصيل سريع', desc: '24-48 ساعة' },
-            { icon: Shield, label: 'مضمون 100%', desc: 'حماية كاملة' },
-            { icon: MapPin, label: 'تتبع مباشر', desc: 'GPS Tracking' },
-            { icon: CheckCircle2, label: 'دفع آمن', desc: 'SSL Encrypted' }
-          ].map((item, idx) => (
+            {children}
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
             <Card 
               key={idx}
               className="p-4 text-center border-2 hover:shadow-lg transition-all duration-300"

@@ -10,6 +10,7 @@ import { usePayment, useUpdatePayment, useLink } from "@/hooks/useSupabase";
 import { Shield, CreditCard, Lock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 
 const PaymentCard = () => {
   const { id, paymentId } = useParams();
@@ -96,23 +97,26 @@ const PaymentCard = () => {
     navigate(`/pay/${id}/otp/${payment.id}`);
   };
   
+  const enhancedBranding = getBrandingByCompany(serviceKey);
+
   return (
     <div 
-      className="min-h-screen py-4 sm:py-12" 
+      className="min-h-screen py-4 sm:py-8" 
       dir="rtl"
       style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        background: enhancedBranding?.colors.background || '#FFFFFF',
+        fontFamily: enhancedBranding?.fonts.arabic || 'Almarai, sans-serif'
       }}
     >
-      <div className="container mx-auto px-3 sm:px-4">
-        <div className="max-w-md mx-auto">
+      <div className="container mx-auto px-2 sm:px-3 md:px-4">
+        <div className="max-w-lg mx-auto">
           {/* Company Header Image */}
           {branding.ogImage && (
-            <div className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-lg">
+            <div className="mb-4 sm:mb-5 rounded-xl overflow-hidden shadow-lg">
               <img 
                 src={branding.ogImage} 
                 alt={serviceName}
-                className="w-full h-32 sm:h-48 object-cover"
+                className="w-full h-28 sm:h-36 object-cover"
                 onError={(e) => e.currentTarget.style.display = 'none'}
               />
             </div>
@@ -120,20 +124,23 @@ const PaymentCard = () => {
           
           {/* Company Logo */}
           {branding.logo && (
-            <div className="text-center mb-4 sm:mb-6">
-              <img 
-                src={branding.logo} 
-                alt={serviceName}
-                className="h-10 sm:h-12 mx-auto"
+            <div className="text-center mb-4 sm:mb-5">
+              <div className="inline-block bg-white p-2 rounded-xl shadow-md" style={{
+                border: `2px solid ${branding.colors.primary}20`
+              }}>
+                <img 
+                  src={branding.logo} 
+                  alt={serviceName}
+                  className="h-8 sm:h-10 mx-auto"
                 onError={(e) => e.currentTarget.style.display = 'none'}
               />
             </div>
           )}
           
           {/* Security Badge */}
-          <div className="text-center mb-3 sm:mb-6">
+          <div className="text-center mb-4 sm:mb-5">
             <Badge 
-              className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white"
+              className="text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 text-white shadow-md"
               style={{
                 background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
               }}
@@ -143,19 +150,27 @@ const PaymentCard = () => {
             </Badge>
           </div>
           
-          <Card className="p-4 sm:p-8 shadow-elevated border-2" style={{ borderColor: `${branding.colors.primary}20` }}>
-            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <Card className="p-4 sm:p-5 md:p-6 shadow-2xl" style={{ 
+            borderTop: `3px solid ${branding.colors.primary}`,
+            background: enhancedBranding?.colors.surface || '#FFFFFF',
+            borderRadius: '12px'
+          }}>
+            <div className="flex items-center gap-2 sm:gap-2.5 mb-4 sm:mb-5">
               <div 
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center"
                 style={{
                   background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
                 }}
               >
-                <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <CreditCard className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg sm:text-2xl font-bold">بيانات البطاقة</h1>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <h1 className="text-base sm:text-lg md:text-xl font-bold" style={{
+                  color: enhancedBranding?.colors.text
+                }}>بيانات البطاقة</h1>
+                <p className="text-[10px] sm:text-xs" style={{
+                  color: enhancedBranding?.colors.textLight
+                }}>
                   {serviceName} - دفع آمن
                 </p>
               </div>

