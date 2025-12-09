@@ -77,7 +77,7 @@ const PaymentDetails = () => {
   };
   
   const paymentContent = (
-      {/* Shipping Info Display */}
+    <>
       {shippingInfo && (
         <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
           <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">تفاصيل الشحنة</h3>
@@ -107,7 +107,6 @@ const PaymentDetails = () => {
         </div>
       )}
       
-      {/* Payment Summary */}
       <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
         <div className="flex justify-between py-2 sm:py-3 border-b border-border text-sm sm:text-base">
           <span className="text-muted-foreground">الخدمة</span>
@@ -127,7 +126,6 @@ const PaymentDetails = () => {
         </div>
       </div>
     
-      {/* Payment Method */}
       <div className="mb-6 sm:mb-8">
         <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">طريقة الدفع</h3>
         <div 
@@ -149,7 +147,6 @@ const PaymentDetails = () => {
         </div>
       </div>
       
-      {/* Proceed Button */}
       <Button
         onClick={handleProceed}
         size="lg"
@@ -165,6 +162,7 @@ const PaymentDetails = () => {
       <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
         بالمتابعة، أنت توافق على الشروط والأحكام
       </p>
+    </>
   );
 
   return (
