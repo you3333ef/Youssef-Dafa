@@ -18,10 +18,8 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
   const serviceDescription = branding.description || `خدمة شحن موثوقة`;
   const ogDescription = description || `صفحة دفع آمنة ومحمية لخدمة ${serviceName} - ${serviceDescription}${amount ? ` - ${amount}` : ''}`;
 
-  // Use production domain to ensure links work when shared
-  const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://gentle-hamster-ed634c.netlify.app';
+  const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://phenomenal-druid-91b4db.netlify.app';
 
-  // Use company-specific OG image or hero image
   const ogImage = branding.ogImage
     ? `${productionDomain}${branding.ogImage}`
     : branding.heroImage
