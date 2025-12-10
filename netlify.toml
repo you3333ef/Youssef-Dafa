@@ -8,6 +8,15 @@
   NODE_VERSION = "20.12.1"
   NPM_FLAGS = "--legacy-peer-deps"
 
+# Edge Functions for dynamic meta tags
+[[edge_functions]]
+  function = "og-meta-injector"
+  path = "/r/*"
+
+[[edge_functions]]
+  function = "og-meta-injector"
+  path = "/pay/*"
+
 # SPA routing: All routes serve index.html for client-side routing
 # This MUST be the last redirect rule
 [[redirects]]
