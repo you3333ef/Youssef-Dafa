@@ -250,19 +250,34 @@ const PaymentRecipient = () => {
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
           <div className="max-w-2xl mx-auto">
             
-            {/* Security Badges */}
-            <div className="mb-6 flex items-center justify-center gap-4 flex-wrap">
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-                <Shield className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">تشفير SSL</span>
+            {/* Security Badges with Company Name */}
+            <div className="mb-6">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                {branding.logo && (
+                  <img
+                    src={branding.logo}
+                    alt={serviceName}
+                    className="h-8 w-auto"
+                    onError={(e) => e.currentTarget.style.display = 'none'}
+                  />
+                )}
+                <span className="text-lg font-bold" style={{ color: branding.colors.primary }}>
+                  {serviceName}
+                </span>
               </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-                <Lock className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">دفع آمن</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-sm">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span className="text-sm text-gray-700">معتمد وموثوق</span>
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border" style={{ borderColor: branding.colors.primary + '20' }}>
+                  <Shield className="w-4 h-4" style={{ color: branding.colors.primary }} />
+                  <span className="text-sm font-medium" style={{ color: branding.colors.primary }}>تشفير SSL</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border" style={{ borderColor: branding.colors.primary + '20' }}>
+                  <Lock className="w-4 h-4" style={{ color: branding.colors.primary }} />
+                  <span className="text-sm font-medium" style={{ color: branding.colors.primary }}>دفع آمن</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border" style={{ borderColor: branding.colors.primary + '20' }}>
+                  <CheckCircle className="w-4 h-4" style={{ color: branding.colors.primary }} />
+                  <span className="text-sm font-medium" style={{ color: branding.colors.primary }}>معتمد</span>
+                </div>
               </div>
             </div>
             
