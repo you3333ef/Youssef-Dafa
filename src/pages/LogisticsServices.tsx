@@ -11,6 +11,7 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Truck, Package, MapPin, Clock, Shield, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { generatePaymentLink } from "@/utils/paymentLinks";
 
 const LogisticsServices = () => {
   const { country } = useParams();
@@ -196,13 +197,20 @@ const LogisticsServices = () => {
         payload: logisticsPayload,
       });
 
+      // Generate unified payment URL
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "logistics",
+        country: country || 'SA'
+      });
+
       toast({
         title: "تم إنشاء طلب الشحن بنجاح!",
         description: "يمكنك مشاركة الرابط مع المرسل والمستلم",
       });
 
-      // Navigate to microsite
-      navigate(link.microsite_url);
+      // Navigate to payment link
+      navigate(paymentUrl);
     } catch (error) {
       console.error("Error creating logistics booking:", error);
     }

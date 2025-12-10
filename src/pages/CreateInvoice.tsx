@@ -10,6 +10,7 @@ import { Country, COUNTRIES, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, FileText, Plus, Trash2, Download, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { generatePaymentLink } from "@/utils/paymentLinks";
 
 interface InvoiceItem {
   id: string;
@@ -118,13 +119,20 @@ const CreateInvoice = () => {
         payload: invoicePayload,
       });
 
+      // Generate unified payment URL
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "invoices",
+        country: country || 'SA'
+      });
+
       toast({
         title: "تم إنشاء فاتورة بنجاح!",
         description: "يمكنك مشاركة الرابط مع العميل",
       });
 
-      // Navigate to microsite
-      navigate(link.microsite_url);
+      // Navigate to payment link
+      navigate(paymentUrl);
     } catch (error) {
       console.error("Error creating invoice:", error);
     }

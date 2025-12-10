@@ -16,6 +16,7 @@ import { formatCurrency, getCurrencyCode } from "@/lib/countryCurrencies";
 import { getBanksByCountry } from "@/lib/banks";
 import { useChalets, useCreateLink } from "@/hooks/useSupabase";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
+import { generatePaymentLink } from "@/utils/paymentLinks";
 import { ArrowRight, Home, Copy, Check, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -71,14 +72,14 @@ const CreateChaletLink = () => {
         payload,
       });
 
-      // Get dynamic currency and title based on country
-      const countryCurrency = getCurrency(country);
-      const countryTitle = getDefaultTitle(country);
+      // Generate unified payment URL using the new function
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "chalet",
+        country: country || 'SA'
+      });
 
-      // Generate dynamic microsite URL with currency and title parameters
-      const micrositeUrl = `${window.location.origin}/r/${country}/${link.type}/${link.id}?currency=${countryCurrency}&title=${encodeURIComponent(countryTitle)}`;
-
-      setCreatedLink(micrositeUrl);
+      setCreatedLink(paymentUrl);
     } catch (error) {
       console.error("Error creating link:", error);
       toast({

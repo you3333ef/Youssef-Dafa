@@ -10,6 +10,7 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Heart, Shield, Clock, Award, Phone, MapPin, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { generatePaymentLink } from "@/utils/paymentLinks";
 
 const HealthServices = () => {
   const { country } = useParams();
@@ -96,13 +97,20 @@ const HealthServices = () => {
         payload: bookingPayload,
       });
 
+      // Generate unified payment URL
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "health",
+        country: country || 'SA'
+      });
+
       toast({
         title: "تم إرسال طلب الحجز بنجاح!",
         description: "يمكنك مشاركة الرابط مع المريض",
       });
 
-      // Navigate to microsite
-      navigate(link.microsite_url);
+      // Navigate to payment link
+      navigate(paymentUrl);
     } catch (error) {
       console.error("Error creating booking:", error);
     }
