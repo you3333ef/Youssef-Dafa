@@ -80,7 +80,7 @@ const CreatePaymentLink = () => {
         description: "يمكنك الآن مشاركة الرابط مع العميل",
       });
     } catch (error) {
-      console.error("Error creating payment link:", error);
+      // Error creating payment link
       toast({
         title: "خطأ في إنشاء الرابط",
         description: "حدث خطأ أثناء إنشاء رابط السداد",

@@ -16,7 +16,7 @@ const isSupabaseConfigured = () => {
 
 export const SUPABASE_ENABLED = isSupabaseConfigured();
 
-if (!SUPABASE_ENABLED) {
+if (!SUPABASE_ENABLED && import.meta.env.DEV) {
   console.warn('⚠️ Supabase is not configured. Using fallback mode with localStorage.');
 }
 

