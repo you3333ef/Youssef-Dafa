@@ -715,8 +715,8 @@ export const shippingCompanyBranding: Record<string, CompanyBranding> = {
     nameEn: 'Hellmann Worldwide Logistics',
     nameAr: 'هايلمان العالمية',
     colors: {
-      primary: '#E90206',
-      secondary: '#005197',
+      primary: '#E32119',
+      secondary: '#004C99',
       accent: '#FFFFFF',
       background: '#FFFFFF',
       surface: '#FFF5F5',
@@ -754,8 +754,8 @@ export const shippingCompanyBranding: Record<string, CompanyBranding> = {
     nameEn: 'DSV',
     nameAr: 'دي إس في',
     colors: {
-      primary: '#003087',
-      secondary: '#0066CC',
+      primary: '#192862',
+      secondary: '#2D5AA0',
       accent: '#FFFFFF',
       background: '#FFFFFF',
       surface: '#F5F8FC',

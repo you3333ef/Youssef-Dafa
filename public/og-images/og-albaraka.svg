@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient_albaraka" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E32119;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F58220;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#gradient_albaraka)"/>
+  
+  <!-- Pattern Overlay -->
+  <g opacity="0.1">
+    <circle cx="100" cy="100" r="150" fill="white"/>
+    <circle cx="1100" cy="530" r="200" fill="white"/>
+    <circle cx="950" cy="150" r="100" fill="white"/>
+  </g>
+  
+  <!-- Content Card -->
+  <rect x="80" y="80" width="1040" height="470" rx="20" fill="white" fill-opacity="0.98" filter="url(#shadow)"/>
+  
+  <!-- Company Logo Area -->
+  <rect x="120" y="120" width="200" height="200" rx="15" fill="#E32119" fill-opacity="0.1"/>
+  <text x="220" y="240" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
+        text-anchor="middle" fill="#E32119">
+    AL
+  </text>
+  
+  <!-- Company Name - English -->
+  <text x="380" y="200" font-family="Arial, sans-serif" font-size="64" font-weight="bold" 
+        fill="#E32119">
+    Al Baraka Group
+  </text>
+  
+  <!-- Company Name - Arabic -->
+  <text x="380" y="270" font-family="Arial, sans-serif" font-size="42" 
+        fill="#F58220" direction="rtl">
+    مجموعة البركة
+  </text>
+  
+  <!-- Service Description -->
+  <text x="120" y="380" font-family="Arial, sans-serif" font-size="32" fill="#333333">
+    خدمات شحن وتوصيل احترافية
+  </text>
+  <text x="120" y="425" font-family="Arial, sans-serif" font-size="32" fill="#333333">
+    Professional Shipping &amp; Logistics Services
+  </text>
+  
+  <!-- Bottom Badge -->
+  <rect x="120" y="470" width="280" height="50" rx="25" fill="#E32119"/>
+  <text x="260" y="503" font-family="Arial, sans-serif" font-size="24" font-weight="600" 
+        text-anchor="middle" fill="white">
+    نظام دفع آمن ومحمي
+  </text>
+  
+  <!-- Trust Icons -->
+  <g transform="translate(900, 470)">
+    <rect width="180" height="50" rx="25" fill="#10B981" fill-opacity="0.1" stroke="#10B981" stroke-width="2"/>
+    <text x="90" y="33" font-family="Arial, sans-serif" font-size="20" font-weight="600" 
+          text-anchor="middle" fill="#10B981">
+      ✓ آمن ومعتمد
+    </text>
+  </g>
+</svg>
