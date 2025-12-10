@@ -217,34 +217,69 @@ const PaymentRecipient = () => {
         className="min-h-screen bg-background" 
         dir="rtl"
       >
-        {/* Hero Section */}
+        {/* Hero Section - Enhanced */}
         <div className="relative w-full h-48 sm:h-64 overflow-hidden">
           <img 
             src={heroImage}
             alt={serviceName}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
           
-          {/* Logo Overlay */}
+          {/* Animated Background Pattern */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, white 2px, transparent 2px), radial-gradient(circle at 80% 80%, white 2px, transparent 2px)',
+            backgroundSize: '60px 60px'
+          }} />
+          
+          {/* Logo Overlay - Enhanced */}
           <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-            {branding.logo && (
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+            <div 
+              className="rounded-2xl p-3 sm:p-4 shadow-2xl backdrop-blur-sm border border-white/20"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))'
+              }}
+            >
+              {branding.logo ? (
                 <img 
                   src={branding.logo} 
                   alt={serviceName}
                   className="h-12 sm:h-16 w-auto"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    img.style.display = 'none';
+                    const parent = img.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `<div class="h-12 sm:h-16 w-16 sm:w-20 flex items-center justify-center text-2xl font-bold" style="color: ${branding.colors.primary}">${serviceName.charAt(0)}</div>`;
+                    }
+                  }}
                 />
-              </div>
-            )}
+              ) : (
+                <div 
+                  className="h-12 sm:h-16 w-16 sm:w-20 flex items-center justify-center text-2xl font-bold"
+                  style={{ color: branding.colors.primary }}
+                >
+                  {serviceName.charAt(0)}
+                </div>
+              )}
+            </div>
           </div>
           
-          {/* Title Overlay */}
+          {/* Title Overlay - Enhanced */}
           <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
             <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+              <h2 className="text-lg sm:text-2xl font-bold mb-1 drop-shadow-lg">{serviceName}</h2>
+              <div className="flex items-center gap-2 justify-end">
+                <span 
+                  className="text-xs sm:text-sm px-2 py-1 rounded-full font-semibold backdrop-blur-sm"
+                  style={{
+                    background: `${branding.colors.primary}40`,
+                    border: `1px solid ${branding.colors.primary}60`
+                  }}
+                >
+                  خدمة شحن معتمدة
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -256,20 +291,44 @@ const PaymentRecipient = () => {
           
           <div className="max-w-2xl mx-auto">
             
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Card 
+              className="p-6 sm:p-10 shadow-2xl border-t-[6px] relative overflow-hidden" 
+              style={{ 
+                borderTopColor: branding.colors.primary,
+                boxShadow: `0 25px 50px -12px ${branding.colors.primary}25, 0 0 0 1px ${branding.colors.primary}10`
+              }}
+            >
+              {/* Decorative Corner Patterns */}
+              <div className="absolute top-0 left-0 w-40 h-40 opacity-[0.03] pointer-events-none" style={{
+                background: `radial-gradient(circle at 0% 0%, ${branding.colors.primary} 0%, transparent 70%)`
+              }} />
+              <div className="absolute bottom-0 right-0 w-40 h-40 opacity-[0.03] pointer-events-none" style={{
+                background: `radial-gradient(circle at 100% 100%, ${branding.colors.secondary} 0%, transparent 70%)`
+              }} />
+              
               <form onSubmit={handleProceed}>
-                <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">
-                    {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
-                  </h1>
+                <div className="flex items-center justify-between mb-8 sm:mb-10 relative z-10">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2.5 mb-2">
+                      <div className="w-1.5 h-9 rounded-full" style={{ background: `linear-gradient(to bottom, ${branding.colors.primary}, ${branding.colors.secondary})` }} />
+                      <h1 className="text-2xl sm:text-4xl font-extrabold" style={{ fontFamily: 'Cairo, sans-serif', color: branding.colors.primary }}>
+                        {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
+                      </h1>
+                    </div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mr-4">أدخل بياناتك بدقة لإكمال عملية الدفع</p>
+                  </div>
                   
                   <div
-                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                    className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center shadow-2xl relative overflow-hidden flex-shrink-0"
                     style={{
                       background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                      boxShadow: `0 12px 32px ${branding.colors.primary}50`
                     }}
                   >
-                    <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                    <div className="absolute inset-0 opacity-20" style={{
+                      background: 'radial-gradient(circle at 30% 30%, white 0%, transparent 70%)'
+                    }} />
+                    <CreditCard className="w-8 h-8 sm:w-12 sm:h-12 text-white drop-shadow-xl relative z-10" strokeWidth={2.5} />
                   </div>
                 </div>
 

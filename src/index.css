@@ -373,3 +373,442 @@ All colors MUST be HSL.
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 }
+
+/* ============================================
+   البنوك السعودية - Saudi Banks Themes
+   ============================================ */
+
+/* مصرف الراجحي - Al Rajhi Bank */
+.bank-alrajhi {
+  --bank-primary: #006C35;
+  --bank-secondary: #00843D;
+  --bank-gradient: linear-gradient(135deg, #006C35 0%, #00843D 100%);
+}
+
+/* البنك الأهلي - Al Ahli Bank */
+.bank-alahli {
+  --bank-primary: #00843D;
+  --bank-secondary: #006C35;
+  --bank-gradient: linear-gradient(135deg, #00843D 0%, #006C35 100%);
+}
+
+/* بنك الرياض - Riyad Bank */
+.bank-riyad {
+  --bank-primary: #0066B2;
+  --bank-secondary: #004B87;
+  --bank-gradient: linear-gradient(135deg, #0066B2 0%, #004B87 100%);
+}
+
+/* سامبا - Samba */
+.bank-samba {
+  --bank-primary: #E31E24;
+  --bank-secondary: #C41E3A;
+  --bank-gradient: linear-gradient(135deg, #E31E24 0%, #C41E3A 100%);
+}
+
+/* بنك الإنماء - Alinma Bank */
+.bank-alinma {
+  --bank-primary: #00A650;
+  --bank-secondary: #008C43;
+  --bank-gradient: linear-gradient(135deg, #00A650 0%, #008C43 100%);
+}
+
+/* بنك البلاد - AlBilad Bank */
+.bank-albilad {
+  --bank-primary: #1C4587;
+  --bank-secondary: #0F2D5C;
+  --bank-gradient: linear-gradient(135deg, #1C4587 0%, #0F2D5C 100%);
+}
+
+/* البنك العربي الوطني - Arab National Bank */
+.bank-anb {
+  --bank-primary: #00A551;
+  --bank-secondary: #008C45;
+  --bank-gradient: linear-gradient(135deg, #00A551 0%, #008C45 100%);
+}
+
+/* ============================================
+   البنوك الإماراتية - UAE Banks Themes
+   ============================================ */
+
+/* بنك الإمارات دبي الوطني - Emirates NBD */
+.bank-enbd {
+  --bank-primary: #D50032;
+  --bank-secondary: #B0002A;
+  --bank-gradient: linear-gradient(135deg, #D50032 0%, #B0002A 100%);
+}
+
+/* بنك أبوظبي الأول - First Abu Dhabi Bank */
+.bank-fab {
+  --bank-primary: #000000;
+  --bank-secondary: #333333;
+  --bank-gradient: linear-gradient(135deg, #000000 0%, #333333 100%);
+}
+
+/* بنك دبي الإسلامي - Dubai Islamic Bank */
+.bank-dib {
+  --bank-primary: #00923F;
+  --bank-secondary: #007833;
+  --bank-gradient: linear-gradient(135deg, #00923F 0%, #007833 100%);
+}
+
+/* ============================================
+   البنوك الكويتية - Kuwait Banks Themes
+   ============================================ */
+
+/* بنك الكويت الوطني - NBK */
+.bank-nbk {
+  --bank-primary: #005EB8;
+  --bank-secondary: #004B93;
+  --bank-gradient: linear-gradient(135deg, #005EB8 0%, #004B93 100%);
+}
+
+/* بيت التمويل الكويتي - KFH */
+.bank-kfh {
+  --bank-primary: #00923F;
+  --bank-secondary: #007833;
+  --bank-gradient: linear-gradient(135deg, #00923F 0%, #007833 100%);
+}
+
+/* ============================================
+   Bank Card Animations
+   ============================================ */
+
+@keyframes bank-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--bank-primary, #0066B2);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--bank-primary, #0066B2), 0 0 60px var(--bank-primary, #0066B2);
+  }
+}
+
+.bank-card-selected {
+  animation: bank-glow 2s ease-in-out infinite;
+}
+
+/* Bank Logo Shimmer Effect */
+@keyframes logo-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.bank-logo-shimmer {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255,255,255,0.3) 50%, 
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: logo-shimmer 3s ease-in-out infinite;
+}
+
+/* Premium Bank Card Shadow */
+.bank-card-premium {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.1);
+}
+
+.bank-card-premium:hover {
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    0 12px 24px rgba(0, 0, 0, 0.12),
+    0 24px 48px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* ============================================
+   Credit Card 3D Effects
+   ============================================ */
+
+.credit-card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.credit-card-3d:hover {
+  transform: rotateY(5deg) rotateX(2deg);
+}
+
+/* EMV Chip Animation */
+@keyframes chip-shine {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.emv-chip {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+  background-size: 200% 200%;
+  animation: chip-shine 3s ease-in-out infinite;
+}
+
+/* ============================================
+   Bank Portal Authentic Styling
+   ============================================ */
+
+.bank-portal-header {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.bank-portal-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    var(--bank-primary, #0066B2) 0%, 
+    var(--bank-secondary, #004B87) 100%
+  );
+  opacity: 0.95;
+}
+
+.bank-portal-pattern {
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 2px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.15) 2px, transparent 2px);
+  background-size: 60px 60px, 80px 80px;
+}
+
+/* ============================================
+   Typography - Bank-specific fonts
+   ============================================ */
+
+.font-bank-ar {
+  font-family: 'Cairo', 'Tajawal', 'Almarai', sans-serif;
+  font-weight: 700;
+}
+
+.font-bank-en {
+  font-family: 'Inter', 'Roboto', -apple-system, sans-serif;
+  font-weight: 600;
+}
+
+/* ============================================
+   Input Styles - Bank Portal Theme
+   ============================================ */
+
+.bank-input {
+  border-width: 2px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.bank-input:focus {
+  border-color: var(--bank-primary, #0066B2);
+  box-shadow: 0 0 0 4px rgba(var(--bank-primary-rgb, 0, 102, 178), 0.1);
+  transform: scale(1.01);
+}
+
+/* ============================================
+   Security Badges
+   ============================================ */
+
+.security-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.security-badge-ssl {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.security-badge-verified {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================
+   Loading States
+   ============================================ */
+
+.bank-skeleton {
+  background: linear-gradient(90deg, 
+    #f0f0f0 0%, 
+    #f8f8f8 50%, 
+    #f0f0f0 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   Responsive Utilities
+   ============================================ */
+
+@media (max-width: 640px) {
+  .bank-portal-header {
+    padding: 1.25rem;
+  }
+  
+  .credit-card-3d:hover {
+    transform: none;
+  }
+}
+
+/* ============================================
+   Premium Input Fields - Bank Portal Style
+   ============================================ */
+
+.premium-input {
+  border-width: 2px;
+  border-radius: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-input:focus {
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Input Icon Containers */
+.input-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+/* ============================================
+   Card Border Top Accent
+   ============================================ */
+
+.card-accent-top {
+  border-top-width: 6px;
+  position: relative;
+}
+
+.card-accent-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, currentColor 50%, transparent 100%);
+  opacity: 0.3;
+}
+
+/* ============================================
+   Hero Section Enhancements
+   ============================================ */
+
+.hero-gradient-overlay {
+  background: linear-gradient(to bottom, 
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.55) 50%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+}
+
+.hero-pattern-dots {
+  background-image: 
+    radial-gradient(circle at 15% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+    radial-gradient(circle at 85% 75%, rgba(255,255,255,0.1) 2px, transparent 2px),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 1.5px, transparent 1.5px);
+  background-size: 70px 70px, 90px 90px, 45px 45px;
+}
+
+/* Logo Container Premium */
+.logo-container-premium {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.98) 0%,
+    rgba(255,255,255,0.92) 100%
+  );
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(255,255,255,0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Badge Premium Style */
+.badge-premium {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   Button Enhancements - Company Branded
+   ============================================ */
+
+.btn-company-gradient {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-company-gradient::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-company-gradient:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-company-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Form Section Separator
+   ============================================ */
+
+.form-section-divider {
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    currentColor 20%,
+    currentColor 80%,
+    transparent 100%
+  );
+  opacity: 0.1;
+}
+
+/* ============================================
+   Amount Display Premium
+   ============================================ */
+
+.amount-display {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  background: linear-gradient(135deg, currentColor 0%, currentColor 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
