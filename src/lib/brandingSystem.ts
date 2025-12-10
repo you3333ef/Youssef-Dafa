@@ -672,7 +672,6 @@ export const governmentPaymentBranding: Record<string, CompanyBranding> = {
     websiteUrl: 'https://www.benefit.bh',
     description: 'الشبكة الإلكترونية للمعاملات المالية',
   },
-};
 
   maal: {
     id: 'maal',
