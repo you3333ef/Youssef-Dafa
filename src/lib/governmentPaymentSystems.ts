@@ -49,7 +49,7 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'سداد',
     nameEn: 'SADAD',
     description: 'نظام المدفوعات الوطني للخدمات الحكومية والفواتير',
-    logo: '/src/assets/gov-sadad-official.png',
+    logo: '/logos/sadad-logo.png',
     heroImage: '/src/assets/gov-hero-sadad.svg',
     website: 'https://www.sadad.com/',
     colors: {
@@ -133,7 +133,7 @@ export const governmentPaymentSystems: Record<string, GovernmentPaymentSystem> =
     nameAr: 'كي نت',
     nameEn: 'KNET',
     description: 'شبكة الكويت الوطنية للمدفوعات الإلكترونية',
-    logo: '/src/assets/gov-knet-logo.png',
+    logo: '/logos/knet-logo.svg',
     heroImage: '/src/assets/gov-hero-knet.svg',
     website: 'https://www.kpay.com.kw/',
     colors: {
