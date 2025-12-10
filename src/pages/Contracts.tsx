@@ -11,6 +11,7 @@ import { Country, getCountryByCode, COUNTRIES } from "@/lib/countries";
 import { ArrowRight, FileText, Scale, Download, Eye, Stamp, PenTool } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { generatePaymentLink } from "@/utils/paymentLinks";
 
 interface ContractTemplate {
   id: string;
@@ -247,13 +248,20 @@ const Contracts = () => {
         payload: contractPayload,
       });
 
+      // Generate unified payment URL
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "contracts",
+        country: country || 'SA'
+      });
+
       toast({
         title: "تم إنشاء العقد بنجاح!",
         description: "يمكنك مشاركة الرابط مع الأطراف المعنية",
       });
 
-      // Navigate to microsite
-      navigate(link.microsite_url);
+      // Navigate to payment link
+      navigate(paymentUrl);
     } catch (error) {
       console.error("Error creating contract:", error);
       toast({
