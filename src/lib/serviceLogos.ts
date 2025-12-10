@@ -24,7 +24,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   fedex: {
     logo: "/logos/fedex-logo.png",
     colors: {
-      primary: "#4D148C",
+      primary: "#660099",
       secondary: "#FF6600"
     },
     ogImage: "/og-fedex.jpg",
@@ -74,7 +74,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "شركة سعودية رائدة في خدمات البريد السريع والشحن"
   },
   naqel: {
-    logo: "https://www.naqelexpress.com/images/logo.png",
+    logo: "/logos/naqel-arabic-logo.png",
     colors: {
       primary: "#E61838",
       secondary: "#002E60"
@@ -184,27 +184,27 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
 
   // Real GCC Shipping Companies - Additional
   albaraka: {
-    logo: "https://logo.clearbit.com/albaraka.com.tr",
+    logo: "/logos/albaraka-logo.svg",
     colors: {
-      primary: "#D89A00",
-      secondary: "#FFFFFF"
+      primary: "#E32119",
+      secondary: "#F58220"
     },
-    ogImage: "https://logo.clearbit.com/albaraka.com.tr",
-    heroImage: "https://logo.clearbit.com/albaraka.com.tr",
+    ogImage: "/og-albaraka.jpg",
+    heroImage: "/hero-albaraka.jpg",
     description: "خدمات شحن وبنكية متكاملة تابعة لمجموعة البركة، حلول مالية ولوجستية متكاملة في الخليج"
   },
   alfuttaim: {
-    logo: "https://logo.clearbit.com/alfuttaim.com",
+    logo: "/logos/alfuttaim-logo.svg",
     colors: {
       primary: "#00559B",
-      secondary: "#FFFFFF"
+      secondary: "#0066CC"
     },
     ogImage: "https://logo.clearbit.com/alfuttaim.com",
     heroImage: "https://logo.clearbit.com/alfuttaim.com",
     description: "حلول لوجستية متكاملة تابعة لمجموعة فطيم، تشمل الشحن والتوزيع وخدمات سلسلة الإمداد في المنطقة"
   },
   alshaya: {
-    logo: "https://logo.clearbit.com/alshaya.com",
+    logo: "/logos/alshaya-logo.png",
     colors: {
       primary: "#D71920",
       secondary: "#000000"
@@ -236,18 +236,18 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   hellmann: {
     logo: "/logos/hellmann-logo.png",
     colors: {
-      primary: "#0C4DA2",
-      secondary: "#FFFFFF"
+      primary: "#E32119",
+      secondary: "#004C99"
     },
     ogImage: "https://logo.clearbit.com/hellmann.com",
     heroImage: "https://logo.clearbit.com/hellmann.com",
     description: "شبكة دولية لخدمات الشحن واللوجستيات، تقدم خدمات الشحن الدولي والنقل البري والبحري والجوي"
   },
   dsv: {
-    logo: "https://logo.clearbit.com/dsv.com",
+    logo: "/logos/dsv-logo.webp",
     colors: {
-      primary: "#0056A6",
-      secondary: "#FFFFFF"
+      primary: "#192862",
+      secondary: "#2D5AA0"
     },
     ogImage: "https://logo.clearbit.com/dsv.com",
     heroImage: "https://logo.clearbit.com/dsv.com",
