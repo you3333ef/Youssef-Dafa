@@ -2,13 +2,13 @@
 export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
   // UAE - الإمارات
   aramex: {
-    logo: "https://logo.clearbit.com/aramex.com",
+    logo: "/og-aramex.jpg",
     colors: {
       primary: "#DC291E",
       secondary: "#FFFFFF"
     },
-    ogImage: "https://logo.clearbit.com/aramex.com",
-    heroImage: "https://logo.clearbit.com/aramex.com",
+    ogImage: "/og-aramex.jpg",
+    heroImage: "/og-aramex.jpg",
     description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
   },
   dhl: {

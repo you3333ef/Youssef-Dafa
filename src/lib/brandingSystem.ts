@@ -82,7 +82,7 @@ export const shippingCompanyBranding: Record<string, CompanyBranding> = {
       md: '8px',
       lg: '12px',
     },
-    logoUrl: 'https://logo.clearbit.com/aramex.com',
+    logoUrl: '/og-aramex.jpg',
     websiteUrl: 'https://www.aramex.com',
     description: 'شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع',
   },
