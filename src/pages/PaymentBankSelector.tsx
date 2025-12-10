@@ -283,41 +283,33 @@ const PaymentBankSelector = () => {
                   )}
                   
                   <div className="flex flex-col items-center gap-2 sm:gap-3">
-                    {/* Bank Logo */}
-                    {bank.logo ? (
+                    {/* Bank Logo - Enhanced with gradient and icon */}
+                    <div 
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex flex-col items-center justify-center p-2 transition-all shadow-sm relative overflow-hidden"
+                      style={{
+                        background: `linear-gradient(135deg, ${bank.color}15, ${bank.color}25)`,
+                        borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
+                        borderWidth: selectedBank === bank.id ? '2px' : '1px',
+                        borderStyle: 'solid'
+                      }}
+                    >
+                      {/* Bank Icon */}
+                      <Building2 
+                        className="w-6 h-6 sm:w-7 sm:h-7 mb-0.5" 
+                        style={{ color: bank.color, opacity: 0.9 }}
+                        strokeWidth={2.5}
+                      />
+                      {/* Bank Initial Letters */}
                       <div 
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center p-2 sm:p-3 bg-white border transition-all"
-                        style={{
-                          borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
-                          borderWidth: selectedBank === bank.id ? '2px' : '1px',
-                        }}
-                      >
-                        <img 
-                          src={bank.logo} 
-                          alt={bank.nameAr}
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            // Fallback if image fails to load
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const parent = target.parentElement;
-                            if (parent) {
-                              parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-2xl font-bold" style="color: ${bank.color}">${bank.nameAr.charAt(0)}</div>`;
-                            }
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-white text-2xl sm:text-3xl font-bold"
-                        style={{
-                          backgroundColor: bank.color || govSystem.colors.primary,
+                        className="text-[10px] sm:text-xs font-bold tracking-wider"
+                        style={{ 
+                          color: bank.color,
                           fontFamily: govSystem.fonts.primaryAr
                         }}
                       >
-                        {bank.nameAr.charAt(0)}
+                        {bank.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('')}
                       </div>
-                    )}
+                    </div>
                     
                     {/* Bank Name */}
                     <div className="text-center w-full">

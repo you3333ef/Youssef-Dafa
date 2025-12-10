@@ -217,34 +217,69 @@ const PaymentRecipient = () => {
         className="min-h-screen bg-background" 
         dir="rtl"
       >
-        {/* Hero Section */}
+        {/* Hero Section - Enhanced */}
         <div className="relative w-full h-48 sm:h-64 overflow-hidden">
           <img 
             src={heroImage}
             alt={serviceName}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
           
-          {/* Logo Overlay */}
+          {/* Animated Background Pattern */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, white 2px, transparent 2px), radial-gradient(circle at 80% 80%, white 2px, transparent 2px)',
+            backgroundSize: '60px 60px'
+          }} />
+          
+          {/* Logo Overlay - Enhanced */}
           <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-            {branding.logo && (
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+            <div 
+              className="rounded-2xl p-3 sm:p-4 shadow-2xl backdrop-blur-sm border border-white/20"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85))'
+              }}
+            >
+              {branding.logo ? (
                 <img 
                   src={branding.logo} 
                   alt={serviceName}
                   className="h-12 sm:h-16 w-auto"
-                  onError={(e) => e.currentTarget.style.display = 'none'}
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    img.style.display = 'none';
+                    const parent = img.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `<div class="h-12 sm:h-16 w-16 sm:w-20 flex items-center justify-center text-2xl font-bold" style="color: ${branding.colors.primary}">${serviceName.charAt(0)}</div>`;
+                    }
+                  }}
                 />
-              </div>
-            )}
+              ) : (
+                <div 
+                  className="h-12 sm:h-16 w-16 sm:w-20 flex items-center justify-center text-2xl font-bold"
+                  style={{ color: branding.colors.primary }}
+                >
+                  {serviceName.charAt(0)}
+                </div>
+              )}
+            </div>
           </div>
           
-          {/* Title Overlay */}
+          {/* Title Overlay - Enhanced */}
           <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
             <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
+              <h2 className="text-lg sm:text-2xl font-bold mb-1 drop-shadow-lg">{serviceName}</h2>
+              <div className="flex items-center gap-2 justify-end">
+                <span 
+                  className="text-xs sm:text-sm px-2 py-1 rounded-full font-semibold backdrop-blur-sm"
+                  style={{
+                    background: `${branding.colors.primary}40`,
+                    border: `1px solid ${branding.colors.primary}60`
+                  }}
+                >
+                  خدمة شحن معتمدة
+                </span>
+              </div>
             </div>
           </div>
         </div>
