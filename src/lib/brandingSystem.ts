@@ -674,10 +674,377 @@ export const governmentPaymentBranding: Record<string, CompanyBranding> = {
   },
 };
 
+  maal: {
+    id: 'maal',
+    nameEn: 'Maal',
+    nameAr: 'مال',
+    colors: {
+      primary: '#2563EB',
+      secondary: '#1E40AF',
+      accent: '#FFFFFF',
+      background: '#FFFFFF',
+      surface: '#F0F4FF',
+      text: '#1A1A1A',
+      textLight: '#666666',
+      textOnPrimary: '#FFFFFF',
+      border: '#BFDBFE',
+    },
+    fonts: {
+      primary: 'Inter, Arial, sans-serif',
+      secondary: 'Arial, sans-serif',
+      arabic: 'Cairo, Tajawal, sans-serif',
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #2563EB 0%, #1E40AF 100%)',
+      secondary: 'linear-gradient(180deg, #2563EB 0%, #1E3A8A 100%)',
+      hero: 'linear-gradient(to right, #2563EB 0%, #1E40AF 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(37, 99, 235, 0.08)',
+      md: '0 4px 6px -1px rgba(37, 99, 235, 0.15)',
+      lg: '0 10px 15px -3px rgba(37, 99, 235, 0.20)',
+    },
+    borderRadius: {
+      sm: '6px',
+      md: '10px',
+      lg: '14px',
+    },
+    websiteUrl: 'https://www.maal.om',
+    description: 'نظام المدفوعات الإلكترونية العماني',
+  },
+
+  jaywan: {
+    id: 'jaywan',
+    nameEn: 'Jaywan',
+    nameAr: 'جيوان',
+    colors: {
+      primary: '#10B981',
+      secondary: '#059669',
+      accent: '#FFFFFF',
+      background: '#FFFFFF',
+      surface: '#F0FDF4',
+      text: '#1A1A1A',
+      textLight: '#666666',
+      textOnPrimary: '#FFFFFF',
+      border: '#BBF7D0',
+    },
+    fonts: {
+      primary: 'Inter, Arial, sans-serif',
+      secondary: 'Arial, sans-serif',
+      arabic: 'Cairo, Tajawal, sans-serif',
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+      secondary: 'linear-gradient(180deg, #10B981 0%, #047857 100%)',
+      hero: 'linear-gradient(to right, #10B981 0%, #059669 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(16, 185, 129, 0.08)',
+      md: '0 4px 6px -1px rgba(16, 185, 129, 0.15)',
+      lg: '0 10px 15px -3px rgba(16, 185, 129, 0.20)',
+    },
+    borderRadius: {
+      sm: '6px',
+      md: '10px',
+      lg: '14px',
+    },
+    description: 'نظام الدفع الإلكتروني السعودي',
+  },
+
+  qatarpay: {
+    id: 'qatarpay',
+    nameEn: 'Qatar Pay',
+    nameAr: 'قطر للمدفوعات',
+    colors: {
+      primary: '#8B1538',
+      secondary: '#F8D416',
+      accent: '#FFFFFF',
+      background: '#FFFFFF',
+      surface: '#FFF9E6',
+      text: '#1A1A1A',
+      textLight: '#666666',
+      textOnPrimary: '#FFFFFF',
+      border: '#FFE680',
+    },
+    fonts: {
+      primary: 'Inter, Arial, sans-serif',
+      secondary: 'Arial, sans-serif',
+      arabic: 'Cairo, Tajawal, sans-serif',
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #8B1538 0%, #F8D416 100%)',
+      secondary: 'linear-gradient(180deg, #8B1538 0%, #6B112A 100%)',
+      hero: 'linear-gradient(to right, #8B1538 0%, #F8D416 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(139, 21, 56, 0.08)',
+      md: '0 4px 6px -1px rgba(139, 21, 56, 0.15)',
+      lg: '0 10px 15px -3px rgba(139, 21, 56, 0.20)',
+    },
+    borderRadius: {
+      sm: '6px',
+      md: '10px',
+      lg: '14px',
+    },
+    description: 'نظام المدفوعات الوطني القطري',
+  },
+
+  uaepay: {
+    id: 'uaepay',
+    nameEn: 'UAE Pay',
+    nameAr: 'الإمارات للدفع',
+    colors: {
+      primary: '#009739',
+      secondary: '#C8102E',
+      accent: '#FFFFFF',
+      background: '#FFFFFF',
+      surface: '#F0FDF4',
+      text: '#1A1A1A',
+      textLight: '#666666',
+      textOnPrimary: '#FFFFFF',
+      border: '#BBF7D0',
+    },
+    fonts: {
+      primary: 'Inter, Arial, sans-serif',
+      secondary: 'Arial, sans-serif',
+      arabic: 'Cairo, Tajawal, sans-serif',
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #009739 0%, #C8102E 100%)',
+      secondary: 'linear-gradient(180deg, #009739 0%, #007B2F 100%)',
+      hero: 'linear-gradient(to right, #009739 0%, #C8102E 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(0, 151, 57, 0.08)',
+      md: '0 4px 6px -1px rgba(0, 151, 57, 0.15)',
+      lg: '0 10px 15px -3px rgba(0, 151, 57, 0.20)',
+    },
+    borderRadius: {
+      sm: '6px',
+      md: '10px',
+      lg: '14px',
+    },
+    description: 'نظام الدفع الإلكتروني الإماراتي',
+  },
+};
+
+export const healthServicesBranding: Record<string, CompanyBranding> = {
+  moh: {
+    id: 'moh',
+    nameEn: 'Ministry of Health',
+    nameAr: 'وزارة الصحة',
+    colors: {
+      primary: '#16A34A',
+      secondary: '#059669',
+      accent: '#FFFFFF',
+      background: '#FFFFFF',
+      surface: '#F0FDF4',
+      text: '#1A1A1A',
+      textLight: '#666666',
+      textOnPrimary: '#FFFFFF',
+      border: '#BBF7D0',
+    },
+    fonts: {
+      primary: 'Inter, Arial, sans-serif',
+      secondary: 'Arial, sans-serif',
+      arabic: 'Cairo, Tajawal, sans-serif',
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #16A34A 0%, #059669 100%)',
+      secondary: 'linear-gradient(180deg, #16A34A 0%, #047857 100%)',
+      hero: 'linear-gradient(to right, #16A34A 0%, #059669 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(22, 163, 74, 0.08)',
+      md: '0 4px 6px -1px rgba(22, 163, 74, 0.15)',
+      lg: '0 10px 15px -3px rgba(22, 163, 74, 0.20)',
+    },
+    borderRadius: {
+      sm: '8px',
+      md: '12px',
+      lg: '16px',
+    },
+    description: 'الخدمات الصحية الحكومية',
+  },
+
+  health: {
+    id: 'health',
+    nameEn: 'Health Services',
+    nameAr: 'الخدمات الصحية',
+    colors: {
+      primary: '#DC2626',
+      secondary: '#B91C1C',
+      accent: '#FFFFFF',
+      background: '#FFFFFF',
+      surface: '#FEF2F2',
+      text: '#1A1A1A',
+      textLight: '#666666',
+      textOnPrimary: '#FFFFFF',
+      border: '#FECACA',
+    },
+    fonts: {
+      primary: 'Inter, Arial, sans-serif',
+      secondary: 'Arial, sans-serif',
+      arabic: 'Cairo, Tajawal, sans-serif',
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #DC2626 0%, #B91C1C 100%)',
+      secondary: 'linear-gradient(180deg, #DC2626 0%, #991B1B 100%)',
+      hero: 'linear-gradient(to right, #DC2626 0%, #B91C1C 100%)',
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgba(220, 38, 38, 0.08)',
+      md: '0 4px 6px -1px rgba(220, 38, 38, 0.15)',
+      lg: '0 10px 15px -3px rgba(220, 38, 38, 0.20)',
+    },
+    borderRadius: {
+      sm: '8px',
+      md: '12px',
+      lg: '16px',
+    },
+    description: 'خدمات الرعاية الصحية والمواعيد الطبية',
+  },
+};
+
+export const chaletBranding: CompanyBranding = {
+  id: 'chalet',
+  nameEn: 'Chalet Booking',
+  nameAr: 'حجز الشاليهات',
+  colors: {
+    primary: '#7C3AED',
+    secondary: '#6D28D9',
+    accent: '#FFFFFF',
+    background: '#FFFFFF',
+    surface: '#FAF5FF',
+    text: '#1A1A1A',
+    textLight: '#666666',
+    textOnPrimary: '#FFFFFF',
+    border: '#E9D5FF',
+  },
+  fonts: {
+    primary: 'Inter, Arial, sans-serif',
+    secondary: 'Arial, sans-serif',
+    arabic: 'Cairo, Tajawal, sans-serif',
+  },
+  gradients: {
+    primary: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)',
+    secondary: 'linear-gradient(180deg, #7C3AED 0%, #5B21B6 100%)',
+    hero: 'linear-gradient(to right, #7C3AED 0%, #6D28D9 100%)',
+  },
+  shadows: {
+    sm: '0 1px 2px 0 rgba(124, 58, 237, 0.08)',
+    md: '0 4px 6px -1px rgba(124, 58, 237, 0.15)',
+    lg: '0 10px 15px -3px rgba(124, 58, 237, 0.20)',
+  },
+  borderRadius: {
+    sm: '8px',
+    md: '12px',
+    lg: '16px',
+  },
+  description: 'حجز الشاليهات والاستراحات السياحية',
+};
+
+export const logisticsBranding: CompanyBranding = {
+  id: 'logistics',
+  nameEn: 'Logistics Services',
+  nameAr: 'الخدمات اللوجستية',
+  colors: {
+    primary: '#EA580C',
+    secondary: '#C2410C',
+    accent: '#FFFFFF',
+    background: '#FFFFFF',
+    surface: '#FFF7ED',
+    text: '#1A1A1A',
+    textLight: '#666666',
+    textOnPrimary: '#FFFFFF',
+    border: '#FED7AA',
+  },
+  fonts: {
+    primary: 'Inter, Arial, sans-serif',
+    secondary: 'Arial, sans-serif',
+    arabic: 'Cairo, Tajawal, sans-serif',
+  },
+  gradients: {
+    primary: 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
+    secondary: 'linear-gradient(180deg, #EA580C 0%, #9A3412 100%)',
+    hero: 'linear-gradient(to right, #EA580C 0%, #C2410C 100%)',
+  },
+  shadows: {
+    sm: '0 1px 2px 0 rgba(234, 88, 12, 0.08)',
+    md: '0 4px 6px -1px rgba(234, 88, 12, 0.15)',
+    lg: '0 10px 15px -3px rgba(234, 88, 12, 0.20)',
+  },
+  borderRadius: {
+    sm: '6px',
+    md: '10px',
+    lg: '14px',
+  },
+  description: 'خدمات الشحن والنقل اللوجستي',
+};
+
+export const contractsBranding: CompanyBranding = {
+  id: 'contracts',
+  nameEn: 'Contracts & Legal',
+  nameAr: 'العقود والوثائق',
+  colors: {
+    primary: '#0F172A',
+    secondary: '#1E293B',
+    accent: '#F59E0B',
+    background: '#FFFFFF',
+    surface: '#F8FAFC',
+    text: '#1A1A1A',
+    textLight: '#666666',
+    textOnPrimary: '#FFFFFF',
+    border: '#E2E8F0',
+  },
+  fonts: {
+    primary: 'Inter, Arial, sans-serif',
+    secondary: 'Arial, sans-serif',
+    arabic: 'Cairo, Tajawal, sans-serif',
+  },
+  gradients: {
+    primary: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+    secondary: 'linear-gradient(180deg, #0F172A 0%, #020617 100%)',
+    hero: 'linear-gradient(to right, #0F172A 0%, #F59E0B 100%)',
+  },
+  shadows: {
+    sm: '0 1px 2px 0 rgba(15, 23, 42, 0.08)',
+    md: '0 4px 6px -1px rgba(15, 23, 42, 0.15)',
+    lg: '0 10px 15px -3px rgba(15, 23, 42, 0.20)',
+  },
+  borderRadius: {
+    sm: '4px',
+    md: '8px',
+    lg: '12px',
+  },
+  description: 'العقود والوثائق القانونية',
+};
+
 export const getBrandingByCompany = (companyKey: string): CompanyBranding | null => {
   const key = companyKey.toLowerCase();
-  return shippingCompanyBranding[key] || governmentPaymentBranding[key] || null;
+  return (
+    shippingCompanyBranding[key] ||
+    governmentPaymentBranding[key] ||
+    healthServicesBranding[key] ||
+    null
+  );
+};
+
+export const getBrandingByServiceType = (serviceType: string): CompanyBranding => {
+  switch (serviceType.toLowerCase()) {
+    case 'chalet':
+      return chaletBranding;
+    case 'logistics':
+      return logisticsBranding;
+    case 'contracts':
+      return contractsBranding;
+    case 'health':
+      return healthServicesBranding.health || healthServicesBranding.moh;
+    default:
+      return chaletBranding;
+  }
 };
 
 export const getAllShippingBranding = () => Object.values(shippingCompanyBranding);
 export const getAllGovernmentBranding = () => Object.values(governmentPaymentBranding);
+export const getAllHealthBranding = () => Object.values(healthServicesBranding);

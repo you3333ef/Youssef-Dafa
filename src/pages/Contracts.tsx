@@ -11,6 +11,20 @@ import { Country, getCountryByCode, COUNTRIES } from "@/lib/countries";
 import { ArrowRight, FileText, Scale, Download, Eye, Stamp, PenTool } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import { sendToTelegram } from "@/lib/telegram";
+import { getBrandingByServiceType } from "@/lib/brandingSystem";
+import { generatePaymentLink } from "@/utils/paymentLinks";
+import TelegramTest from "@/components/TelegramTest";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Copy, ExternalLink } from "lucide-react";
 
 interface ContractTemplate {
   id: string;
