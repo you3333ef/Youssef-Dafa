@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,13 @@ const CreateShippingLink = () => {
   const countryData = getCountryByCode(country?.toUpperCase() || "");
   const services = getServicesByCountry(country?.toUpperCase() || "");
   
+  const generateTrackingNumber = () => {
+    const prefix = selectedService.toUpperCase().substring(0, 3) || 'TRK';
+    const timestamp = Date.now().toString().slice(-8);
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `${prefix}${timestamp}${random}`;
+  };
+
   const [selectedService, setSelectedService] = useState("");
   const [trackingNumber, setTrackingNumber] = useState("");
   const [payerType, setPayerType] = useState("recipient"); // "recipient" or "sender"
@@ -63,6 +70,12 @@ const CreateShippingLink = () => {
     selectedService ? getServiceBranding(selectedService) : null,
     [selectedService]
   );
+
+  useEffect(() => {
+    if (selectedService && !trackingNumber) {
+      setTrackingNumber(generateTrackingNumber());
+    }
+  }, [selectedService]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

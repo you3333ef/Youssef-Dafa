@@ -122,6 +122,58 @@ const companyMetaMap: Record<string, CompanyMeta> = {
     description: "Pay Jinaken Company services"
   },
 
+  // Additional GCC Companies
+  albaraka: {
+    image: "/og-albaraka.jpg",
+    title: "Al Baraka Shipping Payment",
+    description: "Pay Al Baraka shipping services"
+  },
+  alfuttaim: {
+    image: "/og-alfuttaim.jpg",
+    title: "Al Futtaim Shipping Payment",
+    description: "Pay Al Futtaim logistics services"
+  },
+  alshaya: {
+    image: "/og-alshaya.jpg",
+    title: "Al Shaya Shipping Payment",
+    description: "Pay Al Shaya distribution services"
+  },
+  shipco: {
+    image: "/og-shipco.jpg",
+    title: "Shipco Payment",
+    description: "Pay Shipco international shipping services"
+  },
+  national: {
+    image: "/og-bahri.jpg",
+    title: "National Shipping Payment",
+    description: "Pay National shipping and maritime services"
+  },
+  bahri: {
+    image: "/og-bahri.jpg",
+    title: "Bahri Shipping Payment",
+    description: "Pay Bahri maritime and logistics services"
+  },
+  hellmann: {
+    image: "/og-hellmann.jpg",
+    title: "Hellmann Worldwide Payment",
+    description: "Pay Hellmann international logistics services"
+  },
+  dsv: {
+    image: "/og-dsv.jpg",
+    title: "DSV Logistics Payment",
+    description: "Pay DSV freight and logistics services"
+  },
+  agility: {
+    image: "/og-aramex.jpg",
+    title: "Agility Logistics Payment",
+    description: "Pay Agility supply chain services"
+  },
+  genacom: {
+    image: "/og-genacom.jpg",
+    title: "Genacom Shipping Payment",
+    description: "Pay Genacom shipping services"
+  },
+
   // Default fallback for unknown companies
   default: {
     image: "/og-aramex.jpg",
