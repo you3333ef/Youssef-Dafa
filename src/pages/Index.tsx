@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Sparkles, Shield, Zap } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import BottomNav from "@/components/BottomNav";
 
 const Index = () => {
   return (
@@ -106,7 +107,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+      <div className="h-20" />
     </div>
+    <BottomNav />
     </>
   );
 };

@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, FileText, Search, Eye, Edit, Trash2, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 
 interface Invoice {
   id: string;
@@ -87,14 +89,9 @@ const InvoiceList = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(`/services`)}
-            className="mb-4"
-          >
-            <ArrowRight className="w-4 h-4 ml-2" />
-            العودة للخدمات
-          </Button>
+          <div className="mb-4">
+            <BackButton label="العودة للخدمات" />
+          </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 mb-4">
@@ -193,6 +190,8 @@ const InvoiceList = () => {
           </Card>
         )}
       </div>
+      <div className="h-20" />
+      <BottomNav />
     </div>
   );
 };

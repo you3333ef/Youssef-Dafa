@@ -10,6 +10,8 @@ import { Country, getCountryByCode } from "@/lib/countries";
 import { ArrowRight, Heart, Shield, Clock, Award, Phone, MapPin, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 
 const HealthServices = () => {
   const { country } = useParams();
@@ -119,6 +121,9 @@ const HealthServices = () => {
   return (
     <div className="min-h-screen py-6" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
         {/* Header */}
         <div className="mb-6">
           <Button
@@ -364,6 +369,8 @@ const HealthServices = () => {
           </div>
         </div>
       </div>
+      <div className="h-20" />
+      <BottomNav />
     </div>
   );
 };

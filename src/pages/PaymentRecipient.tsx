@@ -37,6 +37,7 @@ import heroHellmann from "@/assets/hero-hellmann.jpg";
 import heroDsv from "@/assets/hero-dsv.jpg";
 import heroJinakum from "@/assets/hero-jinakum.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
+import BackButton from "@/components/BackButton";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -248,6 +249,10 @@ const PaymentRecipient = () => {
         </div>
 
         <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
+          <div className="mb-4">
+            <BackButton />
+          </div>
+          
           <div className="max-w-2xl mx-auto">
             
             <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>

@@ -10,6 +10,7 @@ import { usePayment, useUpdatePayment, useLink } from "@/hooks/useSupabase";
 import { Shield, CreditCard, Lock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import BackButton from "@/components/BackButton";
 
 const PaymentCard = () => {
   const { id, paymentId } = useParams();
@@ -105,6 +106,10 @@ const PaymentCard = () => {
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
+        
         <div className="max-w-md mx-auto">
           {/* Company Header Image */}
           {branding.ogImage && (

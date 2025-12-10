@@ -18,6 +18,8 @@ import { useChalets, useCreateLink } from "@/hooks/useSupabase";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { ArrowRight, Home, Copy, Check, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 
 const CreateChaletLink = () => {
   const { country } = useParams<{ country: string }>();
@@ -200,6 +202,9 @@ const CreateChaletLink = () => {
   return (
     <div className="min-h-screen py-6" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
         <div className="max-w-2xl mx-auto">
           {/* Header - Minimized */}
           <div className="mb-4">
@@ -359,6 +364,8 @@ const CreateChaletLink = () => {
           </Card>
         </div>
       </div>
+      <div className="h-20" />
+      <BottomNav />
     </div>
   );
 };
