@@ -268,13 +268,25 @@ const CreateShippingLink = () => {
                   <Hash className="w-3 h-3" />
                   رقم الشحنة *
                 </Label>
-                <Input
-                  value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="مثال: 1234567890"
-                  className="h-9 text-sm"
-                  required
-                />
+                <div className="flex gap-2">
+                  <Input
+                    value={trackingNumber}
+                    onChange={(e) => setTrackingNumber(e.target.value)}
+                    placeholder="مثال: 1234567890"
+                    className="h-9 text-sm flex-1"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setTrackingNumber(generateTrackingNumber())}
+                    className="h-9 px-3"
+                    title="توليد رقم شحنة جديد"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Payer Type Selection */}
