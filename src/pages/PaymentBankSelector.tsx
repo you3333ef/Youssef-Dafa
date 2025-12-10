@@ -100,7 +100,7 @@ const PaymentBankSelector = () => {
         payload: updatedPayload
       });
     } catch (error) {
-      console.error('Error saving bank selection:', error);
+      // Error saving bank selection
     }
 
     toast({
@@ -127,7 +127,7 @@ const PaymentBankSelector = () => {
         payload: updatedPayload
       });
     } catch (error) {
-      console.error('Error saving bank selection:', error);
+      // Error saving bank selection
     }
 
     navigate(`/pay/${id}/card-input`);

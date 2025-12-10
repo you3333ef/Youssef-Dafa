@@ -133,6 +133,7 @@ export const BrandedButton: React.FC<BrandedButtonProps> = ({
   className = '',
   ...props
 }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
   const branding = getBrandingByCompany(companyKey);
 
   if (!branding) {
@@ -164,8 +165,6 @@ export const BrandedButton: React.FC<BrandedButtonProps> = ({
     transform: 'translateY(-2px)',
     boxShadow: branding.shadows.lg,
   };
-
-  const [isHovered, setIsHovered] = React.useState(false);
 
   return (
     <button

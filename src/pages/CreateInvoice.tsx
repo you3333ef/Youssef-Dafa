@@ -126,7 +126,7 @@ const CreateInvoice = () => {
       // Navigate to microsite
       navigate(link.microsite_url);
     } catch (error) {
-      console.error("Error creating invoice:", error);
+      // Error creating invoice
     }
   };
 

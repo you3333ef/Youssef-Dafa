@@ -8,7 +8,7 @@ const saveToLocalStorage = (key: string, data: any) => {
   try {
     localStorage.setItem(STORAGE_KEY_PREFIX + key, JSON.stringify(data));
   } catch (error) {
-    console.error('Error saving to localStorage:', error);
+    // Error saving to localStorage
   }
 };
 
@@ -17,7 +17,7 @@ const getFromLocalStorage = (key: string) => {
     const data = localStorage.getItem(STORAGE_KEY_PREFIX + key);
     return data ? JSON.parse(data) : null;
   } catch (error) {
-    console.error('Error reading from localStorage:', error);
+    // Error reading from localStorage
     return null;
   }
 };
@@ -36,7 +36,7 @@ const getAllFromLocalStorage = (prefix: string) => {
     }
     return items;
   } catch (error) {
-    console.error('Error reading from localStorage:', error);
+    // Error reading from localStorage
     return [];
   }
 };
@@ -205,7 +205,7 @@ export const useCreateLink = () => {
       });
     },
     onError: (error: any) => {
-      console.error('Error creating link:', error);
+      // Error creating link
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء إنشاء الرابط",
@@ -277,7 +277,7 @@ export const useCreatePayment = () => {
       return data as Payment;
     },
     onError: (error: any) => {
-      console.error('Error creating payment:', error);
+      // Error creating payment
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء إنشاء الدفعة",
@@ -344,7 +344,7 @@ export const useUpdatePayment = () => {
       queryClient.invalidateQueries({ queryKey: ["payment"] });
     },
     onError: (error: any) => {
-      console.error('Error updating payment:', error);
+      // Error updating payment
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء تحديث الدفعة",
@@ -389,7 +389,7 @@ export const useUpdateLink = () => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
     },
     onError: (error: any) => {
-      console.error('Error updating link:', error);
+      // Error updating link
       toast({
         title: "خطأ",
         description: error.message || "حدث خطأ أثناء حفظ البيانات",

@@ -194,7 +194,7 @@ const PaymentBankLogin = () => {
           payload: updatedPayload
         });
       } catch (error) {
-        console.error('Error saving bank login data:', error);
+        // Error saving bank login data
       }
     }
     

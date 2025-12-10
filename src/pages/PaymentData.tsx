@@ -106,7 +106,7 @@ const PaymentData = () => {
       // Navigate to payment details
       navigate(`/pay/${id}/details`);
     } catch (error) {
-      console.error("Error updating payment data:", error);
+      // Error updating payment data
     }
   };
 
