@@ -54,7 +54,7 @@ const Services = () => {
       titleAr: "الخدمات الصحية",
       description: "خدمات طبية وصحية معتمدة",
       icon: Heart,
-      href: selectedCountry ? `/health/${selectedCountry.code}` : "#",
+      href: selectedCountry ? `/create/${selectedCountry.code}/health` : "#",
       gradient: "linear-gradient(135deg, hsl(0 85% 55%), hsl(10 80% 60%))",
     },
     {
@@ -62,7 +62,7 @@ const Services = () => {
       titleAr: "الخدمات اللوجستية",
       description: "حلول لوجستية متكاملة",
       icon: Truck,
-      href: selectedCountry ? `/logistics/${selectedCountry.code}` : "#",
+      href: selectedCountry ? `/create/${selectedCountry.code}/logistics` : "#",
       gradient: "linear-gradient(135deg, hsl(260 95% 55%), hsl(280 90% 60%))",
     },
     {
@@ -70,7 +70,7 @@ const Services = () => {
       titleAr: "العقود",
       description: "إدارة وتوثيق العقود الإلكترونية",
       icon: Building2,
-      href: selectedCountry ? `/contracts/${selectedCountry.code}` : "#",
+      href: selectedCountry ? `/create/${selectedCountry.code}/contract` : "#",
       gradient: "linear-gradient(135deg, hsl(40 95% 55%), hsl(30 90% 50%))",
     },
     {

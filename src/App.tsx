@@ -13,8 +13,11 @@ import InvoiceList from "./pages/InvoiceList";
 import InvoiceView from "./pages/InvoiceView";
 import InvoiceEdit from "./pages/InvoiceEdit";
 import HealthServices from "./pages/HealthServices";
+import CreateHealthLink from "./pages/CreateHealthLink";
 import LogisticsServices from "./pages/LogisticsServices";
+import CreateLogisticsLink from "./pages/CreateLogisticsLink";
 import Contracts from "./pages/Contracts";
+import CreateContractLink from "./pages/CreateContractLink";
 import Microsite from "./pages/Microsite";
 import PaymentRecipient from "./pages/PaymentRecipient";
 import PaymentDetails from "./pages/PaymentDetails";
@@ -50,8 +53,11 @@ const App = () => (
           <Route path="/invoices/:id/view" element={<InvoiceView />} />
           <Route path="/invoices/:id/edit" element={<InvoiceEdit />} />
           <Route path="/health/:country" element={<HealthServices />} />
+          <Route path="/create/:country/health" element={<CreateHealthLink />} />
           <Route path="/logistics/:country" element={<LogisticsServices />} />
+          <Route path="/create/:country/logistics" element={<CreateLogisticsLink />} />
           <Route path="/contracts/:country" element={<Contracts />} />
+          <Route path="/create/:country/contract" element={<CreateContractLink />} />
           <Route path="/r/:country/:type/:id" element={<Microsite />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
