@@ -42,7 +42,19 @@ export default async function handler(request: Request, context: { next: () => P
       'kwpost': `${origin}/og-kwpost.jpg`,
       'qpost': `${origin}/og-qpost.jpg`,
       'omanpost': `${origin}/og-omanpost.jpg`,
-      'bahpost': `${origin}/og-bahpost.jpg`
+      'bahpost': `${origin}/og-bahpost.jpg`,
+      'jinakum': `${origin}/og-jinakum.jpg`,
+      'jinaken': `${origin}/og-jinaken.jpg`,
+      'albaraka': `${origin}/og-albaraka.jpg`,
+      'alfuttaim': `${origin}/og-alfuttaim.jpg`,
+      'alshaya': `${origin}/og-alshaya.jpg`,
+      'shipco': `${origin}/og-shipco.jpg`,
+      'national': `${origin}/og-bahri.jpg`,
+      'bahri': `${origin}/og-bahri.jpg`,
+      'hellmann': `${origin}/og-hellmann.jpg`,
+      'dsv': `${origin}/og-dsv.jpg`,
+      'agility': `${origin}/og-aramex.jpg`,
+      'genacom': `${origin}/og-genacom.jpg`
     };
 
     // Get OG image for the company, fallback to aramex
@@ -66,7 +78,19 @@ export default async function handler(request: Request, context: { next: () => P
       'kwpost': 'البريد الكويتي',
       'qpost': 'البريد القطري',
       'omanpost': 'البريد العُماني',
-      'bahpost': 'البريد البحريني'
+      'bahpost': 'البريد البحريني',
+      'jinakum': 'جينا كم',
+      'jinaken': 'جينا كن',
+      'albaraka': 'البركة',
+      'alfuttaim': 'الفطيم',
+      'alshaya': 'الشايع',
+      'shipco': 'شيبكو',
+      'national': 'الوطنية للشحن',
+      'bahri': 'بحري',
+      'hellmann': 'هيلمان',
+      'dsv': 'دي إس في',
+      'agility': 'أجيليتي',
+      'genacom': 'جيناكوم'
     };
 
     const companyName = companyNames[company.toLowerCase()] || company;

@@ -11,6 +11,8 @@ import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency } from "@/utils/countryData";
 import SEOHead from "@/components/SEOHead";
+import BackButton from "@/components/BackButton";
+import BottomNav from "@/components/BottomNav";
 import {
   MapPin,
   Users,
@@ -149,6 +151,10 @@ const Microsite = () => {
       />
       <div className="min-h-screen py-12 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
+        
         <div className="max-w-4xl mx-auto">
           {/* Header Badge */}
           <div className="text-center mb-8">
@@ -580,6 +586,8 @@ const Microsite = () => {
           </Card>
         </div>
       </div>
+      <div className="h-20" />
+      <BottomNav />
     </div>
     </>
   );

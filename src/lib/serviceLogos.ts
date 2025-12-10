@@ -259,8 +259,8 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
       primary: "#003A63",
       secondary: "#FFFFFF"
     },
-    ogImage: "https://logo.clearbit.com/agility.com",
-    heroImage: "https://logo.clearbit.com/agility.com",
+    ogImage: "/og-aramex.jpg",
+    heroImage: "/og-aramex.jpg",
     description: "خدمات لوجستية وشحن متطورة وحلول سلسلة إمداد واسعة النطاق في المنطقة والعالم"
   },
   jinaken: {
