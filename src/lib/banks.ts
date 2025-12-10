@@ -3,7 +3,10 @@ export interface Bank {
   name: string;
   nameAr: string;
   logo?: string;
-  color?: string;
+  color: string;
+  colorSecondary?: string;
+  textColor?: string;
+  website?: string;
 }
 
 export interface BanksByCountry {
@@ -16,29 +19,41 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "alrajhi_bank",
       name: "Al Rajhi Bank",
       nameAr: "مصرف الراجحي",
-      logo: "https://www.alrajhibank.com.sa/ar/PublishingImages/sitelogo.png",
+      logo: "/logos/banks/alrajhi.svg",
       color: "#006C35",
+      colorSecondary: "#00843D",
+      textColor: "#FFFFFF",
+      website: "https://www.alrajhibank.com.sa",
     },
     {
       id: "alahli_bank",
       name: "Al Ahli Bank",
       nameAr: "البنك الأهلي التجاري",
-      logo: "https://www.alahli.com/assets/svg/alahli-logo-en.svg",
+      logo: "/logos/banks/alahli.svg",
       color: "#00843D",
+      colorSecondary: "#006C35",
+      textColor: "#FFFFFF",
+      website: "https://www.alahli.com",
     },
     {
       id: "riyad_bank",
       name: "Riyad Bank",
       nameAr: "بنك الرياض",
-      logo: "https://www.riyadbank.com/media/w5ej2p44/logo.svg",
+      logo: "/logos/banks/riyad.svg",
       color: "#0066B2",
+      colorSecondary: "#004B87",
+      textColor: "#FFFFFF",
+      website: "https://www.riyadbank.com",
     },
     {
       id: "samba_bank",
       name: "Samba Financial Group",
       nameAr: "مجموعة سامبا المالية",
-      logo: "https://www.samba.com/sites/all/themes/samba/images/logo-en.svg",
+      logo: "/logos/banks/samba.svg",
       color: "#E31E24",
+      colorSecondary: "#C41E3A",
+      textColor: "#FFFFFF",
+      website: "https://www.samba.com",
     },
     {
       id: "saudi_investment_bank",
@@ -65,8 +80,11 @@ export const BANKS_BY_COUNTRY: BanksByCountry = {
       id: "alinma_bank",
       name: "Alinma Bank",
       nameAr: "بنك الإنماء",
-      logo: "https://www.alinma.com/wps/wcm/connect/alinma-ar/alinma/resources/images/logo.svg",
+      logo: "/logos/banks/alinma.svg",
       color: "#00A650",
+      colorSecondary: "#008C43",
+      textColor: "#FFFFFF",
+      website: "https://www.alinma.com",
     },
     {
       id: "albilad_bank",

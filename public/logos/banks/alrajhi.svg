@@ -1,0 +1,11 @@
+<svg width="200" height="80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="alrajhi-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#006C35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00843D;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="80" fill="url(#alrajhi-gradient)" rx="8"/>
+  <text x="100" y="32" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">Al Rajhi Bank</text>
+  <text x="100" y="55" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">مصرف الراجحي</text>
+</svg>

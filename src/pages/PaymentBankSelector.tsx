@@ -283,33 +283,71 @@ const PaymentBankSelector = () => {
                   )}
                   
                   <div className="flex flex-col items-center gap-2 sm:gap-3">
-                    {/* Bank Logo - Enhanced with gradient and icon */}
-                    <div 
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex flex-col items-center justify-center p-2 transition-all shadow-sm relative overflow-hidden"
-                      style={{
-                        background: `linear-gradient(135deg, ${bank.color}15, ${bank.color}25)`,
-                        borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
-                        borderWidth: selectedBank === bank.id ? '2px' : '1px',
-                        borderStyle: 'solid'
-                      }}
-                    >
-                      {/* Bank Icon */}
-                      <Building2 
-                        className="w-6 h-6 sm:w-7 sm:h-7 mb-0.5" 
-                        style={{ color: bank.color, opacity: 0.9 }}
-                        strokeWidth={2.5}
-                      />
-                      {/* Bank Initial Letters */}
+                    {/* Bank Logo - Enhanced with actual logo or sophisticated fallback */}
+                    {bank.logo ? (
                       <div 
-                        className="text-[10px] sm:text-xs font-bold tracking-wider"
-                        style={{ 
-                          color: bank.color,
-                          fontFamily: govSystem.fonts.primaryAr
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center p-1 transition-all shadow-lg relative overflow-hidden"
+                        style={{
+                          background: 'white',
+                          borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
+                          borderWidth: selectedBank === bank.id ? '3px' : '1px',
+                          borderStyle: 'solid',
+                          boxShadow: selectedBank === bank.id ? `0 8px 24px ${bank.color}40` : '0 2px 8px rgba(0,0,0,0.1)'
                         }}
                       >
-                        {bank.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('')}
+                        <img 
+                          src={bank.logo} 
+                          alt={bank.nameAr}
+                          className="w-full h-full object-contain p-2"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `
+                                <div class="w-full h-full flex flex-col items-center justify-center gap-1">
+                                  <svg class="w-8 h-8 sm:w-10 sm:h-10" fill="${bank.color}" viewBox="0 0 24 24">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9 22 9 12 15 12 15 22"/>
+                                  </svg>
+                                  <div class="text-xs font-bold" style="color: ${bank.color}; font-family: ${govSystem.fonts.primaryAr}">
+                                    ${bank.nameAr.split(' ').slice(0, 2).map((word: string) => word.charAt(0)).join('')}
+                                  </div>
+                                </div>
+                              `;
+                            }
+                          }}
+                        />
                       </div>
-                    </div>
+                    ) : (
+                      <div 
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex flex-col items-center justify-center transition-all shadow-lg relative overflow-hidden"
+                        style={{
+                          background: `linear-gradient(135deg, ${bank.color}, ${bank.color}dd)`,
+                          borderColor: selectedBank === bank.id ? bank.color : 'transparent',
+                          borderWidth: selectedBank === bank.id ? '3px' : '0px',
+                          borderStyle: 'solid',
+                          boxShadow: selectedBank === bank.id ? `0 8px 24px ${bank.color}60` : `0 4px 12px ${bank.color}30`
+                        }}
+                      >
+                        {/* Bank Building Icon */}
+                        <Building2 
+                          className="w-8 h-8 sm:w-10 sm:h-10 mb-1" 
+                          style={{ color: 'white' }}
+                          strokeWidth={2.5}
+                        />
+                        {/* Bank Initials */}
+                        <div 
+                          className="text-sm sm:text-base font-bold tracking-widest"
+                          style={{ 
+                            color: 'white',
+                            fontFamily: govSystem.fonts.primaryAr,
+                            textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                          }}
+                        >
+                          {bank.nameAr.split(' ').slice(0, 2).map(word => word.charAt(0)).join('')}
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Bank Name */}
                     <div className="text-center w-full">
