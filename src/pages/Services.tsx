@@ -3,6 +3,8 @@ import { Home, Package, FileText, Heart, Truck, Building2, CreditCard } from "lu
 import ServiceCard from "@/components/ServiceCard";
 import { Country, COUNTRIES } from "@/lib/countries";
 import SEOHead from "@/components/SEOHead";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 import {
   Select,
   SelectContent,
@@ -98,6 +100,9 @@ const Services = () => {
       />
       <div className="min-h-screen py-6" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
         {/* Header - Minimized */}
         <div className="text-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">
@@ -164,7 +169,9 @@ const Services = () => {
           </div>
         )}
       </div>
+      <div className="h-20" />
     </div>
+    <BottomNav />
     </>
   );
 };

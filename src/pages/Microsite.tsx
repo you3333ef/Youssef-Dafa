@@ -186,9 +186,22 @@ const Microsite = () => {
             
             {/* Content */}
             <div className="p-8">
-              {/* Service Icon */}
-              <div className="aspect-video bg-gradient-card rounded-xl mb-6 flex items-center justify-center">
-                {isShipping ? (
+              {/* Company Logo/Icon */}
+              <div className="aspect-video bg-gradient-card rounded-xl mb-6 flex items-center justify-center p-4">
+                {isShipping && serviceBranding.logo ? (
+                  <img 
+                    src={serviceBranding.logo} 
+                    alt={serviceName}
+                    className="max-h-full max-w-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        parent.innerHTML = '<svg class="w-16 h-16 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>';
+                      }
+                    }}
+                  />
+                ) : isShipping ? (
                   <Truck className="w-16 h-16 text-muted-foreground" />
                 ) : isInvoice ? (
                   <FileText className="w-16 h-16 text-muted-foreground" />
@@ -207,7 +220,15 @@ const Microsite = () => {
               {isShipping && (
                 <div className="mb-6 p-4 bg-secondary/20 rounded-lg border">
                   <div className="flex items-center gap-3 mb-2">
-                    <Package className="w-5 h-5 text-primary" />
+                    {serviceBranding.logo && (
+                      <img 
+                        src={serviceBranding.logo} 
+                        alt={serviceName}
+                        className="h-8 w-auto object-contain"
+                        onError={(e) => e.currentTarget.style.display = 'none'}
+                      />
+                    )}
+                    {!serviceBranding.logo && <Package className="w-5 h-5 text-primary" />}
                     <h3 className="font-bold text-lg">{serviceName}</h3>
                   </div>
                   <p className="text-sm text-muted-foreground">{serviceDescription}</p>

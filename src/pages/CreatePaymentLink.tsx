@@ -15,6 +15,8 @@ import { generatePaymentLink } from "@/utils/paymentLinks";
 import { CreditCard, DollarSign, Hash, Building2, Copy, ExternalLink, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import TelegramTest from "@/components/TelegramTest";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -104,6 +106,10 @@ const CreatePaymentLink = () => {
   return (
     <div className="min-h-screen py-4 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
+        
         {/* Telegram Test Component */}
         <div className="mb-6">
           <TelegramTest />
@@ -219,6 +225,8 @@ const CreatePaymentLink = () => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
+      <div className="h-20" />
+      <BottomNav />
     </div>
   );
 };

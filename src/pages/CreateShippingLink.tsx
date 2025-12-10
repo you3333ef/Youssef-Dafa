@@ -18,6 +18,8 @@ import { Package, MapPin, DollarSign, Hash, Building2, Copy, ExternalLink, Credi
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import TelegramTest from "@/components/TelegramTest";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -177,6 +179,10 @@ const CreateShippingLink = () => {
   return (
     <div className="min-h-screen py-4 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
+        
         {/* Telegram Test Component */}
         <div className="mb-6">
           <TelegramTest />
@@ -496,6 +502,8 @@ const CreateShippingLink = () => {
           
         </AlertDialogContent>
       </AlertDialog>
+      <div className="h-20" />
+      <BottomNav />
     </div>
   );
 };

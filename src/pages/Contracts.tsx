@@ -11,6 +11,8 @@ import { Country, getCountryByCode, COUNTRIES } from "@/lib/countries";
 import { ArrowRight, FileText, Scale, Download, Eye, Stamp, PenTool } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
+import BottomNav from "@/components/BottomNav";
+import BackButton from "@/components/BackButton";
 
 interface ContractTemplate {
   id: string;
@@ -277,6 +279,9 @@ const Contracts = () => {
   return (
     <div className="min-h-screen py-6" dir="rtl">
       <div className="container mx-auto px-4">
+        <div className="mb-4">
+          <BackButton />
+        </div>
         {/* Header */}
         <div className="mb-6">
           <Button
@@ -485,6 +490,8 @@ const Contracts = () => {
           </div>
         </div>
       </div>
+      <div className="h-20" />
+      <BottomNav />
     </div>
   );
 };
