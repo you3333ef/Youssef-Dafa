@@ -34,49 +34,49 @@ export const AramexLayout: React.FC<CompanyLayoutProps> = ({
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
       <div 
-        className="h-16 flex items-center px-6 shadow-md"
+        className="h-12 sm:h-14 md:h-16 flex items-center px-3 sm:px-4 md:px-6 shadow-md"
         style={{ backgroundColor: branding?.colors.primary }}
       >
         <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded">
-              <Package className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+            <div className="bg-white p-1 sm:p-1.5 md:p-2 rounded">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: branding?.colors.primary }} />
             </div>
-            <span className="text-white font-bold text-xl">Aramex</span>
+            <span className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl">Aramex</span>
           </div>
           {trackingNumber && (
-            <Badge variant="secondary" className="bg-white/20 text-white">
-              <span className="text-xs">رقم التتبع:</span>
-              <span className="font-mono mr-1">{trackingNumber}</span>
+            <Badge variant="secondary" className="bg-white/20 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 md:px-2.5">
+              <span className="hidden sm:inline">رقم التتبع:</span>
+              <span className="font-mono mr-0.5 sm:mr-1">{trackingNumber}</span>
             </Badge>
           )}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
-            <div className="flex items-center gap-4">
+      <div className="container mx-auto px-2 sm:px-3 md:px-4 py-4 sm:py-6 md:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
+          <Card className="p-3 sm:p-4 md:p-6 border-l-2 sm:border-l-3 md:border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
               <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
+                className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: `${branding?.colors.primary}15` }}
               >
-                <Truck className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+                <Truck className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: branding?.colors.primary }} />
               </div>
               <div>
-                <p className="text-sm text-gray-600">حالة الشحنة</p>
-                <p className="font-bold text-lg">قيد المعالجة</p>
+                <p className="text-xs sm:text-sm text-gray-600">حالة الشحنة</p>
+                <p className="font-bold text-sm sm:text-base md:text-lg">قيد المعالجة</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
-            <div className="flex items-center gap-4">
+          <Card className="p-3 sm:p-4 md:p-6 border-l-2 sm:border-l-3 md:border-l-4" style={{ borderLeftColor: branding?.colors.primary }}>
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
               <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
+                className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: `${branding?.colors.primary}15` }}
               >
-                <Clock className="w-6 h-6" style={{ color: branding?.colors.primary }} />
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: branding?.colors.primary }} />
               </div>
               <div>
                 <p className="text-sm text-gray-600">وقت التسليم</p>

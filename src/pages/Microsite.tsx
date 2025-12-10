@@ -10,6 +10,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { gccShippingServices } from "@/lib/gccShippingServices";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency } from "@/utils/countryData";
+import { generateCompanyTrackingNumber } from "@/utils/trackingNumber";
 import SEOHead from "@/components/SEOHead";
 import {
   MapPin,
@@ -82,6 +83,14 @@ const Microsite = () => {
   const serviceKey = payload.service_key || 'aramex';
   const serviceBranding = getServiceBranding(serviceKey);
 
+  // Generate tracking number if not present (for shipping)
+  const trackingNumber = React.useMemo(() => {
+    if (isShipping) {
+      return payload.tracking_number || generateCompanyTrackingNumber(serviceKey);
+    }
+    return payload.tracking_number;
+  }, [isShipping, serviceKey, payload.tracking_number]);
+
   // Get dynamic company metadata for OG tags
   const companyMeta = getCompanyMeta(serviceKey);
 
@@ -147,13 +156,13 @@ const Microsite = () => {
         companyKey={serviceKey}
         currency={getCurrencyCode(country || "SA")}
       />
-      <div className="min-h-screen py-12 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
-      <div className="container mx-auto px-4">
+      <div className="min-h-screen py-4 sm:py-8 md:py-12 bg-gradient-to-b from-background to-secondary/20" dir="rtl">
+      <div className="container mx-auto px-2 sm:px-3 md:px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header Badge */}
-          <div className="text-center mb-8">
-            <Badge className="text-lg px-6 py-2 bg-gradient-primary">
-              <Shield className="w-4 h-4 ml-2" />
+          <div className="text-center mb-4 sm:mb-6 md:mb-8">
+            <Badge className="text-xs sm:text-sm md:text-base px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 bg-gradient-primary">
+              <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 ml-1.5 sm:ml-2" />
               <span>عقد موثّق ومحمي</span>
             </Badge>
           </div>
@@ -162,14 +171,14 @@ const Microsite = () => {
           <Card className="overflow-hidden shadow-elevated">
             {/* Header with Country Colors */}
             <div
-              className="h-32 relative"
+              className="h-24 sm:h-28 md:h-32 relative"
               style={{
                 background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
               }}
             >
               <div className="absolute inset-0 bg-black/20" />
-              <div className="absolute bottom-4 right-6 text-white">
-                <h1 className="text-3xl font-bold">
+              <div className="absolute bottom-2 sm:bottom-3 md:bottom-4 right-3 sm:right-4 md:right-6 text-white">
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
                   {isInvoice
                     ? `فاتورة ${payload.invoice_number}`
                     : isHealth
@@ -180,42 +189,42 @@ const Microsite = () => {
                     ? payload.template_name
                     : payload.chalet_name}
                 </h1>
-                <p className="text-lg opacity-90">{countryData.nameAr}</p>
+                <p className="text-sm sm:text-base md:text-lg opacity-90">{countryData.nameAr}</p>
               </div>
             </div>
             
             {/* Content */}
-            <div className="p-8">
+            <div className="p-3 sm:p-4 md:p-6 lg:p-8">
               {/* Service Icon */}
-              <div className="aspect-video bg-gradient-card rounded-xl mb-6 flex items-center justify-center">
+              <div className="aspect-video bg-gradient-card rounded-lg md:rounded-xl mb-3 sm:mb-4 md:mb-6 flex items-center justify-center">
                 {isShipping ? (
-                  <Truck className="w-16 h-16 text-muted-foreground" />
+                  <Truck className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-muted-foreground" />
                 ) : isInvoice ? (
-                  <FileText className="w-16 h-16 text-muted-foreground" />
+                  <FileText className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-muted-foreground" />
                 ) : isHealth ? (
-                  <Heart className="w-16 h-16 text-muted-foreground" />
+                  <Heart className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-muted-foreground" />
                 ) : isLogistics ? (
-                  <Package className="w-16 h-16 text-muted-foreground" />
+                  <Package className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-muted-foreground" />
                 ) : isContracts ? (
-                  <Building2 className="w-16 h-16 text-muted-foreground" />
+                  <Building2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-muted-foreground" />
                 ) : (
-                  <Sparkles className="w-16 h-16 text-muted-foreground" />
+                  <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-muted-foreground" />
                 )}
               </div>
               
               {/* Service Info for Shipping */}
               {isShipping && (
-                <div className="mb-6 p-4 bg-secondary/20 rounded-lg border">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Package className="w-5 h-5 text-primary" />
-                    <h3 className="font-bold text-lg">{serviceName}</h3>
+                <div className="mb-3 sm:mb-4 md:mb-6 p-2 sm:p-3 md:p-4 bg-secondary/20 rounded-lg border">
+                  <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3 mb-1.5 sm:mb-2">
+                    <Package className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-primary" />
+                    <h3 className="font-bold text-sm sm:text-base md:text-lg">{serviceName}</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground">{serviceDescription}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{serviceDescription}</p>
                 </div>
               )}
               
               {/* Details Grid */}
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
                 {isInvoice ? (
                   <>
                     <div className="flex items-start gap-3">
@@ -378,8 +387,8 @@ const Microsite = () => {
                       <Hash className="w-5 h-5 text-primary mt-1" />
                       <div>
                         <p className="font-semibold mb-1">رقم الشحنة</p>
-                        <p className="text-muted-foreground text-sm">
-                          {payload.tracking_number}
+                        <p className="text-muted-foreground text-sm font-mono">
+                          {trackingNumber}
                         </p>
                       </div>
                     </div>
