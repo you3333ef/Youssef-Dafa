@@ -84,6 +84,19 @@ All colors MUST be HSL.
     @apply bg-background text-foreground antialiased;
     font-feature-settings: 'cv11', 'ss01';
     font-family: 'Almarai', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: clamp(11px, 2vw, 13px);
+  }
+
+  @media (max-width: 640px) {
+    body {
+      font-size: clamp(10px, 2.5vw, 12px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      font-size: 14px;
+    }
   }
 
   /* RTL Support */
@@ -114,8 +127,15 @@ All colors MUST be HSL.
 
   /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
+  }
+
+  @media (max-width: 640px) {
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
   }
 
   ::-webkit-scrollbar-track {
@@ -328,5 +348,40 @@ All colors MUST be HSL.
 
   .badge-pulse {
     animation: badge-pulse 2s ease-in-out infinite;
+  }
+
+  /* Responsive utilities */
+  .responsive-text {
+    font-size: clamp(0.75rem, 2vw, 1rem);
+  }
+
+  .responsive-heading {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+  }
+
+  .responsive-subheading {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  /* Mobile-first responsive container */
+  @media (max-width: 640px) {
+    .container {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
+  /* Responsive images */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Touch-friendly buttons on mobile */
+  @media (max-width: 768px) {
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 }

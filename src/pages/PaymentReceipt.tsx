@@ -47,25 +47,25 @@ const PaymentReceipt = () => {
   
   return (
     <div 
-      className="min-h-screen py-12" 
+      className="min-h-screen py-4 sm:py-8 md:py-12" 
       dir="rtl"
       style={{ background: govSystem.colors.surface }}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2 sm:px-3 md:px-4">
         <div className="max-w-2xl mx-auto">
           {/* Success Animation */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-4 sm:mb-6 md:mb-8">
             <div 
-              className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 animate-scale-in"
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3 md:mb-4 animate-scale-in"
               style={{
                 background: govSystem.gradients.primary,
                 boxShadow: govSystem.shadows.lg
               }}
             >
-              <CheckCircle2 className="w-12 h-12 text-white" />
+              <CheckCircle2 className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" />
             </div>
             <h1 
-              className="text-4xl font-bold mb-2"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1.5 sm:mb-2"
               style={{ 
                 color: govSystem.colors.text,
                 fontFamily: govSystem.fonts.primaryAr 
@@ -74,7 +74,7 @@ const PaymentReceipt = () => {
               تم الدفع عبر {govSystem.nameAr} بنجاح!
             </h1>
             <p 
-              className="text-lg" 
+              className="text-sm sm:text-base md:text-lg" 
               style={{ color: govSystem.colors.textLight }}
             >
               شكراً لك، تم تأكيد حجزك
@@ -82,16 +82,16 @@ const PaymentReceipt = () => {
           </div>
           
           <Card 
-            className="p-8"
+            className="p-3 sm:p-4 md:p-6 lg:p-8"
             style={{ 
               boxShadow: govSystem.shadows.lg,
               borderRadius: govSystem.borderRadius.lg
             }}
           >
             {/* Receipt Header */}
-            <div className="text-center pb-6 border-b border-border mb-6">
+            <div className="text-center pb-3 sm:pb-4 md:pb-6 border-b border-border mb-3 sm:mb-4 md:mb-6">
               <Badge 
-                className="text-sm px-4 py-2 mb-3"
+                className="text-xs sm:text-sm px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 mb-2 sm:mb-2.5 md:mb-3"
                 style={{
                   background: govSystem.gradients.primary,
                   color: govSystem.colors.textOnPrimary,

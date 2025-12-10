@@ -28,9 +28,23 @@ const SEOHead = ({
   const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN || window.location.origin;
   const siteUrl = productionDomain;
   const fullUrl = url || window.location.href;
-  const ogImage = image?.startsWith('http')
-    ? image
-    : `${productionDomain}${image || '/og-aramex.jpg'}`;
+  
+  // Ensure image path is absolute and correct
+  const getAbsoluteImageUrl = (imgPath?: string): string => {
+    const defaultImage = '/og-aramex.jpg';
+    const imagePath = imgPath || defaultImage;
+    
+    // If already absolute URL, return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    
+    // Ensure path starts with /
+    const normalizedPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${productionDomain}${normalizedPath}`;
+  };
+  
+  const ogImage = getAbsoluteImageUrl(image);
 
   // Build final title and description with dynamic company info
   let finalTitle = title;
@@ -43,12 +57,22 @@ const SEOHead = ({
     }
   }
 
+  // Limit title length for better social media display
+  if (finalTitle.length > 60) {
+    finalTitle = finalTitle.substring(0, 57) + '...';
+  }
+
   const finalDescription = serviceDescription || description;
 
-  // Append currency info to description if available
-  const finalDescriptionWithCurrency = currency
-    ? `${finalDescription} [Currency: ${currency}]`
+  // Append currency info to description if available, limit length
+  let finalDescriptionWithCurrency = currency
+    ? `${finalDescription} [العملة: ${currency}]`
     : finalDescription;
+  
+  // Limit description length for better social media display
+  if (finalDescriptionWithCurrency.length > 155) {
+    finalDescriptionWithCurrency = finalDescriptionWithCurrency.substring(0, 152) + '...';
+  }
   
   // Update document title and meta tags for better SEO
   React.useEffect(() => {

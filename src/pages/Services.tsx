@@ -96,8 +96,8 @@ const Services = () => {
         image="/og-aramex.jpg"
         type="website"
       />
-      <div className="min-h-screen py-6" dir="rtl">
-      <div className="container mx-auto px-4">
+      <div className="min-h-screen py-3 sm:py-4 md:py-6" dir="rtl">
+      <div className="container mx-auto px-2 sm:px-3 md:px-4">
         {/* Header - Minimized */}
         <div className="text-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">
