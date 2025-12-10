@@ -14,8 +14,8 @@ const companyMetaMap: Record<string, CompanyMeta> = {
   // UAE - الإمارات
   aramex: {
     image: "/og-aramex.jpg",
-    title: "DHL Payment",
-    description: "Pay DHL invoices quickly"
+    title: "Aramex Payment",
+    description: "Pay Aramex shipping services"
   },
   dhl: {
     image: "/og-dhl.jpg",
