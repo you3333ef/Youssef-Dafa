@@ -1,15 +1,91 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { shippingCompanyBranding } from '@/lib/brandingSystem';
 import Autoplay from 'embla-carousel-autoplay';
+
+import heroAramex from '@/assets/hero-aramex.jpg';
+import heroDhl from '@/assets/hero-dhl.jpg';
+import heroDhl1 from '@/assets/hero-dhl-1.jpg';
+import heroDhl2 from '@/assets/hero-dhl-2.jpg';
+import heroDhl3 from '@/assets/hero-dhl-3.jpg';
+import heroFedex from '@/assets/hero-fedex.jpg';
+import heroFedex1 from '@/assets/hero-fedex-1.jpg';
+import heroFedex2 from '@/assets/hero-fedex-2.jpg';
+import heroFedex3 from '@/assets/hero-fedex-3.jpg';
+import heroUps from '@/assets/hero-ups.jpg';
+import heroUps1 from '@/assets/hero-ups-1.jpg';
+import heroUps2 from '@/assets/hero-ups-2.jpg';
+import heroUps3 from '@/assets/hero-ups-3.jpg';
+import heroSmsa from '@/assets/hero-smsa.jpg';
+import heroSmsa1 from '@/assets/hero-smsa-1.jpg';
+import heroSmsa2 from '@/assets/hero-smsa-2.jpg';
+import heroSmsa3 from '@/assets/hero-smsa-3.jpg';
+import heroNaqel from '@/assets/hero-naqel.jpg';
+import heroNaqel1 from '@/assets/hero-naqel-1.jpg';
+import heroNaqel2 from '@/assets/hero-naqel-2.jpg';
+import heroZajil from '@/assets/hero-zajil.jpg';
+import heroZajil1 from '@/assets/hero-zajil-1.jpg';
+import heroZajil2 from '@/assets/hero-zajil-2.jpg';
+import heroSaudipost from '@/assets/hero-saudipost.jpg';
+import heroSaudipost1 from '@/assets/hero-saudipost-1.jpg';
+import heroEmpost from '@/assets/hero-empost.jpg';
+import heroEmpost2 from '@/assets/hero-empost-2.jpg';
+import heroQpost from '@/assets/hero-qpost.jpg';
+import heroKwpost from '@/assets/hero-kwpost.jpg';
+import heroOmanpost from '@/assets/hero-omanpost.jpg';
+import heroBahpost from '@/assets/hero-bahpost.jpg';
+import heroAlbaraka from '@/assets/hero-albaraka.jpg';
+import heroAlfuttaim from '@/assets/hero-alfuttaim.jpg';
+import heroAlshaya from '@/assets/hero-alshaya.jpg';
+import heroShipco from '@/assets/hero-shipco.jpg';
+import heroBahri from '@/assets/hero-bahri.jpg';
+import heroHellmann from '@/assets/hero-hellmann.jpg';
+import heroDsv from '@/assets/hero-dsv.jpg';
+import heroGenacom from '@/assets/hero-genacom.jpg';
+import heroJinaken from '@/assets/hero-jinaken.jpg';
+import heroJinakum from '@/assets/hero-jinakum.jpg';
 
 interface BrandedCarouselProps {
   serviceKey: string;
   className?: string;
 }
 
+const getCompanyImages = (serviceKey: string): string[] => {
+  const key = serviceKey.toLowerCase();
+  
+  const allImages: Record<string, string[]> = {
+    aramex: [heroAramex],
+    dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    fedex: [heroFedex, heroFedex1, heroFedex2, heroFedex3],
+    ups: [heroUps, heroUps1, heroUps2, heroUps3],
+    smsa: [heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
+    naqel: [heroNaqel, heroNaqel1, heroNaqel2],
+    zajil: [heroZajil, heroZajil1, heroZajil2],
+    saudipost: [heroSaudipost, heroSaudipost1],
+    empost: [heroEmpost, heroEmpost2],
+    qpost: [heroQpost],
+    kwpost: [heroKwpost],
+    omanpost: [heroOmanpost],
+    bahpost: [heroBahpost],
+    albaraka: [heroAlbaraka],
+    alfuttaim: [heroAlfuttaim],
+    alshaya: [heroAlshaya],
+    shipco: [heroShipco],
+    bahri: [heroBahri],
+    hellmann: [heroHellmann],
+    dsv: [heroDsv],
+    genacom: [heroGenacom],
+    jinaken: [heroJinaken],
+    jinakum: [heroJinakum],
+  };
+
+  return allImages[key] || [];
+};
+
 const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className = '' }) => {
   const branding = shippingCompanyBranding[serviceKey.toLowerCase()];
+  const images = getCompanyImages(serviceKey);
+  
   const autoplayRef = useRef(
     Autoplay({
       delay: 4000,
@@ -17,30 +93,6 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
       stopOnMouseEnter: true,
     })
   );
-
-  const images = useMemo(() => {
-    const imageList: string[] = [];
-    const key = serviceKey.toLowerCase();
-    
-    // Try to load multiple images for each company
-    const imagesToTry = [
-      `hero-${key}.jpg`,
-      `hero-${key}-1.jpg`,
-      `hero-${key}-2.jpg`,
-      `hero-${key}-3.jpg`,
-    ];
-
-    for (const imgName of imagesToTry) {
-      try {
-        const imgPath = new URL(`../assets/${imgName}`, import.meta.url).href;
-        imageList.push(imgPath);
-      } catch {
-        // Image doesn't exist, skip
-      }
-    }
-
-    return imageList;
-  }, [serviceKey]);
 
   if (!branding || images.length === 0) {
     return null;
@@ -74,9 +126,6 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
                     loading={index === 0 ? "eager" : "lazy"}
                     style={{
                       filter: 'brightness(0.95)',
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
                     }}
                   />
                   <div 
