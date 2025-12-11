@@ -204,6 +204,7 @@ const PaymentReceipt = () => {
           </Card>
         </div>
       </div>
+      </div>
     </PaymentPageWrapper>
   );
 };
