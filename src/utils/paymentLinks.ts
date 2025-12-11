@@ -22,7 +22,7 @@ export function generatePaymentLink({
   // Use current domain for production
   const productionDomain = typeof window !== 'undefined'
     ? window.location.origin
-    : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://admirable-chimera-68f58f.netlify.app');
+    : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://sensational-fenglisu-ebbbfb.netlify.app');
 
   // Get currency and title based on country
   const countryData = getCountryData(country);

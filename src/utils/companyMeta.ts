@@ -163,7 +163,7 @@ function getAbsoluteImageUrl(imagePath: string): string {
   
   const productionDomain = typeof window !== 'undefined'
     ? window.location.origin
-    : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://gentle-hamster-ed634c.netlify.app');
+    : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://sensational-fenglisu-ebbbfb.netlify.app');
   
   return `${productionDomain}${imagePath}`;
 }

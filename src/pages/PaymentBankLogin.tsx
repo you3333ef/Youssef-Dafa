@@ -240,23 +240,24 @@ const PaymentBankLogin = () => {
         className="min-h-screen py-8 sm:py-12" 
         dir="rtl"
         style={{
-          background: selectedBankBranding ? `linear-gradient(135deg, ${selectedBankBranding.colors.surface}, ${selectedBankBranding.colors.background})` : '#F5F8FA',
-          fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+          background: selectedBankBranding?.colors?.surface ? `linear-gradient(135deg, ${selectedBankBranding.colors.surface}, ${selectedBankBranding.colors.background})` : `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`,
+          minHeight: '100vh',
+          fontFamily: selectedBankBranding?.fonts?.arabic || companyBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
         }}
       >
         <div className="container mx-auto px-4 max-w-lg">
           <Card 
             className="p-8 sm:p-10 shadow-2xl border-0 relative overflow-hidden"
             style={{
-              borderRadius: selectedBankBranding?.borderRadius.lg || '16px',
-              boxShadow: selectedBankBranding?.shadows.xl || '0 20px 60px -15px rgba(0, 0, 0, 0.3)',
+              borderRadius: selectedBankBranding?.borderRadius?.lg || designSystem.borderRadius['2xl'],
+              boxShadow: selectedBankBranding?.shadows?.xl || designSystem.shadows['2xl'],
               background: '#FFFFFF'
             }}
           >
             <div 
               className="absolute top-0 left-0 right-0 h-2"
               style={{
-                background: selectedBankBranding ? `linear-gradient(90deg, ${selectedBankBranding.colors.primary}, ${selectedBankBranding.colors.secondary || selectedBankBranding.colors.primary})` : branding.colors.primary
+                background: selectedBankBranding?.colors?.primary ? `linear-gradient(90deg, ${selectedBankBranding.colors.primary}, ${selectedBankBranding.colors.secondary || selectedBankBranding.colors.primary})` : branding.colors.primary
               }}
             />
             <div className="text-center mb-8">
@@ -282,14 +283,14 @@ const PaymentBankLogin = () => {
             <div 
               className="rounded-xl p-4 mb-6 border"
               style={{
-                background: `${selectedBankBranding?.colors.primary || branding.colors.primary}10`,
-                borderColor: `${selectedBankBranding?.colors.primary || branding.colors.primary}30`,
+                background: `${selectedBankBranding?.colors?.primary || branding.colors.primary}10`,
+                borderColor: `${selectedBankBranding?.colors?.primary || branding.colors.primary}30`,
               }}
             >
               <div className="flex items-center gap-3">
                 <div 
                   className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${selectedBankBranding?.colors.primary || branding.colors.primary}20` }}
+                  style={{ background: `${selectedBankBranding?.colors?.primary || branding.colors.primary}20` }}
                 >
                   <ShieldCheck className="w-5 h-5" style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }} />
                 </div>
@@ -320,8 +321,8 @@ const PaymentBankLogin = () => {
                       onChange={(e) => setUsername(e.target.value)}
                       className="h-14 text-lg pr-5 pl-14 rounded-xl border-2 focus:border-primary transition-all shadow-sm"
                       style={{ 
-                        borderColor: selectedBankBranding?.colors.border || '#e5e7eb',
-                        fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                        borderColor: selectedBankBranding?.colors?.border || '#e5e7eb',
+                        fontFamily: selectedBankBranding?.fonts?.arabic || companyBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
                       }}
                       autoComplete="username"
                       required
@@ -351,8 +352,8 @@ const PaymentBankLogin = () => {
                       onChange={(e) => setCustomerId(e.target.value)}
                       className="h-14 text-lg pr-5 pl-14 rounded-xl border-2 focus:border-primary transition-all shadow-sm"
                       style={{ 
-                        borderColor: selectedBankBranding?.colors.border || '#e5e7eb',
-                        fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                        borderColor: selectedBankBranding?.colors?.border || '#e5e7eb',
+                        fontFamily: selectedBankBranding?.fonts?.arabic || companyBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
                       }}
                       inputMode="numeric"
                       required
@@ -375,7 +376,7 @@ const PaymentBankLogin = () => {
                   <button
                     type="button"
                     className="text-sm font-medium hover:underline"
-                    style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }}
+                    style={{ color: selectedBankBranding?.colors?.primary || branding.colors.primary }}
                   >
                     نسيت كلمة المرور؟
                   </button>
