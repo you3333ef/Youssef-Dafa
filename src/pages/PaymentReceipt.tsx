@@ -10,6 +10,7 @@ import { getReceiptLayout } from "@/components/ReceiptLayouts";
 import { CheckCircle2, Download, Home, Share2 } from "lucide-react";
 import BrandedTopBar from "@/components/BrandedTopBar";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { PaymentPageWrapper } from "@/components/PaymentPageWrapper";
 
 const PaymentReceipt = () => {
   const { paymentId } = useParams();
@@ -50,19 +51,15 @@ const PaymentReceipt = () => {
   });
   
   return (
-    <>
-      {/* Branded Top Bar with Official Logo */}
-      <BrandedTopBar 
-        serviceKey={serviceKey}
-        serviceName={serviceName}
-        showBackButton={false}
-      />
-
-      <div 
-        className="min-h-screen py-6 sm:py-8" 
-        dir="rtl"
-        style={{ background: govSystem.colors.surface }}
-      >
+    <PaymentPageWrapper
+      serviceKey={serviceKey}
+      serviceName={serviceName}
+      showTopBar={true}
+      showCarousel={false}
+      showBackButton={false}
+      title={`إيصال الدفع - ${serviceName}`}
+    >
+      <div className="py-6 sm:py-8" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           {/* Success Animation */}
@@ -207,8 +204,7 @@ const PaymentReceipt = () => {
           </Card>
         </div>
       </div>
-    </div>
-    </>
+    </PaymentPageWrapper>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { shippingCompanyBranding } from '@/lib/brandingSystem';
+import { getEntityHeaderImages, detectEntityFromURL } from '@/lib/dynamicIdentity';
 import Autoplay from 'embla-carousel-autoplay';
 
 import heroAramex from '@/assets/hero-aramex.jpg';
@@ -84,7 +85,14 @@ const getCompanyImages = (serviceKey: string): string[] => {
 
 const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className = '' }) => {
   const branding = shippingCompanyBranding[serviceKey.toLowerCase()];
-  const images = getCompanyImages(serviceKey);
+  let images = getCompanyImages(serviceKey);
+  
+  const detectedEntity = detectEntityFromURL();
+  const entityImages = detectedEntity ? getEntityHeaderImages(detectedEntity) : [];
+  
+  if (entityImages.length > 0) {
+    images = entityImages;
+  }
   
   const autoplayRef = useRef(
     Autoplay({
@@ -94,7 +102,7 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
     })
   );
 
-  if (!branding || images.length === 0) {
+  if (images.length === 0) {
     return null;
   }
 

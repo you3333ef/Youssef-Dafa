@@ -14,6 +14,7 @@ import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
+import { PaymentPageWrapper } from "@/components/PaymentPageWrapper";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();

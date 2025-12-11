@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getServiceBranding } from '@/lib/serviceLogos';
 import { shippingCompanyBranding, bankBranding } from '@/lib/brandingSystem';
 import { getGovernmentPaymentSystem } from '@/lib/governmentPaymentSystems';
+import { detectEntityFromURL, getEntityLogo } from '@/lib/dynamicIdentity';
 import BrandedCarousel from '@/components/BrandedCarousel';
 
 interface BrandedTopBarProps {
@@ -31,6 +32,9 @@ const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
   const selectedBankBranding = bankId ? bankBranding[bankId] : null;
   const govSystem = countryCode ? getGovernmentPaymentSystem(countryCode) : null;
 
+  const detectedEntity = detectEntityFromURL();
+  const entityLogo = detectedEntity ? getEntityLogo(detectedEntity) : null;
+
   // Priority: Bank branding > Government system > Company branding
   const activeBranding = selectedBankBranding || (serviceKey === 'payment' && govSystem ? {
     colors: govSystem.colors,
@@ -43,6 +47,9 @@ const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
   const primaryColor = activeBranding?.colors.primary || branding.colors.primary;
   const secondaryColor = activeBranding?.colors.secondary || branding.colors.secondary;
   const gradient = activeBranding?.gradients?.primary || `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`;
+
+  const displayLogo = entityLogo || 
+                      ((govSystem?.logo && serviceKey === 'payment') ? govSystem.logo : branding.logo);
 
   const handleBack = () => {
     if (backPath) {
@@ -65,8 +72,8 @@ const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Right side - Logo */}
             <div className="flex items-center gap-3 sm:gap-4">
-              {/* Display government logo if available, otherwise company logo */}
-              {((govSystem?.logo && serviceKey === 'payment') || branding.logo) && (
+              {/* Display dynamic entity logo, government logo, or company logo */}
+              {displayLogo && (
                 <div 
                   className="bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 shadow-lg"
                   style={{
@@ -75,7 +82,7 @@ const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
                   }}
                 >
                   <img 
-                    src={(govSystem?.logo && serviceKey === 'payment') ? govSystem.logo : branding.logo} 
+                    src={displayLogo} 
                     alt={serviceName}
                     className="h-8 sm:h-12 w-auto object-contain"
                     style={{ maxWidth: '150px' }}

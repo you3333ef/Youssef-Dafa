@@ -5,6 +5,8 @@ import { getBrandingByCompany, shippingCompanyBranding } from "@/lib/brandingSys
 import { DynamicBranding } from "@/components/DynamicBranding";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import BrandedTopBar from "@/components/BrandedTopBar";
+import { useAutoApplyIdentity } from "@/hooks/useAutoApplyIdentity";
+import { DynamicMetaTags } from "@/components/DynamicMetaTags";
 import { CreditCard, ArrowLeft } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
@@ -52,10 +54,14 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
   showHero = true,
   bankId
 }) => {
+  const { entity, identity } = useAutoApplyIdentity();
   const actualServiceKey = serviceKey || serviceName;
   const branding = getServiceBranding(actualServiceKey);
   const enhancedBranding = getBrandingByCompany(actualServiceKey);
   const companyBranding = shippingCompanyBranding[actualServiceKey.toLowerCase()] || null;
+  
+  const displayBackground = identity?.colors.background || companyBranding?.colors.background || '#FFFFFF';
+  const displayFont = identity?.fonts[0] || companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif';
   
   const heroImages: Record<string, string> = {
     'aramex': heroAramex,
@@ -92,6 +98,11 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
   return (
     <>
       <DynamicBranding companyKey={actualServiceKey}>
+        <DynamicMetaTags 
+          entityKey={entity || undefined}
+          title={title}
+          description={description}
+        />
         <PaymentMetaTags 
         serviceName={serviceName}
         serviceKey={actualServiceKey}
@@ -111,8 +122,8 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
         className="min-h-screen" 
         dir="rtl"
         style={{
-          background: companyBranding?.colors.background || '#FFFFFF',
-          fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+          background: displayBackground,
+          fontFamily: displayFont
         }}
       >
         <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
