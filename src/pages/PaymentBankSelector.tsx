@@ -8,6 +8,7 @@ import { Building2, ArrowLeft, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
+import { bankBranding } from "@/lib/brandingSystem";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
@@ -283,19 +284,21 @@ const PaymentBankSelector = () => {
                   )}
                   
                   <div className="flex flex-col items-center gap-2 sm:gap-3">
-                    {/* Bank Logo */}
+                    {/* Bank Logo - Enhanced with Official Branding */}
                     {bank.logo ? (
                       <div 
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center p-2 sm:p-3 bg-white border transition-all"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center p-3 sm:p-4 bg-white border-2 transition-all shadow-md"
                         style={{
-                          borderColor: selectedBank === bank.id ? bank.color : '#e5e7eb',
-                          borderWidth: selectedBank === bank.id ? '2px' : '1px',
+                          borderColor: selectedBank === bank.id ? (bankBranding[bank.id]?.colors.primary || bank.color || govSystem.colors.primary) : '#e5e7eb',
+                          borderRadius: bankBranding[bank.id]?.borderRadius.md || '10px',
+                          boxShadow: selectedBank === bank.id ? `0 8px 20px -5px ${bank.color || govSystem.colors.primary}40` : '0 1px 3px rgba(0, 0, 0, 0.1)'
                         }}
                       >
                         <img 
                           src={bank.logo} 
                           alt={bank.nameAr}
                           className="w-full h-full object-contain"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
                           onError={(e) => {
                             // Fallback if image fails to load
                             const target = e.target as HTMLImageElement;
