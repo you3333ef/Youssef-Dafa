@@ -57,6 +57,10 @@ const getCompanyImages = (serviceKey: string): string[] => {
   const allImages: Record<string, string[]> = {
     aramex: [heroAramex],
     dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlkw: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlqa: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlom: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlbh: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
     fedex: [heroFedex, heroFedex1, heroFedex2, heroFedex3],
     ups: [heroUps, heroUps1, heroUps2, heroUps3],
     smsa: [heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
@@ -73,9 +77,11 @@ const getCompanyImages = (serviceKey: string): string[] => {
     alshaya: [heroAlshaya],
     shipco: [heroShipco],
     bahri: [heroBahri],
+    national: [heroBahri],
     hellmann: [heroHellmann],
     dsv: [heroDsv],
     genacom: [heroGenacom],
+    agility: [heroGenacom],
     jinaken: [heroJinaken],
     jinakum: [heroJinakum],
   };
@@ -85,18 +91,34 @@ const getCompanyImages = (serviceKey: string): string[] => {
 
 const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className = '' }) => {
   const branding = shippingCompanyBranding[serviceKey.toLowerCase()];
-  let images = getCompanyImages(serviceKey);
   
   const detectedEntity = detectEntityFromURL();
   const entityImages = detectedEntity ? getEntityHeaderImages(detectedEntity) : [];
   
+  let images: string[] = [];
+  
   if (entityImages.length > 0) {
     images = entityImages;
+  } else if (serviceKey) {
+    const localImages = getCompanyImages(serviceKey);
+    if (localImages.length > 0) {
+      images = localImages;
+    } else {
+      const entityImagesFromKey = getEntityHeaderImages(serviceKey);
+      if (entityImagesFromKey.length > 0) {
+        images = entityImagesFromKey;
+      }
+    }
   }
   
   const [imagesLoaded, setImagesLoaded] = useState(false);
   
   useEffect(() => {
+    console.log('🖼️ BrandedCarousel - serviceKey:', serviceKey);
+    console.log('🖼️ BrandedCarousel - detectedEntity:', detectedEntity);
+    console.log('🖼️ BrandedCarousel - images count:', images.length);
+    console.log('🖼️ BrandedCarousel - images:', images);
+    
     if (images.length === 0) return;
     
     const preloadImages = async () => {
