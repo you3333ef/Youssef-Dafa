@@ -5,6 +5,9 @@ import { getEntityHeaderImages, detectEntityFromURL } from '@/lib/dynamicIdentit
 import Autoplay from 'embla-carousel-autoplay';
 
 import heroAramex from '@/assets/hero-aramex.jpg';
+import heroAramex2 from '@/assets/hero-aramex-2.jpg';
+import heroAramex3 from '@/assets/hero-aramex-3.jpg';
+import heroAramex4 from '@/assets/hero-aramex-4.jpg';
 import heroDhl from '@/assets/hero-dhl.jpg';
 import heroDhl1 from '@/assets/hero-dhl-1.jpg';
 import heroDhl2 from '@/assets/hero-dhl-2.jpg';
@@ -24,9 +27,11 @@ import heroSmsa3 from '@/assets/hero-smsa-3.jpg';
 import heroNaqel from '@/assets/hero-naqel.jpg';
 import heroNaqel1 from '@/assets/hero-naqel-1.jpg';
 import heroNaqel2 from '@/assets/hero-naqel-2.jpg';
+import heroNaqel3 from '@/assets/hero-naqel-3.jpg';
 import heroZajil from '@/assets/hero-zajil.jpg';
 import heroZajil1 from '@/assets/hero-zajil-1.jpg';
 import heroZajil2 from '@/assets/hero-zajil-2.jpg';
+import heroZajil3 from '@/assets/hero-zajil-3.jpg';
 import heroSaudipost from '@/assets/hero-saudipost.jpg';
 import heroSaudipost1 from '@/assets/hero-saudipost-1.jpg';
 import heroEmpost from '@/assets/hero-empost.jpg';
@@ -55,7 +60,7 @@ const getCompanyImages = (serviceKey: string): string[] => {
   const key = serviceKey.toLowerCase();
   
   const allImages: Record<string, string[]> = {
-    aramex: [heroAramex],
+    aramex: [heroAramex, heroAramex2, heroAramex3, heroAramex4],
     dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
     dhlkw: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
     dhlqa: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
@@ -64,8 +69,8 @@ const getCompanyImages = (serviceKey: string): string[] => {
     fedex: [heroFedex, heroFedex1, heroFedex2, heroFedex3],
     ups: [heroUps, heroUps1, heroUps2, heroUps3],
     smsa: [heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
-    naqel: [heroNaqel, heroNaqel1, heroNaqel2],
-    zajil: [heroZajil, heroZajil1, heroZajil2],
+    naqel: [heroNaqel, heroNaqel1, heroNaqel2, heroNaqel3],
+    zajil: [heroZajil, heroZajil1, heroZajil2, heroZajil3],
     saudipost: [heroSaudipost, heroSaudipost1],
     empost: [heroEmpost, heroEmpost2],
     qpost: [heroQpost],
