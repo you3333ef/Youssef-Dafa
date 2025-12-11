@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { getServiceBranding } from '@/lib/serviceLogos';
+import { getEntityPaymentShareImage, getEntityIdentity, detectEntityFromURL } from '@/lib/dynamicIdentity';
 
 interface PaymentMetaTagsProps {
   serviceKey: string;
@@ -18,10 +19,16 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
 }) => {
   const branding = getServiceBranding(serviceKey);
   
-  const pageTitle = title || `دفع ${serviceName}${amount ? ` - ${amount}` : ''}`;
-  const pageDescription = customDescription || branding.description || `خدمة دفع آمنة لـ ${serviceName}`;
+  const detectedEntity = detectEntityFromURL();
+  const entityIdentity = detectedEntity ? getEntityIdentity(detectedEntity) : null;
+  const entityShareImage = detectedEntity ? getEntityPaymentShareImage(detectedEntity) : null;
+  const entityDescription = entityIdentity?.payment_share_description;
   
-  const ogImage = branding.ogImage ? `${window.location.origin}${branding.ogImage}` : undefined;
+  const pageTitle = title || `دفع ${serviceName}${amount ? ` - ${amount}` : ''}`;
+  const pageDescription = customDescription || entityDescription || branding.description || `خدمة دفع آمنة لـ ${serviceName}`;
+  
+  const ogImagePath = entityShareImage || branding.ogImage;
+  const ogImage = ogImagePath ? `${window.location.origin}${ogImagePath}` : undefined;
   
   return (
     <Helmet>
@@ -48,11 +55,15 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
       <meta name="twitter:description" content={pageDescription} />
       {ogImage && <meta name="twitter:image" content={ogImage} />}
       
-      <meta name="theme-color" content={branding.colors.primary} />
+      <meta name="theme-color" content={entityIdentity?.colors.primary || branding.colors.primary} />
       
-      <link rel="preload" as="image" href={branding.ogImage} />
+      {ogImagePath && <link rel="preload" as="image" href={ogImagePath} />}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      
+      <meta name="robots" content="index, follow" />
+      <meta name="googlebot" content="index, follow" />
+      <link rel="canonical" href={window.location.href} />
     </Helmet>
   );
 };

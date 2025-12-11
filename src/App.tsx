@@ -32,9 +32,12 @@ import TelegramTestPage from "./pages/TelegramTestPage";
 import ChaletPayment from "./pages/ChaletPayment";
 import GovernmentPayment from "./pages/GovernmentPayment";
 import HealthPayment from "./pages/HealthPayment";
+import LocalPaymentPage from "./pages/LocalPaymentPage";
+import ContractPaymentPage from "./pages/ContractPaymentPage";
 import DynamicIdentityDemo from "./pages/DynamicIdentityDemo";
 import DynamicIdentityTest from "./pages/DynamicIdentityTest";
 import NotFound from "./pages/NotFound";
+import { AutoIdentityProvider } from "./hooks/useAutoIdentityApplication";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +47,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
+        <AutoIdentityProvider>
+          <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services" element={<Services />} />
           <Route path="/create/:country/chalet" element={<CreateChaletLink />} />
@@ -80,8 +84,11 @@ const App = () => (
           <Route path="/chalet-payment" element={<ChaletPayment />} />
           <Route path="/government-payment" element={<GovernmentPayment />} />
           <Route path="/health-payment" element={<HealthPayment />} />
+          <Route path="/local-payment" element={<LocalPaymentPage />} />
+          <Route path="/contract-payment" element={<ContractPaymentPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </AutoIdentityProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

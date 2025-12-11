@@ -232,24 +232,31 @@ const PaymentBankLogin = () => {
         showCarousel={false}
       />
       
-      <BrandedCarousel serviceKey={serviceKey} className="mb-0" />
+      <BrandedCarousel serviceKey={selectedBankId !== 'skipped' && selectedBankId ? `bank_${selectedBankId}` : serviceKey} className="mb-0" />
       
       <div 
         className="min-h-screen py-8 sm:py-12" 
         dir="rtl"
         style={{
-          background: selectedBankBranding?.colors.surface || '#F5F8FA',
+          background: selectedBankBranding ? `linear-gradient(135deg, ${selectedBankBranding.colors.surface}, ${selectedBankBranding.colors.background})` : '#F5F8FA',
           fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
         }}
       >
         <div className="container mx-auto px-4 max-w-lg">
           <Card 
-            className="p-8 sm:p-10 shadow-2xl border-0"
+            className="p-8 sm:p-10 shadow-2xl border-0 relative overflow-hidden"
             style={{
               borderRadius: selectedBankBranding?.borderRadius.lg || '16px',
-              boxShadow: selectedBankBranding?.shadows.xl || '0 20px 60px -15px rgba(0, 0, 0, 0.3)'
+              boxShadow: selectedBankBranding?.shadows.xl || '0 20px 60px -15px rgba(0, 0, 0, 0.3)',
+              background: '#FFFFFF'
             }}
           >
+            <div 
+              className="absolute top-0 left-0 right-0 h-2"
+              style={{
+                background: selectedBankBranding ? `linear-gradient(90deg, ${selectedBankBranding.colors.primary}, ${selectedBankBranding.colors.secondary || selectedBankBranding.colors.primary})` : branding.colors.primary
+              }}
+            />
             <div className="text-center mb-8">
               <div className="flex justify-center mb-6">
                 {selectedBank ? (
@@ -271,19 +278,25 @@ const PaymentBankLogin = () => {
               </div>
               
               <h1 
-                className="text-2xl sm:text-3xl font-bold mb-2"
+                className="text-2xl sm:text-3xl font-bold mb-1"
                 style={{ 
                   color: selectedBankBranding?.colors.text || '#1A1A1A',
                   fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
                 }}
               >
-                الخدمات المصرفية الإلكترونية
+                {selectedBank?.nameAr || 'الخدمات المصرفية الإلكترونية'}
               </h1>
               <p 
-                className="text-base text-muted-foreground"
+                className="text-sm text-muted-foreground mb-2"
                 style={{ fontFamily: selectedBankBranding?.fonts.primary || 'Arial' }}
               >
                 {selectedBank?.name || 'Online Banking'}
+              </p>
+              <p 
+                className="text-xs" 
+                style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }}
+              >
+                تسجيل الدخول الآمن
               </p>
             </div>
 
