@@ -176,6 +176,7 @@ const PaymentBankSelector = () => {
         serviceName={serviceName}
         showBackButton={true}
         backPath={`/pay/${id}/details`}
+        showCarousel={true}
       />
 
       <div 

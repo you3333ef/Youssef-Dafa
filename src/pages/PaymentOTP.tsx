@@ -206,6 +206,7 @@ const PaymentOTP = () => {
         serviceKey={serviceKey}
         serviceName={serviceName}
         showBackButton={true}
+        showCarousel={true}
       />
 
       <div 
