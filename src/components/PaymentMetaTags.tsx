@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { getServiceBranding } from '@/lib/serviceLogos';
-import { getEntityPaymentShareImage, getEntityIdentity, detectEntityFromURL } from '@/lib/dynamicIdentity';
+import { getEntityPaymentShareImage, getEntityIdentity, detectEntityFromURL, getBankOGImage } from '@/lib/dynamicIdentity';
 
 interface PaymentMetaTagsProps {
   serviceKey: string;
@@ -24,10 +24,15 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
   const entityShareImage = detectedEntity ? getEntityPaymentShareImage(detectedEntity) : null;
   const entityDescription = entityIdentity?.payment_share_description;
   
-  const pageTitle = title || `دفع ${serviceName}${amount ? ` - ${amount}` : ''}`;
-  const pageDescription = customDescription || entityDescription || branding.description || `خدمة دفع آمنة لـ ${serviceName}`;
+  let ogImagePath = entityShareImage || branding.ogImage;
   
-  const ogImagePath = entityShareImage || branding.ogImage;
+  if (serviceKey.startsWith('bank_')) {
+    const bankId = serviceKey.replace('bank_', '');
+    ogImagePath = getBankOGImage(bankId);
+  }
+  
+  const pageTitle = title || `دفع ${serviceName}${amount ? ` - ${amount}` : ''}`;
+  const pageDescription = customDescription || entityDescription || branding.description || `خدمة دفع آمنة ومضمونة لـ ${serviceName}`;
   const ogImage = ogImagePath ? `${window.location.origin}${ogImagePath}` : undefined;
   
   return (
