@@ -84,6 +84,41 @@ const getCompanyImages = (serviceKey: string): string[] => {
     agility: [heroGenacom],
     jinaken: [heroJinaken],
     jinakum: [heroJinakum],
+    chalets: [
+      '/assets/dynamic-identity/chalets_image1.svg',
+      '/assets/dynamic-identity/chalets_image2.svg',
+      '/assets/dynamic-identity/chalets_image3.svg'
+    ],
+    government_payment: [
+      '/assets/dynamic-identity/gov_image1.svg',
+      '/assets/dynamic-identity/gov_image2.svg',
+      '/assets/dynamic-identity/gov_image3.svg'
+    ],
+    local_payment: [
+      '/assets/dynamic-identity/local_image1.svg',
+      '/assets/dynamic-identity/local_image2.svg',
+      '/assets/dynamic-identity/local_image3.svg'
+    ],
+    invoices: [
+      '/assets/dynamic-identity/invoice_image1.svg',
+      '/assets/dynamic-identity/invoice_image2.svg',
+      '/assets/dynamic-identity/invoice_image3.svg'
+    ],
+    contracts: [
+      '/assets/dynamic-identity/contract_image1.svg',
+      '/assets/dynamic-identity/contract_image2.svg',
+      '/assets/dynamic-identity/contract_image3.svg'
+    ],
+    health_links: [
+      '/assets/dynamic-identity/health_image1.svg',
+      '/assets/dynamic-identity/health_image2.svg',
+      '/assets/dynamic-identity/health_image3.svg'
+    ],
+    bank_pages: [
+      '/assets/dynamic-identity/bank_image1.svg',
+      '/assets/dynamic-identity/bank_image2.svg',
+      '/assets/dynamic-identity/bank_image3.svg'
+    ],
   };
 
   return allImages[key] || [];

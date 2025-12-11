@@ -182,87 +182,136 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
     ...generateEntitiesFromServices(),
     ...generateEntitiesFromBanks(),
     chalets: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_chalets.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/chalets_image1.svg',
+        '/assets/dynamic-identity/chalets_image2.svg',
+        '/assets/dynamic-identity/chalets_image3.svg'
+      ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
+      payment_share_image: '/assets/dynamic-identity/chalets_payment.svg',
       payment_share_description: 'احجز شاليه أحلامك بسهولة وأمان مع هوية الدفع الرسمية.',
       colors: { primary: '#FF6F00', secondary: '#FFA000', background: '#FFF3E0' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/chalets_bg.svg',
+        '/assets/dynamic-identity/chalets_bg2.svg'
+      ],
       auto_apply: true,
     },
     government_payment: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_gov.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/gov_image1.svg',
+        '/assets/dynamic-identity/gov_image2.svg',
+        '/assets/dynamic-identity/gov_image3.svg'
+      ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
+      payment_share_image: '/assets/dynamic-identity/gov_payment.svg',
       payment_share_description: 'سداد حكومي سريع وآمن مع هوية الدفع الرسمية للجهة.',
       colors: { primary: '#004080', secondary: '#0073E6', background: '#E6F0FF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/gov_bg.svg',
+        '/assets/dynamic-identity/gov_bg2.svg'
+      ],
       auto_apply: true,
     },
     local_payment: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_local.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/local_image1.svg',
+        '/assets/dynamic-identity/local_image2.svg',
+        '/assets/dynamic-identity/local_image3.svg'
+      ],
       header_position: 'below_top_bar',
       payment_share_image: '/og-aramex.jpg',
-      payment_share_description: 'سداد محلي سريع وآمن مع هوية الدفع الرسمية للبوابة.',
+      payment_share_description: 'سداد محلي سريع وأمن مع هوية الدفع الرسمية للبوابة.',
       colors: { primary: '#008000', secondary: '#00C000', background: '#E6FFE6' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/local_bg.svg',
+        '/assets/dynamic-identity/local_bg2.svg'
+      ],
       auto_apply: true,
     },
     invoices: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_invoice.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/invoice_image1.svg',
+        '/assets/dynamic-identity/invoice_image2.svg',
+        '/assets/dynamic-identity/invoice_image3.svg'
+      ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
+      payment_share_image: '/assets/dynamic-identity/invoice_payment.svg',
       payment_share_description: 'عرض الفواتير الرسمي بدقة مع هوية الدفع للجهة.',
       colors: { primary: '#800000', secondary: '#B22222', background: '#FFE6E6' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/invoice_bg.svg',
+        '/assets/dynamic-identity/invoice_bg2.svg'
+      ],
       auto_apply: true,
     },
     contracts: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_contract.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/contract_image1.svg',
+        '/assets/dynamic-identity/contract_image2.svg',
+        '/assets/dynamic-identity/contract_image3.svg'
+      ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
+      payment_share_image: '/assets/dynamic-identity/contract_payment.svg',
       payment_share_description: 'العقود الرسمية مع هوية الدفع المعتمدة للجهة.',
       colors: { primary: '#000080', secondary: '#0000CD', background: '#E6E6FF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/contract_bg.svg',
+        '/assets/dynamic-identity/contract_bg2.svg'
+      ],
       auto_apply: true,
     },
     health_links: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_health.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/health_image1.svg',
+        '/assets/dynamic-identity/health_image2.svg',
+        '/assets/dynamic-identity/health_image3.svg'
+      ],
       header_position: 'below_top_bar',
       payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'الخدمات الصحية الرسمية مع هوية الدفع الخاصة بالجهة.',
       colors: { primary: '#008080', secondary: '#20B2AA', background: '#E0FFFF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/health_bg.svg',
+        '/assets/dynamic-identity/health_bg2.svg'
+      ],
       auto_apply: true,
     },
     bank_pages: {
-      logo: '/og-aramex.jpg',
-      animated_header_images: ['/hero-bg.jpg'],
+      logo: '/assets/dynamic-identity/official_logo_bank.svg',
+      animated_header_images: [
+        '/assets/dynamic-identity/bank_image1.svg',
+        '/assets/dynamic-identity/bank_image2.svg',
+        '/assets/dynamic-identity/bank_image3.svg'
+      ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
+      payment_share_image: '/assets/dynamic-identity/bank_payment.svg',
       payment_share_description: 'الوصول إلى الدفع البنكي الرسمي مع الهوية البصرية لكل صفحة.',
       colors: { primary: '#0000FF', secondary: '#1E90FF', background: '#E6F0FF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['/hero-bg.jpg'],
+      background_images: [
+        '/assets/dynamic-identity/bank_bg.svg',
+        '/assets/dynamic-identity/bank_bg2.svg'
+      ],
       dynamic_behavior: { on_bank_selection: { apply_identity: true } },
       auto_apply: true,
     },
