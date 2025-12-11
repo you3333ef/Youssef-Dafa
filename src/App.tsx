@@ -29,6 +29,7 @@ import PaymentOTP from "./pages/PaymentOTP";
 import PaymentReceiptPage from "./pages/PaymentReceiptPage";
 import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
+import DynamicIdentityDemo from "./pages/DynamicIdentityDemo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ const App = () => (
           <Route path="/pay/:id/otp" element={<PaymentOTPForm />} />
           <Route path="/pay/:id/receipt" element={<PaymentReceiptPage />} />
           <Route path="/telegram-test" element={<TelegramTestPage />} />
+          <Route path="/identity-demo" element={<DynamicIdentityDemo />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
