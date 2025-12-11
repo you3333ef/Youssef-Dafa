@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { getBankById } from '@/lib/banks';
 
 interface BankLogoProps {
   bankId: string;
@@ -6,7 +7,7 @@ interface BankLogoProps {
   bankNameAr: string;
   color?: string;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const BankLogo: React.FC<BankLogoProps> = ({ 
@@ -17,10 +18,13 @@ const BankLogo: React.FC<BankLogoProps> = ({
   className = '',
   size = 'md'
 }) => {
+  const [imageError, setImageError] = useState(false);
+  
   const sizeClasses = {
     sm: 'h-8 w-8 text-xs',
     md: 'h-12 w-12 text-sm',
-    lg: 'h-16 w-16 text-base'
+    lg: 'h-16 w-16 text-base',
+    xl: 'h-20 w-20 text-lg'
   };
 
   const getInitials = (name: string) => {
@@ -31,6 +35,22 @@ const BankLogo: React.FC<BankLogoProps> = ({
       .toUpperCase()
       .substring(0, 2);
   };
+
+  const bank = getBankById(bankId);
+  const logoPath = bank?.logo;
+
+  if (logoPath && !imageError) {
+    return (
+      <img
+        src={logoPath}
+        alt={`${bankName} logo`}
+        className={`object-contain ${className}`}
+        style={{ maxWidth: '100%', maxHeight: '100%' }}
+        onError={() => setImageError(true)}
+        loading="lazy"
+      />
+    );
+  }
 
   const initials = getInitials(bankName);
 
