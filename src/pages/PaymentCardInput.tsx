@@ -236,6 +236,7 @@ const PaymentCardInput = () => {
       title="بيانات البطاقة"
       description={`أدخل بيانات البطاقة لخدمة ${serviceName}`}
       icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
+      bankId={selectedBankId}
     >
       {/* Selected Bank/Country Info */}
       {(selectedBank || selectedCountryData) && (

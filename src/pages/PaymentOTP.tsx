@@ -10,6 +10,7 @@ import { Shield, AlertCircle, Check, Lock, Clock, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import BackButton from "@/components/BackButton";
+import BrandedTopBar from "@/components/BrandedTopBar";
 import {
   InputOTP,
   InputOTPGroup,
@@ -199,44 +200,25 @@ const PaymentOTP = () => {
   }, [payment]);
   
   return (
-    <div 
-      className="min-h-screen py-4 sm:py-12" 
-      dir="rtl"
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      style={{
-        background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
-      }}
-    >
-      <div className="container mx-auto px-3 sm:px-4">
-        <div className="mb-4">
-          <BackButton />
-        </div>
-        
-        <div className="max-w-md mx-auto">
-          {/* Company Header Image */}
-          {branding.ogImage && (
-            <div className="mb-4 sm:mb-6 rounded-xl overflow-hidden shadow-lg">
-              <img 
-                src={branding.ogImage} 
-                alt={serviceName}
-                className="w-full h-32 sm:h-48 object-cover"
-                onError={(e) => e.currentTarget.style.display = 'none'}
-              />
-            </div>
-          )}
-          
-          {/* Company Logo */}
-          {branding.logo && (
-            <div className="text-center mb-4 sm:mb-6">
-              <img 
-                src={branding.logo} 
-                alt={serviceName}
-                className="h-10 sm:h-12 mx-auto"
-                onError={(e) => e.currentTarget.style.display = 'none'}
-              />
-            </div>
-          )}
+    <>
+      {/* Branded Top Bar with Official Logo */}
+      <BrandedTopBar 
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        showBackButton={true}
+      />
+
+      <div 
+        className="min-h-screen py-4 sm:py-8" 
+        dir="rtl"
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        style={{
+          background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)`
+        }}
+      >
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="max-w-md mx-auto">
           
           {/* Security Badge */}
           <div className="text-center mb-3 sm:mb-6">
@@ -411,6 +393,7 @@ const PaymentOTP = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

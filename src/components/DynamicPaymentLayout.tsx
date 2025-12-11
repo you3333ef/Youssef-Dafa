@@ -4,6 +4,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { getBrandingByCompany, shippingCompanyBranding } from "@/lib/brandingSystem";
 import { DynamicBranding } from "@/components/DynamicBranding";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
+import BrandedTopBar from "@/components/BrandedTopBar";
 import { CreditCard, ArrowLeft } from "lucide-react";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
@@ -37,6 +38,7 @@ interface DynamicPaymentLayoutProps {
   description: string;
   icon?: React.ReactNode;
   showHero?: boolean;
+  bankId?: string;
 }
 
 const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
@@ -47,7 +49,8 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
   title,
   description,
   icon = <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />,
-  showHero = true
+  showHero = true,
+  bankId
 }) => {
   const actualServiceKey = serviceKey || serviceName;
   const branding = getServiceBranding(actualServiceKey);
@@ -96,56 +99,23 @@ const DynamicPaymentLayout: React.FC<DynamicPaymentLayoutProps> = ({
         title={title}
         description={description}
       />
+      {/* Branded Top Bar with Official Logo */}
+      <BrandedTopBar 
+        serviceKey={actualServiceKey}
+        serviceName={serviceName}
+        showBackButton={true}
+        bankId={bankId}
+      />
+
       <div 
         className="min-h-screen" 
         dir="rtl"
         style={{
-          background: showHero ? (companyBranding?.colors.background || '#FFFFFF') : `linear-gradient(135deg, ${branding.colors.primary}05, ${branding.colors.secondary}05)`,
+          background: companyBranding?.colors.background || '#FFFFFF',
           fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
         }}
       >
-        {showHero && (
-          <div className="relative w-full h-48 sm:h-64 overflow-hidden">
-            <img 
-              src={heroImage}
-              alt={serviceName}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-            
-            {/* Logo Overlay - Enhanced with Company Branding */}
-            <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-              {branding.logo && (
-                <div 
-                  className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border-2"
-                  style={{ 
-                    borderColor: companyBranding?.colors.primary || branding.colors.primary,
-                    boxShadow: `0 10px 40px -10px ${branding.colors.primary}50`,
-                    borderRadius: companyBranding?.borderRadius.lg || '12px'
-                  }}
-                >
-                  <img 
-                    src={branding.logo} 
-                    alt={serviceName}
-                    className="h-16 sm:h-24 w-auto object-contain"
-                    style={{ maxWidth: '180px' }}
-                    onError={(e) => e.currentTarget.style.display = 'none'}
-                  />
-                </div>
-              )}
-            </div>
-            
-            {/* Title Overlay */}
-            <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-              <div className="text-right">
-                <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-                <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className={`container mx-auto px-3 sm:px-4 ${showHero ? '-mt-8 sm:-mt-12 relative z-10' : 'py-8'}`}>
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           <div className="max-w-2xl mx-auto">
             <Card 
               className="p-4 sm:p-8 shadow-2xl border-t-4" 

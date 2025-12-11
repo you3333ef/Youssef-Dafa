@@ -2,17 +2,17 @@
 export const serviceLogos: Record<string, { logo: string; colors: { primary: string; secondary: string }; ogImage?: string; heroImage?: string; description?: string }> = {
   // UAE - الإمارات
   aramex: {
-    logo: "/og-aramex.jpg",
+    logo: "/aramex-logo.svg",
     colors: {
       primary: "#DC291E",
-      secondary: "#FFFFFF"
+      secondary: "#8B1A12"
     },
     ogImage: "/og-aramex.jpg",
     heroImage: "/og-aramex.jpg",
     description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
   },
   dhl: {
-    logo: "/og-dhl.jpg",
+    logo: "/dhl-logo.svg",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
@@ -22,7 +22,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
   },
   fedex: {
-    logo: "/og-fedex.jpg",
+    logo: "/fedex-logo.png",
     colors: {
       primary: "#4D148C",
       secondary: "#FF6600"
@@ -32,7 +32,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "خدمات شحن دولية موثوقة مع تتبع فوري للشحنات"
   },
   ups: {
-    logo: "/og-ups.jpg",
+    logo: "/ups-logo.png",
     colors: {
       primary: "#351C15",
       secondary: "#FFB500"
@@ -54,7 +54,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
   
   // Saudi Arabia - السعودية
   smsa: {
-    logo: "/og-smsa.jpg",
+    logo: "/smsa-logo.svg",
     colors: {
       primary: "#662D91",
       secondary: "#FF6600"
@@ -106,7 +106,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في دولة الكويت"
   },
   dhlkw: {
-    logo: "/og-dhl.jpg",
+    logo: "/dhl-logo.svg",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
@@ -128,7 +128,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في دولة قطر"
   },
   dhlqa: {
-    logo: "/og-dhl.jpg",
+    logo: "/dhl-logo.svg",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
@@ -150,7 +150,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في سلطنة عُمان"
   },
   dhlom: {
-    logo: "/og-dhl.jpg",
+    logo: "/dhl-logo.svg",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"
@@ -172,7 +172,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     description: "المشغل الوطني للبريد في مملكة البحرين"
   },
   dhlbh: {
-    logo: "/og-dhl.jpg",
+    logo: "/dhl-logo.svg",
     colors: {
       primary: "#FFCC00",
       secondary: "#D40511"

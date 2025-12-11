@@ -39,6 +39,7 @@ import heroDsv from "@/assets/hero-dsv.jpg";
 import heroJinakum from "@/assets/hero-jinakum.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import BackButton from "@/components/BackButton";
+import BrandedTopBar from "@/components/BrandedTopBar";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -215,6 +216,13 @@ const PaymentRecipient = () => {
         <meta property="og:image" content={dynamicImage} />
         <meta name="twitter:image" content={dynamicImage} />
       </Helmet>
+      {/* Branded Top Bar with Official Logo */}
+      <BrandedTopBar 
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        showBackButton={true}
+      />
+
       <div 
         className="min-h-screen" 
         dir="rtl"
@@ -223,49 +231,7 @@ const PaymentRecipient = () => {
           fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
         }}
       >
-        {/* Hero Section */}
-        <div className="relative w-full h-48 sm:h-64 overflow-hidden">
-          <img 
-            src={heroImage}
-            alt={serviceName}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-          
-          {/* Logo Overlay - Enhanced with Company Branding */}
-          <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
-            {branding.logo && (
-              <div 
-                className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border-2"
-                style={{ 
-                  borderColor: companyBranding?.colors.primary || branding.colors.primary,
-                  boxShadow: `0 10px 40px -10px ${branding.colors.primary}50`
-                }}
-              >
-                <img 
-                  src={branding.logo} 
-                  alt={serviceName}
-                  className="h-16 sm:h-24 w-auto object-contain"
-                  style={{ maxWidth: '180px' }}
-                  onError={(e) => e.currentTarget.style.display = 'none'}
-                />
-              </div>
-            )}
-          </div>
-          
-          {/* Title Overlay */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-white">
-            <div className="text-right">
-              <h2 className="text-lg sm:text-2xl font-bold mb-1">{serviceName}</h2>
-              <p className="text-xs sm:text-sm opacity-90">خدمة شحن</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="container mx-auto px-3 sm:px-4 -mt-8 sm:-mt-12 relative z-10">
-          <div className="mb-4">
-            <BackButton />
-          </div>
+        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           
           <div className="max-w-2xl mx-auto">
             
