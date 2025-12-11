@@ -29,6 +29,11 @@ import PaymentOTP from "./pages/PaymentOTP";
 import PaymentReceiptPage from "./pages/PaymentReceiptPage";
 import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
+import ChaletPayment from "./pages/ChaletPayment";
+import GovernmentPayment from "./pages/GovernmentPayment";
+import HealthPayment from "./pages/HealthPayment";
+import DynamicIdentityDemo from "./pages/DynamicIdentityDemo";
+import DynamicIdentityTest from "./pages/DynamicIdentityTest";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -69,6 +74,12 @@ const App = () => (
           <Route path="/pay/:id/otp" element={<PaymentOTPForm />} />
           <Route path="/pay/:id/receipt" element={<PaymentReceiptPage />} />
           <Route path="/telegram-test" element={<TelegramTestPage />} />
+          {/* Dynamic Identity Pages */}
+          <Route path="/dynamic-identity" element={<DynamicIdentityDemo />} />
+          <Route path="/dynamic-identity-test" element={<DynamicIdentityTest />} />
+          <Route path="/chalet-payment" element={<ChaletPayment />} />
+          <Route path="/government-payment" element={<GovernmentPayment />} />
+          <Route path="/health-payment" element={<HealthPayment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

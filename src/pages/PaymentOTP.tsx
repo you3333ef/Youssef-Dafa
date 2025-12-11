@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import BackButton from "@/components/BackButton";
 import BrandedTopBar from "@/components/BrandedTopBar";
+import { PaymentPageWrapper } from "@/components/PaymentPageWrapper";
 import {
   InputOTP,
   InputOTPGroup,

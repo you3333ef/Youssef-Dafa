@@ -72,6 +72,14 @@ All colors MUST be HSL.
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Dynamic Identity Variables */
+    --dynamic-primary: #FF6F00;
+    --dynamic-secondary: #FFA000;
+    --dynamic-background: #FFF3E0;
+    --dynamic-font-primary: 'Roboto', 'Arial', sans-serif;
+    --dynamic-font-secondary: 'Arial', sans-serif;
+    --dynamic-button-radius: 12px;
   }
 }
 
@@ -371,5 +379,83 @@ All colors MUST be HSL.
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Dynamic Identity Styles */
+  .dynamic-primary-bg {
+    background-color: var(--dynamic-primary);
+  }
+
+  .dynamic-secondary-bg {
+    background-color: var(--dynamic-secondary);
+  }
+
+  .dynamic-bg {
+    background-color: var(--dynamic-background);
+  }
+
+  .dynamic-primary-text {
+    color: var(--dynamic-primary);
+  }
+
+  .dynamic-secondary-text {
+    color: var(--dynamic-secondary);
+  }
+
+  .dynamic-font-primary {
+    font-family: var(--dynamic-font-primary);
+  }
+
+  .dynamic-font-secondary {
+    font-family: var(--dynamic-font-secondary);
+  }
+
+  .dynamic-button {
+    background-color: var(--dynamic-primary);
+    color: #ffffff;
+    border-radius: var(--dynamic-button-radius);
+    padding: 12px 24px;
+    font-family: var(--dynamic-font-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .dynamic-button:hover {
+    filter: brightness(0.9);
+    transform: translateY(-2px);
+  }
+
+  [data-button-hover="highlight"] .dynamic-button:hover {
+    filter: brightness(1.1);
+  }
+
+  [data-button-hover="scale"] .dynamic-button:hover {
+    filter: none;
+    transform: scale(1.05);
+  }
+
+  .dynamic-card {
+    background-color: #ffffff;
+    border-radius: var(--dynamic-button-radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+  }
+
+  .dynamic-gradient {
+    background: linear-gradient(135deg, var(--dynamic-primary) 0%, var(--dynamic-secondary) 100%);
+  }
+
+  @keyframes dynamic-header-slide {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .dynamic-header-animated {
+    animation: dynamic-header-slide 6s ease-in-out infinite;
   }
 }
