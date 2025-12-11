@@ -70,38 +70,20 @@ const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 sm:h-20">
-            {/* Right side - Logo */}
+            {/* Right side - Service Name */}
             <div className="flex items-center gap-3 sm:gap-4">
-              {/* Display dynamic entity logo, government logo, or company logo */}
-              {displayLogo && (
-                <div 
-                  className="bg-white rounded-lg sm:rounded-xl p-2 sm:p-3 shadow-lg"
-                  style={{
-                    borderRadius: activeBranding?.borderRadius?.md || '10px',
-                    boxShadow: activeBranding?.shadows?.md || `0 4px 6px -1px ${primaryColor}40`
-                  }}
-                >
-                  <img 
-                    src={displayLogo} 
-                    alt={serviceName}
-                    className="h-8 sm:h-12 w-auto object-contain"
-                    style={{ maxWidth: '150px' }}
-                    onError={(e) => e.currentTarget.style.display = 'none'}
-                  />
-                </div>
-              )}
-              <div className="text-white hidden sm:block">
+              <div className="text-white">
                 <h2 
-                  className="text-lg sm:text-xl font-bold leading-tight"
+                  className="text-xl sm:text-2xl font-bold leading-tight"
                   style={{ fontFamily: activeBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif' }}
                 >
                   {serviceName}
                 </h2>
                 <p 
-                  className="text-xs opacity-90"
+                  className="text-xs sm:text-sm opacity-90"
                   style={{ fontFamily: activeBranding?.fonts.primary || 'Arial, sans-serif' }}
                 >
-                  Secure Payment
+                  الدفع الآمن - Secure Payment
                 </p>
               </div>
             </div>

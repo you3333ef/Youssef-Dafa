@@ -238,30 +238,6 @@ const PaymentCardInput = () => {
       icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
       bankId={selectedBankId}
     >
-      {/* Selected Bank/Country Info */}
-      {(selectedBank || selectedCountryData) && (
-        <div 
-          className="rounded-lg p-3 sm:p-4 mb-6 flex items-center gap-3"
-          style={{
-            background: `${branding.colors.primary}10`,
-            border: `1px solid ${branding.colors.primary}30`
-          }}
-        >
-          {selectedCountryData && (
-            <span className="text-2xl">{selectedCountryData.flag}</span>
-          )}
-          {selectedBank && (
-            <Building2 className="w-5 h-5" style={{ color: selectedBank.color || branding.colors.primary }} />
-          )}
-          <div className="flex-1">
-            <p className="text-xs text-muted-foreground">البنك المختار</p>
-            <p className="text-sm font-semibold">
-              {selectedBank ? selectedBank.nameAr : 'غير محدد'}
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* Security Notice */}
       <div
         className="mb-6 p-4 rounded-xl border-2"

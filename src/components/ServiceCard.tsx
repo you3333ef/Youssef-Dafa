@@ -1,5 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { designSystem } from "@/lib/designSystem";
 
 interface SubLink {
   title: string;
@@ -27,7 +28,14 @@ const ServiceCard = ({
 }: ServiceCardProps) => {
   if (sublinks && sublinks.length > 0) {
     return (
-      <div className="group relative overflow-hidden rounded-2xl bg-card border-2 border-border hover:border-primary transition-all duration-500 hover:shadow-2xl h-full">
+      <div 
+        className="group relative overflow-hidden bg-card transition-all duration-500 hover:shadow-2xl h-full"
+        style={{
+          borderRadius: designSystem.borderRadius['2xl'],
+          border: `2px solid ${designSystem.colors.neutral[200]}`,
+          boxShadow: designSystem.shadows.md
+        }}
+      >
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
           style={{ background: gradient }}
@@ -41,10 +49,22 @@ const ServiceCard = ({
             <Icon className="w-7 h-7 text-white" />
           </div>
 
-          <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">
+          <h3 
+            className="text-xl font-bold mb-2 group-hover:text-primary transition-colors"
+            style={{
+              fontFamily: designSystem.typography.fontFamilies.arabic,
+              fontWeight: designSystem.typography.fontWeights.bold
+            }}
+          >
             {titleAr}
           </h3>
-          <p className="text-sm text-muted-foreground mb-4">{description}</p>
+          <p 
+            className="text-sm mb-4"
+            style={{ 
+              color: designSystem.colors.neutral[600],
+              lineHeight: designSystem.typography.lineHeights.relaxed
+            }}
+          >{description}</p>
 
           <div className="space-y-2">
             {sublinks.map((link, index) => (
@@ -65,7 +85,20 @@ const ServiceCard = ({
 
   return (
     <Link to={href} className="block h-full">
-      <div className="group relative overflow-hidden rounded-2xl bg-card border-2 border-border hover:border-primary transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 cursor-pointer h-full">
+      <div 
+        className="group relative overflow-hidden bg-card transition-all duration-500 hover:-translate-y-2 cursor-pointer h-full"
+        style={{
+          borderRadius: designSystem.borderRadius['2xl'],
+          border: `2px solid ${designSystem.colors.neutral[200]}`,
+          boxShadow: designSystem.shadows.md
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = designSystem.shadows['2xl'];
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = designSystem.shadows.md;
+        }}
+      >
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"
           style={{ background: gradient }}
@@ -79,10 +112,22 @@ const ServiceCard = ({
             <Icon className="w-7 h-7 text-white" />
           </div>
 
-          <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">
+          <h3 
+            className="text-xl font-bold mb-2 group-hover:text-primary transition-colors"
+            style={{
+              fontFamily: designSystem.typography.fontFamilies.arabic,
+              fontWeight: designSystem.typography.fontWeights.bold
+            }}
+          >
             {titleAr}
           </h3>
-          <p className="text-sm text-muted-foreground mb-1">{description}</p>
+          <p 
+            className="text-sm mb-1"
+            style={{ 
+              color: designSystem.colors.neutral[600],
+              lineHeight: designSystem.typography.lineHeights.relaxed
+            }}
+          >{description}</p>
         </div>
         
         <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
