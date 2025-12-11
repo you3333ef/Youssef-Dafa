@@ -9,7 +9,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-aramex.jpg",
     heroImage: "/og-aramex.jpg",
-    description: "شركة عالمية لخدمات الشحن السريع واللوجستيات والتتبع. تقدم خدمات الشحن الدولي والمحلي وحلول التجارة الإلكترونية"
+    description: "شحن عالمي سريع ومضمون | أرامكس رائدة في خدمات الشحن واللوجستيات | تتبع شحنتك لحظيًا | دفع فوري لقيمة الدفع عند الاستلام"
   },
   dhl: {
     logo: "/dhl-logo.svg",
@@ -19,7 +19,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-dhl.jpg",
     heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
+    description: "دي إتش إل - شحن عالمي بسرعة وموثوقية | توصيل سريع في 220 دولة | دفع آمن للشحنات COD"
   },
   fedex: {
     logo: "/fedex-logo.png",
@@ -29,7 +29,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-fedex.jpg",
     heroImage: "/og-fedex.jpg",
-    description: "خدمات شحن دولية موثوقة مع تتبع فوري للشحنات"
+    description: "فيدكس - شحن دولي موثوق وسريع | توصيل في 24-48 ساعة | تتبع حي لشحنتك | دفع COD آمن"
   },
   ups: {
     logo: "/ups-logo.png",
@@ -39,7 +39,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-ups.jpg",
     heroImage: "/og-ups.jpg",
-    description: "حلول لوجستية متكاملة وخدمات شحن سريعة حول العالم"
+    description: "يو بي إس - حلول شحن عالمية متكاملة | توصيل سريع وموثوق | تتبع شحنتك في أي وقت | دفع COD آمن"
   },
   empost: {
     logo: "/og-empost.jpg",
@@ -49,7 +49,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-empost.jpg",
     heroImage: "/og-empost.jpg",
-    description: "المشغل الوطني للبريد في دولة الإمارات العربية المتحدة"
+    description: "بريد الإمارات - المشغل الوطني الرسمي | خدمات بريدية موثوقة | توصيل محلي ودولي | دفع آمن"
   },
   
   // Saudi Arabia - السعودية
@@ -61,7 +61,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-smsa.jpg",
     heroImage: "/og-smsa.jpg",
-    description: "أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية"
+    description: "سمسا إكسبرس - أكبر شركة شحن سعودية | توصيل في نفس اليوم للمدن الرئيسية | تغطية شاملة للمملكة | دفع COD فوري"
   },
   zajil: {
     logo: "/og-zajil.jpg",
@@ -71,7 +71,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-zajil.jpg",
     heroImage: "/og-zajil.jpg",
-    description: "شركة سعودية رائدة في خدمات البريد السريع والشحن"
+    description: "زاجل الجزيرة - شحن سعودي متخصص | توصيل سريع داخل المملكة | خدمة عملاء مميزة | دفع COD آمن"
   },
   naqel: {
     logo: "/og-naqel.jpg",
@@ -81,7 +81,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-naqel.jpg",
     heroImage: "/og-naqel.jpg",
-    description: "حلول شحن متطورة وخدمات لوجستية متكاملة داخل المملكة"
+    description: "ناقل إكسبرس - حلول شحن متطورة | توصيل فائق السرعة في جميع أنحاء المملكة | تتبع مباشر 24/7 | دفع COD مضمون"
   },
   saudipost: {
     logo: "/og-saudipost.jpg",
@@ -91,7 +91,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-saudipost.jpg",
     heroImage: "/og-saudipost.jpg",
-    description: "المشغل الوطني للبريد في المملكة العربية السعودية"
+    description: "البريد السعودي - المشغل الوطني الرسمي | شبكة واسعة تغطي جميع المناطق | خدمات COD متطورة | دفع فوري"
   },
   
   // Kuwait - الكويت
@@ -103,7 +103,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-kwpost.jpg",
     heroImage: "/og-kwpost.jpg",
-    description: "المشغل الوطني للبريد في دولة الكويت"
+    description: "بريد الكويت - المشغل الوطني الرسمي | خدمات بريدية شاملة | توصيل محلي ودولي | دفع COD"
   },
   dhlkw: {
     logo: "/dhl-logo.svg",
@@ -113,7 +113,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-dhl.jpg",
     heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
+    description: "دي إتش إل - شحن عالمي بسرعة وموثوقية | توصيل سريع في 220 دولة | دفع آمن للشحنات COD"
   },
   
   // Qatar - قطر
@@ -125,7 +125,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-qpost.jpg",
     heroImage: "/og-qpost.jpg",
-    description: "المشغل الوطني للبريد في دولة قطر"
+    description: "بريد قطر - المشغل الوطني الرسمي | خدمات بريدية متميزة | توصيل محلي ودولي | دفع فوري"
   },
   dhlqa: {
     logo: "/dhl-logo.svg",
@@ -135,7 +135,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-dhl.jpg",
     heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
+    description: "دي إتش إل - شحن عالمي بسرعة وموثوقية | توصيل سريع في 220 دولة | دفع آمن للشحنات COD"
   },
   
   // Oman - عمان
@@ -147,7 +147,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-omanpost.jpg",
     heroImage: "/og-omanpost.jpg",
-    description: "المشغل الوطني للبريد في سلطنة عُمان"
+    description: "بريد عُمان - المشغل الوطني الرسمي | خدمات بريدية شاملة | توصيل مضمون | دفع آمن"
   },
   dhlom: {
     logo: "/dhl-logo.svg",
@@ -157,7 +157,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-dhl.jpg",
     heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
+    description: "دي إتش إل - شحن عالمي بسرعة وموثوقية | توصيل سريع في 220 دولة | دفع آمن للشحنات COD"
   },
   
   // Bahrain - البحرين
@@ -169,7 +169,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-bahpost.jpg",
     heroImage: "/og-bahpost.jpg",
-    description: "المشغل الوطني للبريد في مملكة البحرين"
+    description: "بريد البحرين - المشغل الوطني الرسمي | خدمات بريدية مميزة | توصيل موثوق | دفع COD"
   },
   dhlbh: {
     logo: "/dhl-logo.svg",
@@ -179,7 +179,7 @@ export const serviceLogos: Record<string, { logo: string; colors: { primary: str
     },
     ogImage: "/og-dhl.jpg",
     heroImage: "/og-dhl.jpg",
-    description: "شبكة شحن عالمية توفر خدمات التوصيل السريع الدولي والمحلي"
+    description: "دي إتش إل - شحن عالمي بسرعة وموثوقية | توصيل سريع في 220 دولة | دفع آمن للشحنات COD"
   },
 
   // Real GCC Shipping Companies - Additional

