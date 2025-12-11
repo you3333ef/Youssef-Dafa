@@ -62,14 +62,15 @@ const BrandedTopBar: React.FC<BrandedTopBarProps> = ({
   return (
     <>
       <div 
-        className="sticky top-0 z-50 w-full shadow-md"
+        className="sticky top-0 z-50 w-full shadow-lg"
         style={{
           background: gradient,
-          borderBottom: `3px solid ${primaryColor}`
+          borderBottom: `2px solid ${primaryColor}`,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
         }}
       >
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Right side - Service Name */}
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="text-white">

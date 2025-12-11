@@ -162,28 +162,32 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
     console.log('🖼️ BrandedCarousel - images count:', images.length);
     console.log('🖼️ BrandedCarousel - images:', images);
     
-    if (images.length === 0) return;
+    if (images.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
     
     const preloadImages = async () => {
       const imagePromises = images.map((src) => {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           const img = new Image();
           img.src = src;
-          img.onload = resolve;
-          img.onerror = reject;
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
         });
       });
       
       try {
-        await Promise.all(imagePromises);
+        await Promise.allSettled(imagePromises);
         setImagesLoaded(true);
       } catch (error) {
+        console.error('Error preloading images:', error);
         setImagesLoaded(true);
       }
     };
     
     preloadImages();
-  }, [images]);
+  }, [images, serviceKey, detectedEntity]);
   
   const autoplayRef = useRef(
     Autoplay({
@@ -239,9 +243,13 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
                 >
                   <img
                     src={image}
-                    alt={`${branding.nameAr}`}
+                    alt={`${branding.nameAr} - ${index + 1}`}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     loading={index === 0 ? "eager" : "lazy"}
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${image}`);
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                 </div>
               </div>

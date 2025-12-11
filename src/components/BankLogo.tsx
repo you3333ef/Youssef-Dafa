@@ -24,7 +24,7 @@ const BankLogo: React.FC<BankLogoProps> = ({
     sm: 'h-8 w-8 text-xs',
     md: 'h-12 w-12 text-sm',
     lg: 'h-16 w-16 text-base',
-    xl: 'h-20 w-20 text-lg'
+    xl: 'h-24 w-24 text-lg'
   };
 
   const getInitials = (name: string) => {
@@ -41,14 +41,16 @@ const BankLogo: React.FC<BankLogoProps> = ({
 
   if (logoPath && !imageError) {
     return (
-      <img
-        src={logoPath}
-        alt={`${bankName} logo`}
-        className={`object-contain ${className}`}
-        style={{ maxWidth: '100%', maxHeight: '100%' }}
-        onError={() => setImageError(true)}
-        loading="lazy"
-      />
+      <div className={`w-full h-full flex items-center justify-center p-2 ${className}`}>
+        <img
+          src={logoPath}
+          alt={`${bankName} logo`}
+          className="object-contain max-w-full max-h-full"
+          style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.05))' }}
+          onError={() => setImageError(true)}
+          loading="lazy"
+        />
+      </div>
     );
   }
 
