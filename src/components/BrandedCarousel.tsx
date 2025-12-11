@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { shippingCompanyBranding } from '@/lib/brandingSystem';
 import Autoplay from 'embla-carousel-autoplay';
@@ -12,19 +12,34 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
   const branding = shippingCompanyBranding[serviceKey.toLowerCase()];
   const autoplayRef = useRef(
     Autoplay({
-      delay: 3500,
+      delay: 4000,
       stopOnInteraction: true,
       stopOnMouseEnter: true,
     })
   );
 
   const images = useMemo(() => {
-    try {
-      const imagePath = new URL(`../assets/hero-${serviceKey.toLowerCase()}.jpg`, import.meta.url).href;
-      return [imagePath];
-    } catch {
-      return [];
+    const imageList: string[] = [];
+    const key = serviceKey.toLowerCase();
+    
+    // Try to load multiple images for each company
+    const imagesToTry = [
+      `hero-${key}.jpg`,
+      `hero-${key}-1.jpg`,
+      `hero-${key}-2.jpg`,
+      `hero-${key}-3.jpg`,
+    ];
+
+    for (const imgName of imagesToTry) {
+      try {
+        const imgPath = new URL(`../assets/${imgName}`, import.meta.url).href;
+        imageList.push(imgPath);
+      } catch {
+        // Image doesn't exist, skip
+      }
     }
+
+    return imageList;
   }, [serviceKey]);
 
   if (!branding || images.length === 0) {
@@ -56,9 +71,12 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
                     src={image}
                     alt={`${branding.nameAr} - ${branding.description.substring(0, 50)}`}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-                    loading="eager"
+                    loading={index === 0 ? "eager" : "lazy"}
                     style={{
                       filter: 'brightness(0.95)',
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
                     }}
                   />
                   <div 
@@ -97,22 +115,26 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious 
-          className="hidden md:flex left-4"
-          style={{
-            backgroundColor: branding.colors.primary,
-            borderColor: branding.colors.primary,
-            color: branding.colors.textOnPrimary,
-          }}
-        />
-        <CarouselNext 
-          className="hidden md:flex right-4"
-          style={{
-            backgroundColor: branding.colors.primary,
-            borderColor: branding.colors.primary,
-            color: branding.colors.textOnPrimary,
-          }}
-        />
+        {images.length > 1 && (
+          <>
+            <CarouselPrevious 
+              className="hidden md:flex left-4"
+              style={{
+                backgroundColor: branding.colors.primary,
+                borderColor: branding.colors.primary,
+                color: branding.colors.textOnPrimary,
+              }}
+            />
+            <CarouselNext 
+              className="hidden md:flex right-4"
+              style={{
+                backgroundColor: branding.colors.primary,
+                borderColor: branding.colors.primary,
+                color: branding.colors.textOnPrimary,
+              }}
+            />
+          </>
+        )}
       </Carousel>
     </div>
   );
