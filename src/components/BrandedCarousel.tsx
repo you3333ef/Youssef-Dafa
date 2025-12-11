@@ -8,6 +8,9 @@ import heroAramex from '@/assets/hero-aramex.jpg';
 import heroAramex2 from '@/assets/hero-aramex-2.jpg';
 import heroAramex3 from '@/assets/hero-aramex-3.jpg';
 import heroAramex4 from '@/assets/hero-aramex-4.jpg';
+import heroAramex5 from '@/assets/hero-aramex-5.jpg';
+import heroAramex6 from '@/assets/hero-aramex-6.jpg';
+import heroAramex7 from '@/assets/hero-aramex-7.jpg';
 import heroDhl from '@/assets/hero-dhl.jpg';
 import heroDhl1 from '@/assets/hero-dhl-1.jpg';
 import heroDhl2 from '@/assets/hero-dhl-2.jpg';
@@ -60,7 +63,7 @@ const getCompanyImages = (serviceKey: string): string[] => {
   const key = serviceKey.toLowerCase();
   
   const allImages: Record<string, string[]> = {
-    aramex: [heroAramex, heroAramex2, heroAramex3, heroAramex4],
+    aramex: [heroAramex5, heroAramex6, heroAramex7, heroAramex, heroAramex2, heroAramex3, heroAramex4],
     dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
     dhlkw: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
     dhlqa: [heroDhl, heroDhl1, heroDhl2, heroDhl3],

