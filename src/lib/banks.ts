@@ -3,7 +3,7 @@ export interface Bank {
   name: string;
   nameAr: string;
   logo?: string;
-  color?: string;
+  color: string;
 }
 
 export interface BanksByCountry {

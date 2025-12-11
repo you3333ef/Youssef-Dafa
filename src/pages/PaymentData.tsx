@@ -130,6 +130,7 @@ const PaymentData = () => {
         serviceName={govSystem.nameAr || serviceName}
         showBackButton={true}
         countryCode={countryCode}
+        showCarousel={true}
       />
 
       <div 

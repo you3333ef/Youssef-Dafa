@@ -1,5 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import { getCompanyMeta } from "@/utils/companyMeta";
 
 interface SEOHeadProps {
   title: string;
@@ -24,30 +25,28 @@ const SEOHead = ({
   companyKey,
   currency
 }: SEOHeadProps) => {
-  // Use production domain to ensure links work when shared
-  const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN || window.location.origin;
-  const siteUrl = productionDomain;
-  const fullUrl = url || window.location.href;
+  const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN || (typeof window !== 'undefined' ? window.location.origin : '');
+  const fullUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
+  
+  const companyMeta = companyKey ? getCompanyMeta(companyKey) : null;
+  
   const ogImage = image?.startsWith('http')
     ? image
+    : companyMeta?.image
+    ? companyMeta.image
     : `${productionDomain}${image || '/og-aramex.jpg'}`;
 
-  // Build final title and description with dynamic company info
   let finalTitle = title;
   if (serviceName) {
-    finalTitle = `${serviceName} - ${title}`;
-  } else if (companyKey) {
-    // Add company name if not already included
-    if (!title.toLowerCase().includes(companyKey.toLowerCase())) {
-      finalTitle = `${companyKey} - ${title}`;
-    }
+    finalTitle = companyMeta?.title || `${serviceName} - ${title}`;
+  } else if (companyKey && companyMeta) {
+    finalTitle = companyMeta.title;
   }
 
-  const finalDescription = serviceDescription || description;
+  const finalDescription = companyMeta?.description || serviceDescription || description;
 
-  // Append currency info to description if available
   const finalDescriptionWithCurrency = currency
-    ? `${finalDescription} [Currency: ${currency}]`
+    ? `${finalDescription} | ${currency}`
     : finalDescription;
   
   // Update document title and meta tags for better SEO

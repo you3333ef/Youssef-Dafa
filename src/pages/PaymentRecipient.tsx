@@ -221,6 +221,7 @@ const PaymentRecipient = () => {
         serviceKey={serviceKey}
         serviceName={serviceName}
         showBackButton={true}
+        showCarousel={true}
       />
 
       <div 
