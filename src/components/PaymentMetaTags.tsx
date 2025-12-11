@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { getServiceBranding } from "@/lib/serviceLogos";
+import { getCompanyMeta } from "@/utils/companyMeta";
 
 interface PaymentMetaTagsProps {
   serviceName: string;
@@ -10,23 +11,16 @@ interface PaymentMetaTagsProps {
 }
 
 const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }: PaymentMetaTagsProps) => {
-  // Use serviceKey if provided, otherwise try to extract from serviceName
   const actualServiceKey = serviceKey || serviceName?.toLowerCase() || 'aramex';
   const branding = getServiceBranding(actualServiceKey);
+  const companyMeta = getCompanyMeta(actualServiceKey);
 
-  const ogTitle = title || `الدفع - ${serviceName}`;
-  const serviceDescription = branding.description || `خدمة شحن موثوقة`;
-  const ogDescription = description || `صفحة دفع آمنة ومحمية لخدمة ${serviceName} - ${serviceDescription}${amount ? ` - ${amount}` : ''}`;
+  const ogTitle = title || companyMeta.title || `الدفع - ${serviceName}`;
+  const ogDescription = description || companyMeta.description || `صفحة دفع آمنة ومحمية لخدمة ${serviceName}${amount ? ` - ${amount}` : ''}`;
 
-  // Use production domain to ensure links work when shared
   const productionDomain = typeof window !== 'undefined' ? window.location.origin : 'https://gentle-hamster-ed634c.netlify.app';
 
-  // Use company-specific OG image or hero image
-  const ogImage = branding.ogImage
-    ? `${productionDomain}${branding.ogImage}`
-    : branding.heroImage
-    ? `${productionDomain}${branding.heroImage}`
-    : `${productionDomain}/og-aramex.jpg`;
+  const ogImage = companyMeta.image || `${productionDomain}/og-aramex.jpg`;
 
   return (
     <Helmet>
@@ -35,7 +29,7 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={window.location.href} />
+      <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
       <meta property="og:image" content={ogImage} />
@@ -51,6 +45,10 @@ const PaymentMetaTags = ({ serviceName, serviceKey, amount, title, description }
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:type" content="image/jpeg" />
+      
+      {/* Additional meta tags for better sharing */}
+      <meta property="og:site_name" content="منصة الدفع الآمن" />
+      <meta name="robots" content="noindex, nofollow" />
     </Helmet>
   );
 };

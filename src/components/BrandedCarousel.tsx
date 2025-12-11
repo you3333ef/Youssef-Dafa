@@ -19,11 +19,15 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
   );
 
   const images = useMemo(() => {
-    const baseImage = `/src/assets/hero-${serviceKey.toLowerCase()}.jpg`;
-    return [baseImage, baseImage, baseImage];
+    try {
+      const imagePath = new URL(`../assets/hero-${serviceKey.toLowerCase()}.jpg`, import.meta.url).href;
+      return [imagePath];
+    } catch {
+      return [];
+    }
   }, [serviceKey]);
 
-  if (!branding) {
+  if (!branding || images.length === 0) {
     return null;
   }
 
