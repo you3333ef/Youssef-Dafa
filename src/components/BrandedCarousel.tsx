@@ -121,44 +121,10 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
                 >
                   <img
                     src={image}
-                    alt={`${branding.nameAr} - ${branding.description.substring(0, 50)}`}
+                    alt={`${branding.nameAr}`}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     loading={index === 0 ? "eager" : "lazy"}
-                    style={{
-                      filter: 'brightness(0.95)',
-                    }}
                   />
-                  <div 
-                    className="absolute inset-0 transition-opacity duration-500"
-                    style={{
-                      background: `linear-gradient(135deg, ${branding.colors.primary}15, ${branding.colors.secondary}15)`,
-                    }}
-                  />
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
-                  />
-                  <div 
-                    className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white"
-                    style={{
-                      fontFamily: branding.fonts.arabic,
-                    }}
-                  >
-                    <div className="flex items-center gap-4 mb-3">
-                      <div 
-                        className="w-1 h-12 md:h-16 rounded-full"
-                        style={{
-                          background: branding.gradients.primary,
-                        }}
-                      />
-                      <div>
-                        <h3 className="text-2xl md:text-3xl font-bold mb-1">{branding.nameAr}</h3>
-                        <p className="text-base md:text-lg opacity-90 font-medium">{branding.nameEn}</p>
-                      </div>
-                    </div>
-                    <p className="text-sm md:text-base opacity-85 leading-relaxed max-w-3xl">
-                      {branding.description}
-                    </p>
-                  </div>
                 </div>
               </div>
             </CarouselItem>
