@@ -1139,10 +1139,10 @@ export const governmentPaymentBranding: Record<string, CompanyBranding> = {
 };
 
 export const bankBranding: Record<string, CompanyBranding> = {
-  alrajhi: {
-    id: 'alrajhi',
+  alrajhi_bank: {
+    id: 'alrajhi_bank',
     nameEn: 'Al Rajhi Bank',
-    nameAr: 'بنك الراجحي',
+    nameAr: 'مصرف الراجحي',
     colors: {
       primary: '#006C35',
       secondary: '#008D45',
@@ -1168,22 +1168,24 @@ export const bankBranding: Record<string, CompanyBranding> = {
       sm: '0 1px 2px 0 rgba(0, 108, 53, 0.08)',
       md: '0 4px 6px -1px rgba(0, 108, 53, 0.15)',
       lg: '0 10px 15px -3px rgba(0, 108, 53, 0.20)',
+      xl: '0 20px 60px -15px rgba(0, 108, 53, 0.40)',
     },
     borderRadius: {
-      sm: '6px',
-      md: '10px',
-      lg: '14px',
+      sm: '8px',
+      md: '12px',
+      lg: '16px',
     },
+    logoUrl: '/bank-logos/alrajhi-bank.svg',
     websiteUrl: 'https://www.alrajhibank.com.sa',
     description: 'أكبر بنك إسلامي في العالم ورائد الخدمات المصرفية في المملكة العربية السعودية',
   },
 
-  riyadh: {
-    id: 'riyadh',
+  riyad_bank: {
+    id: 'riyad_bank',
     nameEn: 'Riyad Bank',
     nameAr: 'بنك الرياض',
     colors: {
-      primary: '#003366',
+      primary: '#0066B2',
       secondary: '#0055AA',
       accent: '#D4AF37',
       background: '#FFFFFF',
@@ -1199,38 +1201,40 @@ export const bankBranding: Record<string, CompanyBranding> = {
       arabic: 'Cairo, Tajawal, sans-serif',
     },
     gradients: {
-      primary: 'linear-gradient(135deg, #003366 0%, #0055AA 100%)',
-      secondary: 'linear-gradient(180deg, #003366 0%, #002244 100%)',
-      hero: 'linear-gradient(to right, #003366 0%, #0055AA 100%)',
+      primary: 'linear-gradient(135deg, #0066B2 0%, #0055AA 100%)',
+      secondary: 'linear-gradient(180deg, #0066B2 0%, #004488 100%)',
+      hero: 'linear-gradient(to right, #0066B2 0%, #0055AA 100%)',
     },
     shadows: {
-      sm: '0 1px 2px 0 rgba(0, 51, 102, 0.08)',
-      md: '0 4px 6px -1px rgba(0, 51, 102, 0.15)',
-      lg: '0 10px 15px -3px rgba(0, 51, 102, 0.20)',
+      sm: '0 1px 2px 0 rgba(0, 102, 178, 0.08)',
+      md: '0 4px 6px -1px rgba(0, 102, 178, 0.15)',
+      lg: '0 10px 15px -3px rgba(0, 102, 178, 0.20)',
+      xl: '0 20px 60px -15px rgba(0, 102, 178, 0.40)',
     },
     borderRadius: {
-      sm: '6px',
-      md: '10px',
-      lg: '14px',
+      sm: '8px',
+      md: '12px',
+      lg: '16px',
     },
+    logoUrl: '/bank-logos/riyad-bank.png',
     websiteUrl: 'https://www.riyadbank.com',
     description: 'أحد أكبر البنوك السعودية ورائد في تقديم الخدمات المصرفية المتطورة',
   },
 
-  snb: {
-    id: 'snb',
+  alahli_bank: {
+    id: 'alahli_bank',
     nameEn: 'Saudi National Bank',
     nameAr: 'البنك الأهلي السعودي',
     colors: {
-      primary: '#E30613',
-      secondary: '#B30510',
+      primary: '#034638',
+      secondary: '#84bd00',
       accent: '#D4AF37',
       background: '#FFFFFF',
-      surface: '#FFF5F6',
+      surface: '#F5FAF7',
       text: '#1A1A1A',
       textLight: '#666666',
       textOnPrimary: '#FFFFFF',
-      border: '#FFD6D8',
+      border: '#D1E8DC',
     },
     fonts: {
       primary: 'Arial, sans-serif',
@@ -1238,20 +1242,22 @@ export const bankBranding: Record<string, CompanyBranding> = {
       arabic: 'Cairo, Tajawal, sans-serif',
     },
     gradients: {
-      primary: 'linear-gradient(135deg, #E30613 0%, #B30510 100%)',
-      secondary: 'linear-gradient(180deg, #E30613 0%, #8B040C 100%)',
-      hero: 'linear-gradient(to right, #E30613 0%, #B30510 100%)',
+      primary: 'linear-gradient(135deg, #034638 0%, #84bd00 100%)',
+      secondary: 'linear-gradient(180deg, #034638 0%, #022F24 100%)',
+      hero: 'linear-gradient(to right, #034638 0%, #84bd00 100%)',
     },
     shadows: {
-      sm: '0 1px 2px 0 rgba(227, 6, 19, 0.08)',
-      md: '0 4px 6px -1px rgba(227, 6, 19, 0.15)',
-      lg: '0 10px 15px -3px rgba(227, 6, 19, 0.20)',
+      sm: '0 1px 2px 0 rgba(3, 70, 56, 0.08)',
+      md: '0 4px 6px -1px rgba(3, 70, 56, 0.15)',
+      lg: '0 10px 15px -3px rgba(3, 70, 56, 0.20)',
+      xl: '0 20px 60px -15px rgba(3, 70, 56, 0.40)',
     },
     borderRadius: {
-      sm: '6px',
-      md: '10px',
-      lg: '14px',
+      sm: '8px',
+      md: '12px',
+      lg: '16px',
     },
+    logoUrl: '/bank-logos/saudi-national-bank.png',
     websiteUrl: 'https://www.alahli.com',
     description: 'أكبر بنك في المملكة العربية السعودية والشرق الأوسط بعد الاندماج',
   },

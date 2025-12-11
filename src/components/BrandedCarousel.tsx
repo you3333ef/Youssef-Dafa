@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { shippingCompanyBranding } from '@/lib/brandingSystem';
 import { getEntityHeaderImages, detectEntityFromURL } from '@/lib/dynamicIdentity';
@@ -57,6 +57,10 @@ const getCompanyImages = (serviceKey: string): string[] => {
   const allImages: Record<string, string[]> = {
     aramex: [heroAramex],
     dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlkw: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlqa: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlom: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlbh: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
     fedex: [heroFedex, heroFedex1, heroFedex2, heroFedex3],
     ups: [heroUps, heroUps1, heroUps2, heroUps3],
     smsa: [heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
@@ -73,11 +77,48 @@ const getCompanyImages = (serviceKey: string): string[] => {
     alshaya: [heroAlshaya],
     shipco: [heroShipco],
     bahri: [heroBahri],
+    national: [heroBahri],
     hellmann: [heroHellmann],
     dsv: [heroDsv],
     genacom: [heroGenacom],
+    agility: [heroGenacom],
     jinaken: [heroJinaken],
     jinakum: [heroJinakum],
+    chalets: [
+      '/assets/dynamic-identity/chalets_image1.svg',
+      '/assets/dynamic-identity/chalets_image2.svg',
+      '/assets/dynamic-identity/chalets_image3.svg'
+    ],
+    government_payment: [
+      '/assets/dynamic-identity/gov_image1.svg',
+      '/assets/dynamic-identity/gov_image2.svg',
+      '/assets/dynamic-identity/gov_image3.svg'
+    ],
+    local_payment: [
+      '/assets/dynamic-identity/local_image1.svg',
+      '/assets/dynamic-identity/local_image2.svg',
+      '/assets/dynamic-identity/local_image3.svg'
+    ],
+    invoices: [
+      '/assets/dynamic-identity/invoice_image1.svg',
+      '/assets/dynamic-identity/invoice_image2.svg',
+      '/assets/dynamic-identity/invoice_image3.svg'
+    ],
+    contracts: [
+      '/assets/dynamic-identity/contract_image1.svg',
+      '/assets/dynamic-identity/contract_image2.svg',
+      '/assets/dynamic-identity/contract_image3.svg'
+    ],
+    health_links: [
+      '/assets/dynamic-identity/health_image1.svg',
+      '/assets/dynamic-identity/health_image2.svg',
+      '/assets/dynamic-identity/health_image3.svg'
+    ],
+    bank_pages: [
+      '/assets/dynamic-identity/bank_image1.svg',
+      '/assets/dynamic-identity/bank_image2.svg',
+      '/assets/dynamic-identity/bank_image3.svg'
+    ],
   };
 
   return allImages[key] || [];
@@ -85,14 +126,56 @@ const getCompanyImages = (serviceKey: string): string[] => {
 
 const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className = '' }) => {
   const branding = shippingCompanyBranding[serviceKey.toLowerCase()];
-  let images = getCompanyImages(serviceKey);
   
   const detectedEntity = detectEntityFromURL();
   const entityImages = detectedEntity ? getEntityHeaderImages(detectedEntity) : [];
   
+  let images: string[] = [];
+  
   if (entityImages.length > 0) {
     images = entityImages;
+  } else if (serviceKey) {
+    const localImages = getCompanyImages(serviceKey);
+    if (localImages.length > 0) {
+      images = localImages;
+    } else {
+      const entityImagesFromKey = getEntityHeaderImages(serviceKey);
+      if (entityImagesFromKey.length > 0) {
+        images = entityImagesFromKey;
+      }
+    }
   }
+  
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  
+  useEffect(() => {
+    console.log('🖼️ BrandedCarousel - serviceKey:', serviceKey);
+    console.log('🖼️ BrandedCarousel - detectedEntity:', detectedEntity);
+    console.log('🖼️ BrandedCarousel - images count:', images.length);
+    console.log('🖼️ BrandedCarousel - images:', images);
+    
+    if (images.length === 0) return;
+    
+    const preloadImages = async () => {
+      const imagePromises = images.map((src) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+      
+      try {
+        await Promise.all(imagePromises);
+        setImagesLoaded(true);
+      } catch (error) {
+        setImagesLoaded(true);
+      }
+    };
+    
+    preloadImages();
+  }, [images]);
   
   const autoplayRef = useRef(
     Autoplay({
@@ -104,6 +187,25 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
 
   if (images.length === 0) {
     return null;
+  }
+  
+  if (!imagesLoaded) {
+    return (
+      <div className={`w-full ${className}`}>
+        <div 
+          className="w-full max-w-6xl mx-auto aspect-[21/9] rounded-xl flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}20, ${branding.colors.secondary}20)`,
+            borderRadius: branding.borderRadius.lg,
+          }}
+        >
+          <div className="animate-pulse text-center">
+            <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-white/30" />
+            <p className="text-sm" style={{ color: branding.colors.primary }}>جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

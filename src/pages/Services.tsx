@@ -98,29 +98,28 @@ const Services = () => {
         image="/og-aramex.jpg"
         type="website"
       />
-      <div className="min-h-screen py-6" dir="rtl">
-      <div className="container mx-auto px-4">
+      <div className="min-h-screen py-6 bg-gradient-to-br from-background via-background to-muted/20" dir="rtl">
+      <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-4">
           <BackButton />
         </div>
-        {/* Header - Minimized */}
-        <div className="text-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">
+        
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
             اختر خدمتك
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground">
             ابدأ بتحديد الدولة، ثم اختر الخدمة المناسبة
           </p>
         </div>
 
-        {/* Country Dropdown - Minimized */}
-        <div className="mb-6">
+        <div className="mb-8">
           <div className="max-w-md mx-auto">
-            <label className="block text-base font-semibold mb-2 text-center">
+            <label className="block text-lg font-bold mb-3 text-center">
               اختر الدولة
             </label>
             <Select onValueChange={handleCountryChange}>
-              <SelectTrigger className="w-full h-11 text-base bg-card/50 backdrop-blur-sm border-2 hover:border-primary transition-colors">
+              <SelectTrigger className="w-full h-14 text-lg bg-card/80 backdrop-blur-sm border-2 hover:border-primary transition-all shadow-lg">
                 <SelectValue placeholder="اختر دولة..." />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
@@ -128,13 +127,13 @@ const Services = () => {
                   <SelectItem
                     key={country.code}
                     value={country.code}
-                    className="text-base py-2 cursor-pointer hover:bg-accent"
+                    className="text-base py-3 cursor-pointer hover:bg-accent"
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{country.flag}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{country.flag}</span>
                       <div className="text-right">
-                        <div className="font-semibold text-sm">{country.nameAr}</div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="font-bold text-base">{country.nameAr}</div>
+                        <div className="text-sm text-muted-foreground">
                           {country.name}
                         </div>
                       </div>
@@ -146,24 +145,23 @@ const Services = () => {
           </div>
         </div>
 
-        {/* Services Grid - Minimized */}
         {selectedCountry ? (
           <div className="animate-fade-in">
-            <h2 className="text-lg font-bold mb-4 text-center">
+            <h2 className="text-xl font-bold mb-6 text-center bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
               الخدمات المتاحة في {selectedCountry.nameAr}
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 max-w-4xl mx-auto">
               {services.map((service) => (
                 <ServiceCard key={service.title} {...service} />
               ))}
             </div>
           </div>
         ) : (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-              <Package className="w-8 h-8 text-primary-foreground" />
+          <div className="text-center py-16">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse shadow-2xl">
+              <Package className="w-10 h-10 text-primary-foreground" />
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               الرجاء اختيار دولة لعرض الخدمات المتاحة
             </p>
           </div>
