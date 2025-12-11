@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
 import BottomNav from "@/components/BottomNav";
 import BackButton from "@/components/BackButton";
+import { DynamicIdentity, EntityHeader, EntityContainer } from "@/components/DynamicIdentity";
 
 interface ContractTemplate {
   id: string;
@@ -277,34 +278,22 @@ const Contracts = () => {
   const countryElements = getCountrySpecificElements(selectedCountry.code);
 
   return (
+    <DynamicIdentity entityType="contracts">
+      <EntityContainer entityType="contracts" useBackgroundImage={false}>
     <div className="min-h-screen py-6" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="mb-4">
           <BackButton />
         </div>
-        {/* Header */}
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(`/services`)}
-            className="mb-4"
-          >
-            <ArrowRight className="w-4 h-4 ml-2" />
-            العودة للخدمات
-          </Button>
-
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
-              <Scale className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold">إدارة وتوثيق العقود الإلكترونية</h1>
-              <p className="text-sm text-muted-foreground">
-                {selectedCountry.nameAr}
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Header - Dynamic Identity */}
+        <EntityHeader
+          entityType="contracts"
+          title="إدارة وتوثيق العقود الإلكترونية"
+          subtitle={selectedCountry.nameAr}
+          showLogo={true}
+          animateImages={true}
+          className="mb-6"
+        />
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Contract Builder */}
@@ -493,6 +482,8 @@ const Contracts = () => {
       <div className="h-20" />
       <BottomNav />
     </div>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

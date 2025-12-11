@@ -8,6 +8,8 @@ import { formatCurrency } from "@/lib/countryCurrencies";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getReceiptLayout } from "@/components/ReceiptLayouts";
 import { CheckCircle2, Download, Home, Share2 } from "lucide-react";
+import { DynamicIdentity, EntityHeader, EntityContainer } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentReceipt = () => {
   const { paymentId } = useParams();
@@ -26,6 +28,9 @@ const PaymentReceipt = () => {
   if (!countryData) return null;
   
   const payload = link.payload;
+  
+  // Determine entity type
+  const entityType = link ? getPaymentEntityType(link) : 'local_payment';
   
   // Get government payment system
   const selectedCountry = link.payload?.selectedCountry || link.country_code || "SA";
@@ -46,6 +51,8 @@ const PaymentReceipt = () => {
   });
   
   return (
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
     <div 
       className="min-h-screen py-12" 
       dir="rtl"
@@ -196,6 +203,8 @@ const PaymentReceipt = () => {
         </div>
       </div>
     </div>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

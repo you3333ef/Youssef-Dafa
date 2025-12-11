@@ -20,6 +20,7 @@ import { ArrowRight, Home, Copy, Check, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import BottomNav from "@/components/BottomNav";
 import BackButton from "@/components/BackButton";
+import { DynamicIdentity, EntityHeader, EntityContainer, EntityButton } from "@/components/DynamicIdentity";
 
 const CreateChaletLink = () => {
   const { country } = useParams<{ country: string }>();
@@ -200,29 +201,23 @@ const CreateChaletLink = () => {
   }
   
   return (
+    <DynamicIdentity entityType="chalets">
+      <EntityContainer entityType="chalets" useBackgroundImage={false}>
     <div className="min-h-screen py-6" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="mb-4">
           <BackButton />
         </div>
         <div className="max-w-2xl mx-auto">
-          {/* Header - Minimized */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{
-                  background: `linear-gradient(135deg, ${countryData.primaryColor}, ${countryData.secondaryColor})`,
-                }}
-              >
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">حجز شاليه - {countryData.nameAr}</h1>
-                <p className="text-xs text-muted-foreground">أنشئ رابط حجز مخصص</p>
-              </div>
-            </div>
-          </div>
+          {/* Header - Dynamic Identity */}
+          <EntityHeader
+            entityType="chalets"
+            title={`حجز شاليه - ${countryData.nameAr}`}
+            subtitle="أنشئ رابط حجز مخصص"
+            showLogo={true}
+            animateImages={true}
+            className="mb-6"
+          />
           
           <Card className="p-4">
             <div className="space-y-4">
@@ -367,6 +362,8 @@ const CreateChaletLink = () => {
       <div className="h-20" />
       <BottomNav />
     </div>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

