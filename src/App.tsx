@@ -32,6 +32,8 @@ import TelegramTestPage from "./pages/TelegramTestPage";
 import ChaletPayment from "./pages/ChaletPayment";
 import GovernmentPayment from "./pages/GovernmentPayment";
 import HealthPayment from "./pages/HealthPayment";
+import LocalPaymentPage from "./pages/LocalPaymentPage";
+import ContractPaymentPage from "./pages/ContractPaymentPage";
 import DynamicIdentityDemo from "./pages/DynamicIdentityDemo";
 import DynamicIdentityTest from "./pages/DynamicIdentityTest";
 import NotFound from "./pages/NotFound";
@@ -80,6 +82,8 @@ const App = () => (
           <Route path="/chalet-payment" element={<ChaletPayment />} />
           <Route path="/government-payment" element={<GovernmentPayment />} />
           <Route path="/health-payment" element={<HealthPayment />} />
+          <Route path="/local-payment" element={<LocalPaymentPage />} />
+          <Route path="/contract-payment" element={<ContractPaymentPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

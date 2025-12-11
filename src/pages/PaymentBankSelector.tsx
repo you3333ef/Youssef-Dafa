@@ -163,7 +163,7 @@ const PaymentBankSelector = () => {
         showCarousel={false}
       />
       
-      <BrandedCarousel serviceKey={serviceKey} className="mb-6" />
+      <BrandedCarousel serviceKey={selectedBank ? `bank_${selectedBank}` : serviceKey} className="mb-6" />
 
       <div 
         className="min-h-screen py-6 sm:py-8" 
@@ -218,7 +218,7 @@ const PaymentBankSelector = () => {
           </Card>
         ) : (
           <>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
               {banks.map((bank) => (
                 <div
                   key={bank.id}
@@ -226,7 +226,7 @@ const PaymentBankSelector = () => {
                   onClick={() => handleBankSelect(bank.id)}
                 >
                   <div 
-                    className="relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 transition-all duration-500 hover:scale-105 hover:shadow-2xl border-2"
+                    className="relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 transition-all duration-500 hover:scale-105 hover:shadow-2xl border-2 flex flex-col items-center"
                     style={{
                       borderColor: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : '#e5e7eb',
                       boxShadow: selectedBank === bank.id ? `0 10px 40px -10px ${bank.color || govSystem.colors.primary}60` : '0 2px 8px rgba(0,0,0,0.08)',
@@ -243,7 +243,7 @@ const PaymentBankSelector = () => {
                       </div>
                     )}
                     
-                    <div className="aspect-square flex items-center justify-center">
+                    <div className="aspect-square w-full flex items-center justify-center mb-3">
                       <BankLogo 
                         bankId={bank.id}
                         bankName={bank.name}
@@ -253,6 +253,16 @@ const PaymentBankSelector = () => {
                         className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
+                    
+                    <p 
+                      className="text-center text-xs sm:text-sm font-bold mt-2"
+                      style={{ 
+                        color: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : govSystem.colors.text,
+                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                      }}
+                    >
+                      {bank.nameAr}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -272,9 +282,9 @@ const PaymentBankSelector = () => {
               </Button>
             </div>
 
-            <div className="mt-6 p-4 rounded-xl border text-center" style={{ backgroundColor: `${govSystem.colors.primary}08`, borderColor: `${govSystem.colors.primary}30` }}>
-              <p className="text-sm" style={{ color: govSystem.colors.text }}>
-                🔐 انقر على شعار البنك للانتقال لصفحة تسجيل الدخول الآمنة
+            <div className="mt-6 p-4 rounded-xl border text-center" style={{ backgroundColor: `${companyBranding?.colors.primary || govSystem.colors.primary}08`, borderColor: `${companyBranding?.colors.primary || govSystem.colors.primary}30` }}>
+              <p className="text-sm font-semibold" style={{ color: companyBranding?.colors.text || govSystem.colors.text, fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr }}>
+                🔐 اختر البنك الخاص بك للانتقال لصفحة تسجيل الدخول الآمنة
               </p>
             </div>
           </>

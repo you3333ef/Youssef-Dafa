@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { shippingCompanyBranding } from '@/lib/brandingSystem';
 import { getEntityHeaderImages, detectEntityFromURL } from '@/lib/dynamicIdentity';
@@ -94,6 +94,32 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
     images = entityImages;
   }
   
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  
+  useEffect(() => {
+    if (images.length === 0) return;
+    
+    const preloadImages = async () => {
+      const imagePromises = images.map((src) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+      
+      try {
+        await Promise.all(imagePromises);
+        setImagesLoaded(true);
+      } catch (error) {
+        setImagesLoaded(true);
+      }
+    };
+    
+    preloadImages();
+  }, [images]);
+  
   const autoplayRef = useRef(
     Autoplay({
       delay: 4000,
@@ -104,6 +130,25 @@ const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className
 
   if (images.length === 0) {
     return null;
+  }
+  
+  if (!imagesLoaded) {
+    return (
+      <div className={`w-full ${className}`}>
+        <div 
+          className="w-full max-w-6xl mx-auto aspect-[21/9] rounded-xl flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, ${branding.colors.primary}20, ${branding.colors.secondary}20)`,
+            borderRadius: branding.borderRadius.lg,
+          }}
+        >
+          <div className="animate-pulse text-center">
+            <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-white/30" />
+            <p className="text-sm" style={{ color: branding.colors.primary }}>جاري التحميل...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
