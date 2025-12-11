@@ -1,3 +1,6 @@
+import { serviceLogos } from './serviceLogos';
+import { bankBranding } from './brandingSystem';
+
 export interface DynamicIdentityEntity {
   logo: string;
   animated_header_images: string[];
@@ -31,90 +34,153 @@ export interface DynamicIdentityConfig {
   auto_run_on_load: boolean;
 }
 
+const generateEntitiesFromServices = (): Record<string, DynamicIdentityEntity> => {
+  const entities: Record<string, DynamicIdentityEntity> = {};
+  
+  Object.entries(serviceLogos).forEach(([key, service]) => {
+    entities[key] = {
+      logo: service.logo,
+      animated_header_images: [service.heroImage || service.ogImage || ''],
+      header_position: 'below_top_bar',
+      payment_share_image: service.ogImage || '',
+      payment_share_description: service.description || `خدمات ${key}`,
+      colors: {
+        primary: service.colors.primary,
+        secondary: service.colors.secondary,
+        background: '#ffffff',
+      },
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
+      buttons: {
+        style: 'rounded',
+        hover: 'darken',
+      },
+      background_images: [service.heroImage || service.ogImage || ''],
+      auto_apply: true,
+    };
+  });
+  
+  return entities;
+};
+
+const generateEntitiesFromBanks = (): Record<string, DynamicIdentityEntity> => {
+  const entities: Record<string, DynamicIdentityEntity> = {};
+  
+  Object.entries(bankBranding).forEach(([key, bank]) => {
+    entities[`bank_${key}`] = {
+      logo: '',
+      animated_header_images: [],
+      header_position: 'below_top_bar',
+      payment_share_image: '',
+      payment_share_description: `الخدمات المصرفية الإلكترونية - ${bank.nameAr}`,
+      colors: {
+        primary: bank.colors.primary,
+        secondary: bank.colors.secondary || bank.colors.primary,
+        background: bank.colors.background,
+      },
+      fonts: [bank.fonts.arabic, bank.fonts.primary],
+      buttons: {
+        style: 'rounded',
+        hover: 'darken',
+      },
+      background_images: [],
+      auto_apply: true,
+      dynamic_behavior: {
+        on_bank_selection: {
+          apply_identity: true,
+        },
+      },
+    };
+  });
+  
+  return entities;
+};
+
 export const dynamicIdentityConfig: DynamicIdentityConfig = {
   entities: {
+    ...generateEntitiesFromServices(),
+    ...generateEntitiesFromBanks(),
     chalets: {
-      logo: 'official_logo_chalets.svg',
-      animated_header_images: ['chalets_image1.svg', 'chalets_image2.svg', 'chalets_image3.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'chalets_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'احجز شاليه أحلامك بسهولة وأمان مع هوية الدفع الرسمية.',
       colors: { primary: '#FF6F00', secondary: '#FFA000', background: '#FFF3E0' },
-      fonts: ['Roboto', 'Arial'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['chalets_bg1.svg', 'chalets_bg2.svg'],
+      background_images: ['/hero-bg.jpg'],
       auto_apply: true,
     },
     government_payment: {
-      logo: 'official_logo_gov.svg',
-      animated_header_images: ['gov_image1.svg', 'gov_image2.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'gov_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'سداد حكومي سريع وآمن مع هوية الدفع الرسمية للجهة.',
       colors: { primary: '#004080', secondary: '#0073E6', background: '#E6F0FF' },
-      fonts: ['Arial', 'Tahoma'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
-      background_images: ['gov_bg.svg'],
+      background_images: ['/hero-bg.jpg'],
       auto_apply: true,
     },
     local_payment: {
-      logo: 'official_logo_local.svg',
-      animated_header_images: ['local_image1.svg', 'local_image2.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'local_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'سداد محلي سريع وآمن مع هوية الدفع الرسمية للبوابة.',
       colors: { primary: '#008000', secondary: '#00C000', background: '#E6FFE6' },
-      fonts: ['Verdana', 'Arial'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['local_bg.svg'],
+      background_images: ['/hero-bg.jpg'],
       auto_apply: true,
     },
     invoices: {
-      logo: 'official_logo_invoice.svg',
-      animated_header_images: ['invoice_image1.svg', 'invoice_image2.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'invoice_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'عرض الفواتير الرسمي بدقة مع هوية الدفع للجهة.',
       colors: { primary: '#800000', secondary: '#B22222', background: '#FFE6E6' },
-      fonts: ['Times New Roman', 'Georgia'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
-      background_images: ['invoice_bg.svg'],
+      background_images: ['/hero-bg.jpg'],
       auto_apply: true,
     },
     contracts: {
-      logo: 'official_logo_contract.svg',
-      animated_header_images: ['contract_image1.svg', 'contract_image2.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'contract_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'العقود الرسمية مع هوية الدفع المعتمدة للجهة.',
       colors: { primary: '#000080', secondary: '#0000CD', background: '#E6E6FF' },
-      fonts: ['Georgia', 'Times New Roman'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['contract_bg.svg'],
+      background_images: ['/hero-bg.jpg'],
       auto_apply: true,
     },
     health_links: {
-      logo: 'official_logo_health.svg',
-      animated_header_images: ['health_image1.svg', 'health_image2.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'health_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'الخدمات الصحية الرسمية مع هوية الدفع الخاصة بالجهة.',
       colors: { primary: '#008080', secondary: '#20B2AA', background: '#E0FFFF' },
-      fonts: ['Arial', 'Verdana'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'flat', hover: 'highlight' },
-      background_images: ['health_bg.svg'],
+      background_images: ['/hero-bg.jpg'],
       auto_apply: true,
     },
     bank_pages: {
-      logo: 'official_logo_bank.svg',
-      animated_header_images: ['bank_image1.svg', 'bank_image2.svg'],
+      logo: '/og-aramex.jpg',
+      animated_header_images: ['/hero-bg.jpg'],
       header_position: 'below_top_bar',
-      payment_share_image: 'bank_payment.svg',
+      payment_share_image: '/og-aramex.jpg',
       payment_share_description: 'الوصول إلى الدفع البنكي الرسمي مع الهوية البصرية لكل صفحة.',
       colors: { primary: '#0000FF', secondary: '#1E90FF', background: '#E6F0FF' },
-      fonts: ['Tahoma', 'Verdana'],
+      fonts: ['Cairo', 'Tajawal', 'Arial'],
       buttons: { style: 'rounded', hover: 'darken' },
-      background_images: ['bank_bg.svg'],
+      background_images: ['/hero-bg.jpg'],
       dynamic_behavior: { on_bank_selection: { apply_identity: true } },
       auto_apply: true,
     },
@@ -172,27 +238,27 @@ export const removeDynamicIdentity = () => {
 
 export const getEntityLogo = (entityKey: string): string | null => {
   const identity = getEntityIdentity(entityKey);
-  return identity ? `/assets/dynamic-identity/${identity.logo}` : null;
+  return identity?.logo || null;
 };
 
 export const getEntityHeaderImages = (entityKey: string): string[] => {
   const identity = getEntityIdentity(entityKey);
-  return identity ? identity.animated_header_images.map(img => `/assets/dynamic-identity/${img}`) : [];
+  return identity?.animated_header_images || [];
 };
 
 export const getEntityBackgroundImages = (entityKey: string): string[] => {
   const identity = getEntityIdentity(entityKey);
-  return identity ? identity.background_images.map(img => `/assets/dynamic-identity/${img}`) : [];
+  return identity?.background_images || [];
 };
 
 export const getEntityPaymentShareImage = (entityKey: string): string | null => {
   const identity = getEntityIdentity(entityKey);
-  return identity ? `/assets/dynamic-identity/${identity.payment_share_image}` : null;
+  return identity?.payment_share_image || null;
 };
 
 export const shouldAutoApply = (entityKey: string): boolean => {
   const identity = getEntityIdentity(entityKey);
-  return identity ? identity.auto_apply : false;
+  return identity?.auto_apply || false;
 };
 
 export const detectEntityFromURL = (): string | null => {
