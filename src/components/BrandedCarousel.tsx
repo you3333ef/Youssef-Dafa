@@ -62,6 +62,15 @@ interface BrandedCarouselProps {
 const getCompanyImages = (serviceKey: string): string[] => {
   const key = serviceKey.toLowerCase();
   
+  // Handle bank_* keys by returning bank_pages images
+  if (key.startsWith('bank_')) {
+    return [
+      '/assets/dynamic-identity/bank_image1.svg',
+      '/assets/dynamic-identity/bank_image2.svg',
+      '/assets/dynamic-identity/bank_image3.svg'
+    ];
+  }
+  
   const allImages: Record<string, string[]> = {
     aramex: [heroAramex5, heroAramex6, heroAramex7, heroAramex, heroAramex2, heroAramex3, heroAramex4],
     dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
@@ -133,7 +142,12 @@ const getCompanyImages = (serviceKey: string): string[] => {
 };
 
 const BrandedCarousel: React.FC<BrandedCarouselProps> = ({ serviceKey, className = '' }) => {
-  const branding = shippingCompanyBranding[serviceKey.toLowerCase()];
+  const branding = shippingCompanyBranding[serviceKey.toLowerCase()] || {
+    colors: { primary: '#0066B2', secondary: '#004B87', textOnPrimary: '#ffffff' },
+    borderRadius: { lg: '12px' },
+    shadows: { lg: '0 10px 25px rgba(0,0,0,0.1)' },
+    nameAr: 'مقدم الخدمة'
+  };
   
   const detectedEntity = detectEntityFromURL();
   const entityImages = detectedEntity ? getEntityHeaderImages(detectedEntity) : [];
