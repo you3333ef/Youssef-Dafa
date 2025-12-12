@@ -37,6 +37,7 @@ import ContractPaymentPage from "./pages/ContractPaymentPage";
 import DynamicIdentityDemo from "./pages/DynamicIdentityDemo";
 import DynamicIdentityTest from "./pages/DynamicIdentityTest";
 import NotFound from "./pages/NotFound";
+import ShortLinkRedirect from "./pages/ShortLinkRedirect";
 import { AutoIdentityProvider } from "./hooks/useAutoIdentityApplication";
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -72,6 +73,8 @@ const App = () => (
           <Route path="/logistics/:country" element={<LogisticsServices />} />
           <Route path="/contracts/:country" element={<Contracts />} />
           <Route path="/r/:country/:type/:id" element={<Microsite />} />
+          {/* Short link redirect */}
+          <Route path="/p/:code" element={<ShortLinkRedirect />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />

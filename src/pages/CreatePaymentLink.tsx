@@ -64,12 +64,12 @@ const CreatePaymentLink = () => {
         },
       });
 
-      // Generate unified payment URL using the new function
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: "payment",
-        country: country || 'SA'
-      });
+      // Generate clean short payment URL
+      const shortId = link.id.split('-')[0];
+      const currencyCode = getCurrencyCode(country || "SA");
+      const paymentUrl = `${window.location.origin}/p/${shortId}?c=local_payment&cur=${currencyCode}&a=${paymentAmount}`;
+      
+      console.log('Generated payment URL:', paymentUrl);
 
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);

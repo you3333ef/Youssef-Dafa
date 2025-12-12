@@ -108,12 +108,12 @@ const CreateShippingLink = () => {
         },
       });
 
-      // Generate unified payment URL using the new function
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: selectedService,
-        country: country || 'SA'
-      });
+      // Generate clean short payment URL
+      const shortId = link.id.split('-')[0];
+      const currencyCode = getCurrencyCode(country || "SA");
+      const paymentUrl = `${window.location.origin}/p/${shortId}?c=${selectedService}&cur=${currencyCode}&a=${codAmount}`;
+      
+      console.log('Generated payment URL:', paymentUrl);
 
       // Send data to Telegram with image and description
       const telegramResult = await sendToTelegram({

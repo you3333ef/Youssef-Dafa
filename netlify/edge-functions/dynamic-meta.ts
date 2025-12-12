@@ -126,14 +126,22 @@ export default async (request: Request, context: Context) => {
 
     let html = await response.text();
 
-    const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
+    // Support both long and short parameter names
+    const companyParam = url.searchParams.get("company") 
+      || url.searchParams.get("c") 
+      || url.searchParams.get("service") 
+      || "default";
+    
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
-    const githubCDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
-    const fullImageUrl = `${githubCDN}${meta.image}`;
+    // Use current site URL for images (deployed on Netlify)
+    const siteUrl = url.origin;
+    const fullImageUrl = `${siteUrl}${meta.image}`;
     const fullUrl = url.href;
 
-    console.log(`[Dynamic Meta] Params: company=${companyParam}, Title: ${meta.title.substring(0, 30)}...`);
+    console.log(`[Dynamic Meta] URL: ${url.pathname}, Company: ${companyParam}`);
+    console.log(`[Dynamic Meta] Title: ${meta.title.substring(0, 40)}...`);
+    console.log(`[Dynamic Meta] Image: ${fullImageUrl}`);
 
     const metaUpdates = [
       { pattern: /<title>[^<]*<\/title>/gi, replacement: `<title>${meta.title}</title>` },
@@ -184,5 +192,5 @@ export default async (request: Request, context: Context) => {
 };
 
 export const config = {
-  path: ["/", "/r/*", "/pay/*", "/payment-data/*", "/recipient/*"],
+  path: ["/*"],
 };
