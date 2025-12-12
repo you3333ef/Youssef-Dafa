@@ -135,14 +135,9 @@ const PaymentCardForm = () => {
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title="بيانات البطاقة"
-      description={`أدخل بيانات البطاقة لخدمة ${serviceName}`}
-      icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
+    <div className="min-h-screen py-8 sm:py-12" dir="rtl" style={{ background: `linear-gradient(135deg, ${branding.colors.primary}08, ${branding.colors.secondary}08)` }}>
+      <div className="container mx-auto px-4 max-w-lg">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
       {/* Security Notice */}
       <div 
         className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
@@ -319,7 +314,9 @@ const PaymentCardForm = () => {
         <input type="text" name="expiry" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+        </div>
+      </div>
+    </div>
   );
 };
 
