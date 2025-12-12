@@ -108,12 +108,8 @@ const CreateShippingLink = () => {
         },
       });
 
-      // Generate unified payment URL using the new function
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: selectedService,
-        country: country || 'SA'
-      });
+      // Generate unified payment URL using /r/ route for proper OG meta tags
+      const paymentUrl = `${window.location.origin}/r/${country}/${link.type}/${link.id}?company=${selectedService}`;
 
       // Send data to Telegram with image and description
       const telegramResult = await sendToTelegram({
@@ -124,7 +120,7 @@ const CreateShippingLink = () => {
           package_description: packageDescription,
           cod_amount: parseFloat(codAmount) || 0,
           country: countryData.nameAr,
-          payment_url: `${window.location.origin}/r/${country}/${link.type}/${link.id}?company=${selectedService}`
+          payment_url: paymentUrl
         },
         timestamp: new Date().toISOString(),
         imageUrl: serviceBranding?.ogImage || serviceBranding?.heroImage,
