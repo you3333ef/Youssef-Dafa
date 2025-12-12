@@ -8,12 +8,7 @@
   NODE_VERSION = "20.12.1"
   NPM_FLAGS = "--legacy-peer-deps"
 
-# Serverless Functions configuration
-[functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
-
-# Edge function for dynamic meta tags (fallback)
+# Edge function for dynamic meta tags
 [[edge_functions]]
   function = "dynamic-meta"
   path = "/*"

