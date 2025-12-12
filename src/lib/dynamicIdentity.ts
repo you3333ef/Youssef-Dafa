@@ -402,6 +402,9 @@ export const shouldAutoApply = (entityKey: string): boolean => {
 };
 
 export const getBankOGImage = (bankId: string): string => {
+  if (!bankId || bankId === 'skipped') {
+    return `/og-bank_pages.jpg`;
+  }
   return `/og-bank-${bankId}.jpg`;
 };
 
