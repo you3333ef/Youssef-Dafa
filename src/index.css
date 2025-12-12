@@ -8,8 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light Mode - Gulf Platform */
-    --background: 0 0% 100%;
+    /* Light Mode - Modern Gulf Platform */
+    --background: 0 0% 98%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -18,7 +18,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 45 95% 60%;
+    --primary: 45 98% 58%;
     --primary-foreground: 220 25% 8%;
 
     --secondary: 210 40% 96.1%;
@@ -27,7 +27,7 @@ All colors MUST be HSL.
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 45 95% 60%;
+    --accent: 45 98% 58%;
     --accent-foreground: 220 25% 8%;
 
     --destructive: 0 85% 55%;
@@ -35,9 +35,9 @@ All colors MUST be HSL.
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 45 95% 60%;
+    --ring: 45 98% 58%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
     /* Country Colors */
     --sa-primary: 210 95% 50%; /* Saudi Blue */
@@ -58,20 +58,24 @@ All colors MUST be HSL.
     --bh-primary: 0 85% 50%; /* Bahrain Red */
     --bh-secondary: 0 0% 95%; /* Bahrain White */
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(45 95% 60%) 0%, hsl(35 90% 55%) 100%);
+    /* Modern Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(45 98% 58%) 0%, hsl(38 92% 50%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(220 20% 14%) 0%, hsl(220 20% 10%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(140 70% 45%) 0%, hsl(140 60% 40%) 100%);
-    --gradient-danger: linear-gradient(135deg, hsl(0 85% 55%) 0%, hsl(0 75% 50%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(140 70% 48%) 0%, hsl(140 60% 42%) 100%);
+    --gradient-danger: linear-gradient(135deg, hsl(0 85% 58%) 0%, hsl(0 75% 52%) 100%);
+    --gradient-info: linear-gradient(135deg, hsl(210 85% 58%) 0%, hsl(210 75% 52%) 100%);
+    --gradient-warning: linear-gradient(135deg, hsl(35 95% 58%) 0%, hsl(35 85% 52%) 100%);
 
-    /* Shadows */
-    --shadow-glow: 0 0 30px hsl(45 95% 60% / 0.15);
-    --shadow-card: 0 8px 32px hsl(220 25% 4% / 0.4);
-    --shadow-elevated: 0 12px 48px hsl(220 25% 4% / 0.6);
+    /* Modern Shadows */
+    --shadow-glow: 0 0 40px hsl(45 98% 58% / 0.20);
+    --shadow-card: 0 10px 40px hsl(220 25% 4% / 0.08);
+    --shadow-elevated: 0 20px 60px hsl(220 25% 4% / 0.12);
+    --shadow-hover: 0 15px 50px hsl(220 25% 4% / 0.15);
 
-    /* Transitions */
+    /* Smooth Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     /* Dynamic Identity Variables */
     --dynamic-primary: #FF6F00;
@@ -457,5 +461,196 @@ All colors MUST be HSL.
 
   .dynamic-header-animated {
     animation: dynamic-header-slide 6s ease-in-out infinite;
+  }
+}
+
+/* Enhanced Utilities */
+@layer utilities {
+  /* Glass Morphism */
+  .glass-effect {
+    backdrop-filter: blur(12px) saturate(180%);
+    background-color: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(12px) saturate(180%);
+    background-color: rgba(17, 24, 39, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Card Enhancements */
+  .card-hover {
+    transition: var(--transition-smooth);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card-modern {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .card-modern:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* Button Enhancements */
+  .btn-primary-enhanced {
+    background: var(--gradient-primary);
+    box-shadow: 0 4px 14px 0 hsl(45 98% 58% / 0.39);
+    transition: var(--transition-spring);
+  }
+
+  .btn-primary-enhanced:hover {
+    box-shadow: 0 6px 20px 0 hsl(45 98% 58% / 0.50);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary-enhanced:active {
+    transform: translateY(0);
+  }
+
+  /* Success State */
+  .success-glow {
+    box-shadow: 0 0 20px hsl(140 70% 48% / 0.4);
+    animation: pulse-success 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-success {
+    0%, 100% { box-shadow: 0 0 20px hsl(140 70% 48% / 0.3); }
+    50% { box-shadow: 0 0 35px hsl(140 70% 48% / 0.6); }
+  }
+
+  /* Loading States */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      hsl(210 40% 96.1%) 0%,
+      hsl(214.3 31.8% 91.4%) 50%,
+      hsl(210 40% 96.1%) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Floating Animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Fade In Animations */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in-delay-1 {
+    animation: fadeIn 0.5s ease-in-out 0.1s both;
+  }
+
+  .fade-in-delay-2 {
+    animation: fadeIn 0.5s ease-in-out 0.2s both;
+  }
+
+  .fade-in-delay-3 {
+    animation: fadeIn 0.5s ease-in-out 0.3s both;
+  }
+
+  /* Modern Borders */
+  .border-gradient {
+    border: 2px solid transparent;
+    background-image: 
+      var(--gradient-primary),
+      var(--gradient-primary);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+
+  /* Text Shadows */
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-md {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Input Enhancements */
+  .input-modern {
+    transition: var(--transition-smooth);
+  }
+
+  .input-modern:focus {
+    box-shadow: 0 0 0 3px hsl(45 98% 58% / 0.1);
+    border-color: hsl(45 98% 58%);
+  }
+
+  /* Badge Styles */
+  .badge-success {
+    background: var(--gradient-success);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .badge-warning {
+    background: var(--gradient-warning);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .badge-danger {
+    background: var(--gradient-danger);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .badge-info {
+    background: var(--gradient-info);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 }

