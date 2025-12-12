@@ -140,7 +140,7 @@ const companyMetaMap: Record<string, CompanyMeta> = {
     description: "DSV - شبكة لوجستية عالمية - ادفع بأمان واستفد من حلول نقل وشحن دولية متكاملة مع خدمات احترافية 🌍"
   },
   agility: {
-    image: "/og-agility-temp.jpg",
+    image: "/og-agility.jpg",
     title: "دفع آمن - أجيليتي للخدمات اللوجستية 🚚",
     description: "أجيليتي - حلول سلسلة التوريد - أكمل دفعتك بأمان للحصول على خدمات لوجستية متكاملة في الخليج والعالم 🌐"
   },
