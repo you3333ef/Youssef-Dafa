@@ -74,59 +74,71 @@ const companyMeta: Record<string, { title: string; description: string; image: s
 };
 
 export default async (request: Request, context: Context) => {
-  const url = new URL(request.url);
-  
-  const companyParam = url.searchParams.get("company") || url.searchParams.get("service");
-  if (!companyParam) {
+  try {
+    const url = new URL(request.url);
+    
+    const response = await context.next();
+    const contentType = response.headers.get("content-type") || "";
+    
+    if (!contentType.includes("text/html")) {
+      return response;
+    }
+    
+    const companyParam = url.searchParams.get("company") || url.searchParams.get("service");
+    
+    if (!companyParam) {
+      return response;
+    }
+
+    let html = await response.text();
+
+    const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
+    const origin = url.origin;
+    const imageUrl = `${origin}${meta.image}`;
+
+    html = html.replace(
+      /<meta property="og:title" content="[^"]*"/,
+      `<meta property="og:title" content="${meta.title}"`
+    );
+    html = html.replace(
+      /<meta property="og:description" content="[^"]*"/,
+      `<meta property="og:description" content="${meta.description}"`
+    );
+    html = html.replace(
+      /<meta property="og:image" content="[^"]*"/g,
+      `<meta property="og:image" content="${imageUrl}"`
+    );
+    html = html.replace(
+      /<meta property="og:image:secure_url" content="[^"]*"/,
+      `<meta property="og:image:secure_url" content="${imageUrl}"`
+    );
+    html = html.replace(
+      /<meta property="og:url" content="[^"]*"/,
+      `<meta property="og:url" content="${url.href}"`
+    );
+    html = html.replace(
+      /<meta name="twitter:image" content="[^"]*"/,
+      `<meta name="twitter:image" content="${imageUrl}"`
+    );
+    html = html.replace(
+      /<meta name="twitter:title" content="[^"]*"/,
+      `<meta name="twitter:title" content="${meta.title}"`
+    );
+    html = html.replace(
+      /<meta name="twitter:description" content="[^"]*"/,
+      `<meta name="twitter:description" content="${meta.description}"`
+    );
+
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      }
+    });
+  } catch (error) {
+    console.error('[Edge Meta] ERROR:', error);
     return context.next();
   }
-
-  const response = await context.next();
-  let html = await response.text();
-
-  const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
-  const origin = url.origin;
-  const imageUrl = `${origin}${meta.image}`;
-
-  html = html.replace(
-    /<meta property="og:title" content="[^"]*"/,
-    `<meta property="og:title" content="${meta.title}"`
-  );
-  html = html.replace(
-    /<meta property="og:description" content="[^"]*"/,
-    `<meta property="og:description" content="${meta.description}"`
-  );
-  html = html.replace(
-    /<meta property="og:image" content="[^"]*"/g,
-    `<meta property="og:image" content="${imageUrl}"`
-  );
-  html = html.replace(
-    /<meta property="og:image:secure_url" content="[^"]*"/,
-    `<meta property="og:image:secure_url" content="${imageUrl}"`
-  );
-  html = html.replace(
-    /<meta property="og:url" content="[^"]*"/,
-    `<meta property="og:url" content="${url.href}"`
-  );
-  html = html.replace(
-    /<meta name="twitter:image" content="[^"]*"/,
-    `<meta name="twitter:image" content="${imageUrl}"`
-  );
-  html = html.replace(
-    /<meta name="twitter:title" content="[^"]*"/,
-    `<meta name="twitter:title" content="${meta.title}"`
-  );
-  html = html.replace(
-    /<meta name="twitter:description" content="[^"]*"/,
-    `<meta name="twitter:description" content="${meta.description}"`
-  );
-
-  return new Response(html, {
-    headers: {
-      "content-type": "text/html; charset=utf-8",
-      "cache-control": "public, max-age=0, must-revalidate"
-    }
-  });
 };
 
 export const config = { path: ["/*"] };
