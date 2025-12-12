@@ -16,6 +16,7 @@ import { Shield, ArrowLeft, User, Mail, Phone, MapPin, Package, Sparkles, Lock, 
 import { designSystem } from "@/lib/designSystem";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentRecipient = () => {
   const { id } = useParams();
@@ -131,7 +132,7 @@ const PaymentRecipient = () => {
     } catch (error) {
     }
 
-    navigate(`/pay/${id}/details`);
+    navigate(buildNavigationPath(`/pay/${id}/details`));
   };
   
   return (

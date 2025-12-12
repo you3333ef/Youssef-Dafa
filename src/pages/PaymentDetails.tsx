@@ -11,6 +11,7 @@ import { designSystem } from "@/lib/designSystem";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -51,9 +52,9 @@ const PaymentDetails = () => {
     const paymentMethod = shippingInfo?.payment_method || 'card';
     
     if (paymentMethod === 'card') {
-      navigate(`/pay/${id}/card-input`);
+      navigate(buildNavigationPath(`/pay/${id}/card-input`));
     } else {
-      navigate(`/pay/${id}/bank-selector`);
+      navigate(buildNavigationPath(`/pay/${id}/bank-selector`));
     }
   };
   
