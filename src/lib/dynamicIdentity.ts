@@ -407,7 +407,7 @@ export const getBankOGImage = (bankId: string): string => {
 
 export const detectEntityFromURL = (): string | null => {
   const params = new URLSearchParams(window.location.search);
-  const entity = params.get('entity') || params.get('type');
+  const entity = params.get('entity') || params.get('type') || params.get('company') || params.get('service');
   
   const path = window.location.pathname.toLowerCase();
   if (path.includes('chalet')) return 'chalets';

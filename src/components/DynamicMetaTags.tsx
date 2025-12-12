@@ -26,15 +26,23 @@ export const DynamicMetaTags: React.FC<DynamicMetaTagsProps> = ({
   const { data: linkData } = useLink(id);
 
   // Detect entity from multiple sources
+  const urlParams = new URLSearchParams(window.location.search);
+  const companyFromUrl = urlParams.get('company') || urlParams.get('service');
+  
   const detectedEntity = entityKey || 
+                         companyFromUrl ||
                          detectEntityFromURL() || 
                          linkData?.payload?.entity_type || 
                          linkData?.payload?.service_key ||
                          linkData?.payload?.company ||
                          linkData?.payload?.type;
+  
+  console.log('[DynamicMetaTags] Detected entity:', detectedEntity, 'from URL:', companyFromUrl);
 
   const identity = detectedEntity ? getEntityIdentity(detectedEntity) : null;
   const shareImage = imageUrl || (detectedEntity ? getEntityPaymentShareImage(detectedEntity) : null);
+  
+  console.log('[DynamicMetaTags] Share image:', shareImage, 'for entity:', detectedEntity);
   
   // Build dynamic title
   let finalTitle = title;
@@ -64,12 +72,25 @@ export const DynamicMetaTags: React.FC<DynamicMetaTagsProps> = ({
     finalDescription = identity?.payment_share_description || 'منصة الدفع الإلكتروني الآمنة - أكمل معاملاتك المالية بكل ثقة وأمان';
   }
 
-  // Ensure absolute URL for image
+  // Ensure absolute URL for image - Use GitHub Raw CDN for reliability
+  const githubRawBase = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://melodic-squirrel-d354d7.netlify.app';
-  const fullShareImage = shareImage 
-    ? (shareImage.startsWith('http') ? shareImage : `${origin}${shareImage}`)
-    : `${origin}/og-aramex.jpg`;
+  
+  let fullShareImage: string;
+  if (shareImage) {
+    if (shareImage.startsWith('http')) {
+      fullShareImage = shareImage;
+    } else {
+      fullShareImage = `${githubRawBase}${shareImage}`;
+    }
+  } else {
+    fullShareImage = `${githubRawBase}/og-aramex.jpg`;
+  }
+  
   const secureShareImage = fullShareImage.replace('http://', 'https://');
+  const cacheBustedImage = `${secureShareImage}?v=${Date.now()}`;
+  
+  console.log('[DynamicMetaTags] Entity:', detectedEntity, '| Share image path:', shareImage, '| Final URL:', secureShareImage);
 
   // Current page URL
   const currentUrl = typeof window !== 'undefined' 
