@@ -8,13 +8,12 @@
   NODE_VERSION = "20.12.1"
   NPM_FLAGS = "--legacy-peer-deps"
 
-# Edge function for dynamic meta tags
+# Edge function for dynamic meta tags - highest priority
 [[edge_functions]]
   function = "dynamic-meta"
   path = "/*"
 
 # SPA routing: All routes serve index.html for client-side routing
-# This MUST be the last redirect rule
 [[redirects]]
   from = "/*"
   to = "/index.html"

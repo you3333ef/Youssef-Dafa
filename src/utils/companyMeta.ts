@@ -161,11 +161,16 @@ function getAbsoluteImageUrl(imagePath: string): string {
     return imagePath;
   }
   
-  const productionDomain = typeof window !== 'undefined'
-    ? window.location.origin
-    : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://sensational-fenglisu-ebbbfb.netlify.app');
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}${imagePath}`;
+  }
   
-  return `${productionDomain}${imagePath}`;
+  const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN;
+  if (productionDomain) {
+    return `${productionDomain}${imagePath}`;
+  }
+  
+  return imagePath;
 }
 
 /**

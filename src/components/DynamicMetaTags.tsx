@@ -65,7 +65,10 @@ export const DynamicMetaTags: React.FC<DynamicMetaTagsProps> = ({
   }
 
   // Ensure absolute URL for image
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://melodic-squirrel-d354d7.netlify.app';
+  const origin = typeof window !== 'undefined' 
+    ? window.location.origin 
+    : (import.meta.env.VITE_PRODUCTION_DOMAIN || '');
+  
   const fullShareImage = shareImage 
     ? (shareImage.startsWith('http') ? shareImage : `${origin}${shareImage}`)
     : `${origin}/og-aramex.jpg`;

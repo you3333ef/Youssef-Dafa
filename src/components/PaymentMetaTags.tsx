@@ -134,7 +134,8 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
   const entityShareImage = detectedEntity ? getEntityPaymentShareImage(detectedEntity) : null;
   const entityDescription = entityIdentity?.payment_share_description;
   
-  const urlParams = new URLSearchParams(window.location.search);
+  const isClient = typeof window !== 'undefined';
+  const urlParams = isClient ? new URLSearchParams(window.location.search) : new URLSearchParams();
   const companyParam = urlParams.get('company') || serviceKey;
   const companyMetaData = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
   
@@ -147,7 +148,9 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
   
   const pageTitle = title || companyMetaData.title;
   const pageDescription = description || customDescription || companyMetaData.description || entityDescription || branding.description;
-  const ogImage = ogImagePath ? `${window.location.origin}${ogImagePath}` : undefined;
+  
+  const origin = isClient ? window.location.origin : (import.meta.env.VITE_PRODUCTION_DOMAIN || '');
+  const ogImage = ogImagePath && origin ? `${origin}${ogImagePath}` : ogImagePath;
   
   return (
     <Helmet>
@@ -157,7 +160,7 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
       <meta property="og:type" content="website" />
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />
-      <meta property="og:url" content={window.location.href} />
+      <meta property="og:url" content={isClient ? window.location.href : ''} />
       {ogImage && (
         <>
           <meta property="og:image" content={ogImage} />
@@ -182,7 +185,7 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
       
       <meta name="robots" content="index, follow" />
       <meta name="googlebot" content="index, follow" />
-      <link rel="canonical" href={window.location.href} />
+      {isClient && <link rel="canonical" href={window.location.href} />}
     </Helmet>
   );
 };

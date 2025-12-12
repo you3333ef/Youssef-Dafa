@@ -126,7 +126,16 @@ export default async (request: Request, context: Context) => {
 
     let html = await response.text();
 
-    const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
+    let companyParam = url.searchParams.get("company") || url.searchParams.get("service");
+    
+    if (!companyParam) {
+      const pathMatch = url.pathname.match(/\/(aramex|dhl|fedex|ups|smsa|zajil|naqel|saudipost|empost|qpost|kwpost|omanpost|bahpost|chalets|contracts|invoices|government_payment|health_links|local_payment|bank_pages)/i);
+      if (pathMatch) {
+        companyParam = pathMatch[1];
+      }
+    }
+    
+    companyParam = companyParam || "default";
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
     const fullImageUrl = `${url.origin}${meta.image}`;
