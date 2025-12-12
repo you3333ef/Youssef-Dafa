@@ -129,7 +129,8 @@ export default async (request: Request, context: Context) => {
     const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
-    const fullImageUrl = `${url.origin}${meta.image}`;
+    const githubCDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
+    const fullImageUrl = `${githubCDN}${meta.image}`;
     const fullUrl = url.href;
 
     console.log(`[Dynamic Meta] Params: company=${companyParam}, Title: ${meta.title.substring(0, 30)}...`);
