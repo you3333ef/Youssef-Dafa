@@ -292,6 +292,7 @@ exports.handler = async (event, context) => {
   const siteUrl = `https://${event.headers.host}`;
   const fullUrl = `${siteUrl}${path}${queryStringParameters ? '?' + new URLSearchParams(queryStringParameters).toString() : ''}`;
   const fullOgImage = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+  const secureOgImage = fullOgImage.replace('http://', 'https://');
   
   // Final debug logging
   console.log('Final meta tags:', { title, description, ogImage, serviceKey });
@@ -356,9 +357,11 @@ exports.handler = async (event, context) => {
     <meta name="theme-color" content="#0EA5E9" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
+    <!-- Primary Meta Tags -->
     <title>${title}</title>
+    <meta name="title" content="${title.replace(/"/g, '&quot;')}" />
     <meta name="description" content="${description.replace(/"/g, '&quot;')}" />
-    <meta name="author" content="منصة الشحن الذكية" />
+    <meta name="author" content="منصة الدفع الذكية" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
@@ -366,22 +369,24 @@ exports.handler = async (event, context) => {
     
     <!-- Open Graph / Facebook / WhatsApp Meta Tags -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="نظام الدفع الآمن" />
+    <meta property="og:locale" content="ar_AR" />
     <meta property="og:url" content="${fullUrl}" />
     <meta property="og:title" content="${title.replace(/"/g, '&quot;')}" />
     <meta property="og:description" content="${description.replace(/"/g, '&quot;')}" />
-    <meta property="og:image" content="${fullOgImage}" />
+    <meta property="og:image" content="${secureOgImage}" />
+    <meta property="og:image:secure_url" content="${secureOgImage}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:site_name" content="نظام الدفع الآمن" />
-    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:image:alt" content="${title.replace(/"/g, '&quot;')}" />
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="${fullUrl}" />
     <meta name="twitter:title" content="${title.replace(/"/g, '&quot;')}" />
     <meta name="twitter:description" content="${description.replace(/"/g, '&quot;')}" />
-    <meta name="twitter:image" content="${fullOgImage}" />
+    <meta name="twitter:image" content="${secureOgImage}" />
     <meta name="twitter:image:alt" content="${title.replace(/"/g, '&quot;')}" />
     
     <link rel="canonical" href="${fullUrl}" />
