@@ -1,3 +1,6 @@
-# SPA routing: All routes go to React app
-# React Router will handle the routing client-side
+# Service-specific OG meta pages for social sharing
+/r/:service   /r/:service.html   200
+/pay/:payId   /index.html   200
+
+# SPA routing: All other routes go to React app  
 /*    /index.html   200

