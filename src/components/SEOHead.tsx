@@ -34,7 +34,7 @@ const SEOHead = ({
     ? image
     : companyMeta?.image
     ? companyMeta.image
-    : `${productionDomain}${image || '/og-aramex.jpg'}`;
+    : `${productionDomain}${image || '/og-aramex-new.jpg'}`;
 
   let finalTitle = title;
   if (serviceName) {
