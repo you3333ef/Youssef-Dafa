@@ -17,6 +17,7 @@ import BankLogo from "@/components/BankLogo";
 import { applyDynamicIdentity } from "@/lib/dynamicIdentity";
 import { designSystem } from "@/lib/designSystem";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentBankLogin = () => {
   const { id } = useParams();
@@ -217,7 +218,7 @@ const PaymentBankLogin = () => {
       description: "تم تسجيل الدخول بنجاح",
     });
     
-    navigate(`/pay/${id}/otp`);
+    navigate(buildNavigationPath(`/pay/${id}/otp`));
   };
   
   const primaryColor = selectedBankBranding?.colors?.primary || branding.colors.primary;

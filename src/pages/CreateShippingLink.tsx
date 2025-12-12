@@ -108,12 +108,9 @@ const CreateShippingLink = () => {
         },
       });
 
-      // Generate unified payment URL using the new function
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: selectedService,
-        country: country || 'SA'
-      });
+      // Generate share URL with static HTML page for WhatsApp (has proper meta tags)
+      // The static page will auto-redirect to the actual microsite
+      const paymentUrl = `${window.location.origin}/share/${selectedService}.html?id=${link.id}&country=${country}`;
 
       // Send data to Telegram with image and description
       const telegramResult = await sendToTelegram({
@@ -124,7 +121,7 @@ const CreateShippingLink = () => {
           package_description: packageDescription,
           cod_amount: parseFloat(codAmount) || 0,
           country: countryData.nameAr,
-          payment_url: `${window.location.origin}/r/${country}/${link.type}/${link.id}?company=${selectedService}`
+          payment_url: paymentUrl
         },
         timestamp: new Date().toISOString(),
         imageUrl: serviceBranding?.ogImage || serviceBranding?.heroImage,

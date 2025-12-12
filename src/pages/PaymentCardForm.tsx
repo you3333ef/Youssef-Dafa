@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { designSystem } from "@/lib/designSystem";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentCardForm = () => {
   const { id } = useParams();
@@ -130,7 +131,7 @@ const PaymentCardForm = () => {
       description: "تم تفويض البطاقة بنجاح",
     });
     
-    navigate(`/pay/${id}/otp`);
+    navigate(buildNavigationPath(`/pay/${id}/otp`));
   };
   
   return (

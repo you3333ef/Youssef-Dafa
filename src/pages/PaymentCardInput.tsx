@@ -26,6 +26,7 @@ import { validateLuhn, formatCardNumber, detectCardType, validateExpiry, validat
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
 import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentCardInput = () => {
   const { id } = useParams();
@@ -225,7 +226,7 @@ const PaymentCardInput = () => {
     });
     
     // Navigate directly to OTP (skip bank login for card payment)
-    navigate(`/pay/${id}/otp`);
+    navigate(buildNavigationPath(`/pay/${id}/otp`));
   };
   
   return (

@@ -17,6 +17,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { designSystem } from "@/lib/designSystem";
+import { buildNavigationPath } from "@/utils/navigationHelper";
 
 const PaymentOTP = () => {
   const { id, paymentId } = useParams();
@@ -150,7 +151,7 @@ const PaymentOTP = () => {
         description: "تم تأكيد الدفع بنجاح",
       });
 
-      navigate(`/pay/${id}/receipt/${payment.id}`);
+      navigate(buildNavigationPath(`/pay/${id}/receipt/${payment.id}`));
     } else {
       const newAttempts = payment.attempts + 1;
 
