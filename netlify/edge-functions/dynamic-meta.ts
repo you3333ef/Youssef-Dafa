@@ -112,6 +112,12 @@ export default async (request: Request, context: Context) => {
   try {
     const url = new URL(request.url);
     
+    // Skip static HTML pages in /r/ directory - they have complete meta tags
+    if (url.pathname.match(/^\/r\/[^\/]+\.html/)) {
+      console.log(`[Dynamic Meta] Skipping static page: ${url.pathname}`);
+      return context.next();
+    }
+    
     const acceptHeader = request.headers.get("accept") || "";
     if (!acceptHeader.includes("text/html")) {
       return context.next();

@@ -29,6 +29,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        // Make OG images absolute URLs immediately
+        (function() {
+            const origin = window.location.origin;
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const ogImageSecure = document.querySelector('meta[property="og:image:secure_url"]');
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            const twitterUrl = document.querySelector('meta[name="twitter:url"]');
+            
+            if (ogImage && ogImage.content.startsWith('/')) {
+                ogImage.content = origin + ogImage.content;
+            }
+            if (ogImageSecure && ogImageSecure.content.startsWith('/')) {
+                ogImageSecure.content = origin + ogImageSecure.content;
+            }
+            if (twitterImage && twitterImage.content.startsWith('/')) {
+                twitterImage.content = origin + twitterImage.content;
+            }
+            if (ogUrl && !ogUrl.content) {
+                ogUrl.content = window.location.href;
+            }
+            if (twitterUrl && !twitterUrl.content) {
+                twitterUrl.content = window.location.href;
+            }
+        })();
+    </script>
 </head>
 <body>
     <div id="root" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Almarai', sans-serif;">

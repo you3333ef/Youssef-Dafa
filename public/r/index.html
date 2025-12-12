@@ -13,6 +13,34 @@
     <meta property="og:image" content="/og-aramex.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="/og-aramex.jpg" />
+
+    <script>
+        // Make OG images absolute URLs immediately
+        (function() {
+            const origin = window.location.origin;
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            const ogImageSecure = document.querySelector('meta[property="og:image:secure_url"]');
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            const twitterUrl = document.querySelector('meta[name="twitter:url"]');
+            
+            if (ogImage && ogImage.content.startsWith('/')) {
+                ogImage.content = origin + ogImage.content;
+            }
+            if (ogImageSecure && ogImageSecure.content.startsWith('/')) {
+                ogImageSecure.content = origin + ogImageSecure.content;
+            }
+            if (twitterImage && twitterImage.content.startsWith('/')) {
+                twitterImage.content = origin + twitterImage.content;
+            }
+            if (ogUrl && !ogUrl.content) {
+                ogUrl.content = window.location.href;
+            }
+            if (twitterUrl && !twitterUrl.content) {
+                twitterUrl.content = window.location.href;
+            }
+        })();
+    </script>
 </head>
 <body>
     <div id="root" style="text-align: center; padding: 100px 20px; font-family: 'Almarai', sans-serif;">
