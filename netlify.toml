@@ -8,7 +8,12 @@
   NODE_VERSION = "20.12.1"
   NPM_FLAGS = "--legacy-peer-deps"
 
-# Edge function for dynamic meta tags
+# Edge function for short links with OG meta tags
+[[edge_functions]]
+  function = "short-links"
+  path = "/p/*"
+
+# Edge function for dynamic meta tags on all other pages
 [[edge_functions]]
   function = "dynamic-meta"
   path = "/*"

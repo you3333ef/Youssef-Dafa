@@ -66,6 +66,9 @@ const getCompanyImages = (serviceKey: string): string[] => {
   if (key.startsWith('bank_')) {
     return [
       '/og-bank_pages.jpg',
+      '/carousel/carousel-aramex-1.jpg',
+      '/carousel/carousel-aramex-2.jpg',
+      '/carousel/carousel-aramex-3.jpg',
       '/assets/dynamic-identity/bank_image1.svg',
       '/assets/dynamic-identity/bank_image2.svg',
       '/assets/dynamic-identity/bank_image3.svg'
@@ -73,20 +76,129 @@ const getCompanyImages = (serviceKey: string): string[] => {
   }
   
   const allImages: Record<string, string[]> = {
-    // Shipping companies with new OG images
-    aramex: ['/og-aramex.jpg', heroAramex5, heroAramex6, heroAramex7, heroAramex, heroAramex2, heroAramex3, heroAramex4],
-    dhl: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlkw: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlqa: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlom: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlbh: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    fedex: ['/og-fedex.jpg', heroFedex, heroFedex1, heroFedex2, heroFedex3],
-    ups: ['/og-ups.jpg', heroUps, heroUps1, heroUps2, heroUps3],
-    smsa: ['/og-smsa.jpg', heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
-    naqel: ['/og-naqel.jpg', heroNaqel, heroNaqel1, heroNaqel2, heroNaqel3],
-    zajil: ['/og-zajil.jpg', heroZajil, heroZajil1, heroZajil2, heroZajil3],
-    // Post offices with new OG images
-    saudipost: ['/og-saudipost.jpg', heroSaudipost, heroSaudipost1],
+    // Shipping companies with new carousel images
+    aramex: [
+      '/og-aramex.jpg',
+      '/carousel/carousel-aramex-1.jpg',
+      '/carousel/carousel-aramex-2.jpg',
+      '/carousel/carousel-aramex-3.jpg',
+      heroAramex5, 
+      heroAramex6, 
+      heroAramex7, 
+      heroAramex, 
+      heroAramex2, 
+      heroAramex3, 
+      heroAramex4
+    ],
+    dhl: [
+      '/og-dhl.jpg',
+      '/carousel/carousel-dhl-1.jpg',
+      '/carousel/carousel-dhl-2.jpg',
+      '/carousel/carousel-dhl-3.jpg',
+      heroDhl, 
+      heroDhl1, 
+      heroDhl2, 
+      heroDhl3
+    ],
+    dhlkw: [
+      '/og-dhl.jpg',
+      '/carousel/carousel-dhl-1.jpg',
+      '/carousel/carousel-dhl-2.jpg',
+      '/carousel/carousel-dhl-3.jpg',
+      heroDhl, 
+      heroDhl1, 
+      heroDhl2, 
+      heroDhl3
+    ],
+    dhlqa: [
+      '/og-dhl.jpg',
+      '/carousel/carousel-dhl-1.jpg',
+      '/carousel/carousel-dhl-2.jpg',
+      '/carousel/carousel-dhl-3.jpg',
+      heroDhl, 
+      heroDhl1, 
+      heroDhl2, 
+      heroDhl3
+    ],
+    dhlom: [
+      '/og-dhl.jpg',
+      '/carousel/carousel-dhl-1.jpg',
+      '/carousel/carousel-dhl-2.jpg',
+      '/carousel/carousel-dhl-3.jpg',
+      heroDhl, 
+      heroDhl1, 
+      heroDhl2, 
+      heroDhl3
+    ],
+    dhlbh: [
+      '/og-dhl.jpg',
+      '/carousel/carousel-dhl-1.jpg',
+      '/carousel/carousel-dhl-2.jpg',
+      '/carousel/carousel-dhl-3.jpg',
+      heroDhl, 
+      heroDhl1, 
+      heroDhl2, 
+      heroDhl3
+    ],
+    fedex: [
+      '/og-fedex.jpg',
+      '/carousel/carousel-fedex-1.jpg',
+      '/carousel/carousel-fedex-2.jpg',
+      '/carousel/carousel-fedex-3.jpg',
+      heroFedex, 
+      heroFedex1, 
+      heroFedex2, 
+      heroFedex3
+    ],
+    ups: [
+      '/og-ups.jpg',
+      '/carousel/carousel-ups-1.jpg',
+      '/carousel/carousel-ups-2.jpg',
+      '/carousel/carousel-ups-3.jpg',
+      heroUps, 
+      heroUps1, 
+      heroUps2, 
+      heroUps3
+    ],
+    smsa: [
+      '/og-smsa.jpg',
+      '/carousel/carousel-smsa-1.jpg',
+      '/carousel/carousel-smsa-2.jpg',
+      '/carousel/carousel-smsa-3.jpg',
+      heroSmsa, 
+      heroSmsa1, 
+      heroSmsa2, 
+      heroSmsa3
+    ],
+    naqel: [
+      '/og-naqel.jpg',
+      '/carousel/carousel-naqel-1.jpg',
+      '/carousel/carousel-naqel-2.jpg',
+      '/carousel/carousel-naqel-3.jpg',
+      heroNaqel, 
+      heroNaqel1, 
+      heroNaqel2, 
+      heroNaqel3
+    ],
+    zajil: [
+      '/og-zajil.jpg',
+      '/carousel/carousel-zajil-1.jpg',
+      '/carousel/carousel-zajil-2.jpg',
+      '/carousel/carousel-zajil-3.jpg',
+      heroZajil, 
+      heroZajil1, 
+      heroZajil2, 
+      heroZajil3
+    ],
+    // Post offices with new carousel images
+    saudipost: [
+      '/og-saudipost.jpg',
+      '/carousel/carousel-saudipost-1.jpg',
+      '/carousel/carousel-saudipost-2.jpg',
+      '/carousel/carousel-saudipost-3.jpg',
+      heroSaudipost, 
+      heroSaudipost1
+    ],
     empost: ['/og-empost.jpg', heroEmpost, heroEmpost2],
     qpost: ['/og-qpost.jpg', heroQpost],
     kwpost: ['/og-kwpost.jpg', heroKwpost],
