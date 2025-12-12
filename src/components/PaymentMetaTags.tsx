@@ -43,7 +43,15 @@ export const PaymentMetaTags: React.FC<PaymentMetaTagsProps> = ({
   
   const pageTitle = title || companyMetaData.title;
   const pageDescription = description || customDescription || companyMetaData.description || entityDescription || branding.description;
-  const ogImage = ogImagePath || undefined;
+  
+  const getAbsoluteUrl = (path: string | undefined): string | undefined => {
+    if (!path) return undefined;
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    const origin = window.location.origin;
+    return `${origin}${path.startsWith('/') ? path : '/' + path}`;
+  };
+  
+  const ogImage = getAbsoluteUrl(ogImagePath);
   
   return (
     <Helmet>

