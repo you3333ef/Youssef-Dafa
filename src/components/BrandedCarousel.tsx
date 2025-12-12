@@ -65,6 +65,7 @@ const getCompanyImages = (serviceKey: string): string[] => {
   // Handle bank_* keys by returning bank_pages images
   if (key.startsWith('bank_')) {
     return [
+      '/og-bank_pages.jpg',
       '/assets/dynamic-identity/bank_image1.svg',
       '/assets/dynamic-identity/bank_image2.svg',
       '/assets/dynamic-identity/bank_image3.svg'
@@ -72,66 +73,77 @@ const getCompanyImages = (serviceKey: string): string[] => {
   }
   
   const allImages: Record<string, string[]> = {
-    aramex: [heroAramex5, heroAramex6, heroAramex7, heroAramex, heroAramex2, heroAramex3, heroAramex4],
-    dhl: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlkw: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlqa: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlom: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    dhlbh: [heroDhl, heroDhl1, heroDhl2, heroDhl3],
-    fedex: [heroFedex, heroFedex1, heroFedex2, heroFedex3],
-    ups: [heroUps, heroUps1, heroUps2, heroUps3],
-    smsa: [heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
-    naqel: [heroNaqel, heroNaqel1, heroNaqel2, heroNaqel3],
-    zajil: [heroZajil, heroZajil1, heroZajil2, heroZajil3],
-    saudipost: [heroSaudipost, heroSaudipost1],
-    empost: [heroEmpost, heroEmpost2],
-    qpost: [heroQpost],
-    kwpost: [heroKwpost],
-    omanpost: [heroOmanpost],
-    bahpost: [heroBahpost],
-    albaraka: [heroAlbaraka],
-    alfuttaim: [heroAlfuttaim],
-    alshaya: [heroAlshaya],
-    shipco: [heroShipco],
-    bahri: [heroBahri],
-    national: [heroBahri],
-    hellmann: [heroHellmann],
-    dsv: [heroDsv],
-    genacom: [heroGenacom],
-    agility: [heroGenacom],
-    jinaken: [heroJinaken],
-    jinakum: [heroJinakum],
+    // Shipping companies with new OG images
+    aramex: ['/og-aramex.jpg', heroAramex5, heroAramex6, heroAramex7, heroAramex, heroAramex2, heroAramex3, heroAramex4],
+    dhl: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlkw: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlqa: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlom: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    dhlbh: ['/og-dhl.jpg', heroDhl, heroDhl1, heroDhl2, heroDhl3],
+    fedex: ['/og-fedex.jpg', heroFedex, heroFedex1, heroFedex2, heroFedex3],
+    ups: ['/og-ups.jpg', heroUps, heroUps1, heroUps2, heroUps3],
+    smsa: ['/og-smsa.jpg', heroSmsa, heroSmsa1, heroSmsa2, heroSmsa3],
+    naqel: ['/og-naqel.jpg', heroNaqel, heroNaqel1, heroNaqel2, heroNaqel3],
+    zajil: ['/og-zajil.jpg', heroZajil, heroZajil1, heroZajil2, heroZajil3],
+    // Post offices with new OG images
+    saudipost: ['/og-saudipost.jpg', heroSaudipost, heroSaudipost1],
+    empost: ['/og-empost.jpg', heroEmpost, heroEmpost2],
+    qpost: ['/og-qpost.jpg', heroQpost],
+    kwpost: ['/og-kwpost.jpg', heroKwpost],
+    omanpost: ['/og-omanpost.jpg', heroOmanpost],
+    bahpost: ['/og-bahpost.jpg', heroBahpost],
+    // Other companies
+    albaraka: ['/og-albaraka.jpg', heroAlbaraka],
+    alfuttaim: ['/og-alfuttaim.jpg', heroAlfuttaim],
+    alshaya: ['/og-alshaya.jpg', heroAlshaya],
+    shipco: ['/og-shipco.jpg', heroShipco],
+    bahri: ['/og-bahri.jpg', heroBahri],
+    national: ['/og-bahri.jpg', heroBahri],
+    hellmann: ['/og-hellmann.jpg', heroHellmann],
+    dsv: ['/og-dsv.jpg', heroDsv],
+    genacom: ['/og-genacom.jpg', heroGenacom],
+    agility: ['/og-agility-temp.jpg', heroGenacom],
+    jinaken: ['/og-jinaken.jpg', heroJinaken],
+    jinakum: ['/og-jinakum.jpg', heroJinakum],
+    // Services with OG images first
     chalets: [
+      '/og-chalets.jpg',
       '/assets/dynamic-identity/chalets_image1.svg',
       '/assets/dynamic-identity/chalets_image2.svg',
       '/assets/dynamic-identity/chalets_image3.svg'
     ],
     government_payment: [
+      '/og-government_payment.jpg',
       '/assets/dynamic-identity/gov_image1.svg',
       '/assets/dynamic-identity/gov_image2.svg',
       '/assets/dynamic-identity/gov_image3.svg'
     ],
     local_payment: [
+      '/og-local_payment.jpg',
       '/assets/dynamic-identity/local_image1.svg',
       '/assets/dynamic-identity/local_image2.svg',
       '/assets/dynamic-identity/local_image3.svg'
     ],
     invoices: [
+      '/og-invoices.jpg',
       '/assets/dynamic-identity/invoice_image1.svg',
       '/assets/dynamic-identity/invoice_image2.svg',
       '/assets/dynamic-identity/invoice_image3.svg'
     ],
     contracts: [
+      '/og-contracts.jpg',
       '/assets/dynamic-identity/contract_image1.svg',
       '/assets/dynamic-identity/contract_image2.svg',
       '/assets/dynamic-identity/contract_image3.svg'
     ],
     health_links: [
+      '/og-health_links.jpg',
       '/assets/dynamic-identity/health_image1.svg',
       '/assets/dynamic-identity/health_image2.svg',
       '/assets/dynamic-identity/health_image3.svg'
     ],
     bank_pages: [
+      '/og-bank_pages.jpg',
       '/assets/dynamic-identity/bank_image1.svg',
       '/assets/dynamic-identity/bank_image2.svg',
       '/assets/dynamic-identity/bank_image3.svg'
