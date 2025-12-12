@@ -26,55 +26,61 @@ export const AlRajhiBankLogin = ({
   onSubmit,
 }: AlRajhiBankLoginProps) => {
   return (
-    <div className="min-h-screen w-full" style={{ background: '#F8F9FA' }} dir="rtl">
+    <div className="min-h-screen w-full flex flex-col" style={{ background: '#F8F9FA', fontFamily: 'Cairo, sans-serif' }} dir="rtl">
       <div 
-        className="w-full py-4 px-6 shadow-sm"
+        className="w-full"
         style={{ 
           background: 'linear-gradient(135deg, #006C35 0%, #005028 100%)',
-          borderBottom: '3px solid #FFD700'
+          borderBottom: '3px solid #FFD700',
+          boxShadow: '0 2px 8px rgba(0, 108, 53, 0.15)'
         }}
       >
-        <div className="container mx-auto max-w-7xl flex items-center justify-between">
-          <div className="w-40">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
+          <div className="w-32 sm:w-40">
             <BankLogo 
               bankId="alrajhi_bank"
               bankName="Al Rajhi Bank"
               bankNameAr="مصرف الراجحي"
               color="#006C35"
               size="lg"
-              className="filter brightness-0 invert"
+              className="filter brightness-0 invert w-full h-auto"
+              style={{ maxHeight: '48px' }}
             />
           </div>
-          <div className="flex items-center gap-6">
-            <button className="text-white text-sm hover:underline">تواصل معنا</button>
-            <button className="text-white text-sm hover:underline">الفروع وأجهزة الصراف</button>
-            <button className="px-4 py-1.5 bg-white/20 text-white text-sm rounded hover:bg-white/30">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button className="hidden md:inline-block text-white text-sm hover:underline transition-all">تواصل معنا</button>
+            <button className="hidden md:inline-block text-white text-sm hover:underline transition-all">الفروع</button>
+            <button className="px-3 sm:px-4 py-1.5 bg-white/20 text-white text-xs sm:text-sm rounded-md hover:bg-white/30 transition-all font-medium">
               EN
             </button>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center py-12 px-4">
+      <div className="flex-1 flex flex-col items-center justify-center py-8 sm:py-12 px-4">
         <div 
-          className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
-          style={{ border: '1px solid #E5E7EB' }}
+          className="w-full max-w-md bg-white overflow-hidden"
+          style={{ 
+            borderRadius: '16px',
+            border: '1px solid #E5E7EB',
+            boxShadow: '0 20px 50px rgba(0, 108, 53, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1)'
+          }}
         >
           <div 
             className="text-center py-8 px-6"
             style={{ background: 'linear-gradient(180deg, #F8F9FA 0%, #FFFFFF 100%)' }}
           >
             <div 
-              className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center"
+              className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center"
               style={{ 
                 background: 'linear-gradient(135deg, #006C35, #004D27)',
-                boxShadow: '0 8px 20px rgba(0, 108, 53, 0.3)'
+                boxShadow: '0 8px 24px rgba(0, 108, 53, 0.35)'
               }}
             >
-              <User className="w-10 h-10 text-white" />
+              <User className="w-11 h-11 text-white" strokeWidth={2.5} />
             </div>
             <h1 
-              className="text-3xl font-bold mb-2"
+              className="text-2xl sm:text-3xl font-extrabold mb-2 tracking-tight"
               style={{ color: '#006C35', fontFamily: 'Cairo, sans-serif' }}
             >
               المباشر للأفراد
@@ -82,11 +88,11 @@ export const AlRajhiBankLogin = ({
             <p className="text-gray-600 text-sm">الخدمات المصرفية عبر الإنترنت</p>
           </div>
 
-          <form onSubmit={onSubmit} className="p-8 space-y-6">
+          <form onSubmit={onSubmit} className="p-6 sm:p-8 space-y-5">
             <div>
               <label 
-                className="block text-sm font-bold mb-2.5"
-                style={{ color: '#1F2937', fontFamily: 'Cairo, sans-serif' }}
+                className="block text-sm font-bold mb-2"
+                style={{ color: '#111827', fontFamily: 'Cairo, sans-serif', fontSize: '0.9375rem' }}
               >
                 اسم المستخدم
               </label>

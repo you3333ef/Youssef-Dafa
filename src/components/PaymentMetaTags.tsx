@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { getBankMeta } from '@/utils/bankMeta';
 import { getServiceBranding } from '@/lib/serviceLogos';
 import { getEntityPaymentShareImage, getEntityIdentity, detectEntityFromURL, getBankOGImage } from '@/lib/dynamicIdentity';
 

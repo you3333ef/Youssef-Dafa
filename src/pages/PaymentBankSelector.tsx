@@ -287,23 +287,23 @@ const PaymentBankSelector = () => {
                         />
                         
                         {/* Bank Logo */}
-                        <div className="w-full aspect-square flex items-center justify-center mb-3 relative z-10">
+                        <div className="w-full aspect-square flex items-center justify-center mb-3 relative z-10 p-2">
                           <BankLogo 
                             bankId={bank.id}
                             bankName={bank.name}
                             bankNameAr={bank.nameAr}
                             color={bank.color}
                             size="lg"
-                            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                            className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                           />
                         </div>
                         
                         {/* Bank Name */}
                         <p 
-                          className="text-center text-xs sm:text-sm font-bold leading-tight"
+                          className="text-center text-xs sm:text-sm font-bold leading-tight px-1"
                           style={{ 
                             color: selectedBank === bank.id ? (bank.color || primaryColor) : designSystem.colors.neutral[700],
-                            fontFamily: companyBranding?.fonts.arabic || govSystem.fonts.primaryAr
+                            fontFamily: 'Cairo, sans-serif'
                           }}
                         >
                           {bank.nameAr}
