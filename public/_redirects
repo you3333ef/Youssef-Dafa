@@ -1,3 +1,35 @@
-# SPA routing: All routes go to React app
-# React Router will handle the routing client-side
-/*    /index.html   200
+# Redirects for dynamic OG meta tags
+# These rules will intercept requests from social media crawlers and serve dynamic HTML
+
+# For WhatsApp, Facebook, Twitter and other social crawlers - serve dynamic OG function
+# This ensures they get the correct meta tags for the company
+
+# Payment recipient pages with company parameter
+/pay/*/recipient company=* User-Agent=*WhatsApp* /.netlify/functions/dynamic-og 200
+/pay/*/recipient company=* User-Agent=*facebook* /.netlify/functions/dynamic-og 200
+/pay/*/recipient company=* User-Agent=*Twitter* /.netlify/functions/dynamic-og 200
+/pay/*/recipient company=* User-Agent=*Telegram* /.netlify/functions/dynamic-og 200
+/pay/*/recipient company=* User-Agent=*Slack* /.netlify/functions/dynamic-og 200
+/pay/*/recipient company=* User-Agent=*LinkedIn* /.netlify/functions/dynamic-og 200
+
+# Payment details pages
+/pay/*/details company=* User-Agent=*WhatsApp* /.netlify/functions/dynamic-og 200
+/pay/*/details company=* User-Agent=*facebook* /.netlify/functions/dynamic-og 200
+/pay/*/details company=* User-Agent=*Twitter* /.netlify/functions/dynamic-og 200
+
+# Payment data pages
+/pay/*/data company=* User-Agent=*WhatsApp* /.netlify/functions/dynamic-og 200
+/pay/*/data company=* User-Agent=*facebook* /.netlify/functions/dynamic-og 200
+
+# Microsite pages (/r/*)
+/r/*/*/* company=* User-Agent=*WhatsApp* /.netlify/functions/dynamic-og 200
+/r/*/*/* company=* User-Agent=*facebook* /.netlify/functions/dynamic-og 200
+/r/*/*/* company=* User-Agent=*Twitter* /.netlify/functions/dynamic-og 200
+
+# All other payment pages with company parameter for crawlers
+/pay/* company=* User-Agent=*WhatsApp* /.netlify/functions/dynamic-og 200
+/pay/* company=* User-Agent=*facebook* /.netlify/functions/dynamic-og 200
+/pay/* company=* User-Agent=*Twitter* /.netlify/functions/dynamic-og 200
+
+# SPA routing: All other routes serve index.html for normal browsers
+/* /index.html 200

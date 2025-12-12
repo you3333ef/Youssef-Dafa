@@ -146,6 +146,7 @@ export default async (request: Request, context: Context) => {
 
     console.log(`[Dynamic Meta] Company: ${companyParam}, Image: ${fullImageUrl}`);
 
+    // Replace both placeholder syntax and actual meta tags
     const metaUpdates = [
       { pattern: /<title>[^<]*<\/title>/gi, replacement: `<title>${meta.title}</title>` },
       { pattern: /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="description" content="${meta.description}"/>` },
@@ -159,6 +160,11 @@ export default async (request: Request, context: Context) => {
       { pattern: /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:description" content="${meta.description}"/>` },
       { pattern: /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image" content="${fullImageUrl}"/>` },
       { pattern: /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/gi, replacement: `<meta name="twitter:image:alt" content="${meta.title}"/>` },
+      // Replace placeholders
+      { pattern: /\{\{OG_TITLE\}\}/gi, replacement: meta.title },
+      { pattern: /\{\{OG_DESCRIPTION\}\}/gi, replacement: meta.description },
+      { pattern: /\{\{OG_IMAGE\}\}/gi, replacement: fullImageUrl },
+      { pattern: /\{\{OG_URL\}\}/gi, replacement: fullUrl },
     ];
 
     // Apply all meta tag updates
