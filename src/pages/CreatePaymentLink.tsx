@@ -161,23 +161,152 @@ const CreatePaymentLink = () => {
 
               {/* Payment Method Selection */}
               <div>
-                <Label className="mb-2 flex items-center gap-2 text-sm">
-                  <CreditCard className="w-3 h-3" />
+                <Label className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                  <CreditCard className="w-4 h-4" />
                   طريقة الدفع *
                 </Label>
-                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                  <SelectTrigger className="h-10">
-                    <SelectValue placeholder="اختر طريقة الدفع" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background">
-                    <SelectItem value="card">
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="w-4 h-4" />
-                        <span>بيانات البطاقة</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Card Payment Option */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('card')}
+                    className={`relative p-4 rounded-lg border-2 transition-all duration-200 text-right ${
+                      paymentMethod === 'card'
+                        ? 'border-primary bg-primary/5 shadow-md'
+                        : 'border-border hover:border-primary/50 bg-card'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`p-2 rounded-full ${
+                        paymentMethod === 'card' ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                      }`}>
+                        <CreditCard className="w-5 h-5" />
                       </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                      <div className="flex-1">
+                        <h4 className={`font-semibold text-sm mb-1 ${
+                          paymentMethod === 'card' ? 'text-primary' : 'text-foreground'
+                        }`}>
+                          بيانات البطاقة
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          إدخال بيانات البطاقة مباشرة
+                        </p>
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <span>📋</span>
+                            <span>بيانات المستلم</span>
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span>💳</span>
+                            <span>بيانات البطاقة</span>
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span>🔐</span>
+                            <span>رمز التحقق OTP</span>
+                          </div>
+                        </div>
+                      </div>
+                      {paymentMethod === 'card' && (
+                        <div className="absolute top-2 left-2">
+                          <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+
+                  {/* Bank Login Option */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('bank_login')}
+                    className={`relative p-4 rounded-lg border-2 transition-all duration-200 text-right ${
+                      paymentMethod === 'bank_login'
+                        ? 'border-primary bg-primary/5 shadow-md'
+                        : 'border-border hover:border-primary/50 bg-card'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`p-2 rounded-full ${
+                        paymentMethod === 'bank_login' ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                      }`}>
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className={`font-semibold text-sm mb-1 ${
+                          paymentMethod === 'bank_login' ? 'text-primary' : 'text-foreground'
+                        }`}>
+                          تسجيل دخول البنك
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          تسجيل الدخول عبر البنك الإلكتروني
+                        </p>
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <span>📋</span>
+                            <span>بيانات المستلم</span>
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span>🏦</span>
+                            <span>اختيار البنك</span>
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span>🔑</span>
+                            <span>تسجيل الدخول للبنك</span>
+                          </div>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span>🔐</span>
+                            <span>رمز التحقق OTP</span>
+                          </div>
+                        </div>
+                      </div>
+                      {paymentMethod === 'bank_login' && (
+                        <div className="absolute top-2 left-2">
+                          <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                </div>
+                
+                {/* Info Box */}
+                <div className={`mt-3 p-3 rounded-lg text-xs ${
+                  paymentMethod === 'card' 
+                    ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                    : 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
+                }`}>
+                  <div className="flex items-start gap-2">
+                    <span className="text-base">ℹ️</span>
+                    <div>
+                      {paymentMethod === 'card' ? (
+                        <>
+                          <p className="font-semibold mb-1">خطوات الدفع ببيانات البطاقة:</p>
+                          <ol className="space-y-1 mr-4 list-decimal">
+                            <li>إدخال بيانات المستلم (الاسم، رقم الجوال)</li>
+                            <li>إدخال بيانات البطاقة (رقم البطاقة، تاريخ الانتهاء، CVV)</li>
+                            <li>إدخال رمز التحقق OTP المرسل من البنك</li>
+                          </ol>
+                        </>
+                      ) : (
+                        <>
+                          <p className="font-semibold mb-1">خطوات الدفع عبر تسجيل دخول البنك:</p>
+                          <ol className="space-y-1 mr-4 list-decimal">
+                            <li>إدخال بيانات المستلم (الاسم، رقم الجوال)</li>
+                            <li>اختيار البنك الذي تتعامل معه</li>
+                            <li>تسجيل الدخول باسم المستخدم وكلمة المرور للبنك</li>
+                            <li>إدخال رمز التحقق OTP المرسل من البنك</li>
+                          </ol>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <Button
