@@ -155,6 +155,14 @@ export default async (request: Request, context: Context) => {
       html = html.replace(update.pattern, update.replacement);
     }
 
+    // إضافة og:type إذا لم يكن موجود (مهم لـ WhatsApp)
+    if (!html.includes('property="og:type"') && !html.includes("property='og:type'")) {
+      html = html.replace(
+        /<head>/i,
+        `<head>\n    <meta property="og:type" content="website"/>`
+      );
+    }
+
     if (!html.includes('property="og:url"') && !html.includes("property='og:url'")) {
       html = html.replace(
         /<head>/i,
@@ -169,13 +177,25 @@ export default async (request: Request, context: Context) => {
       );
     }
 
+    // إضافة image dimensions لـ WhatsApp (مهم لعرض صحيح)
+    if (!html.includes('property="og:image:width"') && !html.includes("property='og:image:width'")) {
+      html = html.replace(
+        /<meta property="og:image"/i,
+        `<meta property="og:image:width" content="1200"/>\n    <meta property="og:image:height" content="630"/>\n    <meta property="og:image:type" content="image/jpeg"/>\n    <meta property="og:image"`
+      );
+    }
+
     return new Response(html, {
       headers: {
         "content-type": "text/html; charset=utf-8",
-        "cache-control": "no-cache, no-store, must-revalidate, max-age=0",
+        // منع Cache بشكل صارم - مهم لـ WhatsApp
+        "cache-control": "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0",
         "pragma": "no-cache",
         "expires": "0",
-        "x-dynamic-meta": companyParam
+        // Headers إضافية للتوافق
+        "x-dynamic-meta": companyParam,
+        "x-robots-tag": "index, follow",
+        "vary": "User-Agent"
       }
     });
   } catch (error) {
