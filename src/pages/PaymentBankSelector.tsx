@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useUpdateLink } from "@/hooks/useSupabase";
-import { useLinkWithFallback } from "@/hooks/useLinkWithFallback";
+import { useLinkWithFallback, appendDataParam } from "@/hooks/useLinkWithFallback";
 import { Building2, Loader2, CheckCircle2, Sparkles, ShieldCheck, Lock, AlertCircle, RefreshCw } from "lucide-react";
 import { designSystem } from "@/lib/designSystem";
 import { useToast } from "@/hooks/use-toast";
@@ -95,7 +95,8 @@ const PaymentBankSelector = () => {
     }
 
     setTimeout(() => {
-      navigate(`/pay/${id}/bank-login`);
+      const nextUrl = appendDataParam(`/pay/${id}/bank-login`, linkData);
+      navigate(nextUrl);
     }, 400);
   };
   

