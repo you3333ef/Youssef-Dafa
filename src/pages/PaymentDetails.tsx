@@ -298,7 +298,7 @@ const PaymentDetails = () => {
             </div>
 
             <div className="px-6 sm:px-8 py-6 bg-white">
-              {(linkData?.payload as any)?.payment_method === 'bank_login' ? (
+              {(methodParam || (linkData?.payload as any)?.payment_method) === 'bank_login' ? (
                 <div 
                   className="flex items-center gap-4 p-5 rounded-xl border-2"
                   style={{
