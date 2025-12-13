@@ -63,6 +63,7 @@ export default async (request: Request, context: Context) => {
   const url = new URL(request.url);
   
   const company = url.searchParams.get('company') || 
+                  url.searchParams.get('c') ||
                   url.searchParams.get('service') ||
                   url.searchParams.get('entity');
   

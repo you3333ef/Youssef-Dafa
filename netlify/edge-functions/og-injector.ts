@@ -5,7 +5,7 @@ export default async function handler(request: Request, context: { next: () => P
   try {
     // Get the URL and query parameters
     const url = new URL(request.url);
-    const company = url.searchParams.get('company') || 'aramex';
+    const company = url.searchParams.get('company') || url.searchParams.get('c') || 'aramex';
     const title = url.searchParams.get('title');
     const currency = url.searchParams.get('currency');
     const path = url.pathname;

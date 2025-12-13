@@ -126,7 +126,7 @@ export default async (request: Request, context: Context) => {
 
     let html = await response.text();
 
-    const companyParam = url.searchParams.get("company") || url.searchParams.get("service") || "default";
+    const companyParam = url.searchParams.get("company") || url.searchParams.get("c") || url.searchParams.get("service") || "default";
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
     const githubCDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
