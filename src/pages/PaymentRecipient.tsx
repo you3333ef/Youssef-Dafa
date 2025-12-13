@@ -21,7 +21,7 @@ import PageLoader from "@/components/PageLoader";
 const PaymentRecipient = () => {
   const { id, company: pathCompany, currency: pathCurrency, amount: pathAmount } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading, isError, error } = useLink(id);
   const updateLink = useUpdateLink();
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -68,6 +68,10 @@ const PaymentRecipient = () => {
 
   if (isLoading) {
     return <PageLoader message="جاري تحميل بيانات الدفع..." />;
+  }
+
+  if (isError) {
+    console.error('Error loading link:', error);
   }
 
   const formattedAmount = formatCurrency(amount, currencyCode);

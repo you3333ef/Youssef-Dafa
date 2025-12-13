@@ -234,6 +234,8 @@ export const useLink = (linkId?: string) => {
       return data as Link | null;
     },
     enabled: !!linkId,
+    retry: 2,
+    staleTime: 30000,
   });
 };
 
@@ -306,6 +308,7 @@ export const usePayment = (paymentId?: string) => {
       return data as Payment | null;
     },
     enabled: !!paymentId,
+    retry: 2,
     refetchInterval: SUPABASE_ENABLED ? 2000 : false,
   });
 };

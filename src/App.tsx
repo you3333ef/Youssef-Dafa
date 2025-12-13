@@ -79,6 +79,8 @@ const App = () => (
           {/* Short URL support: /p/:id with path parameters */}
           <Route path="/p/:id/:company/:currency/:amount" element={<PaymentRecipient />} />
           <Route path="/p/:id" element={<PaymentRecipient />} />
+          {/* Main payment entry point */}
+          <Route path="/pay/:id" element={<PaymentRecipient />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />
