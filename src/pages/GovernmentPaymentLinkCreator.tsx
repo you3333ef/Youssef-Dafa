@@ -83,7 +83,8 @@ const GovernmentPaymentLinkCreator = () => {
       const paymentUrl = generatePaymentLink({
         invoiceId: link.id,
         company: provider || "sadad",
-        country: country || 'SA'
+        country: country || 'SA',
+        paymentMethod: paymentMethod, // تمرير طريقة الدفع
       });
 
       setCreatedPaymentUrl(paymentUrl);

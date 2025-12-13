@@ -10,6 +10,7 @@
  * @param country - Country code (e.g., 'SA', 'AE')
  * @param amount - Payment amount (optional)
  * @param currency - Currency code (optional)
+ * @param paymentMethod - Payment method: 'card' or 'bank_login' (optional)
  * @returns Full payment URL with query parameters
  */
 export function generatePaymentLink({
@@ -18,12 +19,14 @@ export function generatePaymentLink({
   country,
   amount,
   currency,
+  paymentMethod,
 }: {
   invoiceId: string;
   company: string;
   country: string;
   amount?: number;
   currency?: string;
+  paymentMethod?: string;
 }): string {
   // Use current domain for production
   const productionDomain = typeof window !== 'undefined'
@@ -46,12 +49,15 @@ export function generatePaymentLink({
   // Build short URL with path parameters for better sharing
   // Format: /p/{id}/{company}/{currency}/{amount}
   if (amount && finalCurrency) {
-    return `${productionDomain}/p/${invoiceId}/${encodeURIComponent(company)}/${encodeURIComponent(finalCurrency)}/${amount}`;
+    // Add payment method as query parameter to preserve it across devices
+    const methodParam = paymentMethod ? `&method=${paymentMethod}` : '';
+    return `${productionDomain}/p/${invoiceId}/${encodeURIComponent(company)}/${encodeURIComponent(finalCurrency)}/${amount}?pm=${paymentMethod || 'card'}`;
   }
 
   // Fallback to query parameters
   const title = encodeURIComponent(countryData.defaultTitle);
-  return `${productionDomain}/pay/${invoiceId}/recipient?company=${encodeURIComponent(company)}&currency=${encodeURIComponent(finalCurrency)}&title=${title}`;
+  const methodParam = paymentMethod ? `&method=${paymentMethod}` : '';
+  return `${productionDomain}/pay/${invoiceId}/recipient?company=${encodeURIComponent(company)}&currency=${encodeURIComponent(finalCurrency)}&title=${title}${methodParam}`;
 }
 
 /**

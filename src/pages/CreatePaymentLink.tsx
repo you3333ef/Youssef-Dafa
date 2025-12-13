@@ -71,6 +71,7 @@ const CreatePaymentLink = () => {
         country: country || 'SA',
         amount: parseFloat(paymentAmount) || 500,
         currency: getCurrencyCode(country || "SA"),
+        paymentMethod: paymentMethod, // تمرير طريقة الدفع
       });
 
       setCreatedPaymentUrl(paymentUrl);

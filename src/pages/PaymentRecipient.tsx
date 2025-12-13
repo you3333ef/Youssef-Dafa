@@ -156,7 +156,6 @@ const PaymentRecipient = () => {
             selectedCountry: countryCode,
             service_key: serviceKey,
             service_name: serviceName,
-            payment_method: shippingInfo?.payment_method || 'card', // حفظ طريقة الدفع
           };
 
           await updateLink.mutateAsync({
@@ -168,12 +167,8 @@ const PaymentRecipient = () => {
         }
       }
 
-      // التوجيه حسب طريقة الدفع المحفوظة
-      const savedPaymentMethod = shippingInfo?.payment_method || 'card';
-      const nextUrl = savedPaymentMethod === 'card'
-        ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyCode}&amount=${amount}`
-        : `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyCode}&amount=${amount}`;
-      
+      // التوجيه إلى صفحة التفاصيل أولاً
+      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${currencyCode}&amount=${amount}`;
       navigate(nextUrl);
     } catch (error) {
       console.error('Proceed error:', error);
@@ -448,53 +443,6 @@ const PaymentRecipient = () => {
                   />
                 </div>
               </div>
-
-              {/* Payment Method Display */}
-              {shippingInfo?.payment_method && (
-                <div 
-                  className="mt-6 p-4 rounded-xl flex items-center gap-3"
-                  style={{
-                    background: `${primaryColor}10`,
-                    border: `2px solid ${primaryColor}30`
-                  }}
-                >
-                  {shippingInfo.payment_method === 'bank_login' ? (
-                    <>
-                      <div 
-                        className="w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: primaryColor }}
-                      >
-                        <Shield className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-sm" style={{ color: designSystem.colors.neutral[900] }}>
-                          طريقة الدفع: تسجيل دخول البنك
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          سيتم توجيهك لاختيار البنك وتسجيل الدخول
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div 
-                        className="w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: primaryColor }}
-                      >
-                        <CreditCard className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-sm" style={{ color: designSystem.colors.neutral[900] }}>
-                          طريقة الدفع: إدخال بيانات البطاقة
-                        </p>
-                        <p className="text-xs text-gray-600">
-                          سيتم توجيهك لإدخال معلومات البطاقة الائتمانية
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
 
               {/* Security Notice */}
               <div 
