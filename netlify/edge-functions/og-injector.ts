@@ -58,7 +58,7 @@ export default async function handler(request: Request, context: { next: () => P
     };
 
     // Get OG image for the company, fallback to aramex
-    const ogImage = companyImages[company.toLowerCase()] || `${origin}/og-aramex.jpg`;
+    const ogImage = companyImages[company.toLowerCase()] || `${githubCDN}/og-aramex.jpg`;
 
     // Company display names
     const companyNames: Record<string, string> = {
