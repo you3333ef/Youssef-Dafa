@@ -63,7 +63,17 @@ const serviceDescriptions: Record<string, string> = {
 export default async (request: Request, context: Context) => {
   const url = new URL(request.url);
   
-  const company = url.searchParams.get('company') || 
+  // استخراج company من Path Parameters أولاً (دعم /p/:id/:company/:currency/:amount)
+  const pathParts = url.pathname.split('/');
+  let pathCompany = null;
+  
+  if (pathParts[1] === 'p' && pathParts.length >= 4) {
+    pathCompany = pathParts[3]; // /p/id/company/...
+  }
+  
+  // الأولوية: Path Parameters > Query Parameters
+  const company = pathCompany || 
+                  url.searchParams.get('company') || 
                   url.searchParams.get('c') ||
                   url.searchParams.get('service') ||
                   url.searchParams.get('entity');

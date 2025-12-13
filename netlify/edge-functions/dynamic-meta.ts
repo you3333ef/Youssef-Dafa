@@ -194,7 +194,17 @@ export default async (request: Request, context: Context) => {
 
     let html = await response.text();
 
-    const companyParam = url.searchParams.get("company") || url.searchParams.get("c") || url.searchParams.get("service") || "default";
+    // استخراج company من Path Parameters أولاً (دعم /p/:id/:company/:currency/:amount)
+    const pathParts = url.pathname.split('/');
+    let pathCompany = null;
+    
+    // إذا كان المسار /p/xxx/company/currency/amount
+    if (pathParts[1] === 'p' && pathParts.length >= 3) {
+      pathCompany = pathParts[3]; // /p/id/company/...
+    }
+    
+    // الأولوية: Path Parameters > Query Parameters
+    const companyParam = pathCompany || url.searchParams.get("company") || url.searchParams.get("c") || url.searchParams.get("service") || "default";
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
     // GitHub CDN - موثوق 100% لحل مشكلة WhatsApp cache

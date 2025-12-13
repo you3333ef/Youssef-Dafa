@@ -5,10 +5,20 @@ export default async function handler(request: Request, context: { next: () => P
   try {
     // Get the URL and query parameters
     const url = new URL(request.url);
-    const company = url.searchParams.get('company') || url.searchParams.get('c') || 'aramex';
+    const path = url.pathname;
+    
+    // استخراج company من Path Parameters أولاً (دعم /p/:id/:company/:currency/:amount)
+    const pathParts = path.split('/');
+    let pathCompany = null;
+    
+    if (pathParts[1] === 'p' && pathParts.length >= 4) {
+      pathCompany = pathParts[3]; // /p/id/company/...
+    }
+    
+    // الأولوية: Path Parameters > Query Parameters
+    const company = pathCompany || url.searchParams.get('company') || url.searchParams.get('c') || 'aramex';
     const title = url.searchParams.get('title');
     const currency = url.searchParams.get('currency');
-    const path = url.pathname;
 
     // Only process /pay/* and /p/* paths
     if (!path.startsWith('/pay/') && !path.startsWith('/p/')) {

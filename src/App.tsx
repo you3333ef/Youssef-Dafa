@@ -72,7 +72,8 @@ const App = () => (
           <Route path="/logistics/:country" element={<LogisticsServices />} />
           <Route path="/contracts/:country" element={<Contracts />} />
           <Route path="/r/:country/:type/:id" element={<Microsite />} />
-          {/* Short URL support: /p/:id redirects to /pay/:id/recipient */}
+          {/* Short URL support: /p/:id with path parameters */}
+          <Route path="/p/:id/:company/:currency/:amount" element={<PaymentRecipient />} />
           <Route path="/p/:id" element={<PaymentRecipient />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
