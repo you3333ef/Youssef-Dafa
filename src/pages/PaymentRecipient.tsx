@@ -173,7 +173,15 @@ const PaymentRecipient = () => {
         }
       }
 
-      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${currencyCode}&amount=${amount}&method=${paymentMethodParam}`;
+      const queryParams = new URLSearchParams({
+        service: serviceKey,
+        country: countryCode,
+        amount: amount.toString(),
+        currency: currencyCode,
+        method: paymentMethodParam || 'card'
+      }).toString();
+      
+      const nextUrl = `/pay/${id}/details?${queryParams}`;
       navigate(nextUrl);
     } catch (error) {
       console.error('Proceed error:', error);

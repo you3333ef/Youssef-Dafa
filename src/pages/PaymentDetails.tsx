@@ -77,9 +77,16 @@ const PaymentDetails = () => {
   const handleProceed = () => {
     const paymentMethod = methodParam || (linkData?.payload as any)?.payment_method || 'card';
     
+    const queryParams = new URLSearchParams({
+      service: serviceKey,
+      country: countryCode,
+      amount: amount.toString(),
+      currency: currencyParam || currencyInfo?.code || 'SAR'
+    }).toString();
+    
     const nextUrl = paymentMethod === 'bank_login' 
-      ? `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
-      : `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
+      ? `/pay/${id}/bank-selector?${queryParams}`
+      : `/pay/${id}/card-input?${queryParams}`;
     
     navigate(nextUrl);
   };

@@ -144,7 +144,14 @@ const PaymentData = () => {
 
       // Navigate to payment details with params
       const finalAmount = parseFloat(paymentAmount) || amount;
-      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${getCurrencyCode(countryCode)}&amount=${finalAmount}`;
+      const queryParams = new URLSearchParams({
+        service: serviceKey,
+        country: countryCode,
+        amount: finalAmount.toString(),
+        currency: getCurrencyCode(countryCode)
+      }).toString();
+      
+      const nextUrl = `/pay/${id}/details?${queryParams}`;
       navigate(nextUrl);
     } catch (error) {
       console.error('Payment data error:', error);
