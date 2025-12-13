@@ -183,7 +183,7 @@ export const useCreateLink = () => {
       const signature = btoa(encodeURIComponent(JSON.stringify(linkData.payload)));
       
       const micrositeUrl = `${productionDomain}/r/${linkData.country_code}/${linkData.type}/${linkId}?service=${serviceKey}&data=${encodedData}`;
-      const paymentUrl = `${productionDomain}/pay/${linkId}/country?data=${encodedData}`;
+      const paymentUrl = `${productionDomain}/pay/${linkId}/data?data=${encodedData}`;
       
       linkRecord.microsite_url = micrositeUrl;
       linkRecord.payment_url = paymentUrl;
