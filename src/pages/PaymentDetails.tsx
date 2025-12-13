@@ -57,9 +57,9 @@ const PaymentDetails = () => {
   const primaryColor = companyBranding?.colors.primary || branding.colors.primary;
   const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
   
+  const paymentMethod = shippingInfo?.payment_method || 'card';
+  
   const handleProceed = () => {
-    const paymentMethod = shippingInfo?.payment_method || 'card';
-    
     const nextUrl = paymentMethod === 'card' 
       ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
       : `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
@@ -313,9 +313,14 @@ const PaymentDetails = () => {
                   <CreditCard className="w-6 h-6" style={{ color: primaryColor }} />
                 </div>
                 <div className="flex-1">
-                  <p className="font-bold text-base mb-1">الدفع بالبطاقة</p>
+                  <p className="font-bold text-base mb-1">
+                    {paymentMethod === 'bank_login' ? 'تسجيل دخول البنك' : 'الدفع بالبطاقة'}
+                  </p>
                   <p className="text-sm text-gray-600">
-                    Visa • Mastercard • Mada
+                    {paymentMethod === 'bank_login' 
+                      ? 'الدفع من خلال حساب البنك الإلكتروني'
+                      : 'Visa • Mastercard • Mada'
+                    }
                   </p>
                 </div>
                 <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
