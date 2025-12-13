@@ -11,7 +11,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import { getCurrency, getDefaultTitle } from "@/utils/countryData";
-import { generatePaymentLink } from "@/utils/paymentLinks";
+
 import { CreditCard, DollarSign, Hash, Building2, Copy, ExternalLink, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import TelegramTest from "@/components/TelegramTest";
@@ -68,15 +68,8 @@ const CreatePaymentLink = () => {
         payload: payload,
       });
 
-      // Generate unified payment URL using the new function
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: "payment",
-        country: country || 'SA',
-        amount: parseFloat(paymentAmount) || 500,
-        currency: getCurrencyCode(country || "SA"),
-        paymentMethod: paymentMethod,
-      });
+      // Use the payment_url created by useCreateLink which already includes data parameter
+      const paymentUrl = link.payment_url;
 
       setCreatedPaymentUrl(paymentUrl);
       setLinkId(link.id);

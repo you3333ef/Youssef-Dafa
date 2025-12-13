@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCreateLink } from "@/hooks/useSupabase";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getCurrencySymbol, getCurrencyCode } from "@/lib/countryCurrencies";
-import { generatePaymentLink } from "@/utils/paymentLinks";
+
 import { 
   Landmark, 
   FileText, 
@@ -85,12 +85,8 @@ const SaddadRecipientPage = () => {
         },
       });
 
-      // Generate payment URL
-      const paymentUrl = generatePaymentLink({
-        invoiceId: link.id,
-        company: "sadad",
-        country: "SA"
-      });
+      // Use the payment_url created by useCreateLink which already includes data parameter
+      const paymentUrl = link.payment_url;
 
       setCreatedLink(paymentUrl);
       setLinkId(link.id);

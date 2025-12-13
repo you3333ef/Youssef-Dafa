@@ -10,7 +10,7 @@ import { useCreateLink } from "@/hooks/useSupabase";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { getGovernmentServiceByKey } from "@/lib/governmentPaymentServices";
 import { getCurrencySymbol, getCurrencyCode } from "@/lib/countryCurrencies";
-import { generatePaymentLink } from "@/utils/paymentLinks";
+
 import { 
   Landmark, 
   FileText, 
@@ -101,12 +101,8 @@ const GovernmentPaymentLinkCreator = () => {
         },
       });
 
-      // For government payment services, generate direct link to /pay/:id/data
-      const baseUrl = typeof window !== 'undefined'
-        ? window.location.origin
-        : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://glittering-eclair-9e77e0.netlify.app');
-      
-      const paymentUrl = `${baseUrl}/pay/${link.id}/data`;
+      // Use the payment_url created by useCreateLink which already includes data parameter
+      const paymentUrl = link.payment_url;
 
       setCreatedLink(paymentUrl);
       setLinkId(link.id);
