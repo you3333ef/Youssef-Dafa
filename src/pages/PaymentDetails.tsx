@@ -34,7 +34,7 @@ const PaymentDetails = () => {
   }, [linkData, isError]);
 
   const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  const serviceKey = urlParams.get('company') || urlParams.get('service') || linkData?.payload?.service_key || 'aramex';
   const serviceName = linkData?.payload?.service_name || linkData?.payload?.customerInfo?.service || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
@@ -43,8 +43,9 @@ const PaymentDetails = () => {
   const amountParam = urlParams.get('amount');
   const currencyParam = urlParams.get('currency');
   const methodParam = urlParams.get('method') || urlParams.get('pm');
+  const countryParam = urlParams.get('country');
   
-  const countryCode = shippingInfo?.selectedCountry || "SA";
+  const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);
 
   const rawAmount = amountParam || shippingInfo?.cod_amount || shippingInfo?.customerInfo?.amount;

