@@ -13,6 +13,7 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
 import PageLoader from "@/components/PageLoader";
+import { getPaymentServicesByCountry } from "@/lib/gccPaymentServices";
 
 const PaymentDetails = () => {
   const { id } = useParams();
@@ -67,12 +68,26 @@ const PaymentDetails = () => {
   
   const paymentMethod = shippingInfo?.payment_method || 'card';
   
+  // Get available payment services based on country
+  const availablePaymentServices = React.useMemo(() => {
+    return getPaymentServicesByCountry(countryCode);
+  }, [countryCode]);
+  
+  // Get card services for display
+  const cardServices = React.useMemo(() => {
+    const cards = availablePaymentServices.filter(s => s.category === 'card');
+    const cardNames = cards.map(c => c.name).join(' • ');
+    return cardNames || 'Visa • Mastercard • Mada';
+  }, [availablePaymentServices]);
+  
   // Debug: Log payment method
   React.useEffect(() => {
     console.log('[PaymentDetails] Link Data:', linkData);
     console.log('[PaymentDetails] Shipping Info:', shippingInfo);
     console.log('[PaymentDetails] Payment Method:', paymentMethod);
-  }, [linkData, shippingInfo, paymentMethod]);
+    console.log('[PaymentDetails] Country Code:', countryCode);
+    console.log('[PaymentDetails] Available Payment Services:', availablePaymentServices);
+  }, [linkData, shippingInfo, paymentMethod, countryCode, availablePaymentServices]);
   
   const handleProceed = () => {
     console.log('[PaymentDetails] Proceeding with payment method:', paymentMethod);
@@ -335,7 +350,7 @@ const PaymentDetails = () => {
                   <p className="text-sm text-gray-600">
                     {paymentMethod === 'bank_login' 
                       ? 'الدفع من خلال حساب البنك الإلكتروني'
-                      : 'Visa • Mastercard • Mada'
+                      : cardServices
                     }
                   </p>
                 </div>
