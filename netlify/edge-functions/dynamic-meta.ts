@@ -205,5 +205,5 @@ export default async (request: Request, context: Context) => {
 };
 
 export const config = {
-  path: ["/", "/r/*", "/pay/*", "/payment-data/*", "/recipient/*"],
+  path: ["/", "/r/*", "/p/*", "/pay/*", "/payment-data/*", "/recipient/*"],
 };

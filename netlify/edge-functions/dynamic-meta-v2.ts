@@ -69,7 +69,7 @@ export default async (request: Request, context: Context) => {
                   url.searchParams.get('entity');
   
   const path = url.pathname;
-  const isPaymentPage = path.includes('/pay/') || path.includes('/recipient');
+  const isPaymentPage = path.includes('/pay/') || path.includes('/p/') || path.includes('/recipient');
   
   if (!isPaymentPage) {
     return context.next();

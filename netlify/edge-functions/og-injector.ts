@@ -10,8 +10,8 @@ export default async function handler(request: Request, context: { next: () => P
     const currency = url.searchParams.get('currency');
     const path = url.pathname;
 
-    // Only process /pay/* paths
-    if (!path.startsWith('/pay/')) {
+    // Only process /pay/* and /p/* paths
+    if (!path.startsWith('/pay/') && !path.startsWith('/p/')) {
       return context.next();
     }
 
