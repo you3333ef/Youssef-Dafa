@@ -1,5 +1,6 @@
 import type { Context } from "https://edge.netlify.com";
 
+// GitHub CDN - موثوق 100% لحل مشكلة WhatsApp cache
 const GITHUB_CDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
 const SITE_URL = 'https://kaleidoscopic-kheer-73d72f.netlify.app';
 

@@ -129,6 +129,7 @@ export default async (request: Request, context: Context) => {
     const companyParam = url.searchParams.get("company") || url.searchParams.get("c") || url.searchParams.get("service") || "default";
     const meta = companyMeta[companyParam.toLowerCase()] || companyMeta.default;
     
+    // GitHub CDN - موثوق 100% لحل مشكلة WhatsApp cache
     const githubCDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
     const fullImageUrl = `${githubCDN}${meta.image}`;
     const fullUrl = url.href;

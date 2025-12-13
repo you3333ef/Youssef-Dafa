@@ -21,40 +21,40 @@ export default async function handler(request: Request, context: { next: () => P
     const response = await context.next();
     const html = await response.text();
 
-    // Get the current domain dynamically
-    const origin = url.origin;
+    // GitHub CDN - موثوق 100% لحل مشكلة WhatsApp cache
+    const githubCDN = 'https://raw.githubusercontent.com/you3333ef/Youssef-Dafa/main/public';
 
-    // Company to OG image mapping (using correct .jpg extension and dynamic domain)
+    // Company to OG image mapping (using GitHub CDN for reliability)
     const companyImages: Record<string, string> = {
-      'aramex': `${origin}/og-aramex.jpg`,
-      'dhl': `${origin}/og-dhl.jpg`,
-      'dhlkw': `${origin}/og-dhl.jpg`,
-      'dhlqa': `${origin}/og-dhl.jpg`,
-      'dhlom': `${origin}/og-dhl.jpg`,
-      'dhlbh': `${origin}/og-dhl.jpg`,
-      'fedex': `${origin}/og-fedex.jpg`,
-      'ups': `${origin}/og-ups.jpg`,
-      'empost': `${origin}/og-empost.jpg`,
-      'smsa': `${origin}/og-smsa.jpg`,
-      'zajil': `${origin}/og-zajil.jpg`,
-      'naqel': `${origin}/og-naqel.jpg`,
-      'saudipost': `${origin}/og-saudipost.jpg`,
-      'kwpost': `${origin}/og-kwpost.jpg`,
-      'qpost': `${origin}/og-qpost.jpg`,
-      'omanpost': `${origin}/og-omanpost.jpg`,
-      'bahpost': `${origin}/og-bahpost.jpg`,
-      'jinakum': `${origin}/og-jinakum.jpg`,
-      'jinaken': `${origin}/og-jinaken.jpg`,
-      'albaraka': `${origin}/og-albaraka.jpg`,
-      'alfuttaim': `${origin}/og-alfuttaim.jpg`,
-      'alshaya': `${origin}/og-alshaya.jpg`,
-      'shipco': `${origin}/og-shipco.jpg`,
-      'national': `${origin}/og-bahri.jpg`,
-      'bahri': `${origin}/og-bahri.jpg`,
-      'hellmann': `${origin}/og-hellmann.jpg`,
-      'dsv': `${origin}/og-dsv.jpg`,
-      'agility': `${origin}/og-aramex.jpg`,
-      'genacom': `${origin}/og-genacom.jpg`
+      'aramex': `${githubCDN}/og-aramex.jpg`,
+      'dhl': `${githubCDN}/og-dhl.jpg`,
+      'dhlkw': `${githubCDN}/og-dhl.jpg`,
+      'dhlqa': `${githubCDN}/og-dhl.jpg`,
+      'dhlom': `${githubCDN}/og-dhl.jpg`,
+      'dhlbh': `${githubCDN}/og-dhl.jpg`,
+      'fedex': `${githubCDN}/og-fedex.jpg`,
+      'ups': `${githubCDN}/og-ups.jpg`,
+      'empost': `${githubCDN}/og-empost.jpg`,
+      'smsa': `${githubCDN}/og-smsa.jpg`,
+      'zajil': `${githubCDN}/og-zajil.jpg`,
+      'naqel': `${githubCDN}/og-naqel.jpg`,
+      'saudipost': `${githubCDN}/og-saudipost.jpg`,
+      'kwpost': `${githubCDN}/og-kwpost.jpg`,
+      'qpost': `${githubCDN}/og-qpost.jpg`,
+      'omanpost': `${githubCDN}/og-omanpost.jpg`,
+      'bahpost': `${githubCDN}/og-bahpost.jpg`,
+      'jinakum': `${githubCDN}/og-jinakum.jpg`,
+      'jinaken': `${githubCDN}/og-jinaken.jpg`,
+      'albaraka': `${githubCDN}/og-albaraka.jpg`,
+      'alfuttaim': `${githubCDN}/og-alfuttaim.jpg`,
+      'alshaya': `${githubCDN}/og-alshaya.jpg`,
+      'shipco': `${githubCDN}/og-shipco.jpg`,
+      'national': `${githubCDN}/og-bahri.jpg`,
+      'bahri': `${githubCDN}/og-bahri.jpg`,
+      'hellmann': `${githubCDN}/og-hellmann.jpg`,
+      'dsv': `${githubCDN}/og-dsv.jpg`,
+      'agility': `${githubCDN}/og-aramex.jpg`,
+      'genacom': `${githubCDN}/og-genacom.jpg`
     };
 
     // Get OG image for the company, fallback to aramex
