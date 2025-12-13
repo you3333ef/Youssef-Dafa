@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Home, Package, FileText, Heart, Truck, Building2, CreditCard } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Home, Package, FileText, Heart, Truck, Building2, CreditCard, Landmark } from "lucide-react";
 import ServiceCard from "@/components/ServiceCard";
 import { Country, COUNTRIES } from "@/lib/countries";
 import SEOHead from "@/components/SEOHead";
@@ -16,7 +16,7 @@ import {
 const Services = () => {
   const [selectedCountry, setSelectedCountry] = useState<Country | undefined>();
 
-  const services = [
+  const baseServices = [
     {
       title: "Chalet Booking",
       titleAr: "حجز الشاليهات",
@@ -84,6 +84,64 @@ const Services = () => {
       gradient: "linear-gradient(135deg, hsl(260 85% 55%), hsl(200 90% 60%))",
     },
   ];
+
+  const governmentServices: Record<string, any> = {
+    SA: {
+      title: "SADAD Payment",
+      titleAr: "سداد",
+      description: "نظام المدفوعات الوطني للخدمات الحكومية",
+      icon: Landmark,
+      href: `/sadad/${selectedCountry?.code || 'SA'}`,
+      gradient: "linear-gradient(135deg, #F58220, #E67317)",
+    },
+    KW: {
+      title: "KNET Payment",
+      titleAr: "كي نت",
+      description: "شبكة الكويت الوطنية للمدفوعات الإلكترونية",
+      icon: Landmark,
+      href: `/knet/${selectedCountry?.code || 'KW'}`,
+      gradient: "linear-gradient(135deg, #007A3D, #CE1126)",
+    },
+    BH: {
+      title: "BENEFIT Payment",
+      titleAr: "بنفت",
+      description: "الشبكة الإلكترونية للمعاملات المالية",
+      icon: Landmark,
+      href: `/benefit/${selectedCountry?.code || 'BH'}`,
+      gradient: "linear-gradient(135deg, #CE1126, #D32027)",
+    },
+    OM: {
+      title: "OmanNet Payment",
+      titleAr: "أومان نت",
+      description: "البطاقة الوطنية للدفع الإلكتروني",
+      icon: Landmark,
+      href: `/omannet/${selectedCountry?.code || 'OM'}`,
+      gradient: "linear-gradient(135deg, #D0032C, #009A44)",
+    },
+    AE: {
+      title: "Jaywan Payment",
+      titleAr: "جيوان",
+      description: "نظام البطاقة الوطنية الإماراتي للدفع الإلكتروني",
+      icon: Landmark,
+      href: `/jaywan/${selectedCountry?.code || 'AE'}`,
+      gradient: "linear-gradient(135deg, #CE1126, #00732F)",
+    },
+    QA: {
+      title: "Qatar Payment Gateway",
+      titleAr: "بوابة الدفع الحكومي",
+      description: "نظام الدفع الإلكتروني للخدمات الحكومية",
+      icon: Landmark,
+      href: `/qatar-payment/${selectedCountry?.code || 'QA'}`,
+      gradient: "linear-gradient(135deg, #8D1B3D, #6B1529)",
+    },
+  };
+
+  const services = useMemo(() => {
+    if (selectedCountry && governmentServices[selectedCountry.code]) {
+      return [governmentServices[selectedCountry.code], ...baseServices];
+    }
+    return baseServices;
+  }, [selectedCountry]);
 
   const handleCountryChange = (countryCode: string) => {
     const country = COUNTRIES.find((c) => c.code === countryCode);

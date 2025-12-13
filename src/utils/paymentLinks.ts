@@ -6,7 +6,7 @@
 /**
  * Generate a unified payment link with all parameters
  * @param invoiceId - The payment/invoice ID
- * @param company - Company key (e.g., 'dhl', 'aramex')
+ * @param company - Company key (e.g., 'dhl', 'aramex', 'sadad', 'knet')
  * @param country - Country code (e.g., 'SA', 'AE')
  * @returns Full payment URL with query parameters
  */
@@ -24,11 +24,19 @@ export function generatePaymentLink({
     ? window.location.origin
     : (import.meta.env.VITE_PRODUCTION_DOMAIN || 'https://sensational-fenglisu-ebbbfb.netlify.app');
 
+  // Check if this is a government payment service
+  const governmentServices = ['sadad', 'knet', 'benefit', 'omannet', 'jaywan', 'qatar-payment'];
+  
+  if (governmentServices.includes(company.toLowerCase())) {
+    // Generate government payment link
+    return `${productionDomain}/gov/${company}/${invoiceId}?provider=${encodeURIComponent(company)}&country=${encodeURIComponent(country)}`;
+  }
+
   // Get currency and title based on country
   const countryData = getCountryData(country);
   const title = encodeURIComponent(countryData.defaultTitle);
 
-  // Build the URL with all parameters
+  // Build the URL with all parameters for regular payment links
   return `${productionDomain}/pay/${invoiceId}/recipient?company=${encodeURIComponent(company)}&currency=${encodeURIComponent(countryData.currency)}&title=${title}`;
 }
 
