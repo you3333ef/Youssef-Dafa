@@ -72,7 +72,10 @@ const CreatePaymentLink = () => {
       const paymentUrl = generatePaymentLink({
         invoiceId: link.id,
         company: "payment",
-        country: country || 'SA'
+        country: country || 'SA',
+        amount: parseFloat(paymentAmount) || 500,
+        currency: getCurrencyCode(country || "SA"),
+        paymentMethod: paymentMethod,
       });
 
       setCreatedPaymentUrl(paymentUrl);

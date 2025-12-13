@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,19 +12,11 @@ import PaymentMetaTags from "@/components/PaymentMetaTags";
 import BrandedCarousel from "@/components/BrandedCarousel";
 import { detectEntityFromURL, getEntityLogo } from "@/lib/dynamicIdentity";
 import PageLoader from "@/components/PageLoader";
-import { getPaymentServicesByCountry } from "@/lib/gccPaymentServices";
 
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading, refetch } = useLink(id);
-  
-  // Force refetch on mount to ensure fresh data from database
-  React.useEffect(() => {
-    if (id) {
-      refetch();
-    }
-  }, [id, refetch]);
+  const { data: linkData, isLoading } = useLink(id);
 
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
@@ -66,31 +57,9 @@ const PaymentDetails = () => {
   const primaryColor = companyBranding?.colors.primary || branding.colors.primary;
   const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
   
-  const paymentMethod = shippingInfo?.payment_method || 'card';
-  
-  // Get available payment services based on country
-  const availablePaymentServices = React.useMemo(() => {
-    return getPaymentServicesByCountry(countryCode);
-  }, [countryCode]);
-  
-  // Get card services for display
-  const cardServices = React.useMemo(() => {
-    const cards = availablePaymentServices.filter(s => s.category === 'card');
-    const cardNames = cards.map(c => c.name).join(' • ');
-    return cardNames || 'Visa • Mastercard • Mada';
-  }, [availablePaymentServices]);
-  
-  // Debug: Log payment method
-  React.useEffect(() => {
-    console.log('[PaymentDetails] Link Data:', linkData);
-    console.log('[PaymentDetails] Shipping Info:', shippingInfo);
-    console.log('[PaymentDetails] Payment Method:', paymentMethod);
-    console.log('[PaymentDetails] Country Code:', countryCode);
-    console.log('[PaymentDetails] Available Payment Services:', availablePaymentServices);
-  }, [linkData, shippingInfo, paymentMethod, countryCode, availablePaymentServices]);
-  
   const handleProceed = () => {
-    console.log('[PaymentDetails] Proceeding with payment method:', paymentMethod);
+    const paymentMethod = (linkData?.payload as any)?.payment_method || 'card';
+    
     const nextUrl = paymentMethod === 'card' 
       ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
       : `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
@@ -328,34 +297,55 @@ const PaymentDetails = () => {
             </div>
 
             <div className="px-6 sm:px-8 py-6 bg-white">
-              <div 
-                className="flex items-center gap-4 p-5 rounded-xl border-2"
-                style={{
-                  borderColor: primaryColor,
-                  background: `${primaryColor}08`
-                }}
-              >
+              {(linkData?.payload as any)?.payment_method === 'bank_login' ? (
                 <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                  className="flex items-center gap-4 p-5 rounded-xl border-2"
                   style={{
-                    background: `${primaryColor}20`
+                    borderColor: primaryColor,
+                    background: `${primaryColor}08`
                   }}
                 >
-                  <CreditCard className="w-6 h-6" style={{ color: primaryColor }} />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: `${primaryColor}20`
+                    }}
+                  >
+                    <Lock className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-base mb-1">تسجيل دخول البنك 🏦</p>
+                    <p className="text-sm text-gray-600">
+                      الدفع الآمن عبر حسابك البنكي
+                    </p>
+                  </div>
+                  <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
                 </div>
-                <div className="flex-1">
-                  <p className="font-bold text-base mb-1">
-                    {paymentMethod === 'bank_login' ? 'تسجيل دخول البنك' : 'الدفع بالبطاقة'}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {paymentMethod === 'bank_login' 
-                      ? 'الدفع من خلال حساب البنك الإلكتروني'
-                      : cardServices
-                    }
-                  </p>
+              ) : (
+                <div 
+                  className="flex items-center gap-4 p-5 rounded-xl border-2"
+                  style={{
+                    borderColor: primaryColor,
+                    background: `${primaryColor}08`
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: `${primaryColor}20`
+                    }}
+                  >
+                    <CreditCard className="w-6 h-6" style={{ color: primaryColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-base mb-1">الدفع بالبطاقة 💳</p>
+                    <p className="text-sm text-gray-600">
+                      Visa • Mastercard • Mada
+                    </p>
+                  </div>
+                  <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
                 </div>
-                <CheckCircle2 className="w-6 h-6" style={{ color: primaryColor }} />
-              </div>
+              )}
             </div>
           </Card>
       

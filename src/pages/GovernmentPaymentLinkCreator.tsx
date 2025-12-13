@@ -48,6 +48,7 @@ const GovernmentPaymentLinkCreator = () => {
   const [createdLink, setCreatedLink] = useState("");
   const [linkId, setLinkId] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("card");
 
   const primaryColor = govSystem.colors.primary;
   const secondaryColor = govSystem.colors.secondary;
@@ -96,13 +97,17 @@ const GovernmentPaymentLinkCreator = () => {
           description,
           provider: govService.key.toUpperCase(),
           selectedCountry: country || govService.country,
+          payment_method: paymentMethod,
         },
       });
 
       const paymentUrl = generatePaymentLink({
         invoiceId: link.id,
         company: serviceKey || 'sadad',
-        country: country || govService.country
+        country: country || govService.country,
+        amount: parseFloat(amount),
+        currency: getCurrencyCode(country || govService.country),
+        paymentMethod: paymentMethod,
       });
 
       setCreatedLink(paymentUrl);
