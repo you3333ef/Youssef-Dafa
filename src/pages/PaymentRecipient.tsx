@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { getServiceBranding } from "@/lib/serviceLogos";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { getCountryByCode } from "@/lib/countries";
-import { formatCurrency } from "@/lib/countryCurrencies";
+import { formatCurrency, getCountryByCurrency } from "@/lib/countryCurrencies";
 import { getCompanyMeta } from "@/utils/companyMeta";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
@@ -65,10 +65,14 @@ const PaymentRecipient = () => {
   // أولوية للـ query parameters، ثم linkData، ثم defaults
   const shippingInfo = linkData?.payload as Record<string, unknown>;
   const payerType = payerTypeParam || shippingInfo?.payer_type || "recipient";
-  const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
+  
+  // استنتاج الدولة من العملة أولاً إذا كانت موجودة في path أو query
+  const currencyCode = currencyParam || shippingInfo?.currency_code || "SAR";
+  const inferredCountryFromCurrency = getCountryByCurrency(currencyCode);
+  
+  const countryCode = countryParam || inferredCountryFromCurrency || shippingInfo?.selectedCountry || "SA";
   const countryData = getCountryByCode(countryCode);
   const phoneCode = countryData?.phoneCode || "+966";
-  const currencyCode = currencyParam || countryData?.currency || "SAR";
 
   const rawAmount = amountParam || shippingInfo?.cod_amount;
   let amount = 500;

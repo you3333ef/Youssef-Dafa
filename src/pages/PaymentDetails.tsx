@@ -6,7 +6,7 @@ import { getServiceBranding } from "@/lib/serviceLogos";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { useLink } from "@/hooks/useSupabase";
 import { getCountryByCode } from "@/lib/countries";
-import { formatCurrency, getCurrencyByCountry } from "@/lib/countryCurrencies";
+import { formatCurrency, getCurrencyByCountry, getCountryByCurrency } from "@/lib/countryCurrencies";
 import { CreditCard, ArrowLeft, Hash, DollarSign, Package, Truck, ShieldCheck, Lock, Sparkles, CheckCircle2 } from "lucide-react";
 import { designSystem } from "@/lib/designSystem";
 import PaymentMetaTags from "@/components/PaymentMetaTags";
@@ -45,7 +45,10 @@ const PaymentDetails = () => {
   const methodParam = searchParams.get('method') || searchParams.get('pm');
   const countryParam = searchParams.get('country') || searchParams.get('c');
   
-  const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
+  // استنتاج الدولة من العملة إذا لم تكن موجودة
+  const inferredCountryFromCurrency = currencyParam ? getCountryByCurrency(currencyParam) : null;
+  
+  const countryCode = countryParam || inferredCountryFromCurrency || shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);
 
   const rawAmount = amountParam || shippingInfo?.cod_amount || shippingInfo?.customerInfo?.amount;

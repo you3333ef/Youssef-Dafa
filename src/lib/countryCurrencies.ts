@@ -155,6 +155,23 @@ export const getCurrencyCode = (countryCode: string): string => {
 };
 
 /**
+ * Get country code from currency code
+ * الحصول على رمز الدولة من رمز العملة
+ *
+ * @param currencyCode - Currency code (e.g., 'SAR', 'AED', 'QAR')
+ * @returns Country code or 'SA' as default
+ */
+export const getCountryByCurrency = (currencyCode: string): string => {
+  const currency = currencyCode.toUpperCase();
+  for (const [countryCode, info] of Object.entries(countryCurrencies)) {
+    if (info.code === currency) {
+      return countryCode;
+    }
+  }
+  return 'SA'; // Default to Saudi Arabia
+};
+
+/**
  * Get currency name in Arabic
  * الحصول على اسم العملة بالعربية
  *

