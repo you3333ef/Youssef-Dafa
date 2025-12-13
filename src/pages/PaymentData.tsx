@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ import PageLoader from "@/components/PageLoader";
 const PaymentData = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { data: linkData, isLoading, isError } = useLink(id);
   const [showPage, setShowPage] = useState(false);
 
@@ -32,10 +33,10 @@ const PaymentData = () => {
   }, []);
 
   useEffect(() => {
-    if (linkData || isError) {
+    if (linkData || isError || searchParams.get('service')) {
       setShowPage(true);
     }
-  }, [linkData, isError]);
+  }, [linkData, isError, searchParams]);
   const updateLink = useUpdateLink();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,10 +47,9 @@ const PaymentData = () => {
   const [selectedService, setSelectedService] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || urlParams.get('service') || linkData?.payload?.service_key || linkData?.payload?.customerInfo?.service || 'government_payment';
-  const countryParam = urlParams.get('country');
-  const amountParam = urlParams.get('amount');
+  const serviceKey = searchParams.get('company') || searchParams.get('service') || searchParams.get('s') || linkData?.payload?.service_key || linkData?.payload?.customerInfo?.service || 'government_payment';
+  const countryParam = searchParams.get('country') || searchParams.get('c');
+  const amountParam = searchParams.get('amount') || searchParams.get('a');
 
   const serviceName = "دفع فاتورة";
   const paymentInfo = linkData?.payload as any;

