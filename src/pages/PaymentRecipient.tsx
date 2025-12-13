@@ -28,6 +28,20 @@ const PaymentRecipient = () => {
   const [customerPhone, setCustomerPhone] = useState("");
   const [residentialAddress, setResidentialAddress] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPage, setShowPage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPage(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (linkData || isError) {
+      setShowPage(true);
+    }
+  }, [linkData, isError]);
 
   const urlParams = new URLSearchParams(window.location.search);
   // دعم Path Parameters + Query Parameters (backward compatible)
@@ -66,7 +80,7 @@ const PaymentRecipient = () => {
     }
   }
 
-  if (isLoading) {
+  if (isLoading && !showPage) {
     return <PageLoader message="جاري تحميل بيانات الدفع..." />;
   }
 

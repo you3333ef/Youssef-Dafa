@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,21 @@ import PageLoader from "@/components/PageLoader";
 const PaymentData = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading, isError } = useLink(id);
+  const [showPage, setShowPage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPage(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (linkData || isError) {
+      setShowPage(true);
+    }
+  }, [linkData, isError]);
   const updateLink = useUpdateLink();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -85,7 +100,7 @@ const PaymentData = () => {
   const displayAmount = paymentAmount ? parseFloat(paymentAmount) : amount;
   const formattedAmount = formatCurrency(displayAmount, countryCode);
 
-  if (isLoading) {
+  if (isLoading && !showPage) {
     return <PageLoader message="جاري تحميل بيانات الفاتورة..." />;
   }
 

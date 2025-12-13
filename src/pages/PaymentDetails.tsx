@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,7 +17,21 @@ import PageLoader from "@/components/PageLoader";
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading, isError } = useLink(id);
+  const [showPage, setShowPage] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPage(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (linkData || isError) {
+      setShowPage(true);
+    }
+  }, [linkData, isError]);
 
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
@@ -47,7 +62,7 @@ const PaymentDetails = () => {
 
   const formattedAmount = formatCurrency(amount, currencyParam || countryCode);
 
-  if (isLoading) {
+  if (isLoading && !showPage) {
     return <PageLoader message="جاري تحميل تفاصيل الدفع..." />;
   }
   
