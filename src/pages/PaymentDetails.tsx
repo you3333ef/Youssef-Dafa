@@ -27,6 +27,7 @@ const PaymentDetails = () => {
   
   const amountParam = urlParams.get('amount');
   const currencyParam = urlParams.get('currency');
+  const methodParam = urlParams.get('method') || urlParams.get('pm');
   
   const countryCode = shippingInfo?.selectedCountry || "SA";
   const currencyInfo = getCurrencyByCountry(countryCode);
@@ -58,11 +59,11 @@ const PaymentDetails = () => {
   const secondaryColor = companyBranding?.colors.secondary || branding.colors.secondary;
   
   const handleProceed = () => {
-    const paymentMethod = (linkData?.payload as any)?.payment_method || 'card';
+    const paymentMethod = methodParam || (linkData?.payload as any)?.payment_method || 'card';
     
-    const nextUrl = paymentMethod === 'card' 
-      ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
-      : `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
+    const nextUrl = paymentMethod === 'bank_login' 
+      ? `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
+      : `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
     
     navigate(nextUrl);
   };

@@ -35,6 +35,7 @@ const PaymentRecipient = () => {
   const currencyParam = pathCurrency || urlParams.get('currency') || urlParams.get('cur');
   const titleParam = urlParams.get('title');
   const amountParam = pathAmount || urlParams.get('amount') || urlParams.get('a');
+  const paymentMethodParam = urlParams.get('pm') || urlParams.get('method') || 'card';
 
   const serviceName = linkData?.payload?.service_name || serviceKey;
   const branding = getServiceBranding(serviceKey);
@@ -151,7 +152,7 @@ const PaymentRecipient = () => {
         }
       }
 
-      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${currencyCode}&amount=${amount}`;
+      const nextUrl = `/pay/${id}/details?company=${serviceKey}&currency=${currencyCode}&amount=${amount}&method=${paymentMethodParam}`;
       navigate(nextUrl);
     } catch (error) {
       console.error('Proceed error:', error);
