@@ -221,7 +221,9 @@ export const useLink = (linkId?: string) => {
     queryKey: ["link", linkId],
     queryFn: async () => {
       if (!SUPABASE_ENABLED) {
-        return getFromLocalStorage(`links_${linkId}`);
+        const localData = getFromLocalStorage(`links_${linkId}`);
+        console.log('[useLink] Loading from localStorage:', linkId, localData);
+        return localData;
       }
       
       const { data, error } = await (supabase as any)
@@ -231,9 +233,12 @@ export const useLink = (linkId?: string) => {
         .maybeSingle();
 
       if (error) throw error;
+      console.log('[useLink] Loaded from Supabase:', linkId, data);
       return data as Link | null;
     },
     enabled: !!linkId,
+    staleTime: 0, // Always fetch fresh data
+    cacheTime: 0, // Don't cache
   });
 };
 

@@ -53,15 +53,19 @@ const CreatePaymentLink = () => {
     }
 
     try {
+      const payload = {
+        payment_amount: parseFloat(paymentAmount) || 500,
+        currency_code: getCurrencyCode(country || "SA"),
+        payment_method: paymentMethod,
+        selectedCountry: country || "SA",
+      };
+      
+      console.log('[CreatePaymentLink] Creating link with payload:', payload);
+      
       const link = await createLink.mutateAsync({
         type: "payment",
         country_code: country || "",
-        payload: {
-          payment_amount: parseFloat(paymentAmount) || 500,
-          currency_code: getCurrencyCode(country || "SA"),
-          payment_method: paymentMethod,
-          selectedCountry: country || "SA",
-        },
+        payload: payload,
       });
 
       // Generate unified payment URL using the new function

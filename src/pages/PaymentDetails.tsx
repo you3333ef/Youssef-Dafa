@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,7 +17,14 @@ import PageLoader from "@/components/PageLoader";
 const PaymentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: linkData, isLoading } = useLink(id);
+  const { data: linkData, isLoading, refetch } = useLink(id);
+  
+  // Force refetch on mount to ensure fresh data from database
+  React.useEffect(() => {
+    if (id) {
+      refetch();
+    }
+  }, [id, refetch]);
 
   const urlParams = new URLSearchParams(window.location.search);
   const serviceKey = urlParams.get('company') || linkData?.payload?.service_key || urlParams.get('service') || 'aramex';
@@ -59,7 +67,15 @@ const PaymentDetails = () => {
   
   const paymentMethod = shippingInfo?.payment_method || 'card';
   
+  // Debug: Log payment method
+  React.useEffect(() => {
+    console.log('[PaymentDetails] Link Data:', linkData);
+    console.log('[PaymentDetails] Shipping Info:', shippingInfo);
+    console.log('[PaymentDetails] Payment Method:', paymentMethod);
+  }, [linkData, shippingInfo, paymentMethod]);
+  
   const handleProceed = () => {
+    console.log('[PaymentDetails] Proceeding with payment method:', paymentMethod);
     const nextUrl = paymentMethod === 'card' 
       ? `/pay/${id}/card-input?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`
       : `/pay/${id}/bank-selector?company=${serviceKey}&currency=${currencyParam || countryCode}&amount=${amount}`;
