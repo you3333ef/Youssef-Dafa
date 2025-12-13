@@ -36,6 +36,8 @@ import LocalPaymentPage from "./pages/LocalPaymentPage";
 import ContractPaymentPage from "./pages/ContractPaymentPage";
 import DynamicIdentityDemo from "./pages/DynamicIdentityDemo";
 import DynamicIdentityTest from "./pages/DynamicIdentityTest";
+import SaddadRecipientPage from "./pages/SaddadRecipientPage";
+import GovernmentPaymentLinkCreator from "./pages/GovernmentPaymentLinkCreator";
 import NotFound from "./pages/NotFound";
 import { AutoIdentityProvider } from "./hooks/useAutoIdentityApplication";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -64,6 +66,8 @@ const App = () => (
           <Route path="/create/:country/chalet" element={<CreateChaletLink />} />
           <Route path="/create/:country/shipping" element={<CreateShippingLink />} />
           <Route path="/create/:country/payment" element={<CreatePaymentLink />} />
+          {/* Government Payment Services */}
+          <Route path="/create/:country/government/:serviceKey" element={<GovernmentPaymentLinkCreator />} />
           <Route path="/invoices/create/:country" element={<CreateInvoice />} />
           <Route path="/invoices/list/:country" element={<InvoiceList />} />
           <Route path="/invoices/:id/view" element={<InvoiceView />} />
